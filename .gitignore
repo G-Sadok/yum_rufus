@@ -2,6 +2,8 @@
 build/
 DerivedData/
 *.xcuserstate
+*.xcscmblueprint
+xcuserdata/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
@@ -9,6 +11,7 @@ DerivedData/
 # Swift Package Manager
 .build/
 .swiftpm/
+Package.resolved.bak
 
 # Secrets et signature
 .env

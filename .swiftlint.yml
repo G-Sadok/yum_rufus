@@ -1,0 +1,61 @@
+# Configuration SwiftLint du projet.
+# Le script scripts/verifications.sh lance swiftlint en mode strict,
+# ou le moindre avertissement fait echouer le controle 3.
+
+included:
+  - Packages
+  - App
+
+excluded:
+  - .build
+  - Packages/.build
+  - App/.build
+  - Tests/JeuDeDonnees/genere
+
+disabled_rules:
+  # La trace des travaux restants vit dans loop/backlog.json, pas dans le code.
+  - todo
+
+opt_in_rules:
+  - closure_spacing
+  - contains_over_first_not_nil
+  - empty_count
+  - explicit_init
+  - first_where
+  - force_unwrapping
+  - redundant_nil_coalescing
+  - unneeded_parentheses_in_closure_argument
+  - yoda_condition
+
+# SwiftFormat ajoute la virgule finale dans les litteraux multilignes.
+# Sans cette ligne, SwiftLint la refuserait et les deux outils se battraient.
+trailing_comma:
+  mandatory_comma: true
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+
+line_length:
+  warning: 120
+  error: 160
+  ignores_urls: true
+  ignores_comments: false
+
+file_length:
+  warning: 500
+  error: 800
+
+type_body_length:
+  warning: 300
+  error: 500
+
+function_body_length:
+  warning: 60
+  error: 100
+
+nesting:
+  type_level: 2
+
+reporter: emoji

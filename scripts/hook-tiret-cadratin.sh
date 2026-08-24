@@ -19,7 +19,12 @@ case "$FICHIER" in
   *) exit 0 ;;
 esac
 
-LIGNES="$(grep -n $'\u2014' "$FICHIER" 2>/dev/null || true)"
+# bash 3.2, celui de macOS, ne developpe pas l echappement \u dans $'...'.
+# Le motif cherchait alors le texte u2014, jamais le caractere U+2014.
+# On le construit depuis ses trois octets UTF-8.
+TIRET_CADRATIN="$(printf '\342\200\224')"
+
+LIGNES="$(grep -nF "$TIRET_CADRATIN" "$FICHIER" 2>/dev/null || true)"
 
 if [ -n "$LIGNES" ]; then
   {

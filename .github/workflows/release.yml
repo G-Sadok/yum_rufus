@@ -144,7 +144,10 @@ jobs:
 
       - name: Verifier l absence de tiret cadratin dans les notes
         run: |
-          if grep -q $'\u2014' notes-de-version.md; then
+          # Le bash de macOS est en version 3.2 et ne developpe pas
+          # l echappement \u dans $'...'. On passe donc par les octets UTF-8.
+          TIRET_CADRATIN=$(printf '\342\200\224')
+          if grep -qF "$TIRET_CADRATIN" notes-de-version.md; then
             echo "Tiret cadratin trouve dans les notes de version."
             exit 1
           fi

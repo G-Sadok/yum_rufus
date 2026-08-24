@@ -40,7 +40,12 @@ jobs:
 
       - name: Verifier l absence de tiret cadratin
         run: |
-          TROUVES=$(grep -rIln $'\u2014' \
+          # Le bash de macOS est en version 3.2 et ne developpe pas
+          # l echappement \u dans $'...'. On construit le caractere U+2014
+          # depuis ses trois octets UTF-8, sinon le motif cherche le texte
+          # u2014 et signale les scripts de controle eux memes.
+          TIRET_CADRATIN=$(printf '\342\200\224')
+          TROUVES=$(grep -rIlF "$TIRET_CADRATIN" \
             --include='*.swift' --include='*.md' --include='*.json' \
             --include='*.yml' --include='*.yaml' --include='*.sh' \
             --include='*.strings' --include='*.xcstrings' \

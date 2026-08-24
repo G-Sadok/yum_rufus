@@ -1,0 +1,16 @@
+# Configuration SwiftFormat du projet.
+# Le script scripts/verifications.sh lance swiftformat --lint a la racine.
+# Le jeu de regles reste celui par defaut, seules les options dont le code
+# depend reellement sont figees ici, pour que deux versions de l outil
+# n aboutissent pas a deux verdicts differents.
+
+--swiftversion 6.0
+
+--indent 4
+--linebreaks lf
+--semicolons never
+--self remove
+--extensionacl on-extension
+--stripunusedargs closure-only
+
+--exclude .build,Packages/.build,App/.build,Tests/JeuDeDonnees/genere

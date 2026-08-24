@@ -13,6 +13,18 @@ cd "$RACINE"
 SCHEMA="${SCHEMA_XCODE:-Yum}"
 ECHECS=0
 
+# La presence du dossier App ne prouve pas qu un projet Xcode existe. Tant que
+# la coquille de l application n est pas construite, App ne contient que de la
+# documentation, et xcodebuild n a rien a compiler. On teste donc le projet
+# lui meme, pas le dossier qui l accueillera.
+PROJET_XCODE=""
+for CANDIDAT in ./*.xcworkspace ./*.xcodeproj; do
+  if [ -e "$CANDIDAT" ]; then
+    PROJET_XCODE="$CANDIDAT"
+    break
+  fi
+done
+
 rouge()  { printf '\033[31m  ECHEC   %s\033[0m\n' "$1"; }
 vert()   { printf '\033[32m  OK      %s\033[0m\n' "$1"; }
 jaune()  { printf '\033[33m  IGNORE  %s\033[0m\n' "$1"; }
@@ -23,7 +35,7 @@ echouer() { rouge "$1"; ECHECS=$((ECHECS + 1)); }
 # ---------------------------------------------------------------------------
 titre "1. Compilation"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
+if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
   SORTIE="$(mktemp)"
   if xcodebuild build \
       -scheme "$SCHEMA" \
@@ -55,7 +67,7 @@ fi
 # ---------------------------------------------------------------------------
 titre "2. Tests"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
+if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
   SORTIE="$(mktemp)"
   if xcodebuild test \
       -scheme "$SCHEMA" \
@@ -104,7 +116,14 @@ fi
 # ---------------------------------------------------------------------------
 titre "4. Regle de redaction, aucun tiret cadratin"
 # ---------------------------------------------------------------------------
-TROUVES="$(grep -rIln $'\u2014' \
+# bash 3.2, la version que macOS installe, ne developpe pas l echappement \u
+# dans $'...'. Le motif restait litteral et cherchait le texte u2014 au lieu du
+# caractere U+2014. Le controle signalait donc ses propres scripts et laissait
+# passer les vrais tirets cadratins. On construit le caractere depuis ses trois
+# octets UTF-8, ce qui marche sur toutes les versions de bash.
+TIRET_CADRATIN="$(printf '\342\200\224')"
+
+TROUVES="$(grep -rIlF "$TIRET_CADRATIN" \
   --include='*.swift' --include='*.md' --include='*.json' \
   --include='*.yml' --include='*.yaml' --include='*.sh' \
   --include='*.strings' --include='*.xcstrings' \

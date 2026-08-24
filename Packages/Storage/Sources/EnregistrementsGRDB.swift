@@ -65,6 +65,10 @@ extension LiaisonSuivi: TableRecord, FetchableRecord, PersistableRecord {
     public static let databaseTableName = "liaisonSuivi"
 }
 
+extension ReglageDeSensDeLecture: TableRecord, FetchableRecord, PersistableRecord {
+    public static let databaseTableName = "reglageDeSensDeLecture"
+}
+
 // Les enumerations du domaine sont ecrites en base sous leur representation
 // textuelle. La conformance permet de les utiliser directement dans un filtre
 // de requete, sans passer par leur rawValue a chaque appel.

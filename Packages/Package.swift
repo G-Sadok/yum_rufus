@@ -54,5 +54,10 @@ let package = Package(
         .target(name: "DesignSystem", dependencies: ["Core"], path: "DesignSystem/Sources"),
 
         .testTarget(name: "CoreTests", dependencies: ["Core"], path: "Core/Tests"),
+        .testTarget(
+            name: "DesignSystemTests",
+            dependencies: ["DesignSystem"],
+            path: "DesignSystem/Tests"
+        ),
     ]
 )

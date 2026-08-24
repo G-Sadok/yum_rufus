@@ -30,11 +30,18 @@ let package = Package(
         .library(name: "Sync", targets: ["Sync"]),
         .library(name: "DesignSystem", targets: ["DesignSystem"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/groue/GRDB.swift.git", from: "7.0.0"),
+    ],
     targets: [
         // Core ne depend de rien. Tout le reste peut dependre de Core.
         .target(name: "Core", path: "Core/Sources"),
 
-        .target(name: "Storage", dependencies: ["Core"], path: "Storage/Sources"),
+        .target(
+            name: "Storage",
+            dependencies: ["Core", .product(name: "GRDB", package: "GRDB.swift")],
+            path: "Storage/Sources"
+        ),
         .target(name: "Sources", dependencies: ["Core"], path: "Sources/Sources"),
         .target(name: "Archive", dependencies: ["Core"], path: "Archive/Sources"),
         .target(name: "ImagePipeline", dependencies: ["Core"], path: "ImagePipeline/Sources"),
@@ -54,6 +61,11 @@ let package = Package(
         .target(name: "DesignSystem", dependencies: ["Core"], path: "DesignSystem/Sources"),
 
         .testTarget(name: "CoreTests", dependencies: ["Core"], path: "Core/Tests"),
+        .testTarget(
+            name: "StorageTests",
+            dependencies: ["Storage", "Core"],
+            path: "Storage/Tests"
+        ),
         .testTarget(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem"],

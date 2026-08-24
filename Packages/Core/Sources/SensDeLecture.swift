@@ -27,7 +27,12 @@ public enum SensDeLecture: String, Sendable, Codable, CaseIterable, Hashable {
     case hautBas
 
     /// Sens applique quand ni la serie ni le reglage global ne tranchent.
-    public static let parDefaut: SensDeLecture = .gaucheDroite
+    ///
+    /// La section 12 du cahier de developpement fixe le defaut du reglage
+    /// Sens de lecture a Droite a gauche. C est aussi la valeur ecrite dans la
+    /// base a la creation du schema, pour que la valeur par defaut du modele et
+    /// celle de la base ne puissent jamais diverger.
+    public static let parDefaut: SensDeLecture = .droiteGauche
 
     /// Vrai quand la sequence se parcourt verticalement plutot qu en pages.
     public var estVertical: Bool {

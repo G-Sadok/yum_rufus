@@ -79,6 +79,11 @@ let package = Package(
             path: "Sources/Tests"
         ),
         .testTarget(
+            name: "ReaderEngineTests",
+            dependencies: ["ReaderEngine", "Core"],
+            path: "ReaderEngine/Tests"
+        ),
+        .testTarget(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem"],
             path: "DesignSystem/Tests"

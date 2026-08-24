@@ -54,6 +54,7 @@ struct MigrationDeSchemaTests {
             "id", "mangaId", "service", "identifiantDistant", "statut",
             "chapitreVu", "note", "dateSynchronisation",
         ],
+        "reglageDeSensDeLecture": ["id", "sensGlobal"],
     ]
 
     /// Les quatre index de la section 3.2, avec ce qui les distingue d un

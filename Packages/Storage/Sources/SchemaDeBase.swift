@@ -13,8 +13,15 @@ public enum SchemaDeBase {
     /// Identifiant de la migration qui cree le schema de la section 3.
     public static let creationDuSchema = "2026-08-24-01-creation-du-schema"
 
+    /// Identifiant de la migration qui installe le reglage global de sens de
+    /// lecture.
+    ///
+    /// La creation du schema etant deja publiee, elle n est pas modifiee : le
+    /// reglage arrive par une migration supplementaire, purement additive.
+    public static let reglageDeSensDeLecture = "2026-08-25-01-reglage-de-sens-de-lecture"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
-    public static let migrationsAttendues = [creationDuSchema]
+    public static let migrationsAttendues = [creationDuSchema, reglageDeSensDeLecture]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
     public static func migrateur() -> DatabaseMigrator {
@@ -26,6 +33,10 @@ public enum SchemaDeBase {
             try creerLesTablesDeLecture(base)
             try creerLesIndexObligatoires(base)
             try creerLesDeclencheursDeNonLus(base)
+        }
+
+        migrateur.registerMigration(reglageDeSensDeLecture) { base in
+            try creerLaTableDeReglageDeLecture(base)
         }
 
         return migrateur

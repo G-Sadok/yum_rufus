@@ -1,0 +1,122 @@
+name: Integration continue
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verifications:
+    name: Verifications
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Selectionner Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.app
+
+      - name: Installer les outils
+        run: |
+          brew install swiftlint swiftformat jq
+
+      - name: Mettre en cache les dependances Swift
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            ~/Library/Developer/Xcode/DerivedData
+          key: swift-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: swift-${{ runner.os }}-
+
+      - name: Verifier l absence de tiret cadratin
+        run: |
+          TROUVES=$(grep -rIln $'\u2014' \
+            --include='*.swift' --include='*.md' --include='*.json' \
+            --include='*.yml' --include='*.yaml' --include='*.sh' \
+            --include='*.strings' --include='*.xcstrings' \
+            . 2>/dev/null | grep -v '.git/' || true)
+          if [ -n "$TROUVES" ]; then
+            echo "Regle de redaction enfreinte, tiret cadratin trouve dans :"
+            echo "$TROUVES"
+            exit 1
+          fi
+          echo "Aucun tiret cadratin."
+
+      - name: Lancer le jeu de verifications du projet
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/verifications.sh
+
+      - name: Compiler pour macOS
+        run: |
+          xcodebuild build \
+            -scheme Yum \
+            -destination 'platform=macOS' \
+            -configuration Debug \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Compiler pour iOS
+        run: |
+          xcodebuild build \
+            -scheme Yum \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -configuration Debug \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Lancer les tests
+        run: |
+          xcodebuild test \
+            -scheme Yum \
+            -destination 'platform=macOS' \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults.xcresult \
+            | xcpretty && exit ${PIPESTATUS[0]}
+
+      - name: Publier les resultats de test
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultats-de-test
+          path: TestResults.xcresult
+          retention-days: 7
+
+  performance:
+    name: Budgets de performance
+    runs-on: macos-15
+    timeout-minutes: 60
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Selectionner Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.app
+
+      - name: Generer le jeu de test volumineux
+        run: |
+          if [ -f scripts/generer-jeu-de-test.sh ]; then
+            chmod +x scripts/generer-jeu-de-test.sh
+            ./scripts/generer-jeu-de-test.sh 5000 200000
+          else
+            echo "Generateur de jeu de test absent, etape ignoree."
+            exit 0
+          fi
+
+      - name: Mesurer les budgets
+        run: |
+          xcodebuild test \
+            -scheme Yum \
+            -destination 'platform=macOS' \
+            -only-testing:YumPerformanceTests \
+            | xcpretty && exit ${PIPESTATUS[0]}

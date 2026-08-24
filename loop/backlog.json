@@ -1,0 +1,1036 @@
+{
+  "meta": {
+    "version": 1,
+    "projet": "yum",
+    "description": "Backlog ordonne. Source de verite unique de la boucle. Le champ statut de chaque fonctionnalite est modifie par les scripts, ne le modifie pas a la main sauf pour reprendre une fonctionnalite bloquee.",
+    "statuts_possibles": ["a_faire", "en_cours", "termine", "bloque"],
+    "branche_principale": "main",
+    "prefixe_branche": "feat/"
+  },
+  "features": [
+    {
+      "id": "F001",
+      "slug": "socle-depot",
+      "etape": 0,
+      "titre": "Socle du depot et outillage",
+      "description": "Initialiser le depot, la structure de paquets Swift, SwiftLint, SwiftFormat, le fichier .gitignore, et la protection de branche sur main.",
+      "skills": ["developpement-swift"],
+      "criteres": [
+        "L arborescence Packages et App existe et correspond a la section 2.3 du cahier de developpement",
+        "swift build reussit sur le paquet Core vide",
+        "SwiftLint et SwiftFormat sont configures et passent",
+        "Le fichier .gitignore couvre DerivedData, .build, xcuserdata et .claude/settings.local.json"
+      ],
+      "depend_de": [],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F002",
+      "slug": "jetons-design",
+      "etape": 0,
+      "titre": "Generation des jetons depuis DESIGN-SPEC",
+      "description": "Lire DESIGN-SPEC.md et generer le paquet DesignSystem avec les couleurs, la typographie, les rayons, les espacements et les durees d animation, dans les quatre themes et les deux apparences.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Le fichier DESIGN-SPEC.md a ete lu integralement avant toute generation",
+        "Tous les jetons de couleur des quatre themes sont exposes en Swift",
+        "L echelle typographique complete est exposee",
+        "Un test verifie que chaque jeton du document existe dans le code",
+        "Aucune valeur visuelle en dur n existe ailleurs que dans ce paquet"
+      ],
+      "depend_de": ["F001"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F003",
+      "slug": "schema-base",
+      "etape": 0,
+      "titre": "Schema de base de donnees et migrations",
+      "description": "Mettre en place GRDB, le schema complet de la section 3 du cahier de developpement, les index obligatoires et le systeme de migrations versionnees.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Toutes les entites de la section 3.1 existent",
+        "Les quatre index de la section 3.2 sont crees",
+        "Le compteur de non lus est denormalise et maintenu par declencheur",
+        "Un test de migration de la version vide vers la version courante passe"
+      ],
+      "depend_de": ["F001"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F004",
+      "slug": "tri-naturel",
+      "etape": 1,
+      "titre": "Comparateur de tri naturel des pages",
+      "description": "Implementer le comparateur qui decoupe les suites de chiffres et les compare numeriquement, avec le filtrage des entrees parasites d archive.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "page2 passe avant page10",
+        "Les zeros initiaux sont geres",
+        "Les numeros decimaux sont geres",
+        "Les entrees __MACOSX, .DS_Store et Thumbs.db sont filtrees",
+        "Au moins vingt cas de test couvrent les combinaisons de prefixes"
+      ],
+      "depend_de": ["F001"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F005",
+      "slug": "lecture-zip",
+      "etape": 1,
+      "titre": "Lecture des archives ZIP et CBZ",
+      "description": "Implementer le protocole DocumentLocal pour les conteneurs ZIP, avec acces aleatoire via l index central.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Ouverture d un CBZ et enumeration ordonnee des pages",
+        "Acces direct a la page N sans decompression des precedentes",
+        "Les archives corrompues produisent une erreur typee et non un plantage"
+      ],
+      "depend_de": ["F004"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F006",
+      "slug": "source-fichiers-locaux",
+      "etape": 1,
+      "titre": "Source Fichiers locaux",
+      "description": "Premiere implementation de SourceProvider, sur un dossier local, avec signet de securite pour conserver l acces entre deux lancements.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le dossier choisi reste accessible apres redemarrage de l application",
+        "L analyse du dossier detecte les series et les chapitres",
+        "Les capacites declarees correspondent aux fonctions reellement offertes"
+      ],
+      "depend_de": ["F005", "F003"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F007",
+      "slug": "sens-de-lecture",
+      "etape": 1,
+      "titre": "Sens de lecture dans le modele",
+      "description": "Introduire la propriete de sens de lecture au niveau du modele, globale et surchargeable par serie, et la propager a toutes les couches concernees.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le sens de lecture est une propriete persistante, jamais deduite a la volee",
+        "L ordre des pages, la direction du geste et le sens du curseur en dependent",
+        "La direction de l interface et le sens de lecture sont deux notions distinctes dans le code",
+        "Des tests couvrent les trois valeurs possibles"
+      ],
+      "depend_de": ["F003"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F008",
+      "slug": "coquille-application",
+      "etape": 1,
+      "titre": "Coquille de l application et navigation",
+      "description": "Fenetre, barre laterale a cinq entrees, barre d outils, navigation entre les cinq destinations, adaptation iPad et iPhone.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "La barre laterale respecte les dimensions du DESIGN-SPEC",
+        "Les cinq entrees sont dans l ordre impose",
+        "Le repli de la barre laterale fonctionne",
+        "Sur iPhone la barre laterale devient une barre d onglets",
+        "La navigation au clavier fonctionne"
+      ],
+      "depend_de": ["F002"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F009",
+      "slug": "lecteur-page-simple",
+      "etape": 1,
+      "titre": "Lecteur en page simple",
+      "description": "Moteur de lecture minimal, une page ajustee a l ecran, navigation clavier et gestuelle, respect du sens de lecture, barres masquables.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Ouvrir un chapitre local et le lire du debut a la fin confortablement",
+        "Les fleches du clavier respectent le sens de lecture",
+        "Les barres se masquent et reapparaissent selon la specification",
+        "Le fond est noir OLED par defaut"
+      ],
+      "depend_de": ["F006", "F007", "F008"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F010",
+      "slug": "decodage-sous-echantillonne",
+      "etape": 2,
+      "titre": "Decodage sous echantillonne des images",
+      "description": "Chaine de decodage via Image I/O avec taille cible, jamais de decodage en pleine resolution hors zoom actif.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Une page de 3000 par 4500 consomme moins de 12 Mo a l affichage",
+        "La pleine resolution n est chargee que pendant un zoom actif et liberee ensuite",
+        "Un test de performance mesure la consommation memoire"
+      ],
+      "depend_de": ["F009"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F011",
+      "slug": "cache-images",
+      "etape": 2,
+      "titre": "Cache memoire et cache disque",
+      "description": "Cache LRU en memoire plafonne a six pages ou 220 Mo, cache disque separe avec purge par date d acces, reaction aux alertes memoire.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le plafond memoire n est jamais depasse",
+        "Une alerte memoire vide le cache sauf la page visible",
+        "La purge du cache disque respecte le plafond configure"
+      ],
+      "depend_de": ["F010"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F012",
+      "slug": "precharge-pages",
+      "etape": 2,
+      "titre": "Precharge des pages voisines",
+      "description": "Deux pages en avant et une en arriere dans le sens de lecture, sur une file de priorite distincte et annulable.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La precharge n interfere jamais avec le decodage de la page visible",
+        "Un changement de page annule les precharges devenues inutiles",
+        "La tourne de page en local reste sous 80 ms"
+      ],
+      "depend_de": ["F011"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F013",
+      "slug": "rognage-automatique",
+      "etape": 2,
+      "titre": "Rognage automatique des marges",
+      "description": "Detection des lignes et colonnes de faible variance proches du blanc ou du noir pur, avec marge de securite et seuil configurable.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un scan avec bordure blanche est correctement rogne",
+        "Une page a fond noir n est pas rognee a tort",
+        "Le resultat est mis en cache avec une cle integrant les parametres"
+      ],
+      "depend_de": ["F011"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F014",
+      "slug": "bibliotheque-grille",
+      "etape": 3,
+      "titre": "Bibliotheque et grille de couvertures",
+      "description": "Grille responsive, pastille de non lus, filet de progression, tri, recherche locale, etats vide et chargement.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La pastille et le filet respectent la specification de l element signature",
+        "Le defilement tient 120 images par seconde avec 5000 series",
+        "Le compteur de non lus ne declenche aucun comptage a la volee",
+        "Les trois etats de contenu existent"
+      ],
+      "depend_de": ["F003", "F008"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F015",
+      "slug": "categories",
+      "etape": 3,
+      "titre": "Categories de bibliotheque",
+      "description": "Barre de categories avec compteurs, creation, renommage, reordonnancement, affectation multiple d une serie.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "La categorie Tout est toujours en premier et non supprimable",
+        "Une serie peut appartenir a plusieurs categories",
+        "L ordre des categories est persistant"
+      ],
+      "depend_de": ["F014"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F016",
+      "slug": "fiche-serie",
+      "etape": 3,
+      "titre": "Fiche de serie et liste des chapitres",
+      "description": "En tete avec banniere floutee, metadonnees, actions contextuelles, resume repliable, liste des chapitres avec ses quatre etats, selection multiple.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le libelle du bouton principal change selon l etat de lecture",
+        "Les quatre etats de ligne de chapitre sont distinguables",
+        "La selection multiple ouvre une barre d actions contextuelle",
+        "Le filtre et le tri des chapitres sont persistants par serie"
+      ],
+      "depend_de": ["F014"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F017",
+      "slug": "reprise-lecture",
+      "etape": 3,
+      "titre": "Reprise de lecture et progression",
+      "description": "Sauvegarde de la position toutes les deux secondes et au passage en arriere plan, marquage automatique des chapitres lus.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La position survit a une fermeture brutale de l application",
+        "La position inclut le decalage de defilement en mode vertical",
+        "Un chapitre atteint a plus de 95 pour cent est marque lu"
+      ],
+      "depend_de": ["F016", "F009"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F018",
+      "slug": "historique",
+      "etape": 3,
+      "titre": "Historique de lecture",
+      "description": "Liste groupee par jour avec en tete collant, vignettes, suppression unitaire, effacement global avec confirmation.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Le regroupement par jour fonctionne y compris au passage de minuit",
+        "L etat vide affiche le texte impose",
+        "L effacement global demande confirmation"
+      ],
+      "depend_de": ["F017"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F019",
+      "slug": "reglages-structure",
+      "etape": 3,
+      "titre": "Structure des reglages",
+      "description": "Colonne de 580 centree, cartes de section, les cinq variantes de ligne de reglage, persistance de chaque valeur.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Les dix sept sections sont dans l ordre impose",
+        "Les cinq variantes de ligne existent et respectent le DESIGN-SPEC",
+        "Chaque reglage persiste et est observable de facon reactive"
+      ],
+      "depend_de": ["F008"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F020",
+      "slug": "themes-apparence",
+      "etape": 3,
+      "titre": "Themes et apparence",
+      "description": "Les quatre themes, les trois apparences, le basculement a chaud sans redemarrage.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Les quatre themes sont complets en clair et en sombre",
+        "Le basculement est instantane sur tous les ecrans ouverts",
+        "Des tests de captures couvrent chaque combinaison"
+      ],
+      "depend_de": ["F019", "F002"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F021",
+      "slug": "libarchive",
+      "etape": 4,
+      "titre": "Integration de libarchive",
+      "description": "Pont Swift vers libarchive pour RAR, RAR5, 7z, TAR et LZH, avec gestion du cas 7z solide.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Les cinq conteneurs s ouvrent correctement",
+        "Un 7z solide bascule sur extraction complete avec progression",
+        "Le dossier temporaire est supprime a la fermeture",
+        "Les formats CBA et ACE sont refuses avec un message explicatif"
+      ],
+      "depend_de": ["F005"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F022",
+      "slug": "index-tar",
+      "etape": 4,
+      "titre": "Index persistant pour les conteneurs sans index",
+      "description": "Scanner une fois les archives TAR et mettre l index resultant en cache sur disque.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La seconde ouverture d une archive TAR ne rescanne pas",
+        "L index est invalide si le fichier source change"
+      ],
+      "depend_de": ["F021"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F023",
+      "slug": "lecture-pdf",
+      "etape": 4,
+      "titre": "Lecture des fichiers PDF",
+      "description": "Implementation de DocumentLocal via PDFKit, avec rendu a la taille cible.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un PDF de 400 pages s ouvre en moins de 350 ms",
+        "Le rendu respecte la taille cible et le budget memoire",
+        "Les PDF proteges par mot de passe demandent le mot de passe"
+      ],
+      "depend_de": ["F010"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F024",
+      "slug": "formats-images-etendus",
+      "etape": 4,
+      "titre": "Formats d images etendus",
+      "description": "Prise en charge de WebP, AVIF, HEIC, JPEG 2000, JPEG XL, APNG et SVG.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Chaque format s affiche correctement",
+        "Un format non supporte affiche une page de remplacement explicite plutot qu un vide",
+        "Un jeu de fichiers de test couvre tous les formats"
+      ],
+      "depend_de": ["F010"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F025",
+      "slug": "metadonnees-comicinfo",
+      "etape": 4,
+      "titre": "Metadonnees ComicInfo et ComicBookInfo",
+      "description": "Analyse de ComicInfo.xml en priorite et du commentaire ZIP en secours, alimentation du modele.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Les champs serie, volume, numero, langue et resume sont importes",
+        "Un fichier malforme n interrompt jamais l ouverture du chapitre",
+        "Des tests couvrent au moins cinq fichiers reels differents"
+      ],
+      "depend_de": ["F021"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F026",
+      "slug": "protocole-source",
+      "etape": 5,
+      "titre": "Generalisation du protocole SourceProvider",
+      "description": "Finaliser le protocole, les capacites, la pagination, la gestion d erreur typee et le registre de sources.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "L interface n expose que les actions correspondant aux capacites declarees",
+        "Une source en echec n empeche jamais les autres de fonctionner",
+        "Les erreurs reseau sont typees et traduites en messages utilisateur"
+      ],
+      "depend_de": ["F006"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F027",
+      "slug": "ecran-parcourir",
+      "etape": 5,
+      "titre": "Ecran Parcourir et gestion des sources",
+      "description": "Liste des sources, menu d ajout a douze entrees, tri, recherche, feuilles de configuration, pastille d etat de connexion.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Le menu d ajout contient les douze entrees dans l ordre impose",
+        "Le bouton Enregistrer reste desactive tant que le test de connexion echoue",
+        "Le reordonnancement par glisser deposer fonctionne en tri personnalise"
+      ],
+      "depend_de": ["F026", "F019"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F028",
+      "slug": "trousseau-identifiants",
+      "etape": 5,
+      "titre": "Stockage des identifiants dans le trousseau",
+      "description": "Toutes les authentifications de source passent par le trousseau avec accessibilite apres premier deverrouillage.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Aucun identifiant n apparait dans UserDefaults ni dans la base",
+        "La suppression d une source supprime ses identifiants",
+        "L export de sauvegarde n inclut jamais les mots de passe"
+      ],
+      "depend_de": ["F026"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F029",
+      "slug": "source-komga",
+      "etape": 5,
+      "titre": "Source Komga",
+      "description": "Client REST complet, authentification basique, series, livres, pages, progression distante.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Connexion, parcours et lecture fonctionnent de bout en bout",
+        "La progression est synchronisee avec le serveur",
+        "Des tests avec reponses figees couvrent l analyse des reponses"
+      ],
+      "depend_de": ["F027", "F028"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F030",
+      "slug": "source-kavita",
+      "etape": 5,
+      "titre": "Source Kavita",
+      "description": "Client REST avec jeton JWT et rafraichissement automatique.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le jeton expire est rafraichi sans interruption de lecture",
+        "Connexion, parcours et lecture fonctionnent de bout en bout"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F031",
+      "slug": "source-jellyfin",
+      "etape": 5,
+      "titre": "Source Jellyfin",
+      "description": "Client REST avec cle d API, filtrage sur le type de media livre.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Seuls les elements de type livre remontent",
+        "Connexion, parcours et lecture fonctionnent de bout en bout"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F032",
+      "slug": "source-opds",
+      "etape": 5,
+      "titre": "Source OPDS",
+      "description": "Analyse Atom pour OPDS 1.2 et JSON pour OPDS 2.0, suivi des liens de pagination.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Les deux versions du protocole fonctionnent",
+        "La pagination suit correctement les liens next",
+        "Un catalogue protege par authentification basique fonctionne"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F033",
+      "slug": "partages-reseau",
+      "etape": 5,
+      "titre": "Partages SMB, NFS et WebDAV",
+      "description": "Trois clients de partage reseau avec lecture en flux, sans copie complete des fichiers.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un CBZ de 200 Mo s ouvre sans etre copie entierement en local",
+        "La perte de connexion produit une erreur claire et une possibilite de reprise",
+        "L authentification Digest fonctionne sur WebDAV"
+      ],
+      "depend_de": ["F028"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F034",
+      "slug": "icloud-drive",
+      "etape": 5,
+      "titre": "Bibliotheque iCloud Drive",
+      "description": "Source basee sur un dossier iCloud Drive, avec telechargement a la demande des fichiers non locaux.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un fichier non telecharge declenche son telechargement avec progression",
+        "La coordination de fichiers evite les conflits"
+      ],
+      "depend_de": ["F006"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F035",
+      "slug": "ecran-recherche",
+      "etape": 5,
+      "titre": "Ecran Rechercher multi sources",
+      "description": "Recherche simultanee dans toutes les sources, resultats groupes en rangees horizontales, degradation gracieuse par source.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Une source lente n empeche pas l affichage des autres",
+        "Une source en erreur affiche une ligne discrete a sa place",
+        "Le lien Tout voir ouvre la liste complete de la source"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F036",
+      "slug": "extensions-declaratives",
+      "etape": 5,
+      "titre": "Systeme d extensions declaratives",
+      "description": "Interprete de regles declaratives, manifeste signe, liste blanche de domaines, ecran de depot, avertissement explicite a l installation.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Aucun code fourni par une extension n est execute",
+        "Toute requete hors liste blanche est bloquee et journalisee",
+        "L utilisateur voit et confirme la liste des domaines avant installation",
+        "Le delai maximal de 15 secondes par requete est applique"
+      ],
+      "depend_de": ["F026"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F037",
+      "slug": "transfert-wifi",
+      "etape": 5,
+      "titre": "Transfert Wi-Fi",
+      "description": "Serveur HTTP local temporaire protege par code a six chiffres, page de depot de fichiers.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le serveur ne tourne que pendant que la feuille est ouverte",
+        "Le code a six chiffres est obligatoire",
+        "Les fichiers recus arrivent dans la source Fichiers locaux"
+      ],
+      "depend_de": ["F006"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F038",
+      "slug": "double-page",
+      "etape": 6,
+      "titre": "Mode double page",
+      "description": "Composition de paires selon le sens de lecture, couverture seule, detection des pages larges, decalage reglable.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "En droite a gauche la premiere page de la paire est a droite",
+        "Une page large est affichee seule",
+        "Le decalage de couverture est reglable et persistant",
+        "Des tests couvrent la composition dans les deux sens"
+      ],
+      "depend_de": ["F012", "F007"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F039",
+      "slug": "division-images-larges",
+      "etape": 6,
+      "titre": "Division des images larges",
+      "description": "Detection du ratio superieur a 1 et decoupe au milieu, avec ordre des moities dependant du sens de lecture.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "En droite a gauche la moitie droite vient en premier",
+        "Le decoupage n introduit aucun artefact au raccord",
+        "Des tests couvrent les deux sens"
+      ],
+      "depend_de": ["F038"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F040",
+      "slug": "defilement-continu",
+      "etape": 6,
+      "titre": "Mode defilement continu",
+      "description": "Pages empilees verticalement avec recyclage des vues et transitions nettes.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le recyclage maintient un nombre de vues vivantes constant",
+        "Le defilement tient 120 images par seconde",
+        "La position de reprise inclut le decalage de defilement"
+      ],
+      "depend_de": ["F038"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F041",
+      "slug": "webtoon-tuilage",
+      "etape": 6,
+      "titre": "Mode webtoon avec tuilage",
+      "description": "Decoupe des images longues en tuiles de 2048 pixels maximum, recyclage, budget de tuiles vivantes fixe.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Une image de 20000 pixels de haut s affiche sans echec de rendu",
+        "Le budget de tuiles vivantes n est jamais depasse",
+        "La largeur de colonne est reglable de 40 a 100 pour cent",
+        "L espacement entre pages est reglable de 0 a 24"
+      ],
+      "depend_de": ["F040"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F042",
+      "slug": "enchainement-chapitres",
+      "etape": 6,
+      "titre": "Enchainement automatique des chapitres",
+      "description": "Chargement du chapitre suivant sans quitter le lecteur, intercalaire, marquage du precedent comme lu.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "L enchainement fonctionne en mode continu et en mode webtoon",
+        "Le chapitre precedent est marque lu au passage",
+        "La fin de la serie affiche un ecran de fin explicite"
+      ],
+      "depend_de": ["F041"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F043",
+      "slug": "zones-de-toucher",
+      "etape": 6,
+      "titre": "Zones de toucher et gestes",
+      "description": "Quatre dispositions de zones, inversion optionnelle, tutoriel de premiere ouverture en surimpression.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Les quatre dispositions fonctionnent",
+        "L inversion respecte le sens de lecture",
+        "Le tutoriel apparait une seule fois et dure quatre secondes"
+      ],
+      "depend_de": ["F009"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F044",
+      "slug": "filtres-image-temps-reel",
+      "etape": 6,
+      "titre": "Filtres image en temps reel",
+      "description": "Luminosite, chaleur, nettete, contraste, gamma et reduction du bruit appliques sur le GPU via Core Image, panneau de filtres dans le lecteur.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Chaque modification s applique en direct sans a coup",
+        "L ordre de la chaine de traitement respecte la section 6.3",
+        "Les filtres n augmentent pas la consommation memoire de plus de 15 pour cent"
+      ],
+      "depend_de": ["F013"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F045",
+      "slug": "prereglages-lecture",
+      "etape": 6,
+      "titre": "Prereglages de lecture",
+      "description": "Capture de l ensemble des reglages de lecture dans un prereglage nomme, application en une action, gestion de la liste.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un prereglage capture le sens, les filtres, la teinte et les traitements",
+        "L application d un prereglage est immediate",
+        "Les prereglages sont exportes dans la sauvegarde"
+      ],
+      "depend_de": ["F044"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F046",
+      "slug": "signets",
+      "etape": 6,
+      "titre": "Signets de page",
+      "description": "Creation d un signet sur une page avec note et vignette, ecran de consultation, saut direct.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Le signet enregistre une vignette de la page",
+        "Le saut depuis l ecran des signets ouvre la bonne page",
+        "Les signets sont exportes dans la sauvegarde"
+      ],
+      "depend_de": ["F017"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F047",
+      "slug": "file-telechargements",
+      "etape": 7,
+      "titre": "File de telechargement",
+      "description": "File avec priorites, reprise apres interruption, limitation au Wi-Fi, telechargements simultanes configurables, ecran de suivi.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un telechargement interrompu reprend ou il s est arrete",
+        "La limite de telechargements simultanes est respectee",
+        "La progression par chapitre est visible et exacte"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F048",
+      "slug": "gestion-stockage",
+      "etape": 7,
+      "titre": "Gestion du stockage",
+      "description": "Trois ecrans de detail avec tailles reelles, suppression selective, suppression automatique des telechargements lus.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Les tailles affichees correspondent aux tailles reelles sur disque",
+        "La suppression automatique respecte le reglage",
+        "Aucune suppression n est possible sans confirmation"
+      ],
+      "depend_de": ["F047"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F049",
+      "slug": "storekit-premium",
+      "etape": 8,
+      "titre": "Abonnement premium avec StoreKit 2",
+      "description": "Produits, essai de sept jours, restauration des achats, verification de la transaction, mur premium.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "L essai de sept jours fonctionne",
+        "La restauration des achats est accessible depuis le mur",
+        "Le mur ne surgit jamais pendant la lecture",
+        "Des tests avec un fichier de configuration StoreKit couvrent les parcours"
+      ],
+      "depend_de": ["F019"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F050",
+      "slug": "matrice-verrouillage",
+      "etape": 8,
+      "titre": "Matrice de verrouillage premium",
+      "description": "Application de la matrice de la section 10 a toutes les fonctions concernees, degradation sans perte de donnees a l expiration.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Chaque fonction premium est effectivement verrouillee sans abonnement",
+        "L expiration ne supprime aucune donnee",
+        "Les sources premium passent en lecture seule avec une banniere explicative"
+      ],
+      "depend_de": ["F049"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F051",
+      "slug": "mode-incognito",
+      "etape": 8,
+      "titre": "Mode incognito et verrouillage de l app",
+      "description": "Session sans ecriture d historique ni de progression ni de synchronisation, verrouillage biometrique avec repli sur le code.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Aucune ecriture n a lieu pendant une session incognito",
+        "La banniere reste visible toute la session",
+        "Le verrouillage se declenche apres 30 secondes en arriere plan"
+      ],
+      "depend_de": ["F049"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F052",
+      "slug": "suivis-oauth",
+      "etape": 8,
+      "titre": "Services de suivi",
+      "description": "Connexion OAuth a AniList, MyAnimeList, Kitsu et MangaUpdates, liaison de series, synchronisation automatique optionnelle.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Les quatre services se connectent et se deconnectent proprement",
+        "La liaison propose des correspondances et permet la correction manuelle",
+        "La synchronisation automatique respecte le mode incognito"
+      ],
+      "depend_de": ["F050"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F053",
+      "slug": "amelioration-ia",
+      "etape": 9,
+      "titre": "Amelioration IA en deux fois",
+      "description": "Modele Core ML de surelevation, traitement par tuiles avec recouvrement, acteur dedie a file serialisee, cache du resultat.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le traitement se fait par tuiles de 256 avec recouvrement de 16",
+        "Aucun raccord visible entre les tuiles",
+        "Deux traitements ne tournent jamais en parallele",
+        "Le resultat est mis en cache et jamais recalcule"
+      ],
+      "depend_de": ["F050"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F054",
+      "slug": "colorisation-ia",
+      "etape": 9,
+      "titre": "Colorisation par IA",
+      "description": "Modele Core ML de colorisation, meme architecture d execution que la surelevation.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La colorisation fonctionne sur une page en noir et blanc",
+        "Le resultat est mis en cache",
+        "La licence du modele est verifiee et documentee dans le depot"
+      ],
+      "depend_de": ["F053"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F055",
+      "slug": "detection-cases",
+      "etape": 9,
+      "titre": "Detection de cases et zoom automatique",
+      "description": "Detecteur Core ML de cases, navigation case par case, mention de provenance du jeu de donnees dans A propos.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La navigation case par case suit le sens de lecture",
+        "La licence du jeu de donnees est verifiee et documentee",
+        "La mention de provenance apparait dans la section A propos"
+      ],
+      "depend_de": ["F053"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F056",
+      "slug": "traduction",
+      "etape": 9,
+      "titre": "Traduction des bulles",
+      "description": "Detection de texte par Vision, traduction sur l appareil, rendu en surimpression sur bulle floutee, option de moteur dans le nuage.",
+      "skills": ["design-systeme", "developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Le texte traduit reste lisible et ne deborde pas de la bulle",
+        "Le moteur sur l appareil fonctionne sans reseau",
+        "Le moteur dans le nuage est explicitement opt in et signale a l utilisateur"
+      ],
+      "depend_de": ["F055"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F057",
+      "slug": "sauvegarde-restauration",
+      "etape": 10,
+      "titre": "Sauvegarde et restauration",
+      "description": "Export d une archive contenant un JSON versionne, import avec choix entre fusion et remplacement, exclusion des mots de passe.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Un cycle complet export puis import restitue l etat a l identique",
+        "Aucun mot de passe n est present dans l export",
+        "L import d une version anterieure du format est migre automatiquement"
+      ],
+      "depend_de": ["F050"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F058",
+      "slug": "synchronisation-icloud",
+      "etape": 10,
+      "titre": "Synchronisation iCloud",
+      "description": "Couche explicite au dessus de CloudKit avec journal de changements, resolution de conflit par horodatage, indicateur d etat.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La progression de lecture se propage entre deux appareils en moins de 30 secondes",
+        "Un conflit est resolu de facon deterministe et documentee",
+        "Le mode hors ligne accumule les changements et les rejoue a la reconnexion"
+      ],
+      "depend_de": ["F057"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F059",
+      "slug": "statistiques-lecture",
+      "etape": 10,
+      "titre": "Statistiques de lecture et objectif quotidien",
+      "description": "Ecran de statistiques, serie de jours consecutifs, objectif quotidien configurable, notification de rappel optionnelle.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Les statistiques ne comptabilisent pas les sessions incognito",
+        "L objectif quotidien est configurable de 1 a 20 chapitres",
+        "Aucune formulation culpabilisante dans les textes"
+      ],
+      "depend_de": ["F018"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F060",
+      "slug": "notifications-chapitres",
+      "etape": 10,
+      "titre": "Notifications de nouveaux chapitres",
+      "description": "Verification periodique en arriere plan des sources declarant la capacite, regroupement des notifications, respect du mode incognito.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La verification en arriere plan respecte les quotas du systeme",
+        "Les notifications sont regroupees par serie",
+        "Aucune notification n est emise en mode incognito"
+      ],
+      "depend_de": ["F029"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F061",
+      "slug": "pont-navigateur",
+      "etape": 10,
+      "titre": "Pont navigateur",
+      "description": "Socket locale authentifiee par jeton permettant a une extension de navigateur d envoyer une serie vers l application.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "La socket n accepte que les connexions locales authentifiees",
+        "Le pont est desactive par defaut",
+        "La revocation du jeton est immediate"
+      ],
+      "depend_de": ["F036"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F062",
+      "slug": "premiere-ouverture",
+      "etape": 11,
+      "titre": "Parcours de premiere ouverture",
+      "description": "Trois etapes maximum, une decision par etape, bouton Plus tard aussi visible que le bouton d essai.",
+      "skills": ["design-systeme", "developpement-swift"],
+      "criteres": [
+        "Le parcours ne depasse pas trois etapes",
+        "Le bouton Plus tard a le meme poids visuel que le bouton d essai",
+        "Le parcours peut etre rejoue depuis les reglages"
+      ],
+      "depend_de": ["F049"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F063",
+      "slug": "accessibilite",
+      "etape": 11,
+      "titre": "Accessibilite complete",
+      "description": "Contrastes verifies, cibles de pointage, focus clavier visible, texte dynamique jusqu a la taille accessibilite extra extra large, etiquettes VoiceOver.",
+      "skills": ["design-systeme", "tests-qualite"],
+      "criteres": [
+        "Chaque paire de jetons respecte le contraste minimal",
+        "Le focus clavier est visible partout et jamais supprime",
+        "Les lignes de reglages passent en disposition verticale aux grandes tailles",
+        "Aucune information n est transmise par la couleur seule",
+        "Un audit VoiceOver complet est passe sur les dix ecrans"
+      ],
+      "depend_de": ["F020"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F064",
+      "slug": "localisation",
+      "etape": 11,
+      "titre": "Localisation",
+      "description": "Catalogue de chaines complet en francais, anglais, espagnol et japonais, aucune chaine en dur.",
+      "skills": ["developpement-swift", "tests-qualite"],
+      "criteres": [
+        "Aucune chaine en dur ne subsiste dans les vues",
+        "Les quatre langues sont completes",
+        "Un test echoue si une cle de traduction manque dans une langue",
+        "L architecture n empeche pas l ajout ulterieur d une langue de droite a gauche"
+      ],
+      "depend_de": ["F062"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F065",
+      "slug": "budgets-performance",
+      "etape": 11,
+      "titre": "Validation des budgets de performance",
+      "description": "Jeu de test de 5000 series et 200000 chapitres, tests de performance qui echouent si un budget est depasse.",
+      "skills": ["tests-qualite", "developpement-swift"],
+      "criteres": [
+        "Le jeu de test existe dans le depot et se genere par script",
+        "Les sept budgets de la section 12 sont mesures automatiquement",
+        "Un depassement fait echouer la chaine d integration continue"
+      ],
+      "depend_de": ["F064"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F066",
+      "slug": "signature-notarisation",
+      "etape": 11,
+      "titre": "Signature, notarisation et empaquetage DMG",
+      "description": "Signature avec identifiant de developpeur, notarisation Apple, agrafage, generation du DMG avec fond et lien vers Applications.",
+      "skills": ["release-dmg"],
+      "criteres": [
+        "Le DMG s ouvre sur une machine tierce sans avertissement Gatekeeper",
+        "spctl valide l application",
+        "Le DMG contient le lien vers le dossier Applications",
+        "Le script fonctionne en local et dans l integration continue"
+      ],
+      "depend_de": ["F065"],
+      "statut": "a_faire"
+    },
+    {
+      "id": "F067",
+      "slug": "release-github",
+      "etape": 11,
+      "titre": "Publication de la version sur GitHub",
+      "description": "Chaine automatisee declenchee par une etiquette de version, produisant une release GitHub avec le DMG, la somme de controle et les notes de version.",
+      "skills": ["release-dmg"],
+      "criteres": [
+        "Une etiquette v1.0.0 declenche la chaine complete",
+        "La release contient le DMG et son fichier de somme SHA 256",
+        "Les notes de version sont generees depuis les messages de commit",
+        "La release est marquee comme brouillon jusqu a validation manuelle"
+      ],
+      "depend_de": ["F066"],
+      "statut": "a_faire"
+    }
+  ]
+}

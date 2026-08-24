@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#0E0E10"/>
+  <rect x="24" y="24" width="1392" height="852" rx="18" fill="#131315" stroke="#303034"/>
+  <rect x="24" y="24" width="1392" height="60" fill="#161618"/>
+  <line x1="24" y1="84" x2="1416" y2="84" stroke="#2A2A2E"/>
+  <circle cx="52" cy="54" r="6" fill="#3A3A3E"/><circle cx="72" cy="54" r="6" fill="#3A3A3E"/><circle cx="92" cy="54" r="6" fill="#3A3A3E"/>
+  <text x="172" y="60" fill="#F2F2F7" font-size="17" font-weight="700">Bibliotheque</text>
+  <rect x="1186" y="40" width="206" height="28" rx="8" fill="#202023" stroke="#303034"/>
+  <text x="1206" y="59" fill="#6E6E73" font-size="13">Rechercher la bibliotheque</text>
+
+  <!-- Barre laterale reduite -->
+  <rect x="36" y="94" width="196" height="770" rx="14" fill="#1B1B1D" stroke="#2A2A2E"/>
+  <rect x="46" y="106" width="176" height="40" rx="10" fill="#3A3A3E"/>
+  <text x="86" y="131" fill="#F2F2F7" font-size="14" font-weight="600">Bibliotheque</text>
+  <text x="86" y="175" fill="#C7C7CC" font-size="14">Historique</text>
+  <text x="86" y="217" fill="#C7C7CC" font-size="14">Parcourir</text>
+  <text x="86" y="259" fill="#C7C7CC" font-size="14">Rechercher</text>
+  <text x="86" y="300" fill="#C7C7CC" font-size="14">Reglages</text>
+
+  <!-- Barre de categories -->
+  <rect x="256" y="102" width="96" height="30" rx="8" fill="#2C2C30"/>
+  <text x="304" y="122" fill="#F2F2F7" font-size="13" text-anchor="middle" font-weight="600">Tout  128</text>
+  <text x="382" y="122" fill="#8E8E93" font-size="13">En cours  24</text>
+  <text x="486" y="122" fill="#8E8E93" font-size="13">Termines  61</text>
+  <text x="596" y="122" fill="#8E8E93" font-size="13">Prevus  43</text>
+
+  <!-- Grille de couvertures -->
+  <g>
+    <g transform="translate(256 156)">
+      <rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/>
+      <rect x="118" y="10" width="40" height="20" rx="10" fill="#0A84FF"/>
+      <text x="138" y="24" fill="#FFFFFF" font-size="11" text-anchor="middle" font-weight="700">12</text>
+      <rect x="0" y="208" width="168" height="40" rx="0" fill="#0E0E1088"/>
+      <text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text>
+      <text x="10" y="288" fill="#8E8E93" font-size="11">MangaDex</text>
+      <rect x="0" y="244" width="112" height="4" fill="#0A84FF"/>
+    </g>
+    <g transform="translate(444 156)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text><text x="10" y="288" fill="#8E8E93" font-size="11">Komga</text></g>
+    <g transform="translate(632 156)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text><text x="10" y="288" fill="#8E8E93" font-size="11">Fichiers locaux</text></g>
+    <g transform="translate(820 156)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text><text x="10" y="288" fill="#8E8E93" font-size="11">Kavita</text></g>
+    <g transform="translate(1008 156)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text><text x="10" y="288" fill="#8E8E93" font-size="11">OPDS</text></g>
+    <g transform="translate(1196 156)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text><text x="10" y="288" fill="#8E8E93" font-size="11">SMB</text></g>
+
+    <g transform="translate(256 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+    <g transform="translate(444 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+    <g transform="translate(632 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+    <g transform="translate(820 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+    <g transform="translate(1008 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+    <g transform="translate(1196 460)"><rect width="168" height="248" rx="10" fill="#26262A" stroke="#303034"/><text x="10" y="270" fill="#F2F2F7" font-size="13" font-weight="600">Titre du manga</text></g>
+  </g>
+
+  <g font-size="11" fill="#0A84FF">
+    <line x1="424" y1="180" x2="470" y2="180" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="430" y="146">Pastille bleue : nombre de chapitres non lus</text>
+    <text x="256" y="796" fill="#6E6E73">Grille responsive, ratio couverture 2:3, gouttiere 20, largeur mini carte 150, maxi 200</text>
+    <text x="256" y="816" fill="#6E6E73">Barre de progression bleue en bas de la couverture pour les series commencees</text>
+    <text x="256" y="836" fill="#6E6E73">Survol : elevation legere, echelle 1.02, revelation du bouton contextuel en haut a droite</text>
+  </g>
+</svg>

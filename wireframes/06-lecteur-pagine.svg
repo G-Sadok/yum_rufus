@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#000000"/>
+
+  <!-- Zones de toucher -->
+  <rect x="0" y="0" width="400" height="900" fill="#0A84FF" opacity="0.06"/>
+  <rect x="400" y="0" width="640" height="900" fill="#FFFFFF" opacity="0.03"/>
+  <rect x="1040" y="0" width="400" height="900" fill="#0A84FF" opacity="0.06"/>
+  <text x="200" y="850" fill="#0A84FF" font-size="12" text-anchor="middle" opacity="0.8">Zone gauche : page suivante en mode droite a gauche</text>
+  <text x="720" y="850" fill="#98989D" font-size="12" text-anchor="middle" opacity="0.8">Zone centrale : afficher ou masquer les barres</text>
+  <text x="1240" y="850" fill="#0A84FF" font-size="12" text-anchor="middle" opacity="0.8">Zone droite : page precedente</text>
+
+  <!-- Double page -->
+  <rect x="418" y="96" width="290" height="620" fill="#1A1A1C" stroke="#2E2E32"/>
+  <rect x="712" y="96" width="290" height="620" fill="#1A1A1C" stroke="#2E2E32"/>
+  <text x="563" y="410" fill="#3A3A3E" font-size="14" text-anchor="middle">Page 43</text>
+  <text x="857" y="410" fill="#3A3A3E" font-size="14" text-anchor="middle">Page 42</text>
+  <text x="710" y="740" fill="#5A5A5F" font-size="11" text-anchor="middle">Double page, page de droite lue en premier en mode droite a gauche</text>
+
+  <!-- Barre superieure -->
+  <rect x="0" y="0" width="1440" height="72" fill="#131315" opacity="0.94"/>
+  <path d="M40 30 L28 40 L40 50" stroke="#F2F2F7" stroke-width="2" fill="none"/>
+  <text x="64" y="34" fill="#F2F2F7" font-size="15" font-weight="600">Titre de la serie</text>
+  <text x="64" y="54" fill="#8E8E93" font-size="12">Chapitre 43  Le titre du chapitre</text>
+  <g fill="none" stroke="#F2F2F7" stroke-width="1.8">
+    <rect x="1156" y="26" width="20" height="20" rx="4"/>
+    <path d="M1216 26 v20 M1206 36 h20"/>
+    <circle cx="1276" cy="36" r="10"/>
+    <path d="M1336 28 h20 v16 h-20 z"/>
+    <path d="M1392 26 v20 M1382 36 h20"/>
+  </g>
+  <text x="1166" y="62" fill="#6E6E73" font-size="9" text-anchor="middle">Filtres</text>
+  <text x="1216" y="62" fill="#6E6E73" font-size="9" text-anchor="middle">Traduire</text>
+  <text x="1276" y="62" fill="#6E6E73" font-size="9" text-anchor="middle">Coloriser</text>
+  <text x="1346" y="62" fill="#6E6E73" font-size="9" text-anchor="middle">Signet</text>
+  <text x="1392" y="62" fill="#6E6E73" font-size="9" text-anchor="middle">Options</text>
+
+  <!-- Barre inferieure -->
+  <rect x="0" y="756" width="1440" height="64" fill="#131315" opacity="0.94"/>
+  <text x="40" y="794" fill="#F2F2F7" font-size="13">42 / 22</text>
+  <rect x="120" y="786" width="1120" height="4" rx="2" fill="#3A3A3E"/>
+  <rect x="120" y="786" width="740" height="4" rx="2" fill="#0A84FF"/>
+  <circle cx="860" cy="788" r="8" fill="#FFFFFF"/>
+  <text x="1300" y="794" fill="#0A84FF" font-size="13">Chapitre suivant</text>
+  <text x="120" y="812" fill="#5A5A5F" font-size="10">Curseur inverse en mode droite a gauche, vignettes des pages au survol prolonge</text>
+
+  <g font-size="11" fill="#6E6E73">
+    <text x="40" y="110">Fond noir OLED par defaut, reglable</text>
+    <text x="40" y="130">Barres masquees par defaut, revelees au tap central</text>
+    <text x="40" y="150">Masquage automatique au glissement si l option est active</text>
+  </g>
+</svg>

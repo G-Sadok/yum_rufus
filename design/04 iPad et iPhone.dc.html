@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body { margin:0; background:#0A0A0B; -webkit-font-smoothing:antialiased; }
+  a { color:#0A84FF; text-decoration:none; }
+  a:hover { color:#409CFF; }
+</style>
+</helmet>
+<div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;width:1440px;box-sizing:border-box;padding:48px 80px 72px;display:flex;flex-direction:column;gap:40px;background:{{ c.canvas }}">
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;border-bottom:1px solid {{ c.sep }};padding-bottom:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:{{ c.tq }}">Livrable 4 sur 6, Yum</div>
+        <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em;color:{{ c.tp }}">Declinaisons iPad et iPhone</div>
+        <div style="font-size:13px;line-height:18px;color:{{ c.tt }};max-width:660px">{{ screenNote }}</div>
+      </div>
+      <div style="font-size:11px;line-height:16px;color:{{ c.tq }};max-width:300px;text-align:right">Les trois appareils sont dessines a leurs pixels reels, sans mise a l echelle. iPad 11 pouces en paysage et en portrait, iPhone au gabarit 393 par 852.</div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+      <div style="display:flex;gap:6px">
+        <sc-for list="{{ screenTabs }}" as="tb" hint-placeholder-count="5">
+          <div onClick="{{ tb.go }}" style="height:30px;padding:0 14px;border-radius:9999px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }};font-weight:{{ tb.weight }}">{{ tb.label }}</div>
+        </sc-for>
+      </div>
+      <div style="flex:1"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:11px;color:{{ c.tt }}">Apparence</div>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:9px;background:{{ c.card }}">
+          <sc-for list="{{ modeTabs }}" as="mt" hint-placeholder-count="2">
+            <div onClick="{{ mt.go }}" style="height:24px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ mt.bg }};color:{{ mt.fg }};font-weight:{{ mt.weight }}">{{ mt.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:11px;color:{{ c.tt }}">Theme</div>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:9px;background:{{ c.card }}">
+          <sc-for list="{{ themeTabs }}" as="th" hint-placeholder-count="4">
+            <div onClick="{{ th.go }}" style="height:24px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ th.bg }};color:{{ th.fg }};font-weight:{{ th.weight }}">{{ th.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-for list="{{ devices }}" as="dv" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:14px;width:{{ dv.wrapW }}">
+      <div style="display:flex;align-items:baseline;gap:12px">
+        <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ dv.label }}</div>
+        <div style="font-size:11px;color:{{ c.tq }};font-variant-numeric:tabular-nums">{{ dv.spec }}</div>
+      </div>
+
+      <div style="width:{{ dv.w }};height:{{ dv.h }};border-radius:{{ dv.radius }};overflow:hidden;position:relative;box-shadow:0 30px 90px rgba(0,0,0,0.45);background:{{ dv.shellBg }}">
+
+        <div style="position:absolute;left:0;right:0;top:0;height:{{ dv.statusH }};display:flex;align-items:{{ dv.statusAlign }};justify-content:space-between;padding:{{ dv.statusPad }};box-sizing:border-box;z-index:4">
+          <div style="font-size:12px;font-weight:600;color:{{ dv.statusFg }};font-variant-numeric:tabular-nums">21:04</div>
+          <div style="display:flex;align-items:center;gap:5px">
+            <div style="width:16px;height:10px;border-radius:2px;background:{{ dv.statusFg }}"></div>
+            <div style="width:14px;height:10px;border-radius:2px;background:{{ dv.statusFg }};opacity:0.55"></div>
+            <div style="width:22px;height:11px;border-radius:3px;box-shadow:inset 0 0 0 1.2px {{ dv.statusFg }};position:relative">
+              <div style="position:absolute;left:2px;top:2px;bottom:2px;width:13px;border-radius:1px;background:{{ dv.statusFg }}"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:0;right:0;top:0;bottom:0;display:{{ dv.dApp }};flex-direction:column;padding-top:{{ dv.statusH }};box-sizing:border-box">
+
+          <div style="flex:1;min-height:0;display:flex">
+
+            <div style="display:{{ dv.dRail }};width:{{ dv.railW }};flex:none;padding:{{ dv.railPad }};box-sizing:border-box">
+              <div style="width:100%;height:100%;border-radius:14px;box-sizing:border-box;padding:{{ dv.railInner }};display:flex;flex-direction:column;gap:2px;background:{{ c.sidebar }}">
+                <sc-for list="{{ dv.rail }}" as="rl" hint-placeholder-count="5">
+                  <div style="height:40px;border-radius:10px;display:flex;align-items:center;gap:12px;padding-left:{{ dv.railItemPad }};box-sizing:border-box;justify-content:{{ dv.railJustify }};background:{{ rl.bg }}">
+                    <div style="width:20px;height:20px;flex:none;border-radius:{{ rl.glyphRadius }};box-shadow:inset 0 0 0 1.6px {{ rl.icon }}"></div>
+                    <div style="font-size:14px;color:{{ rl.fg }};font-weight:{{ rl.weight }};display:{{ dv.dRailLabel }}">{{ rl.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:{{ c.canvas }}">
+
+              <div style="height:{{ dv.navH }};flex:none;display:flex;align-items:center;gap:12px;padding:0 {{ dv.margin }};box-sizing:border-box;background:{{ dv.navBg }};border-bottom:1px solid {{ dv.navLine }}">
+                <div style="display:{{ dv.dBack }};width:28px;height:28px;align-items:center;justify-content:center;flex:none">
+                  <div style="width:10px;height:17px;clip-path:polygon(100% 0,0 50%,100% 100%);background:{{ c.accent }}"></div>
+                </div>
+                <div style="font-size:{{ dv.titleSize }};font-weight:700;color:{{ c.tp }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ navTitle }}</div>
+                <div style="flex:1"></div>
+                <div style="display:{{ dv.dSearchField }};align-items:center;gap:8px;height:32px;border-radius:9px;padding:0 12px;box-sizing:border-box;width:242px;background:{{ c.field }};border:1px solid {{ c.border }}">
+                  <div style="width:11px;height:11px;border-radius:6px;box-shadow:inset 0 0 0 1.5px {{ c.tt }};flex:none"></div>
+                  <div style="font-size:13px;color:{{ c.tq }};white-space:nowrap">{{ dv.searchPlaceholder }}</div>
+                </div>
+                <div style="display:{{ dv.dNavIcons }};align-items:center;gap:8px">
+                  <div style="display:{{ dv.dPlusIcon }};width:44px;height:44px;border-radius:9px;align-items:center;justify-content:center">
+                    <div style="position:relative;width:16px;height:16px">
+                      <div style="position:absolute;left:0;right:0;top:7px;height:2px;border-radius:1px;background:{{ c.accent }}"></div>
+                      <div style="position:absolute;top:0;bottom:0;left:7px;width:2px;border-radius:1px;background:{{ c.accent }}"></div>
+                    </div>
+                  </div>
+                  <div style="display:{{ dv.dOptionsIcon }};width:44px;height:44px;border-radius:9px;align-items:center;justify-content:center;gap:3px">
+                    <div style="width:4px;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+                    <div style="width:4px;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+                    <div style="width:4px;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="flex:1;min-height:0;overflow:hidden;position:relative">
+
+                <div style="display:{{ dv.dLibrary }};flex-direction:column;height:100%">
+                  <div style="display:flex;gap:6px;padding:10px {{ dv.margin }} 12px;flex:none;overflow:hidden">
+                    <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="4">
+                      <div style="height:28px;padding:0 12px;border-radius:9999px;display:flex;align-items:center;gap:7px;flex:none;background:{{ cat.bg }}">
+                        <div style="font-size:13px;color:{{ cat.fg }};font-weight:{{ cat.weight }}">{{ cat.label }}</div>
+                        <div style="font-size:11px;color:{{ cat.count }};font-variant-numeric:tabular-nums">{{ cat.n }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="flex:1;min-height:0;overflow:hidden;padding:0 {{ dv.margin }}">
+                    <div style="display:grid;grid-template-columns:{{ dv.gridCols }};gap:{{ dv.gridGap }}">
+                      <sc-for list="{{ dv.cards }}" as="lc" hint-placeholder-count="8">
+                        <div style="display:flex;flex-direction:column;gap:8px">
+                          <div style="position:relative;width:100%;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:{{ lc.bg }}">
+                            <div style="position:absolute;left:{{ lc.mx }};top:{{ lc.my }};width:{{ lc.ms }};height:{{ lc.ms }};border-radius:{{ lc.mr }};background:{{ lc.mc }}"></div>
+                            <div style="position:absolute;left:0;right:0;top:{{ lc.bt }};height:10px;background:{{ lc.bc }}"></div>
+                            <div style="position:absolute;left:10px;right:10px;bottom:12px;font-size:12px;font-weight:700;line-height:15px;color:{{ lc.tc }}">{{ lc.coverTitle }}</div>
+                            <div style="position:absolute;top:10px;right:10px;height:20px;min-width:20px;border-radius:10px;padding:0 8px;box-sizing:border-box;background:{{ c.accent }};display:{{ lc.badgeDisplay }};align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums">{{ lc.unread }}</div>
+                            <div style="position:absolute;left:0;bottom:0;height:4px;background:{{ c.accent }};width:{{ lc.progress }}"></div>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:2px">
+                            <div style="font-size:13px;font-weight:600;line-height:16px;color:{{ c.tp }}">{{ lc.title }}</div>
+                            <div style="font-size:11px;color:{{ c.tt }}">{{ lc.source }}</div>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:{{ dv.dBrowse }};flex-direction:column;gap:10px;padding:14px {{ dv.margin }};box-sizing:border-box;height:100%;overflow:hidden">
+                  <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">5 installees</div>
+                  <sc-for list="{{ sources }}" as="so" hint-placeholder-count="5">
+                    <div style="min-height:72px;border-radius:12px;display:flex;align-items:center;gap:14px;padding:12px 16px;box-sizing:border-box;flex:none;background:{{ c.card }}">
+                      <div style="width:40px;height:40px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ so.iconBg }}">
+                        <div style="width:18px;height:18px;border-radius:{{ so.glyphRadius }};background:{{ so.glyph }}"></div>
+                      </div>
+                      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ so.name }}</div>
+                        <div style="font-size:12px;color:{{ c.tt }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ so.sub }}</div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:7px;flex:none">
+                        <div style="width:8px;height:8px;border-radius:4px;display:{{ so.dotDisplay }};background:{{ so.dot }}"></div>
+                        <div style="font-size:12px;color:{{ c.ts }};display:{{ dv.dSourceStatus }}">{{ so.status }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="display:{{ dv.dSettings }};flex-direction:column;align-items:center;height:100%;overflow:hidden;padding:{{ dv.settingsPad }};box-sizing:border-box">
+                  <div style="width:{{ dv.columnW }};display:flex;flex-direction:column;gap:28px">
+                    <sc-for list="{{ dv.settings }}" as="ss" hint-placeholder-count="4">
+                      <div style="display:flex;flex-direction:column">
+                        <div style="font-size:15px;font-weight:700;color:{{ c.tp }};padding-bottom:14px">{{ ss.title }}</div>
+                        <div style="border-radius:12px;overflow:hidden;background:{{ c.card }}">
+                          <sc-for list="{{ ss.rows }}" as="r" hint-placeholder-count="3">
+                            <div style="min-height:52px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:0 20px;border-top:{{ r.border }};background:{{ r.bg }}">
+                              <div style="width:22px;height:22px;flex:none;border-radius:{{ r.glyphRadius }};box-shadow:inset 0 0 0 1.6px {{ c.accent }}"></div>
+                              <div style="flex:1;min-width:0;font-size:15px;color:{{ r.fg }}">{{ r.label }}</div>
+                              <div style="font-size:15px;color:{{ r.valueFg }};display:{{ r.dValue }};white-space:nowrap">{{ r.value }}</div>
+                              <div style="display:{{ r.dChevronPair }};flex-direction:column;gap:4px;flex:none">
+                                <div style="width:10px;height:5px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.tt }}"></div>
+                                <div style="width:10px;height:5px;clip-path:polygon(50% 100%,100% 0,0 0);background:{{ c.tt }}"></div>
+                              </div>
+                              <div style="display:{{ r.dChevron }};width:8px;height:14px;clip-path:polygon(0 0,100% 50%,0 100%);background:{{ c.tt }};flex:none"></div>
+                              <div style="display:{{ r.dToggle }};width:48px;height:28px;border-radius:14px;position:relative;flex:none;background:{{ r.track }}">
+                                <div style="position:absolute;top:2px;left:{{ r.knobLeft }};width:24px;height:24px;border-radius:12px;background:#FFFFFF"></div>
+                              </div>
+                              <div style="display:{{ r.dCrown }};width:22px;height:15px;flex:none;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:{{ c.accent }}"></div>
+                            </div>
+                          </sc-for>
+                        </div>
+                        <div style="display:{{ ss.dDesc }};font-size:12px;line-height:16px;color:{{ c.tt }};padding-top:12px">{{ ss.desc }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display:{{ dv.dSeries }};flex-direction:column;height:100%;overflow:hidden">
+                  <div style="height:{{ dv.bannerH }};flex:none;position:relative;overflow:hidden">
+                    <div style="position:absolute;inset:-40px;filter:blur(40px);background:#E8E4DC">
+                      <div style="position:absolute;left:22%;top:14%;width:44%;height:44%;border-radius:50%;background:#1B1B1D"></div>
+                      <div style="position:absolute;left:0;right:0;top:62%;height:12%;background:#C2382B"></div>
+                    </div>
+                    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55)"></div>
+                    <div style="position:absolute;inset:0;padding:{{ dv.bannerPad }};box-sizing:border-box;display:flex;flex-direction:{{ dv.seriesDir }};align-items:{{ dv.seriesAlign }};gap:{{ dv.seriesGap }};text-align:{{ dv.seriesText }}">
+                      <div style="width:{{ dv.coverW }};height:{{ dv.coverH }};border-radius:10px;overflow:hidden;position:relative;flex:none;background:#E8E4DC">
+                        <div style="position:absolute;left:12%;top:14%;width:70%;height:47%;border-radius:50%;background:#1B1B1D"></div>
+                        <div style="position:absolute;left:0;right:0;top:68%;height:7%;background:#C2382B"></div>
+                        <div style="position:absolute;left:10px;right:10px;bottom:12px;font-size:13px;font-weight:700;line-height:16px;color:#1B1B1D">Vagabond de la nuit blanche</div>
+                      </div>
+                      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;align-items:{{ dv.seriesAlign }}">
+                        <div style="font-size:{{ dv.displaySize }};font-weight:700;line-height:{{ dv.displayLine }};letter-spacing:-0.02em;color:#F2F2F7">Vagabond de la nuit blanche</div>
+                        <div style="font-size:13px;color:#C7C7CC">Haruna Sekiguchi  et  Toru Anno</div>
+                        <div style="font-size:12px;color:#8E8E93;display:{{ dv.dMeta }}">En cours  japonais  Komga serveur maison</div>
+                        <div style="display:{{ dv.dGenres }};gap:8px;flex-wrap:wrap;justify-content:{{ dv.seriesJustify }}">
+                          <sc-for list="{{ genres }}" as="g" hint-placeholder-count="4">
+                            <div style="height:22px;padding:0 11px;border-radius:11px;display:flex;align-items:center;font-size:11px;color:#C7C7CC;background:rgba(255,255,255,0.14)">{{ g }}</div>
+                          </sc-for>
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:4px;justify-content:{{ dv.seriesJustify }}">
+                          <div style="height:{{ dv.ctaH }};padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }}">Reprendre ch. 146</div>
+                          <div style="height:{{ dv.ctaH }};padding:0 16px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:#F2F2F7;background:rgba(255,255,255,0.16)">Dans ma liste</div>
+                          <div style="width:{{ dv.ctaH }};height:{{ dv.ctaH }};border-radius:10px;display:flex;align-items:center;justify-content:center;gap:3px;background:rgba(255,255,255,0.16)">
+                            <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                            <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                            <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:20px {{ dv.margin }};box-sizing:border-box">
+                    <div style="width:{{ dv.columnW }};display:flex;flex-direction:column;gap:16px">
+                      <div style="font-size:13px;line-height:18px;color:{{ c.ts }}">Un ronin sans maitre traverse un pays qui n a plus besoin de sabres. A chaque village il croise quelqu un qui a survecu a la meme guerre que lui.</div>
+                      <div style="display:flex;align-items:center;gap:16px">
+                        <div style="font-size:17px;font-weight:700;color:{{ c.tp }};font-variant-numeric:tabular-nums">148 chapitres</div>
+                        <div style="flex:1"></div>
+                        <div style="font-size:13px;color:{{ c.accentText }}">Filtrer</div>
+                        <div style="font-size:13px;color:{{ c.accentText }};display:{{ dv.dSeriesActions }}">Trier</div>
+                        <div style="font-size:13px;color:{{ c.accentText }};display:{{ dv.dSeriesActions }}">Tout marquer lu</div>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:6px">
+                        <sc-for list="{{ dv.chapters }}" as="ch" hint-placeholder-count="5">
+                          <div style="height:56px;border-radius:10px;display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;flex:none;background:{{ ch.bg }}">
+                            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;overflow:hidden">
+                              <div style="font-size:15px;color:{{ ch.fg }};font-weight:{{ ch.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ch.title }}</div>
+                              <div style="font-size:12px;color:{{ ch.subFg }};font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ch.sub }}</div>
+                            </div>
+                            <div style="width:12px;height:12px;border-radius:6px;display:{{ ch.dotDisplay }};background:{{ c.accent }};flex:none"></div>
+                            <div style="position:absolute;left:0;bottom:0;height:3px;background:rgba(10,132,255,0.6);width:{{ ch.progress }}"></div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div style="display:{{ dv.dTabBar }};flex:none;height:83px;flex-direction:column;background:{{ dv.navBg }};border-top:1px solid {{ dv.navLine }}">
+                <div style="height:49px;display:flex;align-items:center">
+                  <sc-for list="{{ tabBar }}" as="tbi" hint-placeholder-count="5">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                      <div style="width:22px;height:22px;border-radius:{{ tbi.glyphRadius }};box-shadow:inset 0 0 0 1.7px {{ tbi.fg }}"></div>
+                      <div style="font-size:10px;color:{{ tbi.fg }};font-weight:{{ tbi.weight }}">{{ tbi.label }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="flex:1;display:flex;align-items:center;justify-content:center">
+                  <div style="width:140px;height:5px;border-radius:3px;background:{{ c.tt }};opacity:0.6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;inset:0;display:{{ dv.dReader }};align-items:center;justify-content:center;gap:4px;background:#000000">
+          <sc-for list="{{ dv.pages }}" as="pg" hint-placeholder-count="2">
+            <div style="width:{{ pg.w }};height:{{ pg.h }};flex:none;background:#FFFFFF;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.35fr 1fr 0.75fr;gap:7px;padding:9px;box-sizing:border-box">
+              <div style="grid-column:1 / span 2;background:#D9D9DE;box-shadow:inset 0 0 0 2px #1B1B1D"></div>
+              <div style="background:#E6E6EA;box-shadow:inset 0 0 0 2px #1B1B1D"></div>
+              <div style="background:#C9C9D0;box-shadow:inset 0 0 0 2px #1B1B1D"></div>
+              <div style="grid-column:1 / span 2;background:#EFEFF2;box-shadow:inset 0 0 0 2px #1B1B1D"></div>
+            </div>
+          </sc-for>
+
+          <div style="position:absolute;left:0;right:0;top:0;height:{{ dv.readerTopH }};display:flex;align-items:flex-end;gap:16px;padding:0 20px 12px;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex:none">
+              <div style="width:11px;height:18px;clip-path:polygon(100% 0,0 50%,100% 100%);background:{{ c.accent }}"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+              <div style="font-size:15px;font-weight:700;color:{{ c.tp }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Vagabond de la nuit blanche</div>
+              <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">Chapitre 146, Le pont de Sanjo</div>
+            </div>
+            <div style="flex:1"></div>
+            <sc-for list="{{ dv.readerActions }}" as="ra" hint-placeholder-count="5">
+              <div style="height:34px;min-width:34px;padding:0 12px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:7px;flex:none;background:{{ c.menu }}">
+                <div style="width:15px;height:15px;border-radius:{{ ra.glyphRadius }};box-shadow:inset 0 0 0 1.5px {{ c.tp }}"></div>
+                <div style="font-size:13px;color:{{ c.tp }};display:{{ dv.dReaderActionLabel }}">{{ ra.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="position:absolute;left:0;right:0;bottom:0;height:{{ dv.readerBottomH }};display:flex;align-items:flex-start;gap:16px;padding:16px 20px 0;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+            <div style="font-size:13px;color:{{ c.ts }};font-variant-numeric:tabular-nums;width:66px;flex:none">14 / 38</div>
+            <div style="flex:1;height:32px;display:flex;align-items:center;position:relative">
+              <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:{{ c.selected }}"></div>
+              <div style="position:absolute;right:0;width:63%;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+              <div style="position:absolute;left:37%;margin-left:-15px;width:30px;height:30px;border-radius:15px;background:#FFFFFF"></div>
+            </div>
+            <div style="font-size:13px;color:{{ c.accentText }};flex:none;display:{{ dv.dNextChapter }}">Chapitre suivant</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="font-size:11px;line-height:16px;color:{{ c.tq }};max-width:{{ dv.w }}">{{ dv.note }}</div>
+    </div>
+  </sc-for>
+
+  <div style="display:flex;flex-direction:column;gap:14px;border-top:1px solid {{ c.sep }};padding-top:28px">
+    <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">Regles d adaptation</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+      <sc-for list="{{ rules }}" as="ru" hint-placeholder-count="3">
+        <div style="border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;background:{{ c.card }}">
+          <div style="font-size:13px;font-weight:700;color:{{ c.tp }}">{{ ru.title }}</div>
+          <sc-for list="{{ ru.items }}" as="ri" hint-placeholder-count="4">
+            <div style="font-size:12px;line-height:17px;color:{{ c.ts }}">{{ ri }}</div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1200}}">
+const THEMES = {
+  midnight: {
+    dark:  { canvas:"#0E0E10", window:"#131315", chrome:"#161618", sidebar:"#1B1B1D", card:"#202023", cardHover:"#26262A", menu:"#2C2C30", selected:"#3A3A3E", field:"#141416", premium:"#1C2740" },
+    light: { canvas:"#F2F2F5", window:"#FAFAFC", chrome:"#F0F0F4", sidebar:"#E9E9EE", card:"#FFFFFF", cardHover:"#F4F4F8", menu:"#E6E6EB", selected:"#D5D5DC", field:"#FFFFFF", premium:"#E4EDFB" }
+  },
+  obsidian: {
+    dark:  { canvas:"#000000", window:"#000000", chrome:"#0B0B0C", sidebar:"#101012", card:"#161618", cardHover:"#1B1B1D", menu:"#202023", selected:"#2C2C30", field:"#050506", premium:"#151E33" },
+    light: { canvas:"#FFFFFF", window:"#FFFFFF", chrome:"#F7F7F9", sidebar:"#F0F0F3", card:"#F4F4F7", cardHover:"#EDEDF1", menu:"#E8E8EC", selected:"#DADAE0", field:"#FFFFFF", premium:"#E4EDFC" }
+  },
+  slate: {
+    dark:  { canvas:"#0E0F13", window:"#131418", chrome:"#16171C", sidebar:"#1B1C22", card:"#202128", cardHover:"#26272F", menu:"#2C2D36", selected:"#3A3B45", field:"#141519", premium:"#1C2740" },
+    light: { canvas:"#EDEFF4", window:"#F7F8FC", chrome:"#EBEDF2", sidebar:"#E4E7EE", card:"#FFFFFF", cardHover:"#F2F4F9", menu:"#E0E4EC", selected:"#D0D5E0", field:"#FFFFFF", premium:"#E2EBFA" }
+  },
+  paper: {
+    dark:  { canvas:"#121110", window:"#171614", chrome:"#1A1917", sidebar:"#1F1E1B", card:"#242320", cardHover:"#2A2926", menu:"#302F2B", selected:"#3E3D39", field:"#171614", premium:"#1C2740" },
+    light: { canvas:"#F5F5F7", window:"#FFFFFF", chrome:"#F2F2F4", sidebar:"#ECECEF", card:"#FFFFFF", cardHover:"#F5F5F7", menu:"#E8E8EB", selected:"#DBDBDF", field:"#FFFFFF", premium:"#E8F0FC" }
+  }
+};
+const TEXT = {
+  dark:  { tp:"#F2F2F7", ts:"#C7C7CC", tt:"#8E8E93", tq:"#6E6E73", tdis:"#48484C" },
+  light: { tp:"#1C1C1E", ts:"#3C3C43", tt:"#5C5C61", tq:"#6E6E73", tdis:"#ABABB0" }
+};
+const SEM = {
+  dark:  { accent:"#0A84FF", accentText:"#0A84FF", success:"#30D158", warning:"#FF9F0A", danger:"#FF453A", sep:"#2E2E32", border:"#3A3A3E", readerBar:"rgba(19,19,21,0.94)" },
+  light: { accent:"#0A84FF", accentText:"#0B6BCB", success:"#248A3D", warning:"#B25000", danger:"#D70015", sep:"#E3E3E6", border:"#D1D1D6", readerBar:"rgba(250,250,252,0.94)" }
+};
+
+const COVERS = [
+  { bg:"#E8E4DC", mc:"#1B1B1D", mx:"12%", my:"14%", ms:"70%", mr:"50%", bc:"#C2382B", bt:"68%", tc:"#1B1B1D" },
+  { bg:"#141416", mc:"#2C2C30", mx:"-10%", my:"20%", ms:"88%", mr:"0", bc:"#F2F2F7", bt:"73%", tc:"#F2F2F7" },
+  { bg:"#9AA7B4", mc:"#F2F2F7", mx:"22%", my:"9%", ms:"55%", mr:"6%", bc:"#1B2530", bt:"59%", tc:"#F2F2F7" },
+  { bg:"#2B3A2F", mc:"#D9E2D3", mx:"30%", my:"26%", ms:"46%", mr:"50%", bc:"#0F1611", bt:"78%", tc:"#F2F2F7" },
+  { bg:"#F0E8D8", mc:"#3A3F52", mx:"-6%", my:"34%", ms:"74%", mr:"12%", bc:"#3A3F52", bt:"84%", tc:"#1B1B1D" },
+  { bg:"#3D2E33", mc:"#E5C1B0", mx:"18%", my:"12%", ms:"62%", mr:"50%", bc:"#F2F2F7", bt:"70%", tc:"#F2F2F7" }
+];
+const TITLES = [
+  { t:"Vagabond de la nuit blanche", s:"Komga, salon", u:12, p:"62%", c:0 },
+  { t:"Le sel et la cendre", s:"Dossier local", u:3, p:"28%", c:1 },
+  { t:"Quatorze etes", s:"OPDS public", u:0, p:"0", c:2 },
+  { t:"Marches basses", s:"Kavita, atelier", u:0, p:"0", c:3 },
+  { t:"Sept nuits a Otaru", s:"SMB, nas", u:1, p:"8%", c:4 },
+  { t:"La fille du ferrailleur", s:"Komga, salon", u:24, p:"0", c:5 },
+  { t:"Neige sur les rails", s:"Dossier local", u:0, p:"94%", c:2 },
+  { t:"Un ete de trop", s:"Kavita, atelier", u:7, p:"41%", c:4 },
+  { t:"Le bruit des cigales", s:"WebDAV", u:0, p:"0", c:3 },
+  { t:"Cendres de Yokohama", s:"OPDS public", u:148, p:"12%", c:1 }
+];
+
+class Component extends DCLogic {
+  state = { screen: "library", mode: "dark", theme: "midnight" };
+  set(k, v) { this.setState({ [k]: v }); }
+
+  renderVals() {
+    const S = this.state;
+    const c = { ...THEMES[S.theme][S.mode], ...TEXT[S.mode], ...SEM[S.mode] };
+    const A = c.accent;
+    const on = b => b ? "flex" : "none";
+
+    const screens = [
+      { id:"library",  label:"Bibliotheque",   note:"La grille change de nombre de colonnes, pas de gabarit de carte. La couverture reste au ratio 2:3 et la pastille garde sa marge de 10." },
+      { id:"browse",   label:"Parcourir",      note:"La ligne de source garde sa hauteur de 72 sur iPad. Sur iPhone elle passe en hauteur libre et l etat de connexion se replie sur la pastille seule, le texte revient dans la fiche de la source." },
+      { id:"settings", label:"Reglages",       note:"Le gabarit colonne de 580 est conserve sur iPad. Sur iPhone il devient pleine largeur avec une marge de 16, et les cartes gardent leur rayon de 12." },
+      { id:"series",   label:"Fiche de serie", note:"La banniere passe de 300 a 260 sur iPad portrait et a 420 en pile verticale sur iPhone, ou la couverture se centre au dessus des metadonnees." },
+      { id:"paged",    label:"Lecteur pagine", note:"Double page sur iPad paysage seulement. En portrait et sur iPhone, page unique. Les cibles du curseur passent a 30 pour tenir les 44 par 44 de la zone de toucher." }
+    ];
+    const cur = screens.find(x => x.id === S.screen) || screens[0];
+
+    const tab = a => ({ bg: a ? A : c.card, fg: a ? "#FFFFFF" : c.ts, weight: a ? 600 : 400 });
+    const seg = a => ({ bg: a ? c.selected : "transparent", fg: a ? c.tp : c.tt, weight: a ? 600 : 400 });
+    const screenTabs = screens.map(s => ({ label: s.label, ...tab(s.id === S.screen), go: () => this.set("screen", s.id) }));
+    const modeTabs = [["dark","sombre"],["light","clair"]].map(([id,label]) => ({ label, ...seg(S.mode === id), go: () => this.set("mode", id) }));
+    const themeTabs = [["midnight","Midnight"],["obsidian","Obsidian"],["slate","Slate"],["paper","Paper"]].map(([id,label]) => ({ label, ...seg(S.theme === id), go: () => this.set("theme", id) }));
+
+    const navTitles = { library:"Bibliotheque", browse:"Parcourir", settings:"Reglages", series:"Vagabond de la nuit blanche", paged:"" };
+
+    const railDefs = [
+      { id:"library", label:"Bibliotheque", r:"3px" },
+      { id:"history", label:"Historique", r:"10px" },
+      { id:"browse", label:"Parcourir", r:"10px" },
+      { id:"search", label:"Rechercher", r:"10px" },
+      { id:"settings", label:"Reglages", r:"10px" }
+    ];
+    const activeRail = S.screen === "series" ? "library" : S.screen;
+    const mkRail = () => railDefs.map(r => {
+      const a = r.id === activeRail;
+      return { label:r.label, glyphRadius:r.r, bg: a ? c.selected : "transparent", fg: a ? c.tp : c.ts, icon: a ? c.tp : c.tt, weight: a ? 600 : 400 };
+    });
+    const tabBar = railDefs.map(r => {
+      const a = r.id === activeRail;
+      return { label:r.label, glyphRadius:r.r, fg: a ? A : c.tt, weight: a ? 600 : 400 };
+    });
+
+    const cats = [["Tout",148],["En cours",12],["Termine",46],["Seinen",31]];
+    const categories = cats.map(([label,n], i) => ({ label, n, bg: i === 0 ? c.menu : "transparent", fg: i === 0 ? c.tp : c.ts, weight: i === 0 ? 600 : 400, count: i === 0 ? c.tt : c.tq }));
+
+    const mkCards = (n) => TITLES.slice(0, n).map(t => ({
+      ...COVERS[t.c], coverTitle:t.t, title:t.t, source:t.s,
+      unread:String(t.u), badgeDisplay: t.u > 0 ? "flex" : "none",
+      progress: (t.p === "0" || t.p === "100%") ? "0" : t.p
+    }));
+
+    const sources = [
+      { name:"Fichiers locaux", sub:"v1.0", iconBg:"#1E3A5F", glyph:A, glyphRadius:"3px", dot:"transparent", dotDisplay:"none", status:"" },
+      { name:"Komga, serveur maison", sub:"https://komga.local  connecte", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block", status:"" },
+      { name:"Kavita, atelier", sub:"https://kavita.maison  connecte", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block", status:"" },
+      { name:"Catalogue OPDS", sub:"v1.4  multilingue", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block", status:"" },
+      { name:"WebDAV, sauvegarde", sub:"https://dav.exemple.net  sans reponse depuis 21:04", iconBg:c.menu, glyph:c.warning, glyphRadius:"3px", dot:c.warning, dotDisplay:"block", status:"" }
+    ];
+
+    const row = (label, kind, opts = {}) => ({
+      label, border:"none", bg: kind === "premium" ? c.premium : "transparent",
+      fg: kind === "premium" ? A : c.tp, glyphRadius: opts.glyphRadius || "5px",
+      value: opts.value || "", dValue: on(kind === "value"), valueFg: opts.accentValue ? A : c.ts,
+      dChevronPair: on(kind === "value"),
+      dChevron: on(kind === "nav" || !!opts.chevron),
+      dToggle: on(kind === "toggle"), dCrown: on(kind === "premium" && !opts.chevron),
+      track: opts.off ? c.selected : A, knobLeft: opts.off ? "2px" : "22px"
+    });
+    const sec = (title, rows, desc) => ({
+      title, rows: rows.map((r,i) => ({ ...r, border: i === 0 ? "none" : "1px solid " + c.sep })),
+      desc: desc || "", dDesc: on(!!desc)
+    });
+    const settingsAll = [
+      sec("Abonnement", [row("Passer a Premium","premium",{ chevron:true }), row("Restaurer les achats","nav")], "Debloquez la traduction, la colorisation, les suivis, la sauvegarde, le mode incognito, les serveurs Komga, Kavita, Jellyfin et OPDS, la synchronisation iCloud et bien plus."),
+      sec("Confidentialite", [row("Incognito","premium",{ glyphRadius:"9px" }), row("Verrouillage de l app","toggle",{ off:true, glyphRadius:"4px" })], "Navigation privee : l activite de lecture n est pas enregistree dans l historique."),
+      sec("General", [row("Langue","value",{ value:"Systeme", accentValue:true }), row("Apparence","value",{ value: S.mode === "dark" ? "Sombre" : "Systeme" }), row("Theme","value",{ value:{ midnight:"Midnight", obsidian:"Obsidian", slate:"Slate", paper:"Paper" }[S.theme] }), row("Notifications de nouveaux chapitres","toggle",{ off:false })]),
+      sec("Lecteur", [row("Sens de lecture","value",{ value:"Droite a gauche", glyphRadius:"4px" }), row("Mise en page","value",{ value:"Double page" }), row("Fond du lecteur","value",{ value:"Noir OLED" }), row("Rogner les bords","toggle",{ off:false })], "La double page se replie automatiquement en portrait.")
+    ];
+
+    const unread = { bg:c.card, fg:c.tp, weight:600, subFg:c.tt, dotDisplay:"block", progress:"0" };
+    const read = { bg:"transparent", fg:c.tt, weight:400, subFg:c.tq, dotDisplay:"none", progress:"0" };
+    const chaptersAll = [
+      { ...unread, title:"Chapitre 148, Le pont de Sanjo", sub:"12 aout 2026  24 pages" },
+      { ...unread, title:"Chapitre 147, Sel et fer", sub:"5 aout 2026  22 pages" },
+      { ...read, title:"Chapitre 146, La riviere basse", sub:"Lu  page 14 sur 38", progress:"37%" },
+      { ...read, title:"Chapitre 145, Trois pierres", sub:"Lu  telecharge" },
+      { ...read, title:"Chapitre 144, Le marchand borgne", sub:"Lu" },
+      { ...read, title:"Chapitre 143, Ce que le vent laisse", sub:"Lu" },
+      { ...read, title:"Chapitre 142, Deux bols de riz", sub:"Lu" },
+      { ...read, title:"Chapitre 141, La route de l est", sub:"Lu" }
+    ];
+
+    const ra = ["Filtres","Traduire","Coloriser","Signet","Options"].map((label,i) => ({ label, glyphRadius: i === 3 ? "3px" : "7px" }));
+
+    const isReader = S.screen === "paged";
+    const showSearch = ["library","browse"].includes(S.screen);
+    const showPlus = ["library","browse"].includes(S.screen);
+    const showOptions = S.screen === "series";
+    const placeholders = { library:"Rechercher la bibliotheque", browse:"Rechercher des sources", settings:"", series:"", paged:"" };
+
+    const trim = (list) => list.map(([i, n]) => n === null ? settingsAll[i] : { ...settingsAll[i], rows: settingsAll[i].rows.slice(0, n) });
+
+    const base = (dv) => ({
+      ...dv,
+      rail: mkRail(),
+      cards: mkCards(dv.cardCount),
+      settings: trim(dv.settingsPlan),
+      chapters: chaptersAll.slice(0, dv.chapterCount),
+      readerActions: ra.slice(0, dv.actionCount),
+      searchPlaceholder: placeholders[S.screen],
+      dApp: on(!isReader),
+      dReader: on(isReader),
+      dLibrary: on(S.screen === "library"),
+      dBrowse: on(S.screen === "browse"),
+      dSettings: on(S.screen === "settings"),
+      dSeries: on(S.screen === "series"),
+      dSearchField: on(dv.hasSearch && showSearch),
+      dNavIcons: on(dv.isPhone && (showPlus || showOptions)),
+      dPlusIcon: on(showPlus),
+      dOptionsIcon: on(showOptions)
+    });
+
+    const devices = [
+      base({
+        label:"iPad, paysage", spec:"1194 par 834, barre laterale native", w:"1194px", h:"834px", wrapW:"1194px", radius:"22px",
+        shellBg:c.window, statusH:"24px", statusAlign:"center", statusPad:"0 24px", statusFg:c.tt,
+        dRail:"flex", railW:"220px", railPad:"12px", railInner:"10px", railItemPad:"14px", railJustify:"flex-start", dRailLabel:"block",
+        navH:"52px", navBg:c.chrome, navLine:c.sep, margin:"24px", titleSize:"17px",
+        dBack: on(S.screen === "series"), hasSearch:true, isPhone:false, dTabBar:"none",
+        gridCols:"repeat(5,1fr)", gridGap:"20px", cardCount:10, columnW:"580px", settingsPad:"20px 0",
+        settingsPlan:[[0,null],[1,null],[2,null]], chapterCount:5,
+        dSourceStatus:"block", bannerH:"300px", bannerPad:"0 24px", seriesDir:"row", seriesAlign:"center",
+        seriesGap:"24px", seriesText:"left", seriesJustify:"flex-start", coverW:"188px", coverH:"278px",
+        displaySize:"28px", displayLine:"34px", ctaH:"38px", dSeriesActions:"block", dGenres:"flex", dMeta:"block",
+        pages:[{ w:"556px", h:"834px" },{ w:"556px", h:"834px" }], actionCount:5, dReaderActionLabel:"block",
+        readerTopH:"72px", readerBottomH:"64px", dNextChapter:"block",
+        note:"Identique a macOS. Barre laterale NavigationSplitView de 196 encastree a 12, gabarit large a 24 de marge, gabarit colonne a 580. Seule difference, les feux de circulation disparaissent et la barre d etat prend leur place."
+      }),
+      base({
+        label:"iPad, portrait", spec:"834 par 1194, barre laterale repliee", w:"834px", h:"1194px", wrapW:"834px", radius:"22px",
+        shellBg:c.window, statusH:"24px", statusAlign:"center", statusPad:"0 24px", statusFg:c.tt,
+        dRail:"flex", railW:"68px", railPad:"12px 6px 12px 12px", railInner:"6px", railItemPad:"0", railJustify:"center", dRailLabel:"none",
+        navH:"52px", navBg:c.chrome, navLine:c.sep, margin:"24px", titleSize:"17px",
+        dBack: on(S.screen === "series"), hasSearch:true, isPhone:false, dTabBar:"none",
+        gridCols:"repeat(4,1fr)", gridGap:"20px", cardCount:8, columnW:"580px", settingsPad:"20px 0",
+        settingsPlan:[[0,null],[1,null],[2,null],[3,null]], chapterCount:8,
+        dSourceStatus:"block", bannerH:"260px", bannerPad:"0 24px", seriesDir:"row", seriesAlign:"center",
+        seriesGap:"20px", seriesText:"left", seriesJustify:"flex-start", coverW:"156px", coverH:"231px",
+        displaySize:"28px", displayLine:"34px", ctaH:"38px", dSeriesActions:"block", dGenres:"flex", dMeta:"block",
+        pages:[{ w:"796px", h:"1194px" }], actionCount:5, dReaderActionLabel:"none",
+        readerTopH:"72px", readerBottomH:"64px", dNextChapter:"block",
+        note:"La barre laterale est repliee par defaut sur une barre d icones de 56, avec info bulle au survol. Un glissement depuis le bord gauche la deploie par dessus le contenu. Page unique dans le lecteur, la double page se replie automatiquement."
+      }),
+      base({
+        label:"iPhone", spec:"393 par 852, barre d onglets basse", w:"393px", h:"852px", wrapW:"393px", radius:"44px",
+        shellBg:c.window, statusH:"54px", statusAlign:"flex-end", statusPad:"0 32px 10px", statusFg:c.tp,
+        dRail:"none", railW:"0", railPad:"0", railInner:"0", railItemPad:"0", railJustify:"center", dRailLabel:"none",
+        navH:"52px", navBg:c.chrome, navLine:c.sep, margin:"16px", titleSize:"17px",
+        dBack: on(S.screen === "series"), hasSearch:false, isPhone:true, dTabBar:"flex",
+        gridCols:"repeat(2,1fr)", gridGap:"12px", cardCount:4, columnW:"100%", settingsPad:"16px",
+        settingsPlan:[[0,null],[1,null],[2,2]], chapterCount:2,
+        dSourceStatus:"none", bannerH:"400px", bannerPad:"24px 16px", seriesDir:"column", seriesAlign:"center",
+        seriesGap:"18px", seriesText:"center", seriesJustify:"center", coverW:"120px", coverH:"178px",
+        displaySize:"22px", displayLine:"28px", ctaH:"44px", dSeriesActions:"none", dGenres:"none", dMeta:"none",
+        pages:[{ w:"393px", h:"590px" }], actionCount:3, dReaderActionLabel:"none",
+        readerTopH:"96px", readerBottomH:"88px", dNextChapter:"none",
+        note:"La barre laterale devient une barre d onglets basse a cinq entrees, memes icones et memes libelles. Gabarit colonne en pleine largeur avec une marge de 16, cartes collees aux marges, rayon 12 conserve. Toute cible interactive passe a 44 par 44 minimum."
+      })
+    ];
+
+    const rules = [
+      { title:"Ce qui ne change jamais", items:[
+        "Les jetons de couleur, la totalite des seize valeurs de surface et des cinq valeurs de texte.",
+        "L echelle typographique, huit roles, aucune taille intermediaire ajoutee pour tenir dans un ecran.",
+        "Le ratio 2:3 des couvertures, le rayon 10, la pastille de 20 a marge 10, le filet de 4.",
+        "Le rayon 12 des cartes, y compris quand elles se collent aux marges sur iPhone."
+      ]},
+      { title:"Ce qui s adapte", items:[
+        "Le nombre de colonnes de la grille, cinq, quatre, deux.",
+        "La marge laterale, 24 sur iPad, 16 sur iPhone.",
+        "La hauteur de banniere de la fiche, 300, 260, 420 en pile verticale.",
+        "La barre laterale, complete, repliee a 56, remplacee par une barre d onglets."
+      ]},
+      { title:"Ce qui grossit au toucher", items:[
+        "La pastille du curseur du lecteur, 18 au pointeur, 30 au doigt.",
+        "Le bouton principal de la fiche, 38 sur iPad, 44 sur iPhone.",
+        "Les actions de la barre du lecteur, 28 au pointeur, 34 au doigt, libelles retires sur iPhone.",
+        "Les actions secondaires de la liste de chapitres passent dans un menu au lieu de rester en ligne."
+      ]}
+    ];
+
+    return { c, screenTabs, modeTabs, themeTabs, screenNote: cur.note, navTitle: navTitles[S.screen],
+      categories, sources, tabBar, devices, rules,
+      genres: ["Action","Aventure","Drame"] };
+  }
+}
+</script>
+</body>
+</html>

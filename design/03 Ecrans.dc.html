@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body { margin:0; background:#0A0A0B; -webkit-font-smoothing:antialiased; }
+  a { color:#0A84FF; text-decoration:none; }
+  a:hover { color:#409CFF; }
+  @keyframes yumPulse { 0%,100% { opacity:0.4 } 50% { opacity:0.8 } }
+  ::-webkit-scrollbar { width:10px; height:10px }
+  ::-webkit-scrollbar-thumb { background:rgba(142,142,147,0.34); border-radius:5px; border:3px solid transparent; background-clip:content-box }
+  ::-webkit-scrollbar-track { background:transparent }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;width:1440px;min-height:100vh;box-sizing:border-box;padding:28px 80px 56px;display:flex;flex-direction:column;align-items:center;gap:20px;background:{{ c.canvas }}">
+
+  <div style="width:1280px;display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:{{ c.tq }}">Livrable 3 sur 6, Yum</div>
+        <div style="font-size:22px;font-weight:700;line-height:28px;color:{{ c.tp }}">{{ screenTitle }}</div>
+      </div>
+      <div style="font-size:12px;line-height:16px;color:{{ c.tt }};max-width:520px;text-align:right">{{ screenNote }}</div>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      <sc-for list="{{ screenTabs }}" as="tb" hint-placeholder-count="10">
+        <div onClick="{{ tb.go }}" style="height:30px;padding:0 14px;border-radius:9999px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ tb.bg }};color:{{ tb.fg }};font-weight:{{ tb.weight }}">{{ tb.label }}</div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;padding:12px 16px;border-radius:12px;background:{{ c.card }}">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:11px;color:{{ c.tt }};width:44px">Etat</div>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:9px;background:{{ c.canvas }}">
+          <sc-for list="{{ stateTabs }}" as="st" hint-placeholder-count="4">
+            <div onClick="{{ st.go }}" style="height:24px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ st.bg }};color:{{ st.fg }};font-weight:{{ st.weight }}">{{ st.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:11px;color:{{ c.tt }}">Apparence</div>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:9px;background:{{ c.canvas }}">
+          <sc-for list="{{ modeTabs }}" as="mt" hint-placeholder-count="2">
+            <div onClick="{{ mt.go }}" style="height:24px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ mt.bg }};color:{{ mt.fg }};font-weight:{{ mt.weight }}">{{ mt.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:11px;color:{{ c.tt }}">Theme</div>
+        <div style="display:flex;gap:4px;padding:3px;border-radius:9px;background:{{ c.canvas }}">
+          <sc-for list="{{ themeTabs }}" as="tt2" hint-placeholder-count="4">
+            <div onClick="{{ tt2.go }}" style="height:24px;padding:0 12px;border-radius:7px;display:flex;align-items:center;font-size:12px;cursor:pointer;background:{{ tt2.bg }};color:{{ tt2.fg }};font-weight:{{ tt2.weight }}">{{ tt2.label }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:1"></div>
+      <div onClick="{{ toggleZones }}" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="width:34px;height:20px;border-radius:10px;position:relative;background:{{ zonesTrack }}">
+          <div style="position:absolute;top:2px;left:{{ zonesKnob }};width:16px;height:16px;border-radius:8px;background:#FFFFFF"></div>
+        </div>
+        <div style="font-size:11px;color:{{ c.ts }}">zones de toucher</div>
+      </div>
+      <div onClick="{{ toggleBars }}" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <div style="width:34px;height:20px;border-radius:10px;position:relative;background:{{ barsTrack }}">
+          <div style="position:absolute;top:2px;left:{{ barsKnob }};width:16px;height:16px;border-radius:8px;background:#FFFFFF"></div>
+        </div>
+        <div style="font-size:11px;color:{{ c.ts }}">barres du lecteur</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:1280px;height:860px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,0.5);background:{{ c.window }}">
+
+    <div style="position:absolute;inset:0;display:{{ d.shell }};flex-direction:column">
+      <div style="height:60px;flex:none;display:flex;align-items:center;gap:0;padding:0 20px;box-sizing:border-box;background:{{ c.chrome }};border-bottom:1px solid {{ c.chromeLine }}">
+        <div style="display:flex;gap:8px;align-items:center;width:74px;flex:none">
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+        </div>
+        <div style="width:22px;height:18px;border-radius:4px;box-shadow:inset 0 0 0 1.5px {{ c.tt }};position:relative;flex:none;margin-right:26px">
+          <div style="position:absolute;left:7px;top:0;bottom:0;width:1.5px;background:{{ c.tt }}"></div>
+        </div>
+        <div style="font-size:17px;font-weight:700;color:{{ c.tp }}">{{ toolbar.title }}</div>
+        <div style="flex:1"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div onClick="{{ togglePlusMenu }}" style="display:{{ toolbar.dPlus }};width:28px;height:28px;border-radius:8px;align-items:center;justify-content:center;cursor:pointer;background:{{ plusBg }}">
+            <div style="position:relative;width:14px;height:14px">
+              <div style="position:absolute;left:0;right:0;top:6px;height:2px;border-radius:1px;background:{{ c.accent }}"></div>
+              <div style="position:absolute;top:0;bottom:0;left:6px;width:2px;border-radius:1px;background:{{ c.accent }}"></div>
+            </div>
+          </div>
+          <div style="display:{{ toolbar.dClear }};height:28px;padding:0 12px;border-radius:8px;align-items:center;font-size:13px;color:{{ c.accent }};cursor:pointer;background:{{ c.menu }}">Effacer l historique</div>
+          <div style="display:{{ toolbar.dSort }};height:28px;padding:0 10px;border-radius:8px;align-items:center;gap:8px;background:{{ c.menu }};cursor:pointer">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="width:13px;height:1.6px;background:{{ c.accent }}"></div>
+              <div style="width:10px;height:1.6px;background:{{ c.accent }}"></div>
+              <div style="width:7px;height:1.6px;background:{{ c.accent }}"></div>
+            </div>
+            <div style="width:7px;height:5px;clip-path:polygon(50% 100%,100% 0,0 0);background:{{ c.accent }}"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;height:28px;border-radius:8px;padding:0 12px;box-sizing:border-box;background:{{ c.field }};border:1px solid {{ c.border }};width:{{ toolbar.searchW }}">
+            <div style="width:11px;height:11px;border-radius:6px;box-shadow:inset 0 0 0 1.5px {{ c.tt }};flex:none"></div>
+            <div style="font-size:13px;color:{{ c.tq }}">{{ toolbar.search }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;min-height:0">
+        <div style="width:220px;flex:none;padding:12px;box-sizing:border-box">
+          <div style="width:196px;height:100%;border-radius:14px;box-sizing:border-box;padding:10px;display:flex;flex-direction:column;gap:2px;background:{{ c.sidebar }}">
+            <sc-for list="{{ sidebar }}" as="sb" hint-placeholder-count="5">
+              <div onClick="{{ sb.go }}" style="height:40px;border-radius:10px;display:flex;align-items:center;cursor:pointer;padding-left:14px;box-sizing:border-box;gap:12px;background:{{ sb.bg }}">
+                <div style="width:20px;height:20px;flex:none;border-radius:{{ sb.glyphRadius }};box-shadow:inset 0 0 0 1.6px {{ sb.icon }}"></div>
+                <div style="font-size:14px;color:{{ sb.fg }};font-weight:{{ sb.weight }}">{{ sb.label }}</div>
+              </div>
+            </sc-for>
+            <div style="flex:1"></div>
+            <div onClick="{{ goPremium }}" style="height:52px;border-radius:12px;display:flex;align-items:center;gap:10px;padding:0 14px;box-sizing:border-box;cursor:pointer;background:{{ c.premium }}">
+              <div style="width:20px;height:14px;flex:none;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:{{ c.accent }}"></div>
+              <div style="display:flex;flex-direction:column">
+                <div style="font-size:13px;font-weight:600;color:{{ c.accent }}">Passer a Premium</div>
+                <div style="font-size:11px;color:{{ c.tt }}">7 jours offerts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;position:relative;background:{{ c.canvas }}">
+
+          <div style="display:{{ d.categories }};gap:6px;padding:6px 24px 14px;flex:none;align-items:center">
+            <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
+              <div style="height:30px;padding:0 14px;border-radius:8px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{ cat.bg }}">
+                <div style="font-size:13px;color:{{ cat.fg }};font-weight:{{ cat.weight }}">{{ cat.label }}</div>
+                <div style="font-size:11px;color:{{ cat.count }};font-variant-numeric:tabular-nums">{{ cat.n }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="flex:1;min-height:0;overflow:auto;padding:0 24px 24px;position:relative">
+
+            <div style="display:{{ d.grid }};grid-template-columns:repeat(5,1fr);gap:20px 20px">
+              <sc-for list="{{ libraryCards }}" as="lc" hint-placeholder-count="10">
+                <div onClick="{{ lc.open }}" style="display:flex;flex-direction:column;gap:10px;cursor:pointer">
+                  <div style="position:relative;width:100%;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:{{ lc.bg }}">
+                    <div style="position:absolute;left:{{ lc.mx }};top:{{ lc.my }};width:{{ lc.ms }};height:{{ lc.ms }};border-radius:{{ lc.mr }};background:{{ lc.mc }}"></div>
+                    <div style="position:absolute;left:0;right:0;top:{{ lc.bt }};height:12px;background:{{ lc.bc }}"></div>
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:40px;background:rgba(14,14,16,0.53)"></div>
+                    <div style="position:absolute;left:12px;right:12px;bottom:16px;font-size:13px;font-weight:700;line-height:17px;color:{{ lc.tc }}">{{ lc.coverTitle }}</div>
+                    <div style="position:absolute;top:10px;right:10px;height:20px;min-width:20px;border-radius:10px;padding:0 8px;box-sizing:border-box;background:{{ c.accent }};display:{{ lc.badgeDisplay }};align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums">{{ lc.unread }}</div>
+                    <div style="position:absolute;left:0;bottom:0;height:4px;background:{{ c.accent }};width:{{ lc.progress }}"></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:3px">
+                    <div style="font-size:13px;font-weight:600;line-height:17px;color:{{ c.tp }}">{{ lc.title }}</div>
+                    <div style="font-size:11px;color:{{ c.tt }}">{{ lc.source }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:{{ d.historyList }};flex-direction:column;gap:24px;padding-top:6px">
+              <sc-for list="{{ historyGroups }}" as="hg" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:15px;font-weight:700;color:{{ c.tp }};padding-bottom:2px">{{ hg.day }}</div>
+                  <sc-for list="{{ hg.items }}" as="hi" hint-placeholder-count="4">
+                    <div style="height:80px;border-radius:12px;display:flex;align-items:center;gap:16px;padding:0 16px;background:{{ c.card }}">
+                      <div style="width:44px;height:66px;border-radius:6px;overflow:hidden;position:relative;flex:none;background:{{ hi.bg }}">
+                        <div style="position:absolute;left:{{ hi.mx }};top:{{ hi.my }};width:{{ hi.ms }};height:{{ hi.ms }};border-radius:{{ hi.mr }};background:{{ hi.mc }}"></div>
+                      </div>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:15px;font-weight:600;color:{{ c.tp }}">{{ hi.title }}</div>
+                        <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">{{ hi.chapter }}</div>
+                      </div>
+                      <div style="font-size:12px;color:{{ c.tq }};font-variant-numeric:tabular-nums">{{ hi.time }}</div>
+                      <div style="width:26px;height:26px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:{{ hi.delBg }}">
+                        <div style="width:12px;height:1.6px;background:{{ hi.delFg }}"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:{{ d.browseList }};flex-direction:column;gap:10px;padding-top:6px">
+              <div style="font-size:15px;font-weight:700;color:{{ c.tp }};padding-bottom:4px">5 installees</div>
+              <div style="font-size:11px;color:{{ c.tq }};padding-bottom:6px">Reordonnancement par glisser deposer lorsque le tri est en mode Personnalise.</div>
+              <sc-for list="{{ sources }}" as="so" hint-placeholder-count="5">
+                <div style="height:72px;border-radius:12px;display:flex;align-items:center;gap:16px;padding:0 20px;background:{{ c.card }}">
+                  <div style="width:40px;height:40px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ so.iconBg }}">
+                    <div style="width:18px;height:18px;border-radius:{{ so.glyphRadius }};background:{{ so.glyph }}"></div>
+                  </div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                    <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ so.name }}</div>
+                    <div style="font-size:12px;color:{{ c.tt }}">{{ so.sub }}</div>
+                  </div>
+                  <div style="width:10px;height:10px;border-radius:5px;display:{{ so.dotDisplay }};background:{{ so.dot }};flex:none"></div>
+                  <div style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;gap:3px">
+                    <div style="width:3px;height:3px;border-radius:2px;background:{{ c.tt }}"></div>
+                    <div style="width:3px;height:3px;border-radius:2px;background:{{ c.tt }}"></div>
+                    <div style="width:3px;height:3px;border-radius:2px;background:{{ c.tt }}"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:{{ d.searchList }};flex-direction:column;gap:28px;padding-top:6px">
+              <sc-for list="{{ searchGroups }}" as="sg" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;align-items:baseline;gap:10px">
+                    <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ sg.name }}</div>
+                    <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">{{ sg.count }}</div>
+                    <div style="flex:1"></div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer;display:{{ sg.dSeeAll }}">Tout voir</div>
+                  </div>
+                  <div style="display:{{ sg.dRow }};gap:16px;overflow:hidden">
+                    <sc-for list="{{ sg.items }}" as="si" hint-placeholder-count="6">
+                      <div onClick="{{ si.open }}" style="width:132px;flex:none;display:flex;flex-direction:column;gap:8px;cursor:pointer">
+                        <div style="width:132px;height:198px;border-radius:10px;overflow:hidden;position:relative;background:{{ si.bg }}">
+                          <div style="position:absolute;left:{{ si.mx }};top:{{ si.my }};width:{{ si.ms }};height:{{ si.ms }};border-radius:{{ si.mr }};background:{{ si.mc }}"></div>
+                          <div style="position:absolute;left:0;right:0;top:{{ si.bt }};height:10px;background:{{ si.bc }}"></div>
+                          <div style="position:absolute;left:10px;right:10px;bottom:12px;font-size:11px;font-weight:700;line-height:14px;color:{{ si.tc }}">{{ si.coverTitle }}</div>
+                        </div>
+                        <div style="font-size:12px;font-weight:600;line-height:15px;color:{{ c.tp }}">{{ si.title }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="display:{{ sg.dError }};height:52px;border-radius:12px;align-items:center;gap:12px;padding:0 16px;background:{{ c.card }}">
+                    <div style="width:16px;height:14px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.warning }};flex:none"></div>
+                    <div style="font-size:13px;color:{{ c.ts }}">{{ sg.errorText }}</div>
+                    <div style="flex:1"></div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Reessayer</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:{{ d.settings }};flex-direction:column;align-items:center;padding-top:8px">
+              <div style="width:580px;display:flex;flex-direction:column;gap:32px;padding-bottom:40px">
+                <div style="display:{{ d.settingsBanner }};border-radius:12px;padding:16px 20px;flex-direction:column;gap:10px;background:{{ c.card }};box-shadow:inset 0 0 0 1px {{ c.warning }}">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:16px;height:14px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.warning }};flex:none"></div>
+                    <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">iCloud n a pas synchronise depuis 6 jours</div>
+                  </div>
+                  <div style="font-size:12px;line-height:16px;color:{{ c.tt }}">Le compte iCloud de cet appareil n autorise plus Yum. Ouvrez les reglages du systeme, puis reactivez Yum dans la liste des applications iCloud.</div>
+                  <div style="display:flex;gap:10px;padding-top:4px">
+                    <div style="height:28px;padding:0 14px;border-radius:8px;display:flex;align-items:center;font-size:13px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer">Reessayer</div>
+                    <div style="height:28px;padding:0 14px;border-radius:8px;display:flex;align-items:center;font-size:13px;color:{{ c.tp }};background:{{ c.menu }};box-shadow:inset 0 0 0 1px {{ c.border }};cursor:pointer">Ouvrir les reglages du systeme</div>
+                  </div>
+                </div>
+
+                <sc-for list="{{ settingsSections }}" as="ss" hint-placeholder-count="17">
+                  <div style="display:flex;flex-direction:column">
+                    <div style="font-size:15px;font-weight:700;color:{{ c.tp }};padding-bottom:14px">{{ ss.title }}</div>
+                    <div style="border-radius:12px;overflow:hidden;background:{{ c.card }}">
+                      <sc-for list="{{ ss.rows }}" as="r" hint-placeholder-count="3">
+                        <div style="min-height:52px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;padding:{{ r.pad }};gap:10px;border-top:{{ r.border }};background:{{ r.bg }}">
+                          <div style="display:flex;align-items:center;gap:16px">
+                            <div style="width:22px;height:22px;flex:none;border-radius:{{ r.glyphRadius }};box-shadow:inset 0 0 0 1.6px {{ r.icon }}"></div>
+                            <div style="flex:1;font-size:15px;color:{{ r.fg }}">{{ r.label }}</div>
+                            <div style="font-size:15px;color:{{ r.valueFg }};display:{{ r.dValue }};font-variant-numeric:tabular-nums">{{ r.value }}</div>
+                            <div style="display:{{ r.dChevronPair }};flex-direction:column;gap:4px">
+                              <div style="width:10px;height:5px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.tt }}"></div>
+                              <div style="width:10px;height:5px;clip-path:polygon(50% 100%,100% 0,0 0);background:{{ c.tt }}"></div>
+                            </div>
+                            <div style="display:{{ r.dChevron }};width:8px;height:14px;clip-path:polygon(0 0,100% 50%,0 100%);background:{{ c.tt }}"></div>
+                            <div style="display:{{ r.dToggle }};width:48px;height:28px;border-radius:14px;position:relative;flex:none;background:{{ r.track }}">
+                              <div style="position:absolute;top:2px;left:{{ r.knobLeft }};width:24px;height:24px;border-radius:12px;background:#FFFFFF"></div>
+                            </div>
+                            <div style="display:{{ r.dCrown }};width:22px;height:15px;flex:none;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:{{ c.accent }}"></div>
+                          </div>
+                          <div style="display:{{ r.dSlider }};margin-left:38px;height:20px;align-items:center;position:relative">
+                            <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:{{ c.selected }}"></div>
+                            <div style="position:absolute;left:0;height:4px;border-radius:2px;background:{{ c.accent }};width:{{ r.sliderW }}"></div>
+                            <div style="position:absolute;left:{{ r.sliderW }};margin-left:-10px;width:20px;height:20px;border-radius:10px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,0.4)"></div>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="display:{{ ss.dDesc }};font-size:12px;line-height:16px;color:{{ c.tt }};padding-top:12px">{{ ss.desc }}</div>
+                    <div style="display:{{ ss.dLegal }};font-size:11px;line-height:15px;color:{{ c.tq }};padding-top:12px">{{ ss.legal }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:{{ d.series }};flex-direction:column;margin:0 -24px">
+              <div style="height:300px;position:relative;overflow:hidden;flex:none">
+                <div style="position:absolute;inset:-40px;filter:blur(40px);background:{{ series.bg }}">
+                  <div style="position:absolute;left:22%;top:14%;width:44%;height:44%;border-radius:50%;background:{{ series.mc }}"></div>
+                  <div style="position:absolute;left:0;right:0;top:62%;height:12%;background:{{ series.bc }}"></div>
+                </div>
+                <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55)"></div>
+                <div style="position:absolute;left:24px;top:0;bottom:0;right:24px;display:flex;align-items:center;gap:24px">
+                  <div style="width:188px;height:278px;border-radius:10px;overflow:hidden;position:relative;flex:none;background:{{ series.bg }}">
+                    <div style="position:absolute;left:22px;top:40px;width:132px;height:132px;border-radius:66px;background:{{ series.mc }}"></div>
+                    <div style="position:absolute;left:0;right:0;top:190px;height:14px;background:{{ series.bc }}"></div>
+                    <div style="position:absolute;left:14px;right:14px;bottom:16px;font-size:15px;font-weight:700;line-height:19px;color:{{ series.tc }}">{{ series.coverTitle }}</div>
+                  </div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
+                    <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em;color:#F2F2F7">{{ series.title }}</div>
+                    <div style="font-size:13px;color:#C7C7CC">{{ series.authors }}</div>
+                    <div style="font-size:12px;color:#8E8E93;font-variant-numeric:tabular-nums">{{ series.meta }}</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:2px">
+                      <sc-for list="{{ series.genres }}" as="g" hint-placeholder-count="4">
+                        <div style="height:22px;padding:0 11px;border-radius:11px;display:flex;align-items:center;font-size:11px;color:#C7C7CC;background:rgba(255,255,255,0.14)">{{ g }}</div>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;gap:12px;align-items:center;padding-top:8px">
+                      <div onClick="{{ openReader }}" style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer">{{ series.cta }}</div>
+                      <div style="height:38px;padding:0 18px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:#F2F2F7;background:rgba(255,255,255,0.16);cursor:pointer">Dans ma liste</div>
+                      <div style="height:38px;padding:0 18px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:#F2F2F7;background:rgba(255,255,255,0.16);cursor:pointer">Suivre</div>
+                      <div style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:3px;background:rgba(255,255,255,0.16);cursor:pointer">
+                        <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                        <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                        <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;align-items:center;padding:24px 24px 40px">
+                <div style="width:580px;display:flex;flex-direction:column;gap:24px">
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <div style="font-size:13px;line-height:18px;color:{{ c.ts }}">{{ series.summary }}</div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Afficher plus</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:16px">
+                    <div style="font-size:17px;font-weight:700;color:{{ c.tp }};font-variant-numeric:tabular-nums">{{ series.chapterCount }}</div>
+                    <div style="flex:1"></div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Filtrer</div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Trier</div>
+                    <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Tout marquer lu</div>
+                  </div>
+
+                  <div style="display:{{ d.chapters }};flex-direction:column;gap:6px">
+                    <sc-for list="{{ chapters }}" as="ch" hint-placeholder-count="8">
+                      <div onClick="{{ openReader }}" style="height:56px;border-radius:10px;display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;cursor:pointer;background:{{ ch.bg }}">
+                        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                          <div style="font-size:15px;color:{{ ch.fg }};font-weight:{{ ch.weight }};font-variant-numeric:tabular-nums">{{ ch.title }}</div>
+                          <div style="font-size:12px;color:{{ ch.subFg }};font-variant-numeric:tabular-nums">{{ ch.sub }}</div>
+                        </div>
+                        <div style="width:22px;height:22px;border-radius:11px;display:{{ ch.dlDisplay }};box-shadow:inset 0 0 0 1.6px {{ c.accent }};flex:none"></div>
+                        <div style="width:12px;height:12px;border-radius:6px;display:{{ ch.dotDisplay }};background:{{ c.accent }}"></div>
+                        <div style="position:absolute;left:0;bottom:0;height:3px;background:rgba(10,132,255,0.6);width:{{ ch.progress }}"></div>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <div style="display:{{ d.chapterCenter }};flex-direction:column;align-items:center;text-align:center;gap:12px;padding:48px 0">
+                    <div style="width:44px;height:44px;border-radius:10px;box-shadow:inset 0 0 0 3px {{ chapterCenter.glyph }};margin-bottom:4px"></div>
+                    <div style="font-size:17px;font-weight:700;color:{{ c.tp }}">{{ chapterCenter.title }}</div>
+                    <div style="font-size:13px;line-height:18px;color:{{ c.tt }};max-width:420px">{{ chapterCenter.phrase }}</div>
+                    <div style="display:{{ chapterCenter.dAction }};height:34px;padding:0 18px;border-radius:10px;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer;margin-top:4px">{{ chapterCenter.action }}</div>
+                  </div>
+
+                  <div style="display:{{ d.chapterSkeleton }};flex-direction:column;gap:6px">
+                    <sc-for list="{{ eight }}" as="k" hint-placeholder-count="8">
+                      <div style="height:56px;border-radius:10px;background:{{ c.card }};animation:yumPulse 1200ms ease-in-out infinite"></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:{{ d.centered }};position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 40px">
+              <div style="display:{{ centered.dBooks }};gap:5px;align-items:flex-end;margin-bottom:8px">
+                <div style="width:16px;height:44px;border-radius:2px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }}"></div>
+                <div style="width:16px;height:52px;border-radius:2px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }}"></div>
+                <div style="width:16px;height:38px;border-radius:2px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }};transform:rotate(10deg)"></div>
+              </div>
+              <div style="display:{{ centered.dClock }};width:52px;height:52px;border-radius:26px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }};position:relative;margin-bottom:8px">
+                <div style="position:absolute;left:24px;top:12px;width:3px;height:16px;border-radius:2px;background:{{ c.emptyGlyph }}"></div>
+                <div style="position:absolute;left:26px;top:26px;width:14px;height:3px;border-radius:2px;background:{{ c.emptyGlyph }}"></div>
+              </div>
+              <div style="display:{{ centered.dGlass }};width:52px;height:52px;position:relative;margin-bottom:8px">
+                <div style="position:absolute;left:0;top:0;width:38px;height:38px;border-radius:19px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }}"></div>
+                <div style="position:absolute;left:32px;top:32px;width:18px;height:3px;border-radius:2px;background:{{ c.emptyGlyph }};transform:rotate(45deg)"></div>
+              </div>
+              <div style="display:{{ centered.dWarn }};width:52px;height:52px;border-radius:26px;box-shadow:inset 0 0 0 3px {{ c.warning }};position:relative;margin-bottom:8px">
+                <div style="position:absolute;left:24.5px;top:13px;width:3px;height:17px;border-radius:2px;background:{{ c.warning }}"></div>
+                <div style="position:absolute;left:23.5px;top:34px;width:5px;height:5px;border-radius:3px;background:{{ c.warning }}"></div>
+              </div>
+              <div style="font-size:22px;font-weight:700;line-height:28px;color:{{ c.tp }}">{{ centered.title }}</div>
+              <div style="font-size:13px;line-height:18px;color:{{ c.tt }};max-width:420px">{{ centered.phrase }}</div>
+              <div style="display:{{ centered.dActions }};gap:12px;margin-top:6px">
+                <div onClick="{{ centered.act }}" style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:{{ centered.actionWeight }};color:{{ centered.actionFg }};background:{{ centered.actionBg }};box-shadow:inset 0 0 0 1px {{ centered.actionBorder }};cursor:pointer">{{ centered.action }}</div>
+                <div style="display:{{ centered.dSecond }};height:38px;padding:0 20px;border-radius:10px;align-items:center;font-size:15px;color:{{ c.tp }};background:{{ c.menu }};box-shadow:inset 0 0 0 1px {{ c.border }};cursor:pointer">{{ centered.second }}</div>
+              </div>
+            </div>
+
+            <div style="display:{{ d.skelGrid }};grid-template-columns:repeat(5,1fr);gap:20px;padding-top:6px">
+              <sc-for list="{{ ten }}" as="k2" hint-placeholder-count="10">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="width:100%;aspect-ratio:2/3;border-radius:10px;background:{{ c.card }};animation:yumPulse 1200ms ease-in-out infinite"></div>
+                  <div style="width:78%;height:13px;border-radius:4px;background:{{ c.card }};animation:yumPulse 1200ms ease-in-out infinite"></div>
+                  <div style="width:46%;height:11px;border-radius:4px;background:{{ c.card }};animation:yumPulse 1200ms ease-in-out infinite"></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:{{ d.skelRows }};flex-direction:column;gap:10px;padding-top:6px">
+              <sc-for list="{{ eight }}" as="k3" hint-placeholder-count="8">
+                <div style="height:72px;border-radius:12px;background:{{ c.card }};animation:yumPulse 1200ms ease-in-out infinite"></div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:{{ d.plusMenu }};position:absolute;top:8px;right:24px;width:324px;border-radius:14px;flex-direction:column;padding:6px 0;background:{{ c.menu }};border:1px solid {{ c.border }};box-shadow:0 8px 24px rgba(0,0,0,0.44);z-index:5">
+            <sc-for list="{{ plusMenu }}" as="pm" hint-placeholder-count="13">
+              <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 14px;border-top:{{ pm.border }};cursor:pointer">
+                <div style="width:16px;height:16px;flex:none;border-radius:{{ pm.glyphRadius }};box-shadow:inset 0 0 0 1.5px {{ c.accent }}"></div>
+                <div style="font-size:15px;color:{{ c.tp }}">{{ pm.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;inset:0;display:{{ d.readerPaged }};background:{{ readerBg }}">
+      <div style="position:absolute;inset:0;display:{{ d.pagedPages }};align-items:center;justify-content:center;gap:4px">
+        <div style="width:573px;height:100%;flex:none;position:relative">
+          <image-slot id="yum-page-left" shape="rect" placeholder="page de gauche"></image-slot>
+        </div>
+        <div style="width:573px;height:100%;flex:none;position:relative">
+          <image-slot id="yum-page-right" shape="rect" placeholder="page de droite"></image-slot>
+        </div>
+      </div>
+
+      <div style="position:absolute;inset:0;display:{{ d.pagedZones }}">
+        <div style="width:28%;background:rgba(10,132,255,0.06);display:flex;align-items:center;justify-content:center">
+          <div style="font-size:11px;color:rgba(255,255,255,0.5)">28 %</div>
+        </div>
+        <div style="width:44%;background:rgba(242,242,247,0.06);display:flex;align-items:center;justify-content:center">
+          <div style="font-size:11px;color:rgba(255,255,255,0.5)">44 %</div>
+        </div>
+        <div style="width:28%;background:rgba(10,132,255,0.06);display:flex;align-items:center;justify-content:center">
+          <div style="font-size:11px;color:rgba(255,255,255,0.5)">28 %</div>
+        </div>
+      </div>
+
+      <div onClick="{{ toggleBars }}" style="position:absolute;inset:0;cursor:pointer"></div>
+
+      <div style="position:absolute;left:0;right:0;top:0;height:72px;display:{{ d.readerBars }};align-items:center;gap:20px;padding:0 20px;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+        <div onClick="{{ goSeries }}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <div style="width:11px;height:18px;clip-path:polygon(100% 0,0 50%,100% 100%);background:{{ c.tp }}"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ series.title }}</div>
+          <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">Chapitre 146, Le pont de Sanjo</div>
+        </div>
+        <div style="flex:1"></div>
+        <sc-for list="{{ readerActions }}" as="ra" hint-placeholder-count="5">
+          <div onClick="{{ ra.act }}" style="height:28px;padding:0 12px;border-radius:8px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{ ra.bg }}">
+            <div style="width:14px;height:14px;border-radius:{{ ra.glyphRadius }};box-shadow:inset 0 0 0 1.5px {{ ra.fg }}"></div>
+            <div style="font-size:13px;color:{{ ra.fg }}">{{ ra.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="position:absolute;left:0;right:0;bottom:0;height:64px;display:{{ d.readerBars }};align-items:center;gap:20px;padding:0 20px;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+        <div style="font-size:13px;color:{{ c.tp }};font-variant-numeric:tabular-nums;width:96px">14 / 38</div>
+        <div style="flex:1;height:20px;display:flex;align-items:center;position:relative">
+          <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:{{ c.selected }}"></div>
+          <div style="position:absolute;right:0;width:63%;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+          <div style="position:absolute;left:37%;margin-left:-9px;width:18px;height:18px;border-radius:9px;background:#FFFFFF"></div>
+        </div>
+        <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Chapitre suivant</div>
+      </div>
+
+      <div style="position:absolute;top:76px;right:20px;width:300px;border-radius:14px;display:{{ d.filters }};flex-direction:column;gap:16px;padding:18px;box-sizing:border-box;background:{{ c.menu }};border:1px solid {{ c.border }};box-shadow:0 8px 24px rgba(0,0,0,0.44)">
+        <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">Filtres d image</div>
+        <sc-for list="{{ filterSliders }}" as="fl" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:baseline">
+              <div style="flex:1;font-size:13px;color:{{ c.ts }}">{{ fl.label }}</div>
+              <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">{{ fl.value }}</div>
+            </div>
+            <div style="height:18px;display:flex;align-items:center;position:relative">
+              <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:{{ c.selected }}"></div>
+              <div style="position:absolute;left:0;height:4px;border-radius:2px;background:{{ c.accent }};width:{{ fl.w }}"></div>
+              <div style="position:absolute;left:{{ fl.w }};margin-left:-9px;width:18px;height:18px;border-radius:9px;background:#FFFFFF"></div>
+            </div>
+          </div>
+        </sc-for>
+        <div style="height:1px;background:{{ c.border }}"></div>
+        <sc-for list="{{ filterToggles }}" as="ft" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="flex:1;font-size:13px;color:{{ ft.fg }}">{{ ft.label }}</div>
+            <div style="display:{{ ft.dCrown }};width:18px;height:12px;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:{{ c.accent }}"></div>
+            <div style="display:{{ ft.dToggle }};width:40px;height:24px;border-radius:12px;position:relative;background:{{ ft.track }}">
+              <div style="position:absolute;top:2px;left:{{ ft.knobLeft }};width:20px;height:20px;border-radius:10px;background:#FFFFFF"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="position:absolute;inset:0;display:{{ d.pagedCenter }};flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 60px">
+        <div style="display:{{ pagedCenter.dWarn }};width:56px;height:48px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.warning }};margin-bottom:8px"></div>
+        <div style="display:{{ pagedCenter.dPage }};width:44px;height:60px;border-radius:3px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }};margin-bottom:8px"></div>
+        <div style="font-size:22px;font-weight:700;line-height:28px;color:#F2F2F7">{{ pagedCenter.title }}</div>
+        <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:420px">{{ pagedCenter.phrase }}</div>
+        <div style="display:{{ pagedCenter.dActions }};gap:12px;margin-top:6px">
+          <div style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer">{{ pagedCenter.action }}</div>
+          <div onClick="{{ goSeries }}" style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:#F2F2F7;background:rgba(255,255,255,0.16);cursor:pointer">{{ pagedCenter.second }}</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;inset:0;display:{{ d.pagedSkeleton }};align-items:center;justify-content:center;gap:4px">
+        <div style="width:573px;height:100%;flex:none;background:#131315;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        <div style="width:573px;height:100%;flex:none;background:#131315;animation:yumPulse 1200ms ease-in-out infinite"></div>
+      </div>
+    </div>
+
+    <div style="position:absolute;inset:0;display:{{ d.webtoon }};background:{{ readerBg }};overflow:auto">
+      <div style="min-height:100%;display:{{ d.webtoonPages }};flex-direction:column;align-items:center;padding:0">
+        <sc-for list="{{ webtoonPanels }}" as="wp" hint-placeholder-count="6">
+          <div style="width:62%;position:relative;background:{{ wp.bg }};height:{{ wp.h }};margin-bottom:{{ wp.gap }}">
+            <div style="position:absolute;left:{{ wp.mx }};top:{{ wp.my }};width:{{ wp.ms }};height:{{ wp.mh }};border-radius:{{ wp.mr }};background:{{ wp.mc }}"></div>
+            <div style="position:absolute;left:0;right:0;bottom:0;height:{{ wp.bandH }};background:{{ wp.bc }}"></div>
+          </div>
+        </sc-for>
+        <div style="width:62%;display:flex;align-items:center;gap:16px;padding:32px 0">
+          <div style="flex:1;height:1px;background:rgba(142,142,147,0.3)"></div>
+          <div style="font-size:12px;color:#8E8E93;font-variant-numeric:tabular-nums">Chapitre 147</div>
+          <div style="flex:1;height:1px;background:rgba(142,142,147,0.3)"></div>
+        </div>
+        <div style="width:62%;height:400px;background:#E8E4DC;position:relative">
+          <image-slot id="yum-webtoon-1" shape="rect" placeholder="premiere image du chapitre suivant"></image-slot>
+        </div>
+      </div>
+
+      <div style="position:absolute;left:0;right:0;top:0;height:72px;display:{{ d.readerBars }};align-items:center;gap:20px;padding:0 20px;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+        <div onClick="{{ goSeries }}" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <div style="width:11px;height:18px;clip-path:polygon(100% 0,0 50%,100% 100%);background:{{ c.tp }}"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:15px;font-weight:600;color:{{ c.tp }}">Sept nuits a Otaru</div>
+          <div style="font-size:12px;color:{{ c.tt }};font-variant-numeric:tabular-nums">Chapitre 118  defilement vertical</div>
+        </div>
+        <div style="flex:1"></div>
+      </div>
+
+      <div style="position:absolute;left:0;right:0;bottom:0;height:64px;display:{{ d.readerBars }};align-items:center;gap:20px;padding:0 20px;box-sizing:border-box;background:{{ c.readerBar }};backdrop-filter:blur(20px)">
+        <div style="font-size:13px;color:{{ c.tp }};font-variant-numeric:tabular-nums;width:96px">38 %</div>
+        <div style="flex:1;height:20px;display:flex;align-items:center;position:relative">
+          <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:{{ c.selected }}"></div>
+          <div style="position:absolute;left:0;width:38%;height:4px;border-radius:2px;background:{{ c.accent }}"></div>
+        </div>
+        <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer">Chapitre suivant</div>
+      </div>
+
+      <div style="position:absolute;inset:0;display:{{ d.webtoonCenter }};flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 60px">
+        <div style="display:{{ webtoonCenter.dWarn }};width:56px;height:48px;clip-path:polygon(50% 0,100% 100%,0 100%);background:{{ c.warning }};margin-bottom:8px"></div>
+        <div style="display:{{ webtoonCenter.dPage }};width:44px;height:60px;border-radius:3px;box-shadow:inset 0 0 0 3px {{ c.emptyGlyph }};margin-bottom:8px"></div>
+        <div style="font-size:22px;font-weight:700;line-height:28px;color:#F2F2F7">{{ webtoonCenter.title }}</div>
+        <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:440px">{{ webtoonCenter.phrase }}</div>
+        <div style="display:{{ webtoonCenter.dActions }};gap:12px;margin-top:6px">
+          <div style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer">{{ webtoonCenter.action }}</div>
+          <div onClick="{{ goSeries }}" style="height:38px;padding:0 20px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:#F2F2F7;background:rgba(255,255,255,0.16);cursor:pointer">Revenir a la fiche</div>
+        </div>
+      </div>
+
+      <div style="position:absolute;inset:0;display:{{ d.webtoonSkeleton }};flex-direction:column;align-items:center;gap:0">
+        <sc-for list="{{ eight }}" as="k4" hint-placeholder-count="8">
+          <div style="width:62%;height:180px;background:#131315;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="position:absolute;inset:0;display:{{ d.premium }};align-items:center;justify-content:center;background:rgba(0,0,0,0.45)">
+      <div style="width:360px;border-radius:16px;box-sizing:border-box;padding:32px 28px 24px;display:{{ d.premiumSheet }};flex-direction:column;gap:0;background:#141A28;border:1px solid #24344F;box-shadow:0 24px 64px rgba(0,0,0,0.60)">
+        <div style="display:flex;justify-content:center"><div style="width:56px;height:40px;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:#0A84FF"></div></div>
+        <div style="font-size:20px;font-weight:700;color:#F2F2F7;text-align:center;padding-top:24px">Premium</div>
+        <div style="font-size:12px;color:#8E8E93;text-align:center;padding-top:8px">Debloquez toutes les fonctions avancees</div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:28px 0 32px">
+          <sc-for list="{{ premiumPerks }}" as="pp" hint-placeholder-count="5">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="width:14px;height:14px;flex:none;margin-top:2px;clip-path:polygon(14% 52%,0 66%,40% 100%,100% 16%,86% 4%,38% 74%);background:#0A84FF"></div>
+              <div style="font-size:13px;line-height:18px;color:#C7C7CC">{{ pp }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#FFFFFF;background:#0A84FF;cursor:pointer">Essayer 7 jours gratuitement</div>
+        <div style="font-size:11px;line-height:15px;color:#6E6E73;text-align:center;padding-top:16px">Puis 3,99 euros par mois. Resiliable a tout moment.</div>
+        <div onClick="{{ goLibrary }}" style="font-size:13px;color:#0A84FF;text-align:center;cursor:pointer;padding-top:16px">Plus tard</div>
+      </div>
+
+      <div style="width:360px;border-radius:16px;box-sizing:border-box;padding:24px;display:{{ d.premiumSkeleton }};flex-direction:column;gap:16px;background:#141A28;border:1px solid #24344F">
+        <div style="width:34px;height:24px;background:#1E2A3F;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        <div style="width:60%;height:20px;border-radius:5px;background:#1E2A3F;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        <sc-for list="{{ four }}" as="k5" hint-placeholder-count="4">
+          <div style="width:100%;height:14px;border-radius:4px;background:#1E2A3F;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        </sc-for>
+        <div style="height:38px;border-radius:10px;background:#1E2A3F;animation:yumPulse 1200ms ease-in-out infinite"></div>
+      </div>
+
+      <div style="width:380px;border-radius:16px;box-sizing:border-box;padding:24px;display:{{ d.premiumError }};flex-direction:column;gap:14px;background:#141A28;border:1px solid #24344F;box-shadow:0 24px 64px rgba(0,0,0,0.60)">
+        <div style="width:34px;height:29px;clip-path:polygon(50% 0,100% 100%,0 100%);background:#FF9F0A"></div>
+        <div style="font-size:17px;font-weight:700;color:#F2F2F7">La boutique ne repond pas</div>
+        <div style="font-size:13px;line-height:18px;color:#C7C7CC">Yum n a pas pu lire les tarifs. Votre abonnement actuel, s il existe, reste actif. Reessayez dans un moment.</div>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;height:34px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#F2F2F7;background:#24344F;cursor:pointer">Plus tard</div>
+          <div style="flex:1;height:34px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#FFFFFF;background:#0A84FF;cursor:pointer">Reessayer</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;inset:0;display:{{ d.onboarding }};flex-direction:column;background:{{ c.window }}">
+      <div style="height:60px;flex:none;display:flex;align-items:center;padding:0 20px;box-sizing:border-box">
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+          <div style="width:12px;height:12px;border-radius:6px;background:{{ c.dot }}"></div>
+        </div>
+        <div style="flex:1"></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <sc-for list="{{ obDots }}" as="od" hint-placeholder-count="3">
+            <div onClick="{{ od.go }}" style="width:7px;height:7px;border-radius:4px;cursor:pointer;background:{{ od.bg }}"></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding:0 80px 40px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+          <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em;color:{{ c.tp }}">{{ ob.title }}</div>
+          <div style="font-size:13px;line-height:18px;color:{{ c.tt }};max-width:460px">{{ ob.phrase }}</div>
+        </div>
+
+        <div style="display:{{ ob.dReading }};gap:24px">
+          <sc-for list="{{ obReading }}" as="orr" hint-placeholder-count="2">
+            <div onClick="{{ orr.pick }}" style="width:300px;border-radius:16px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;gap:18px;cursor:pointer;background:{{ orr.bg }};box-shadow:inset 0 0 0 {{ orr.ringW }} {{ c.accent }}">
+              <div style="display:flex;gap:4px;justify-content:center;flex-direction:{{ orr.dir }}">
+                <div style="width:74px;height:112px;border-radius:3px;background:{{ c.selected }};display:flex;align-items:center;justify-content:center;font-size:11px;color:{{ c.ts }};font-variant-numeric:tabular-nums">1</div>
+                <div style="width:74px;height:112px;border-radius:3px;background:{{ c.menu }};display:flex;align-items:center;justify-content:center;font-size:11px;color:{{ c.tt }};font-variant-numeric:tabular-nums">2</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+                <div style="font-size:15px;font-weight:600;color:{{ c.tp }}">{{ orr.label }}</div>
+                <div style="font-size:12px;color:{{ c.tt }}">{{ orr.sub }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:{{ ob.dSources }};flex-direction:column;gap:12px;width:580px">
+          <sc-for list="{{ obSources }}" as="os" hint-placeholder-count="3">
+            <div style="height:72px;border-radius:12px;display:flex;align-items:center;gap:16px;padding:0 20px;box-sizing:border-box;cursor:pointer;background:{{ c.card }}">
+              <div style="width:40px;height:40px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:{{ os.iconBg }}">
+                <div style="width:18px;height:18px;border-radius:{{ os.glyphRadius }};background:{{ os.glyph }}"></div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                <div style="font-size:15px;font-weight:700;color:{{ c.tp }}">{{ os.name }}</div>
+                <div style="font-size:12px;color:{{ c.tt }}">{{ os.sub }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:8px;height:8px;border-radius:4px;display:{{ os.dotDisplay }};background:{{ os.dot }}"></div>
+                <div style="font-size:12px;color:{{ c.ts }}">{{ os.status }}</div>
+              </div>
+            </div>
+          </sc-for>
+          <div style="font-size:13px;color:{{ c.accentText }};cursor:pointer;padding-top:4px">Voir les douze types de sources</div>
+        </div>
+
+        <div style="display:{{ ob.dTrial }};width:420px;flex-direction:column;gap:14px;border-radius:16px;box-sizing:border-box;padding:24px;background:{{ c.premium }}">
+          <sc-for list="{{ premiumPerks }}" as="pp2" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="width:14px;height:14px;flex:none;margin-top:2px;clip-path:polygon(14% 52%,0 66%,40% 100%,100% 16%,86% 4%,38% 74%);background:{{ c.accent }}"></div>
+              <div style="font-size:13px;line-height:18px;color:{{ c.ts }}">{{ pp2 }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:center">
+          <div onClick="{{ ob.next }}" style="height:38px;padding:0 24px;border-radius:10px;display:flex;align-items:center;font-size:15px;font-weight:600;color:#FFFFFF;background:{{ c.accent }};cursor:pointer">{{ ob.primary }}</div>
+          <div onClick="{{ goLibrary }}" style="height:38px;padding:0 24px;border-radius:10px;display:flex;align-items:center;font-size:15px;color:{{ c.tp }};background:{{ c.menu }};box-shadow:inset 0 0 0 1px {{ c.border }};cursor:pointer">{{ ob.secondary }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="width:1280px;display:flex;gap:32px;padding-top:8px">
+    <div style="flex:1;font-size:11px;line-height:16px;color:{{ c.tq }}">Fenetre 1280 par 860, taille par defaut a la premiere ouverture. Barre de titre unifiee de 60. Barre laterale encastree de 196 avec une marge de 12. Gabarit large a 24 de marge, gabarit colonne a 580 exactement.</div>
+    <div style="flex:1;font-size:11px;line-height:16px;color:{{ c.tq }}">{{ footNote }}</div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1100}}">
+const THEMES = {
+  midnight: {
+    dark:  { canvas:"#0E0E10", window:"#131315", chrome:"#161618", sidebar:"#1B1B1D", card:"#202023", cardHover:"#26262A", menu:"#2C2C30", selected:"#3A3A3E", field:"#141416", reader:"#000000", premium:"#1C2740" },
+    light: { canvas:"#F2F2F5", window:"#FAFAFC", chrome:"#F0F0F4", sidebar:"#E9E9EE", card:"#FFFFFF", cardHover:"#F4F4F8", menu:"#E6E6EB", selected:"#D5D5DC", field:"#FFFFFF", reader:"#FFFFFF", premium:"#E4EDFB" }
+  },
+  obsidian: {
+    dark:  { canvas:"#000000", window:"#000000", chrome:"#0B0B0C", sidebar:"#101012", card:"#161618", cardHover:"#1B1B1D", menu:"#202023", selected:"#2C2C30", field:"#050506", reader:"#000000", premium:"#151E33" },
+    light: { canvas:"#FFFFFF", window:"#FFFFFF", chrome:"#F7F7F9", sidebar:"#F0F0F3", card:"#F4F4F7", cardHover:"#EDEDF1", menu:"#E8E8EC", selected:"#DADAE0", field:"#FFFFFF", reader:"#FFFFFF", premium:"#E4EDFC" }
+  },
+  slate: {
+    dark:  { canvas:"#0E0F13", window:"#131418", chrome:"#16171C", sidebar:"#1B1C22", card:"#202128", cardHover:"#26272F", menu:"#2C2D36", selected:"#3A3B45", field:"#141519", reader:"#000000", premium:"#1C2740" },
+    light: { canvas:"#EDEFF4", window:"#F7F8FC", chrome:"#EBEDF2", sidebar:"#E4E7EE", card:"#FFFFFF", cardHover:"#F2F4F9", menu:"#E0E4EC", selected:"#D0D5E0", field:"#FFFFFF", reader:"#FFFFFF", premium:"#E2EBFA" }
+  },
+  paper: {
+    dark:  { canvas:"#121110", window:"#171614", chrome:"#1A1917", sidebar:"#1F1E1B", card:"#242320", cardHover:"#2A2926", menu:"#302F2B", selected:"#3E3D39", field:"#171614", reader:"#000000", premium:"#1C2740" },
+    light: { canvas:"#F5F5F7", window:"#FFFFFF", chrome:"#F2F2F4", sidebar:"#ECECEF", card:"#FFFFFF", cardHover:"#F5F5F7", menu:"#E8E8EB", selected:"#DBDBDF", field:"#FFFFFF", reader:"#FFFFFF", premium:"#E8F0FC" }
+  }
+};
+
+const TEXT = {
+  dark:  { tp:"#F2F2F7", ts:"#C7C7CC", tt:"#8E8E93", tq:"#6E6E73", tdis:"#48484C", emptyGlyph:"#4A4A4F" },
+  light: { tp:"#1C1C1E", ts:"#3C3C43", tt:"#5C5C61", tq:"#6E6E73", tdis:"#ABABB0", emptyGlyph:"#B4B4BA" }
+};
+
+const SEM = {
+  dark:  { accent:"#0A84FF", accentText:"#0A84FF", success:"#30D158", warning:"#FF9F0A", danger:"#FF453A", sep:"#2E2E32", border:"#3A3A3E", chromeLine:"#2A2A2E", dot:"#3A3A3E", readerBar:"rgba(19,19,21,0.94)" },
+  light: { accent:"#0A84FF", accentText:"#0B6BCB", success:"#248A3D", warning:"#B25000", danger:"#D70015", sep:"#E3E3E6", border:"#D1D1D6", chromeLine:"#E3E3E6", dot:"#D1D1D6", readerBar:"rgba(250,250,252,0.94)" }
+};
+
+const COVERS = [
+  { bg:"#E8E4DC", mc:"#1B1B1D", mx:"12%", my:"14%", ms:"70%", mr:"50%", bc:"#C2382B", bt:"68%", tc:"#1B1B1D" },
+  { bg:"#141416", mc:"#2C2C30", mx:"-10%", my:"20%", ms:"88%", mr:"0", bc:"#F2F2F7", bt:"73%", tc:"#F2F2F7" },
+  { bg:"#9AA7B4", mc:"#F2F2F7", mx:"22%", my:"9%", ms:"55%", mr:"6%", bc:"#1B2530", bt:"59%", tc:"#F2F2F7" },
+  { bg:"#2B3A2F", mc:"#D9E2D3", mx:"30%", my:"26%", ms:"46%", mr:"50%", bc:"#0F1611", bt:"78%", tc:"#F2F2F7" },
+  { bg:"#F0E8D8", mc:"#3A3F52", mx:"-6%", my:"34%", ms:"74%", mr:"12%", bc:"#3A3F52", bt:"84%", tc:"#1B1B1D" },
+  { bg:"#3D2E33", mc:"#E5C1B0", mx:"18%", my:"12%", ms:"62%", mr:"50%", bc:"#F2F2F7", bt:"70%", tc:"#F2F2F7" }
+];
+
+const TITLES = [
+  { t:"Vagabond de la nuit blanche", s:"Komga, salon", u:12, p:"62%", c:0 },
+  { t:"Le sel et la cendre", s:"Dossier local", u:3, p:"28%", c:1 },
+  { t:"Quatorze etes", s:"OPDS, bibliotheque publique", u:0, p:"0", c:2 },
+  { t:"Marches basses", s:"Kavita, atelier", u:0, p:"0", c:3 },
+  { t:"Sept nuits a Otaru", s:"SMB, nas", u:1, p:"8%", c:4 },
+  { t:"La fille du ferrailleur", s:"Komga, salon", u:24, p:"0", c:5 },
+  { t:"Neige sur les rails", s:"Dossier local", u:0, p:"94%", c:2 },
+  { t:"Un ete de trop", s:"Kavita, atelier", u:7, p:"41%", c:4 },
+  { t:"Le bruit des cigales", s:"WebDAV, sauvegarde", u:0, p:"0", c:3 },
+  { t:"Cendres de Yokohama", s:"OPDS, bibliotheque publique", u:148, p:"12%", c:1 }
+];
+
+class Component extends DCLogic {
+  state = { screen: "library", st: "charge", mode: "dark", theme: "midnight", bars: true, zones: false, plusMenu: false, filters: false, obStep: 0, readingDir: 1 };
+
+  set(k, v) { this.setState({ [k]: v }); }
+
+  renderVals() {
+    const S = this.state;
+    const c = { ...THEMES[S.theme][S.mode], ...TEXT[S.mode], ...SEM[S.mode] };
+    const A = c.accent;
+    const on = (b) => b ? "flex" : "none";
+
+    const screens = [
+      { id: "library",  label: "Bibliotheque",   title: "5.1 Bibliotheque",        note: "Grille, barre de categories, menu de tri. Le mode liste compacte est decrit dans DESIGN-SPEC." },
+      { id: "history",  label: "Historique",     title: "5.2 Historique",          note: "Regroupement par jour, en tete collant, suppression au survol, effacement avec confirmation." },
+      { id: "browse",   label: "Parcourir",      title: "5.3 Parcourir",           note: "Cliquez le bouton plus de la barre d outils pour deplier les treize entrees dans leur ordre impose." },
+      { id: "search",   label: "Rechercher",     title: "5.4 Rechercher",          note: "Une rangee defilante par source. Une source qui ne repond pas affiche sa ligne d erreur sans bloquer les autres." },
+      { id: "settings", label: "Reglages",       title: "5.5 Reglages",            note: "Colonne de 580 exactement, dix sept sections dans l ordre impose. Faites defiler la colonne." },
+      { id: "series",   label: "Fiche de serie", title: "5.6 Fiche de serie",      note: "Banniere de 300, couverture floutee a 40 px et assombrie a 55 pour cent. Cliquez un chapitre pour ouvrir le lecteur." },
+      { id: "paged",    label: "Lecteur pagine", title: "5.7 Lecteur pagine",      note: "Cliquez la page pour retirer les barres. Deposez de vraies pages dans les deux emplacements pour appliquer le critere de la section 9." },
+      { id: "webtoon",  label: "Lecteur webtoon",title: "5.8 Lecteur webtoon",     note: "Defilement vertical continu, colonne a 62 pour cent, progression en pourcentage, enchainement automatique." },
+      { id: "premium",  label: "Mur premium",    title: "5.9 Mur premium",         note: "Feuille de 360, fond #141A28, contour #24344F. Aucun compte a rebours." },
+      { id: "onboarding", label: "Premiere ouverture", title: "5.10 Premiere ouverture", note: "Trois etapes, une seule decision par etape. Les points en haut a droite naviguent." }
+    ];
+    const cur = screens.find(x => x.id === S.screen) || screens[0];
+
+    const tab = (active) => ({ bg: active ? A : c.card, fg: active ? "#FFFFFF" : c.ts, weight: active ? 600 : 400 });
+    const screenTabs = screens.map(s => ({ label: s.label, ...tab(s.id === S.screen), go: () => this.setState({ screen: s.id, plusMenu: false, filters: false }) }));
+
+    const seg = (active) => ({ bg: active ? c.selected : "transparent", fg: active ? c.tp : c.tt, weight: active ? 600 : 400 });
+    const stateTabs = [["vide","vide"],["chargement","chargement"],["charge","charge"],["erreur","erreur"]].map(([id, label]) => ({ label, ...seg(S.st === id), go: () => this.set("st", id) }));
+    const modeTabs = [["dark","sombre"],["light","clair"]].map(([id, label]) => ({ label, ...seg(S.mode === id), go: () => this.set("mode", id) }));
+    const themeTabs = [["midnight","Midnight"],["obsidian","Obsidian"],["slate","Slate"],["paper","Paper"]].map(([id, label]) => ({ label, ...seg(S.theme === id), go: () => this.set("theme", id) }));
+
+    const isShell = ["library","history","browse","search","settings","series","premium"].includes(S.screen);
+    const listScreen = ["library","history","browse","search"].includes(S.screen);
+    const shellScreen = S.screen === "premium" ? "library" : S.screen;
+
+    const sidebarDefs = [
+      { id:"library", label:"Bibliotheque", r:"3px" },
+      { id:"history", label:"Historique", r:"10px" },
+      { id:"browse", label:"Parcourir", r:"10px" },
+      { id:"search", label:"Rechercher", r:"10px" },
+      { id:"settings", label:"Reglages", r:"10px" }
+    ];
+    const activeSide = shellScreen === "series" ? "library" : shellScreen;
+    const sidebar = sidebarDefs.map(s => {
+      const active = s.id === activeSide;
+      return { label: s.label, glyphRadius: s.r, bg: active ? c.selected : "transparent", fg: active ? c.tp : c.ts, icon: active ? c.tp : c.tt, weight: active ? 600 : 400, go: () => this.setState({ screen: s.id, plusMenu: false }) };
+    });
+
+    const tbTitles = { library:"Bibliotheque", history:"Historique", browse:"Parcourir", search:"Rechercher", settings:"Reglages", series:"Bibliotheque" };
+    const tbSearch = { library:"Rechercher la bibliotheque", history:"Rechercher dans l historique", browse:"Rechercher des sources", search:"Manga, auteurs, genres...", settings:"Rechercher un reglage", series:"Rechercher la bibliotheque" };
+    const toolbar = {
+      title: tbTitles[shellScreen],
+      search: tbSearch[shellScreen],
+      searchW: shellScreen === "search" ? "440px" : "206px",
+      dPlus: on(["library","browse"].includes(shellScreen)),
+      dSort: on(["library","browse","series"].includes(shellScreen)),
+      dClear: on(shellScreen === "history")
+    };
+
+    const cats = [["Tout",128],["En cours",24],["Termines",61],["Prevus",43]];
+    const categories = cats.map(([label, n], i) => ({ label, n, bg: i === 0 ? c.menu : "transparent", fg: i === 0 ? c.tp : c.tt, weight: i === 0 ? 600 : 400, count: i === 0 ? c.tt : c.tt }));
+
+    const libraryCards = TITLES.map(t => ({
+      ...COVERS[t.c], coverTitle: t.t, title: t.t, source: t.s,
+      unread: String(t.u), badgeDisplay: t.u > 0 ? "flex" : "none",
+      progress: (t.p === "0" || t.p === "100%") ? "0" : t.p,
+      open: () => this.setState({ screen: "series", st: "charge" })
+    }));
+
+    const hi = (ci) => ({ bg: COVERS[ci].bg, mc: COVERS[ci].mc, mx: "18%", my: "22%", ms: "62%", mr: "50%" });
+    const historyGroups = [
+      { day: "Aujourd hui", items: [
+        { ...hi(0), title:"Vagabond de la nuit blanche", chapter:"Chapitre 146, page 14 sur 38", time:"21:04", delBg:c.selected, delFg:c.ts },
+        { ...hi(4), title:"Sept nuits a Otaru", chapter:"Chapitre 12, termine", time:"19:47", delBg:"transparent", delFg:c.tq },
+        { ...hi(1), title:"Le sel et la cendre", chapter:"Chapitre 41, termine", time:"18:12", delBg:"transparent", delFg:c.tq }
+      ]},
+      { day: "Hier", items: [
+        { ...hi(5), title:"La fille du ferrailleur", chapter:"Chapitre 8, page 3 sur 44", time:"23:38", delBg:"transparent", delFg:c.tq },
+        { ...hi(3), title:"Marches basses", chapter:"Chapitre 77, termine", time:"22:05", delBg:"transparent", delFg:c.tq }
+      ]}
+    ];
+
+    const sources = [
+      { name:"Fichiers locaux", sub:"v1.0", iconBg:"#1E3A5F", glyph:A, glyphRadius:"3px", dot:"transparent", dotDisplay:"none" },
+      { name:"Komga, serveur maison", sub:"https://komga.local  connecte", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block" },
+      { name:"Kavita, atelier", sub:"https://kavita.maison  connecte", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block" },
+      { name:"Catalogue OPDS", sub:"v1.4  multilingue", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px", dot:c.success, dotDisplay:"block" },
+      { name:"WebDAV, sauvegarde", sub:"https://dav.exemple.net  sans reponse depuis 21:04", iconBg:c.menu, glyph:c.warning, glyphRadius:"3px", dot:c.warning, dotDisplay:"block" }
+    ];
+
+    const plusMenu = [
+      "Transfert Wi-Fi","Ajouter un serveur Komga","Ajouter un serveur Kavita","Ajouter un serveur Jellyfin",
+      "Ajouter un catalogue OPDS","Ajouter SMB / NAS","Ajouter un partage NFS","Ajouter un serveur WebDAV",
+      "Parcourir un dossier local","Ajouter une bibliotheque iCloud Drive","Ajouter un depot","Installer une extension"
+    ].map((label, i) => ({ label, border: i === 1 ? "1px solid " + c.border : "none", glyphRadius: i === 0 ? "8px" : "3px" }));
+
+    const mkItem = (i) => ({ ...COVERS[TITLES[i].c], coverTitle: TITLES[i].t, title: TITLES[i].t, open: () => this.setState({ screen: "series", st: "charge" }) });
+    const searchGroups = [
+      { name:"Komga, salon", count:"18 resultats", dSeeAll:"block", dRow:"flex", dError:"none", errorText:"", items:[mkItem(0),mkItem(5),mkItem(7),mkItem(2),mkItem(9),mkItem(3)] },
+      { name:"Catalogue OPDS", count:"7 resultats", dSeeAll:"block", dRow:"flex", dError:"none", errorText:"", items:[mkItem(2),mkItem(6),mkItem(8),mkItem(1),mkItem(4),mkItem(0)] },
+      { name:"WebDAV, sauvegarde", count:"", dSeeAll:"none", dRow:"none", dError:"flex", errorText:"dav.exemple.net n a pas repondu en 10 secondes", items:[] }
+    ];
+
+    const fresh = S.st === "vide";
+    const row = (label, kind, opts = {}) => {
+      const base = {
+        label, pad: "0 20px", border: "none", bg: "transparent",
+        icon: opts.premium ? A : A, fg: opts.premium ? A : (opts.disabled ? c.tdis : c.tp),
+        glyphRadius: opts.glyphRadius || "5px",
+        value: opts.value || "", dValue: on(kind === "value"), valueFg: opts.accentValue ? A : c.ts,
+        dChevronPair: on(kind === "value"), dChevron: on(kind === "nav" || !!opts.chevron),
+        dToggle: on(kind === "toggle"), dCrown: on(kind === "premium" && !opts.chevron),
+        dSlider: on(kind === "slider"), sliderW: opts.sliderW || "50%",
+        track: opts.off ? c.selected : A, knobLeft: opts.off ? "2px" : "22px"
+      };
+      if (kind === "premium") { base.bg = c.premium; base.fg = A; }
+      if (kind === "slider") { base.pad = "14px 20px"; }
+      if (kind === "counter") { base.dValue = "flex"; base.dChevronPair = "flex"; }
+      return base;
+    };
+
+    const sec = (title, rows, desc, legal) => ({
+      title,
+      rows: rows.map((r, i) => ({ ...r, border: i === 0 ? "none" : "1px solid " + c.sep })),
+      desc: desc || "", dDesc: on(!!desc), legal: legal || "", dLegal: on(!!legal)
+    });
+
+    const settingsSections = [
+      sec("Abonnement", [
+        row(fresh ? "Passer a Premium" : "Premium, actif", "premium", { chevron: true }),
+        row("Restaurer les achats", "nav")
+      ], "Debloquez la traduction, la colorisation, les suivis, la sauvegarde, le mode incognito, les serveurs Komga, Kavita, Jellyfin et OPDS, la synchronisation iCloud et bien plus."),
+      sec("Confidentialite", [
+        row("Incognito", "premium", { glyphRadius: "9px" }),
+        row("Verrouillage de l app", "toggle", { off: fresh, glyphRadius: "4px" })
+      ], "Navigation privee : l activite de lecture n est pas enregistree dans l historique."),
+      sec("General", [
+        row("Langue", "value", { value: "Systeme", accentValue: true }),
+        row("Apparence", "value", { value: S.mode === "dark" ? "Sombre" : "Systeme" }),
+        row("Theme", "value", { value: { midnight:"Midnight", obsidian:"Obsidian", slate:"Slate", paper:"Paper" }[S.theme] }),
+        row("Notifications de nouveaux chapitres", "toggle", { off: fresh })
+      ]),
+      sec("Bibliotheque", [
+        row("Trier par", "value", { value: "Derniere lecture" }),
+        row("Ordre", "value", { value: "Decroissant" }),
+        row("Grouper par categorie", "toggle", { off: fresh })
+      ], "Ce tri s applique a la grille et au mode liste compacte."),
+      sec("Traduction", [
+        row("Traduire les bulles", "premium"),
+        row("Langue cible", "value", { value: "Francais" }),
+        row("Police de remplacement", "nav")
+      ]),
+      sec("Lecteur", [
+        row("Sens de lecture", "value", { value: "Droite a gauche", glyphRadius: "4px" }),
+        row("Mise en page", "value", { value: "Double page" }),
+        row("Fond du lecteur", "value", { value: "Noir OLED" }),
+        row("Rogner les bords", "toggle", { off: fresh })
+      ], "La double page se replie automatiquement en portrait."),
+      sec("Prereglages de lecture", [
+        row(fresh ? "Aucun prereglage" : "3 prereglages", "nav"),
+        row("Appliquer au chapitre suivant", "toggle", { off: fresh })
+      ]),
+      sec("Comportement du lecteur", [
+        row("Tourne de page animee", "toggle", { off: false }),
+        row("Garder l ecran allume", "toggle", { off: false }),
+        row("Tourner avec les touches de volume", "toggle", { off: true }),
+        row("Pages gardees en memoire", "counter", { value: fresh ? "4" : "12" }),
+        row("Luminosite du lecteur", "slider", { sliderW: "88%" })
+      ]),
+      sec("Bibliotheque", [
+        row("Marquer lu a la derniere page", "toggle", { off: false }),
+        row("Supprimer apres lecture", "value", { value: "Jamais" }),
+        row("Mettre a jour au lancement", "toggle", { off: fresh })
+      ], "Deuxieme carte Bibliotheque, comportement, distincte de la carte de tri plus haut."),
+      sec("Pont navigateur", [
+        row("Extension Safari", "nav"),
+        row("Ouvrir les liens dans Yum", "toggle", { off: fresh })
+      ], "Le pont laisse une page de catalogue ouverte dans le navigateur envoyer une serie vers Yum."),
+      sec("Suivis", [
+        row(fresh ? "Aucun service connecte" : "1 service connecte", "nav"),
+        row("Envoyer la progression", "toggle", { off: fresh }),
+        row("Confirmer avant d envoyer", "toggle", { off: true })
+      ]),
+      sec("Telechargements", [
+        row("Qualite", "value", { value: "Originale" }),
+        row("En Wi-Fi seulement", "toggle", { off: false }),
+        row("Chapitres a l avance", "counter", { value: "3" }),
+        row("Emplacement", "nav")
+      ]),
+      sec("Sauvegarde et restauration", [
+        row("Sauvegarder maintenant", "nav", { glyphRadius: "4px" }),
+        row("Sauvegarde automatique", "value", { value: fresh ? "Desactivee" : "Chaque semaine" }),
+        row("Restaurer depuis un fichier", "nav")
+      ]),
+      sec("iCloud", [
+        row("Synchroniser la progression", "toggle", { off: fresh }),
+        row("Synchroniser la bibliotheque", "toggle", { off: true }),
+        row("Dernier envoi", "value", { value: fresh ? "Jamais" : (S.st === "erreur" ? "il y a 6 jours" : "il y a 4 minutes") })
+      ]),
+      sec("Stockage", [
+        row("Detail du stockage", "nav", { value: fresh ? "0 octet" : "12,4 Go" }),
+        row("Vider le cache d images", "nav"),
+        row("Supprimer tous les telechargements", "nav")
+      ], "Les chapitres supprimes restent lisibles depuis leur source."),
+      sec("Assistance", [
+        row("Aide", "nav"),
+        row("Signaler un bug", "nav"),
+        row("Statistiques de lecture", "nav")
+      ]),
+      sec("A propos", [
+        row("Version", "value", { value: "1.0.0, build 148" }),
+        row("Nouveautes", "nav"),
+        row("Mentions legales", "nav")
+      ], null, "Yum ne heberge aucun contenu. L application lit les fichiers et les serveurs que vous lui indiquez. Vous restez responsable de la legalite de vos sources.")
+    ];
+
+    const seriesData = {
+      ...COVERS[0], coverTitle: "Vagabond de la nuit blanche", title: "Vagabond de la nuit blanche",
+      authors: "Recit et dessin, Haruna Sekiguchi",
+      meta: "En cours, japonais, Komga salon, 148 chapitres",
+      genres: ["Seinen","Historique","Drame","Arts martiaux"],
+      cta: S.st === "vide" ? "Aucun chapitre" : "Reprendre ch. 146",
+      summary: "Un ronin sans maitre traverse un pays qui n a plus besoin de sabres. A chaque village il croise quelqu un qui a survecu a la meme guerre que lui et qui a choisi de vivre autrement.",
+      chapterCount: S.st === "charge" ? "148 chapitres" : "Chapitres"
+    };
+
+    const unread = { bg:c.card, fg:c.tp, weight:600, subFg:c.tt, dotDisplay:"block", progress:"0" };
+    const read = { bg:"transparent", fg:c.tt, weight:400, subFg:c.tq, dotDisplay:"none", progress:"0" };
+    const chapters = [
+      { ...unread, title:"Chapitre 148, Le pont de Sanjo", sub:"12 aout 2026  24 pages", dlDisplay:"none" },
+      { ...unread, title:"Chapitre 147, Sel et fer", sub:"5 aout 2026  22 pages", dlDisplay:"block" },
+      { ...read, title:"Chapitre 146, La riviere basse", sub:"Lu  page 14 sur 38", progress:"37%", dlDisplay:"none" },
+      { ...read, title:"Chapitre 145, Trois pierres", sub:"Lu  telecharge", dlDisplay:"block" },
+      { ...read, title:"Chapitre 144, Le marchand borgne", sub:"Lu", dlDisplay:"none" },
+      { ...read, title:"Chapitre 143, Ce que le vent laisse", sub:"Lu", dlDisplay:"none" },
+      { ...read, title:"Chapitre 142, Deux bols de riz", sub:"Lu", dlDisplay:"none" },
+      { ...read, title:"Chapitre 141, La route de l est", sub:"Lu", dlDisplay:"none" }
+    ];
+
+    const emptyByScreen = {
+      library: { title:"Votre bibliotheque est vide", phrase:"Parcourez les sources pour trouver des mangas et les ajouter a votre bibliotheque.", action:"Parcourir les sources", glyph:"books", act: () => this.set("screen","browse") },
+      history: { title:"Aucun historique", phrase:"Les chapitres que vous lisez apparaitront ici.", action:"Ouvrir la bibliotheque", glyph:"clock", act: () => this.set("screen","library") },
+      browse:  { title:"Aucune source installee", phrase:"Ajoutez un serveur, un dossier local ou un catalogue public pour commencer a lire.", action:"Ajouter une source", glyph:"books", act: () => this.set("plusMenu", true) },
+      search:  { title:"Rechercher un manga", phrase:"Recherche dans toutes les sources installees", action:"", glyph:"glass", act: () => {} }
+    };
+    const errorByScreen = {
+      library: { title:"La bibliotheque n a pas pu etre lue", phrase:"Le fichier d index est illisible. Yum peut le reconstruire depuis vos sources, la progression est conservee.", action:"Reconstruire l index", second:"Voir les telechargements" },
+      history: { title:"L historique n a pas pu etre lu", phrase:"Le fichier d historique est corrompu. Yum peut le repartir de zero, votre bibliotheque n est pas touchee.", action:"Repartir de zero", second:"" },
+      browse:  { title:"Deux sources ne repondent pas", phrase:"dav.exemple.net et opds.exemple.org n ont pas repondu en 10 secondes. Verifiez votre reseau, ou lisez vos chapitres telecharges.", action:"Reessayer", second:"Voir les telechargements" },
+      search:  { title:"Aucune source ne repond", phrase:"Les cinq sources installees ont echoue. Verifiez votre reseau, la recherche locale reste disponible.", action:"Reessayer", second:"Chercher hors ligne" }
+    };
+
+    const primaryBtn = { actionWeight:600, actionFg:"#FFFFFF", actionBg:A, actionBorder:"transparent" };
+    const secondaryBtn = { actionWeight:400, actionFg:c.tp, actionBg:c.menu, actionBorder:c.border };
+    let centered = { title:"", phrase:"", action:"", second:"", dActions:"none", dSecond:"none", dBooks:"none", dClock:"none", dGlass:"none", dWarn:"none", act: () => {}, ...primaryBtn };
+    if (listScreen && S.st === "vide") {
+      const e = emptyByScreen[S.screen];
+      centered = { ...centered, title:e.title, phrase:e.phrase, action:e.action, dActions: on(!!e.action), act: e.act,
+        dBooks: on(e.glyph === "books"), dClock: on(e.glyph === "clock"), dGlass: on(e.glyph === "glass") };
+    } else if (listScreen && S.st === "erreur") {
+      const e = errorByScreen[S.screen];
+      centered = { ...centered, ...secondaryBtn, title:e.title, phrase:e.phrase, action:e.action, second:e.second, dActions:"flex", dSecond: on(!!e.second), dWarn:"flex" };
+    }
+
+    let chapterCenter = { title:"", phrase:"", action:"", dAction:"none", glyph:c.emptyGlyph };
+    if (S.screen === "series" && S.st === "vide") chapterCenter = { title:"Aucun chapitre dans cette serie", phrase:"La source connait cette serie mais n expose encore aucun chapitre. Suivez la serie pour etre prevenu.", action:"Suivre la serie", dAction:"flex", glyph:c.emptyGlyph };
+    if (S.screen === "series" && S.st === "erreur") chapterCenter = { title:"La liste des chapitres n a pas pu etre lue", phrase:"Komga salon a repondu, puis a coupe la connexion. Les cinq chapitres telecharges restent lisibles.", action:"Reessayer", dAction:"flex", glyph:c.warning };
+
+    let pagedCenter = { title:"", phrase:"", action:"", second:"Revenir a la fiche", dActions:"none", dWarn:"none", dPage:"none" };
+    if (S.screen === "paged" && S.st === "vide") pagedCenter = { title:"Ce chapitre ne contient aucune page", phrase:"Le fichier est present mais vide. Retelechargez le chapitre, ou ouvrez le chapitre suivant.", action:"Retelecharger", second:"Revenir a la fiche", dActions:"flex", dWarn:"none", dPage:"flex" };
+    if (S.screen === "paged" && S.st === "erreur") pagedCenter = { title:"La page 14 est illisible", phrase:"Le fichier contient une image que Yum ne sait pas ouvrir. Vous pouvez sauter cette page, ou signaler le fichier pour qu il soit pris en charge.", action:"Sauter la page", second:"Signaler le fichier", dActions:"flex", dWarn:"flex", dPage:"none" };
+
+    let webtoonCenter = { title:"", phrase:"", action:"", dActions:"none", dWarn:"none", dPage:"none" };
+    if (S.screen === "webtoon" && S.st === "vide") webtoonCenter = { title:"Ce chapitre ne contient aucune image", phrase:"Le dossier du chapitre est vide. Retelechargez le, ou passez au chapitre suivant.", action:"Retelecharger", dActions:"flex", dPage:"flex" };
+    if (S.screen === "webtoon" && S.st === "erreur") webtoonCenter = { title:"Le defilement s est arrete a 41 pour cent", phrase:"Les images suivantes ne se telechargent plus. Votre position est gardee, vous reprendrez ici.", action:"Reessayer", dActions:"flex", dWarn:"flex" };
+
+    const webtoonPanels = [
+      { bg:"#E8E4DC", h:"210px", mc:"#1B1B1D", mx:"14%", my:"18%", ms:"48%", mh:"56%", mr:"50%", bc:"#C2382B", bandH:"10px", gap:"0px" },
+      { bg:"#141416", h:"260px", mc:"#3A3A3E", mx:"-8%", my:"22%", ms:"70%", mh:"52%", mr:"0", bc:"#F2F2F7", bandH:"6px", gap:"0px" },
+      { bg:"#9AA7B4", h:"180px", mc:"#F2F2F7", mx:"26%", my:"16%", ms:"38%", mh:"62%", mr:"12px", bc:"#1B2530", bandH:"12px", gap:"0px" },
+      { bg:"#F0E8D8", h:"320px", mc:"#3A3F52", mx:"10%", my:"14%", ms:"58%", mh:"64%", mr:"8px", bc:"#3A3F52", bandH:"8px", gap:"0px" },
+      { bg:"#2B3A2F", h:"240px", mc:"#D9E2D3", mx:"32%", my:"20%", ms:"36%", mh:"56%", mr:"50%", bc:"#0F1611", bandH:"10px", gap:"0px" },
+      { bg:"#3D2E33", h:"280px", mc:"#E5C1B0", mx:"18%", my:"12%", ms:"46%", mh:"68%", mr:"50%", bc:"#F2F2F7", bandH:"6px", gap:"0px" }
+    ];
+
+    const readerActions = ["Filtres","Traduire","Coloriser","Signet","Options"].map((label, i) => ({
+      label, glyphRadius: i === 3 ? "3px" : "7px",
+      bg: (i === 0 && S.filters) ? c.selected : c.menu, fg: c.tp,
+      act: i === 0 ? () => this.set("filters", !S.filters) : () => {}
+    }));
+    const filterSliders = [
+      { label:"Luminosite", value:"88 %", w:"88%" },
+      { label:"Chaleur", value:"+2", w:"56%" },
+      { label:"Nettete", value:"+14", w:"64%" },
+      { label:"Contraste", value:"0", w:"50%" },
+      { label:"Gamma", value:"1,00", w:"50%" }
+    ];
+    const filterToggles = [
+      { label:"Reduction du bruit", fg:c.ts, dToggle:"block", dCrown:"none", track:A, knobLeft:"18px" },
+      { label:"Amelioration IA", fg:c.ts, dToggle:"block", dCrown:"none", track:c.selected, knobLeft:"2px" },
+      { label:"Colorisation IA", fg:A, dToggle:"none", dCrown:"block", track:c.selected, knobLeft:"2px" }
+    ];
+
+    const premiumPerks = [
+      "Traduction et colorisation par IA",
+      "Serveurs Komga, Kavita, Jellyfin, OPDS",
+      "Suivis sur vos services de suivi",
+      "Telechargements hors ligne",
+      "Sauvegarde et synchronisation iCloud"
+    ];
+
+    const obDefs = [
+      { title:"Dans quel sens lisez vous ?", phrase:"Vous pourrez changer ce reglage a tout moment, et le definir serie par serie.", primary:"Continuer", secondary:"Passer", dReading:"flex", dSources:"none", dTrial:"none" },
+      { title:"Ajoutez votre premiere source", phrase:"Yum ne heberge aucun contenu. Il lit les fichiers et les serveurs que vous lui indiquez.", primary:"Continuer", secondary:"Passer", dReading:"none", dSources:"flex", dTrial:"none" },
+      { title:"Essayez Premium", phrase:"Sept jours, sans moyen de paiement. Yum fonctionne entierement sans abonnement.", primary:"Commencer l essai", secondary:"Plus tard", dReading:"none", dSources:"none", dTrial:"flex" }
+    ];
+    const obIdx = S.obStep;
+    const ob = { ...obDefs[obIdx], next: () => this.set("obStep", Math.min(2, obIdx + 1)) };
+    const obDots = [0,1,2].map(i => ({ bg: i === obIdx ? A : c.selected, go: () => this.set("obStep", i) }));
+    const obReading = [
+      { label:"Droite a gauche", sub:"manga japonais", dir:"row-reverse", ringW: S.readingDir === 1 ? "3px" : "0", bg: S.readingDir === 1 ? c.cardHover : c.card, pick: () => this.set("readingDir", 1) },
+      { label:"Gauche a droite", sub:"manhwa, manhua, bandes dessinees", dir:"row", ringW: S.readingDir === 0 ? "3px" : "0", bg: S.readingDir === 0 ? c.cardHover : c.card, pick: () => this.set("readingDir", 0) }
+    ];
+    const obSourceBase = [
+      { name:"Parcourir un dossier local", sub:"un dossier de fichiers CBZ deja sur cet appareil", iconBg:c.menu, glyph:c.ts, glyphRadius:"3px" },
+      { name:"Ajouter un serveur Komga", sub:"le plus courant pour une collection auto hebergee", iconBg:c.premium, glyph:A, glyphRadius:"9px" },
+      { name:"Ajouter un catalogue OPDS", sub:"un catalogue public, aucun compte requis", iconBg:c.menu, glyph:c.ts, glyphRadius:"9px" }
+    ];
+    const obSources = obSourceBase.map((s, i) => {
+      if (S.st === "charge" && i === 1) return { ...s, dot:c.success, dotDisplay:"block", status:"Connecte, 412 series" };
+      if (S.st === "erreur" && i === 1) return { ...s, dot:c.warning, dotDisplay:"block", status:"Adresse injoignable" };
+      return { ...s, dot:"transparent", dotDisplay:"none", status:"" };
+    });
+
+    const d = {
+      shell: on(isShell),
+      categories: (shellScreen === "library" && S.st !== "erreur") ? "flex" : "none",
+      grid: (S.screen === "library" || S.screen === "premium") && S.st === "charge" ? "grid" : "none",
+      historyList: on(S.screen === "history" && S.st === "charge"),
+      browseList: on(S.screen === "browse" && S.st === "charge"),
+      searchList: on(S.screen === "search" && S.st === "charge"),
+      settings: on(S.screen === "settings"),
+      settingsBanner: on(S.screen === "settings" && S.st === "erreur"),
+      series: on(S.screen === "series"),
+      chapters: on(S.screen === "series" && S.st === "charge"),
+      chapterCenter: on(S.screen === "series" && (S.st === "vide" || S.st === "erreur")),
+      chapterSkeleton: on(S.screen === "series" && S.st === "chargement"),
+      centered: on(listScreen && (S.st === "vide" || S.st === "erreur")),
+      skelGrid: (["library","search"].includes(S.screen) && S.st === "chargement") ? "grid" : "none",
+      skelRows: on(["history","browse"].includes(S.screen) && S.st === "chargement"),
+      plusMenu: on(S.plusMenu && ["library","browse"].includes(shellScreen)),
+      readerPaged: on(S.screen === "paged"),
+      pagedPages: on(S.screen === "paged" && S.st === "charge"),
+      pagedZones: (S.screen === "paged" && S.zones) ? "flex" : "none",
+      pagedCenter: on(S.screen === "paged" && (S.st === "vide" || S.st === "erreur")),
+      pagedSkeleton: on(S.screen === "paged" && S.st === "chargement"),
+      readerBars: (S.bars && S.st === "charge") ? "flex" : "none",
+      filters: on(S.filters && S.screen === "paged" && S.st === "charge" && S.bars),
+      webtoon: on(S.screen === "webtoon"),
+      webtoonPages: on(S.screen === "webtoon" && S.st === "charge"),
+      webtoonCenter: on(S.screen === "webtoon" && (S.st === "vide" || S.st === "erreur")),
+      webtoonSkeleton: on(S.screen === "webtoon" && S.st === "chargement"),
+      premium: on(S.screen === "premium"),
+      premiumSheet: on(S.screen === "premium" && S.st === "charge"),
+      premiumSkeleton: on(S.screen === "premium" && (S.st === "chargement" || S.st === "vide")),
+      premiumError: on(S.screen === "premium" && S.st === "erreur"),
+      onboarding: on(S.screen === "onboarding")
+    };
+
+    const footNotes = {
+      library: "Etat vide, chargement, charge, erreur. La pastille de non lus et le filet de progression sont les seules marques posees sur une couverture.",
+      history: "En tete de jour en headline, vignette 44 par 66, heure en chiffres tabulaires, suppression au survol.",
+      browse: "Le menu plus reprend les douze entrees du cahier des charges dans l ordre exact, separateur apres Transfert Wi-Fi.",
+      search: "Une rangee par source. La troisieme source echoue sans empecher les deux autres de repondre.",
+      settings: "Dix sept sections dans l ordre impose. L etat vide est l installation neuve, l etat en erreur ajoute une banniere iCloud en haut de colonne.",
+      series: "Le bouton principal change de libelle selon l etat, Commencer la lecture, Reprendre ch. N, Tout est lu.",
+      paged: "Zones de toucher 28, 44, 28 pour cent, visibles seulement pendant le tutoriel a 6 pour cent d opacite. Panneau de filtres en popover ancre au bouton Filtres.",
+      webtoon: "Progression en pourcentage, jamais en numero de page. Separateur discret portant le numero du chapitre entrant.",
+      premium: "Le mur premium se pose sur l ecran d ou il a ete ouvert, voile noir a 45 pour cent, aucune formulation qui presse.",
+      onboarding: "Trois etapes, une decision par etape. Le bouton Plus tard est aussi visible que le bouton d essai."
+    };
+
+    return {
+      c, screenTabs, stateTabs, modeTabs, themeTabs,
+      screenTitle: cur.title, screenNote: cur.note, footNote: footNotes[S.screen],
+      sidebar, toolbar, categories, libraryCards, historyGroups, sources, plusMenu, searchGroups,
+      settingsSections, series: seriesData, chapters, centered, chapterCenter,
+      pagedCenter, webtoonCenter, webtoonPanels, readerActions, filterSliders, filterToggles,
+      premiumPerks, ob, obDots, obReading, obSources, d,
+      readerBg: S.theme === "paper" && S.mode === "light" ? "#EFE3CE" : "#000000",
+      zonesTrack: S.zones ? A : c.selected, zonesKnob: S.zones ? "16px" : "2px",
+      barsTrack: S.bars ? A : c.selected, barsKnob: S.bars ? "16px" : "2px",
+      plusBg: S.plusMenu ? c.selected : c.menu,
+      four: [1,2,3,4], eight: [1,2,3,4,5,6,7,8], ten: [1,2,3,4,5,6,7,8,9,10],
+      toggleZones: () => this.set("zones", !S.zones),
+      toggleBars: () => this.set("bars", !S.bars),
+      togglePlusMenu: () => this.set("plusMenu", !S.plusMenu),
+      goPremium: () => this.setState({ screen: "premium", st: "charge" }),
+      goLibrary: () => this.setState({ screen: "library", st: "charge" }),
+      goSeries: () => this.setState({ screen: "series", st: "charge" }),
+      openReader: () => this.setState({ screen: "paged", st: "charge", bars: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

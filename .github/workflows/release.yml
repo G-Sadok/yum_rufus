@@ -1,0 +1,196 @@
+name: Publication
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version a publier, par exemple 1.0.0"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  publier:
+    name: Construire et publier le DMG
+    runs-on: macos-15
+    timeout-minutes: 90
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determiner la version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Version a publier : $VERSION"
+
+      - name: Selectionner Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.app
+
+      - name: Installer le certificat de signature
+        env:
+          CERTIFICAT_P12: ${{ secrets.CERTIFICAT_P12_BASE64 }}
+          MOT_DE_PASSE_P12: ${{ secrets.MOT_DE_PASSE_P12 }}
+          MOT_DE_PASSE_TROUSSEAU: ${{ secrets.MOT_DE_PASSE_TROUSSEAU }}
+        run: |
+          CHEMIN_P12="$RUNNER_TEMP/certificat.p12"
+          TROUSSEAU="$RUNNER_TEMP/signature.keychain-db"
+
+          echo -n "$CERTIFICAT_P12" | base64 --decode -o "$CHEMIN_P12"
+
+          security create-keychain -p "$MOT_DE_PASSE_TROUSSEAU" "$TROUSSEAU"
+          security set-keychain-settings -lut 21600 "$TROUSSEAU"
+          security unlock-keychain -p "$MOT_DE_PASSE_TROUSSEAU" "$TROUSSEAU"
+
+          security import "$CHEMIN_P12" \
+            -P "$MOT_DE_PASSE_P12" \
+            -A -t cert -f pkcs12 \
+            -k "$TROUSSEAU"
+
+          security set-key-partition-list \
+            -S apple-tool:,apple: \
+            -k "$MOT_DE_PASSE_TROUSSEAU" \
+            "$TROUSSEAU"
+
+          security list-keychain -d user -s "$TROUSSEAU"
+          rm -f "$CHEMIN_P12"
+
+      - name: Enregistrer le profil de notarisation
+        env:
+          IDENTIFIANT_APPLE: ${{ secrets.IDENTIFIANT_APPLE }}
+          EQUIPE_APPLE: ${{ secrets.EQUIPE_APPLE }}
+          MOT_DE_PASSE_APPLICATION: ${{ secrets.MOT_DE_PASSE_APPLICATION }}
+        run: |
+          xcrun notarytool store-credentials "notarisation-ci" \
+            --apple-id "$IDENTIFIANT_APPLE" \
+            --team-id "$EQUIPE_APPLE" \
+            --password "$MOT_DE_PASSE_APPLICATION"
+
+      - name: Construire le DMG
+        env:
+          IDENTITE_SIGNATURE: ${{ secrets.IDENTITE_SIGNATURE }}
+          EQUIPE_APPLE: ${{ secrets.EQUIPE_APPLE }}
+          PROFIL_NOTARISATION: notarisation-ci
+        run: |
+          chmod +x scripts/build-dmg.sh
+          ./scripts/build-dmg.sh "${{ steps.version.outputs.version }}"
+
+      - name: Rediger les notes de version
+        id: notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PRECEDENTE="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo '')"
+
+          {
+            echo "## Version $VERSION"
+            echo ""
+
+            if [ -n "$PRECEDENTE" ]; then
+              echo "### Nouveautes"
+              echo ""
+              git log "$PRECEDENTE"..HEAD --pretty=format:'%s' \
+                | grep '^feat' \
+                | sed -E 's/^feat\(([A-Z0-9]+)\): /- /' \
+                || echo "- Aucune nouvelle fonctionnalite"
+              echo ""
+              echo ""
+              echo "### Corrections"
+              echo ""
+              git log "$PRECEDENTE"..HEAD --pretty=format:'%s' \
+                | grep '^fix' \
+                | sed -E 's/^fix(\([^)]*\))?: /- /' \
+                || echo "- Aucune correction"
+              echo ""
+            else
+              echo "Premiere version publiee."
+            fi
+
+            echo ""
+            echo "### Installation"
+            echo ""
+            echo "Telecharge le DMG, ouvre le, glisse l application dans le dossier Applications."
+            echo ""
+            echo "L application est signee et notarisee par Apple. Aucun avertissement de securite ne doit apparaitre."
+            echo ""
+            echo "### Verification de l integrite"
+            echo ""
+            echo '```'
+            echo "shasum -a 256 -c Yum-$VERSION.dmg.sha256"
+            echo '```'
+            echo ""
+            echo "Somme attendue :"
+            echo '```'
+            cat "build/Yum-$VERSION.dmg.sha256"
+            echo '```'
+            echo ""
+            echo "### Configuration requise"
+            echo ""
+            echo "macOS 14 Sonoma ou plus recent."
+          } > notes-de-version.md
+
+          cat notes-de-version.md
+
+      - name: Verifier l absence de tiret cadratin dans les notes
+        run: |
+          if grep -q $'\u2014' notes-de-version.md; then
+            echo "Tiret cadratin trouve dans les notes de version."
+            exit 1
+          fi
+
+      - name: Creer la release en brouillon
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          gh release create "v$VERSION" \
+            --title "Version $VERSION" \
+            --notes-file notes-de-version.md \
+            --draft \
+            "build/Yum-$VERSION.dmg" \
+            "build/Yum-$VERSION.dmg.sha256"
+
+      - name: Archiver les artefacts de construction
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: artefacts-publication
+          path: |
+            build/*.dmg
+            build/*.sha256
+            notes-de-version.md
+          retention-days: 30
+
+      - name: Nettoyer le trousseau
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/signature.keychain-db" || true
+
+      - name: Rappel de validation manuelle
+        run: |
+          cat <<'FIN'
+
+          ===================================================================
+          RELEASE CREEE EN BROUILLON
+          ===================================================================
+          Elle n est pas encore publique. Avant de publier :
+
+            1. Telecharge le DMG depuis la page de la release
+            2. Teste le sur une machine qui n a jamais vu le projet
+            3. Verifie la somme SHA 256
+            4. Relis les notes de version
+            5. Publie depuis l interface GitHub
+
+          ===================================================================
+          FIN

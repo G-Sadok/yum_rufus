@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#0E0E10"/>
+
+  <!-- Fenetre -->
+  <rect x="24" y="24" width="1392" height="852" rx="18" fill="#131315" stroke="#303034"/>
+
+  <!-- Barre de titre -->
+  <rect x="24" y="24" width="1392" height="60" rx="18" fill="#161618"/>
+  <rect x="24" y="66" width="1392" height="18" fill="#161618"/>
+  <line x1="24" y1="84" x2="1416" y2="84" stroke="#2A2A2E"/>
+
+  <!-- Feux de circulation -->
+  <circle cx="52" cy="54" r="6" fill="#3A3A3E"/>
+  <circle cx="72" cy="54" r="6" fill="#3A3A3E"/>
+  <circle cx="92" cy="54" r="6" fill="#3A3A3E"/>
+
+  <!-- Bouton bascule barre laterale -->
+  <rect x="118" y="44" width="22" height="18" rx="4" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <line x1="126" y1="44" x2="126" y2="62" stroke="#98989D" stroke-width="1.5"/>
+
+  <!-- Titre -->
+  <text x="172" y="60" fill="#F2F2F7" font-size="17" font-weight="700">Bibliotheque</text>
+
+  <!-- Actions barre outils -->
+  <line x1="1102" y1="46" x2="1102" y2="62" stroke="#0A84FF" stroke-width="2"/>
+  <line x1="1094" y1="54" x2="1110" y2="54" stroke="#0A84FF" stroke-width="2"/>
+  <rect x="1128" y="40" width="46" height="28" rx="8" fill="#2A2A2E"/>
+  <path d="M1140 62 L1140 46 M1136 50 L1140 46 L1144 50" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+  <path d="M1152 46 L1152 62 M1148 58 L1152 62 L1156 58" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+  <path d="M1162 51 L1166 55 L1170 51" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+  <rect x="1186" y="40" width="206" height="28" rx="8" fill="#202023" stroke="#303034"/>
+  <circle cx="1202" cy="54" r="5" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <line x1="1206" y1="58" x2="1210" y2="62" stroke="#98989D" stroke-width="1.5"/>
+  <text x="1218" y="59" fill="#6E6E73" font-size="13">Rechercher la bibliotheque</text>
+
+  <!-- Barre laterale -->
+  <rect x="36" y="94" width="196" height="770" rx="14" fill="#1B1B1D" stroke="#2A2A2E"/>
+
+  <rect x="46" y="106" width="176" height="40" rx="10" fill="#3A3A3E"/>
+  <rect x="60" y="119" width="14" height="14" rx="2" fill="none" stroke="#F2F2F7" stroke-width="1.5"/>
+  <text x="86" y="131" fill="#F2F2F7" font-size="14" font-weight="600">Bibliotheque</text>
+
+  <circle cx="67" cy="170" r="7" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <path d="M67 166 L67 170 L70 172" stroke="#98989D" stroke-width="1.5" fill="none"/>
+  <text x="86" y="175" fill="#C7C7CC" font-size="14">Historique</text>
+
+  <circle cx="67" cy="212" r="8" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <path d="M63 216 L71 208 L67 216 Z" fill="#98989D"/>
+  <text x="86" y="217" fill="#C7C7CC" font-size="14">Parcourir</text>
+
+  <circle cx="66" cy="252" r="6" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <line x1="70" y1="256" x2="74" y2="260" stroke="#98989D" stroke-width="1.5"/>
+  <text x="86" y="259" fill="#C7C7CC" font-size="14">Rechercher</text>
+
+  <circle cx="67" cy="295" r="7" fill="none" stroke="#98989D" stroke-width="1.5"/>
+  <circle cx="67" cy="295" r="2.5" fill="#98989D"/>
+  <text x="86" y="300" fill="#C7C7CC" font-size="14">Reglages</text>
+
+  <!-- Etat vide -->
+  <g transform="translate(760 420)">
+    <rect x="-46" y="-40" width="26" height="66" rx="3" fill="none" stroke="#4A4A4F" stroke-width="3"/>
+    <rect x="-12" y="-48" width="26" height="74" rx="3" fill="none" stroke="#4A4A4F" stroke-width="3"/>
+    <rect x="22" y="-34" width="26" height="60" rx="3" fill="none" stroke="#4A4A4F" stroke-width="3" transform="rotate(12 35 -4)"/>
+  </g>
+  <text x="760" y="530" fill="#F2F2F7" font-size="22" font-weight="700" text-anchor="middle">Votre bibliotheque est vide</text>
+  <text x="760" y="562" fill="#8E8E93" font-size="14" text-anchor="middle">Parcourez les sources pour trouver des mangas et les ajouter a votre bibliotheque.</text>
+
+  <!-- Menu de tri deploye -->
+  <rect x="1148" y="80" width="244" height="228" rx="12" fill="#2C2C30" stroke="#3A3A3E"/>
+  <path d="M1166 102 L1172 108 L1182 96" stroke="#F2F2F7" stroke-width="2" fill="none"/>
+  <text x="1194" y="107" fill="#F2F2F7" font-size="14">A a Z</text>
+  <text x="1194" y="141" fill="#F2F2F7" font-size="14">Derniere lecture</text>
+  <text x="1194" y="175" fill="#F2F2F7" font-size="14">Derniere mise a jour</text>
+  <text x="1194" y="209" fill="#F2F2F7" font-size="14">Date d ajout</text>
+  <text x="1194" y="243" fill="#F2F2F7" font-size="14">Non lu</text>
+  <line x1="1164" y1="262" x2="1376" y2="262" stroke="#3A3A3E"/>
+  <line x1="1168" y1="280" x2="1180" y2="280" stroke="#0A84FF" stroke-width="1.6"/>
+  <line x1="1168" y1="286" x2="1180" y2="286" stroke="#0A84FF" stroke-width="1.6"/>
+  <line x1="1168" y1="292" x2="1180" y2="292" stroke="#0A84FF" stroke-width="1.6"/>
+  <text x="1194" y="291" fill="#F2F2F7" font-size="14">Ordres de lecture</text>
+
+  <!-- Annotations -->
+  <g font-size="11" fill="#0A84FF">
+    <line x1="232" y1="126" x2="300" y2="126" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="308" y="130">Barre laterale encastree, coins arrondis 14, largeur fixe 196</text>
+    <line x1="1000" y1="54" x2="1080" y2="54" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="700" y="58" text-anchor="end">Barre outils : ajouter, trier, champ de recherche</text>
+    <text x="760" y="600" fill="#6E6E73" text-anchor="middle">Etat vide centre verticalement dans la zone de contenu</text>
+  </g>
+</svg>

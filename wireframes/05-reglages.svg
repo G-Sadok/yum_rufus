@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#0E0E10"/>
+  <rect x="24" y="24" width="1392" height="852" rx="18" fill="#131315" stroke="#303034"/>
+  <rect x="24" y="24" width="1392" height="60" fill="#161618"/>
+  <line x1="24" y1="84" x2="1416" y2="84" stroke="#2A2A2E"/>
+  <circle cx="52" cy="54" r="6" fill="#3A3A3E"/><circle cx="72" cy="54" r="6" fill="#3A3A3E"/><circle cx="92" cy="54" r="6" fill="#3A3A3E"/>
+  <text x="172" y="60" fill="#F2F2F7" font-size="17" font-weight="700">Reglages</text>
+
+  <rect x="36" y="94" width="196" height="770" rx="14" fill="#1B1B1D" stroke="#2A2A2E"/>
+  <text x="86" y="131" fill="#C7C7CC" font-size="14">Bibliotheque</text>
+  <text x="86" y="175" fill="#C7C7CC" font-size="14">Historique</text>
+  <text x="86" y="217" fill="#C7C7CC" font-size="14">Parcourir</text>
+  <text x="86" y="259" fill="#C7C7CC" font-size="14">Rechercher</text>
+  <rect x="46" y="277" width="176" height="40" rx="10" fill="#3A3A3E"/>
+  <text x="86" y="302" fill="#F2F2F7" font-size="14" font-weight="600">Reglages</text>
+
+  <!-- Colonne centree -->
+  <g transform="translate(480 0)">
+    <text x="0" y="128" fill="#F2F2F7" font-size="15" font-weight="700">Abonnement</text>
+    <rect x="0" y="142" width="580" height="52" rx="12" fill="#1C2740" stroke="#24344F"/>
+    <path d="M20 172 l6 -12 l6 8 l6 -8 l6 12 z" fill="#0A84FF"/>
+    <text x="58" y="174" fill="#0A84FF" font-size="15" font-weight="600">Passer a Premium</text>
+    <path d="M552 165 l6 6 l-6 6" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+    <text x="0" y="216" fill="#8E8E93" font-size="12">Debloquez la traduction, la colorisation, les suivis, la sauvegarde, le mode incognito,</text>
+    <text x="0" y="234" fill="#8E8E93" font-size="12">les serveurs Komga, Kavita, Jellyfin et OPDS, la synchronisation iCloud et bien plus.</text>
+
+    <text x="0" y="286" fill="#F2F2F7" font-size="15" font-weight="700">Confidentialite</text>
+    <rect x="0" y="300" width="580" height="104" rx="12" fill="#202023"/>
+    <rect x="0" y="300" width="580" height="52" rx="12" fill="#1C2740"/>
+    <rect x="0" y="340" width="580" height="12" fill="#1C2740"/>
+    <text x="58" y="332" fill="#0A84FF" font-size="15">Incognito</text>
+    <path d="M540 320 l6 -12 l6 8 l6 -8 l6 12 z" fill="#0A84FF"/>
+    <line x1="20" y1="352" x2="560" y2="352" stroke="#2E2E32"/>
+    <text x="58" y="384" fill="#F2F2F7" font-size="15">Verrouillage de l app</text>
+    <rect x="512" y="370" width="48" height="28" rx="14" fill="#3A3A3E"/>
+    <circle cx="526" cy="384" r="12" fill="#FFFFFF"/>
+    <text x="0" y="424" fill="#8E8E93" font-size="12">Navigation privee : l activite de lecture n est pas enregistree dans l historique.</text>
+
+    <text x="0" y="476" fill="#F2F2F7" font-size="15" font-weight="700">General</text>
+    <rect x="0" y="490" width="580" height="208" rx="12" fill="#202023"/>
+    <text x="58" y="522" fill="#F2F2F7" font-size="15">Langue</text>
+    <text x="510" y="522" fill="#0A84FF" font-size="15" text-anchor="end">Systeme</text>
+    <line x1="20" y1="542" x2="560" y2="542" stroke="#2E2E32"/>
+    <text x="58" y="574" fill="#F2F2F7" font-size="15">Apparence</text>
+    <text x="510" y="574" fill="#C7C7CC" font-size="15" text-anchor="end">Systeme</text>
+    <line x1="20" y1="594" x2="560" y2="594" stroke="#2E2E32"/>
+    <text x="58" y="626" fill="#F2F2F7" font-size="15">Theme</text>
+    <text x="510" y="626" fill="#C7C7CC" font-size="15" text-anchor="end">Midnight</text>
+    <line x1="20" y1="646" x2="560" y2="646" stroke="#2E2E32"/>
+    <text x="58" y="678" fill="#F2F2F7" font-size="15">Notifications de nouveaux chapitres</text>
+    <rect x="512" y="664" width="48" height="28" rx="14" fill="#3A3A3E"/>
+    <circle cx="526" cy="678" r="12" fill="#FFFFFF"/>
+
+    <text x="0" y="750" fill="#F2F2F7" font-size="15" font-weight="700">Lecteur</text>
+    <rect x="0" y="764" width="580" height="52" rx="12" fill="#202023"/>
+    <text x="58" y="796" fill="#F2F2F7" font-size="15">Sens de lecture</text>
+    <rect x="392" y="782" width="20" height="18" rx="4" fill="none" stroke="#C7C7CC" stroke-width="1.4"/>
+    <text x="510" y="796" fill="#C7C7CC" font-size="15" text-anchor="end">Droite a gauche</text>
+  </g>
+
+  <g font-size="11" fill="#6E6E73">
+    <text x="60" y="700">Colonne de contenu</text>
+    <text x="60" y="718">centree, largeur 580</text>
+    <text x="60" y="736">Cartes arrondies 12</text>
+    <text x="60" y="754">Ligne 52 de haut</text>
+    <text x="60" y="772">Icone 22 a gauche</text>
+    <text x="60" y="790">Separateur encastre</text>
+    <text x="60" y="808">de 20 a gauche</text>
+  </g>
+
+  <g font-size="11" fill="#0A84FF">
+    <line x1="1090" y1="168" x2="1160" y2="168" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="1168" y="172">Ligne premium : fond bleute, texte bleu, couronne a droite</text>
+    <line x1="1090" y1="384" x2="1160" y2="384" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="1168" y="388">Interrupteur style iOS, 48 par 28</text>
+    <line x1="1090" y1="626" x2="1160" y2="626" stroke="#0A84FF" stroke-dasharray="3 3"/>
+    <text x="1168" y="630">Valeur a droite, chevron ou menu contextuel</text>
+  </g>
+</svg>

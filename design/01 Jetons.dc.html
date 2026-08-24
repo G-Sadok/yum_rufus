@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin:0; background:#0E0E10; -webkit-font-smoothing:antialiased; }
+  a { color:#0A84FF; text-decoration:none; }
+  a:hover { color:#409CFF; }
+</style>
+</helmet>
+<div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;background:#0E0E10;color:#F2F2F7;padding:56px 56px 72px;display:flex;flex-direction:column;gap:56px;width:1520px;box-sizing:border-box">
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;border-bottom:1px solid #2E2E32;padding-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#6E6E73">Livrable 1 sur 6</div>
+      <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em">Jetons de design</div>
+      <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:620px">Toutes les valeurs des sections 2.1 a 2.8, dans les quatre themes, en variante sombre et en variante claire. Source de verite : <a href="design-tokens.json">design-tokens.json</a></div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <div style="background:#202023;border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:4px;min-width:120px">
+        <div style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">4</div>
+        <div style="font-size:11px;color:#8E8E93">themes</div>
+      </div>
+      <div style="background:#202023;border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:4px;min-width:120px">
+        <div style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">8</div>
+        <div style="font-size:11px;color:#8E8E93">palettes de surface</div>
+      </div>
+      <div style="background:#202023;border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:4px;min-width:120px">
+        <div style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums">11</div>
+        <div style="font-size:11px;color:#8E8E93">surfaces par palette</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:15px;font-weight:700">Surfaces, quatre themes</div>
+      <div style="font-size:12px;line-height:16px;color:#8E8E93">Les themes ne permutent que les surfaces. Le texte et les jetons semantiques suivent la variante, pas le theme.</div>
+    </div>
+
+    <div style="display:flex;gap:14px;padding-left:132px">
+      <sc-for list="{{ surfaceKeys }}" as="k" hint-placeholder-count="11">
+        <div style="width:84px;font-size:10px;line-height:13px;color:#6E6E73;letter-spacing:0.02em">{{ k }}</div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ paletteRows }}" as="row" hint-placeholder-count="8">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:118px;display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:13px;font-weight:700">{{ row.theme }}</div>
+            <div style="font-size:11px;color:#8E8E93">{{ row.variant }}</div>
+          </div>
+          <sc-for list="{{ row.colors }}" as="c" hint-placeholder-count="11">
+            <div style="width:84px;display:flex;flex-direction:column;gap:6px">
+              <div style="height:52px;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);background:{{ c.v }}"></div>
+              <div style="font-size:10px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ c.v }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">Texte</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Ratio mesure sur la surface carte du theme Midnight de la variante correspondante.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ textRows }}" as="t" hint-placeholder-count="10">
+          <div style="display:flex;align-items:center;gap:16px;background:{{ t.bg }};border-radius:12px;padding:12px 16px">
+            <div style="width:28px;height:28px;border-radius:6px;background:{{ t.v }};flex:none"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div style="font-size:13px;font-weight:600;color:{{ t.v }}">{{ t.name }}</div>
+              <div style="font-size:11px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ t.meta }}</div>
+            </div>
+            <div style="font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:{{ t.ratioColor }}">{{ t.ratio }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">Semantique</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">accent reste identique dans les deux variantes. accentText est la derivation qui porte le texte sur fond clair.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ semanticRows }}" as="s" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;gap:16px;background:#202023;border-radius:12px;padding:12px 16px">
+            <div style="width:28px;height:28px;border-radius:6px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);background:{{ s.dark }}"></div>
+            <div style="width:28px;height:28px;border-radius:6px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.14);background:{{ s.light }}"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div style="font-size:13px;font-weight:600">{{ s.name }}</div>
+              <div style="font-size:11px;color:#6E6E73">{{ s.usage }}</div>
+            </div>
+            <div style="font-size:10px;color:#6E6E73;font-variant-numeric:tabular-nums;text-align:right;line-height:14px">{{ s.dark }}<br>{{ s.light }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">Echelle typographique</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Huit roles, trois graisses. La personnalite vient de la discipline de l echelle, pas du choix de la fonte.</div>
+      </div>
+      <div style="background:#202023;border-radius:12px;padding:8px 20px">
+        <sc-for list="{{ typeRows }}" as="ty" hint-placeholder-count="8">
+          <div style="display:flex;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid #2E2E32">
+            <div style="width:74px;flex:none;font-size:11px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ ty.name }}</div>
+            <div style="flex:1;color:#F2F2F7;font-size:{{ ty.size }};font-weight:{{ ty.weight }};line-height:{{ ty.lh }}">{{ ty.sample }}</div>
+            <div style="width:96px;flex:none;text-align:right;font-size:11px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ ty.spec }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="font-size:15px;font-weight:700">Rayons</div>
+        <div style="display:flex;flex-wrap:wrap;gap:16px">
+          <sc-for list="{{ radiusRows }}" as="r" hint-placeholder-count="10">
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center;width:88px">
+              <div style="width:64px;height:64px;background:#202023;box-shadow:inset 0 0 0 1px #3A3A3E;border-radius:{{ r.px }}"></div>
+              <div style="font-size:11px;font-weight:700;font-variant-numeric:tabular-nums">{{ r.n }}</div>
+              <div style="font-size:10px;color:#6E6E73;text-align:center;line-height:13px">{{ r.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="font-size:15px;font-weight:700">Espacements, echelle de 4</div>
+        <div style="display:flex;align-items:flex-end;gap:12px">
+          <sc-for list="{{ spaceRows }}" as="sp" hint-placeholder-count="10">
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+              <div style="background:#0A84FF;border-radius:2px;height:10px;width:{{ sp.px }}"></div>
+              <div style="font-size:11px;color:#8E8E93;font-variant-numeric:tabular-nums">{{ sp.n }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="font-size:15px;font-weight:700">Elevation, trois niveaux</div>
+        <div style="display:flex;gap:20px">
+          <div style="flex:1;height:104px;border-radius:12px;background:#202023;display:flex;flex-direction:column;justify-content:flex-end;padding:14px">
+            <div style="font-size:12px;font-weight:700">Niveau 0</div>
+            <div style="font-size:11px;color:#6E6E73">contenu, aucune ombre</div>
+          </div>
+          <div style="flex:1;height:104px;border-radius:14px;background:#2C2C30;border:1px solid #3A3A3E;box-shadow:0 8px 24px rgba(0,0,0,0.44);display:flex;flex-direction:column;justify-content:flex-end;padding:14px">
+            <div style="font-size:12px;font-weight:700">Niveau 1</div>
+            <div style="font-size:11px;color:#8E8E93">menu, popover</div>
+          </div>
+          <div style="flex:1;height:104px;border-radius:20px;background:#2C2C30;box-shadow:0 24px 64px rgba(0,0,0,0.60);display:flex;flex-direction:column;justify-content:flex-end;padding:14px">
+            <div style="font-size:12px;font-weight:700">Niveau 2</div>
+            <div style="font-size:11px;color:#8E8E93">modale, voile a 45 %</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">Mouvement</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Le mouvement explique une transition. Il n impressionne jamais.</div>
+      </div>
+      <div style="background:#202023;border-radius:12px;padding:4px 20px">
+        <sc-for list="{{ motionRows }}" as="m" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid #2E2E32">
+            <div style="flex:1;font-size:13px">{{ m.name }}</div>
+            <div style="width:64px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;color:#0A84FF">{{ m.ms }}</div>
+            <div style="width:210px;text-align:right;font-size:11px;color:#6E6E73">{{ m.curve }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:11px;line-height:15px;color:#6E6E73">Interdits : rebond sur les cartes, parallaxe, entree en cascade sur les grilles, rotation, particules.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">Fonds de lecteur</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Quatre valeurs proposees par le reglage Fond du lecteur.</div>
+      </div>
+      <div style="display:flex;gap:16px">
+        <sc-for list="{{ readerRows }}" as="rd" hint-placeholder-count="4">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="height:132px;border-radius:10px;box-shadow:inset 0 0 0 1px #2E2E32;display:flex;align-items:center;justify-content:center;background:{{ rd.bg }}">
+              <div style="width:56px;height:84px;border-radius:2px;background:{{ rd.page }}"></div>
+            </div>
+            <div style="font-size:12px;font-weight:600">{{ rd.name }}</div>
+            <div style="font-size:10px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ rd.bg }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+        <div style="font-size:15px;font-weight:700">Accessibilite, exceptions declarees</div>
+        <div style="font-size:12px;line-height:17px;color:#8E8E93">text.quaternary mesure 3.1:1 en variante sombre. Il est reserve au texte redondant, jamais porteur d une information unique. Toute autre utilisation passe a text.tertiary.</div>
+        <div style="font-size:12px;line-height:17px;color:#8E8E93">accent a 3.3:1 sur blanc ne peut pas porter de texte sous 18 px. La variante claire utilise accentText a 5.6:1 pour le texte et garde accent pour les aplats.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1520,&quot;height&quot;:2400}}">
+class Component extends DCLogic {
+  renderVals() {
+    const S = {
+      midnight: {
+        dark:  ["#0E0E10","#131315","#161618","#1B1B1D","#202023","#26262A","#2C2C30","#3A3A3E","#141416","#000000","#1C2740"],
+        light: ["#F2F2F5","#FAFAFC","#F0F0F4","#E9E9EE","#FFFFFF","#F4F4F8","#E6E6EB","#D5D5DC","#FFFFFF","#FFFFFF","#E4EDFB"]
+      },
+      obsidian: {
+        dark:  ["#000000","#000000","#0B0B0C","#101012","#161618","#1B1B1D","#202023","#2C2C30","#050506","#000000","#151E33"],
+        light: ["#FFFFFF","#FFFFFF","#F7F7F9","#F0F0F3","#F4F4F7","#EDEDF1","#E8E8EC","#DADAE0","#FFFFFF","#FFFFFF","#E4EDFC"]
+      },
+      slate: {
+        dark:  ["#0E0F13","#131418","#16171C","#1B1C22","#202128","#26272F","#2C2D36","#3A3B45","#141519","#000000","#1C2740"],
+        light: ["#EDEFF4","#F7F8FC","#EBEDF2","#E4E7EE","#FFFFFF","#F2F4F9","#E0E4EC","#D0D5E0","#FFFFFF","#FFFFFF","#E2EBFA"]
+      },
+      paper: {
+        dark:  ["#121110","#171614","#1A1917","#1F1E1B","#242320","#2A2926","#302F2B","#3E3D39","#171614","#000000","#1C2740"],
+        light: ["#F5F5F7","#FFFFFF","#F2F2F4","#ECECEF","#FFFFFF","#F5F5F7","#E8E8EB","#DBDBDF","#FFFFFF","#FFFFFF","#E8F0FC"]
+      }
+    };
+    const keys = ["canvas","window","chrome","sidebar","card","cardHover","menu","selected","field","reader","premium"];
+    const names = { midnight: "Midnight", obsidian: "Obsidian", slate: "Slate", paper: "Paper" };
+    const caracteres = {
+      midnight: "gris neutre, defaut",
+      obsidian: "noir absolu, OLED",
+      slate: "gris bleute",
+      paper: "clair de reference"
+    };
+    const paletteRows = [];
+    ["midnight","obsidian","slate","paper"].forEach(t => {
+      ["dark","light"].forEach(v => {
+        paletteRows.push({
+          theme: names[t],
+          variant: (v === "dark" ? "sombre, " : "clair, ") + caracteres[t],
+          colors: S[t][v].map((v2, i) => ({ k: keys[i], v: v2 }))
+        });
+      });
+    });
+
+    const ratioBadge = r => (r >= 4.5 ? "#30D158" : r >= 3 ? "#FF9F0A" : "#FF453A");
+    const mkText = (name, v, bg, ratio, meta) => ({
+      name, v, bg, ratio: ratio.toFixed(1) + ":1", ratioColor: ratioBadge(ratio), meta: v + "  " + meta
+    });
+
+    const textRows = [
+      mkText("text.primary sombre", "#F2F2F7", "#202023", 14.9, "titres, libelles de ligne"),
+      mkText("text.secondary sombre", "#C7C7CC", "#202023", 9.6, "valeurs, texte courant"),
+      mkText("text.tertiary sombre", "#8E8E93", "#202023", 4.8, "descriptions, metadonnees"),
+      mkText("text.quaternary sombre", "#6E6E73", "#202023", 3.1, "mention legale, redondant"),
+      mkText("text.disabled sombre", "#48484C", "#202023", 1.7, "element inactif"),
+      mkText("text.primary clair", "#1C1C1E", "#FFFFFF", 16.7, "titres, libelles de ligne"),
+      mkText("text.secondary clair", "#3C3C43", "#FFFFFF", 10.9, "valeurs, texte courant"),
+      mkText("text.tertiary clair", "#5C5C61", "#FFFFFF", 6.4, "assombri pour tenir 4.5:1"),
+      mkText("text.quaternary clair", "#6E6E73", "#FFFFFF", 4.9, "assombri pour tenir 4.5:1"),
+      mkText("text.disabled clair", "#ABABB0", "#FFFFFF", 2.2, "element inactif")
+    ];
+
+    const semanticRows = [
+      { name: "accent", dark: "#0A84FF", light: "#0A84FF", usage: "action, lien, pastille de non lus" },
+      { name: "accentPressed", dark: "#0774E0", light: "#0774E0", usage: "etat presse" },
+      { name: "accentText", dark: "#0A84FF", light: "#0B6BCB", usage: "texte accentue sous 18 px" },
+      { name: "success", dark: "#30D158", light: "#248A3D", usage: "serveur connecte, telechargement fini" },
+      { name: "warning", dark: "#FF9F0A", light: "#B25000", usage: "connexion instable" },
+      { name: "danger", dark: "#FF453A", light: "#D70015", usage: "suppression, echec critique" },
+      { name: "separator", dark: "#2E2E32", light: "#E3E3E6", usage: "filet entre deux lignes" },
+      { name: "border", dark: "#3A3A3E", light: "#D1D1D6", usage: "contour de champ et de menu" },
+      { name: "premiumSheet", dark: "#141A28", light: "#141A28", usage: "fond du mur premium" }
+    ];
+
+    const typeRows = [
+      { name: "display",  size: "28px", weight: 700, lh: "34px", spec: "28 / 700 / 34", sample: "Vagabond de la nuit blanche" },
+      { name: "title1",   size: "22px", weight: 700, lh: "28px", spec: "22 / 700 / 28", sample: "Votre bibliotheque est vide" },
+      { name: "title2",   size: "17px", weight: 700, lh: "22px", spec: "17 / 700 / 22", sample: "Bibliotheque" },
+      { name: "headline", size: "15px", weight: 700, lh: "20px", spec: "15 / 700 / 20", sample: "Comportement du lecteur" },
+      { name: "body",     size: "15px", weight: 400, lh: "20px", spec: "15 / 400 / 20", sample: "Sens de lecture" },
+      { name: "callout",  size: "13px", weight: 400, lh: "18px", spec: "13 / 400 / 18", sample: "Un ronin sans maitre traverse le pays" },
+      { name: "footnote", size: "12px", weight: 400, lh: "16px", spec: "12 / 400 / 16", sample: "La description explique la consequence en une phrase" },
+      { name: "caption",  size: "11px", weight: 400, lh: "14px", spec: "11 / 400 / 14", sample: "Version 1.0.0, build 148" }
+    ];
+
+    const radiusRows = [
+      { n: 6, px: "6px", label: "pastille" },
+      { n: 9, px: "9px", label: "champ" },
+      { n: 10, px: "10px", label: "bouton, icone" },
+      { n: 12, px: "12px", label: "carte" },
+      { n: 14, px: "14px", label: "barre laterale, menu" },
+      { n: 16, px: "16px", label: "feuille" },
+      { n: 18, px: "18px", label: "fenetre" },
+      { n: 20, px: "20px", label: "modale" }
+    ];
+
+    const spaceRows = [4, 8, 12, 16, 20, 24, 32, 40, 56, 72].map(n => ({ n, px: n + "px" }));
+
+    const motionRows = [
+      { name: "Survol, changement d etat local", ms: "120 ms", curve: "easeOut" },
+      { name: "Apparition de menu ou popover", ms: "180 ms", curve: "spring 0.28 / 0.86" },
+      { name: "Modale entrante", ms: "240 ms", curve: "spring 0.34 / 0.82" },
+      { name: "Changement d ecran principal", ms: "200 ms", curve: "fondu croise pur" },
+      { name: "Tourne de page en mode pagine", ms: "220 ms", curve: "easeInOut, desactivable" },
+      { name: "Barres du lecteur", ms: "200 ms", curve: "fondu plus translation 8 px" }
+    ];
+
+    const readerRows = [
+      { name: "Noir OLED", bg: "#000000", page: "#FFFFFF" },
+      { name: "Gris sombre", bg: "#1A1A1C", page: "#FFFFFF" },
+      { name: "Blanc", bg: "#FFFFFF", page: "#FFFFFF" },
+      { name: "Sepia", bg: "#EFE3CE", page: "#F6EEDD" }
+    ];
+
+    return { surfaceKeys: keys, paletteRows, textRows, semanticRows, typeRows, radiusRows, spaceRows, motionRows, readerRows };
+  }
+}
+</script>
+</body>
+</html>

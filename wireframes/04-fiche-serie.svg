@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#0E0E10"/>
+  <rect x="24" y="24" width="1392" height="852" rx="18" fill="#131315" stroke="#303034"/>
+
+  <!-- Banniere floutee derriere l en tete -->
+  <rect x="232" y="24" width="1184" height="300" fill="#1E2430"/>
+  <rect x="232" y="24" width="1184" height="300" fill="#131315" opacity="0.55"/>
+
+  <rect x="24" y="24" width="1392" height="60" fill="#16161899"/>
+  <circle cx="52" cy="54" r="6" fill="#3A3A3E"/><circle cx="72" cy="54" r="6" fill="#3A3A3E"/><circle cx="92" cy="54" r="6" fill="#3A3A3E"/>
+  <path d="M186 46 L176 54 L186 62" stroke="#0A84FF" stroke-width="2" fill="none"/>
+  <text x="200" y="60" fill="#0A84FF" font-size="15">Bibliotheque</text>
+
+  <rect x="36" y="94" width="196" height="770" rx="14" fill="#1B1B1D" stroke="#2A2A2E"/>
+  <text x="86" y="131" fill="#C7C7CC" font-size="14">Bibliotheque</text>
+  <text x="86" y="175" fill="#C7C7CC" font-size="14">Historique</text>
+  <text x="86" y="217" fill="#C7C7CC" font-size="14">Parcourir</text>
+  <text x="86" y="259" fill="#C7C7CC" font-size="14">Rechercher</text>
+  <text x="86" y="300" fill="#C7C7CC" font-size="14">Reglages</text>
+
+  <!-- Couverture -->
+  <rect x="272" y="112" width="188" height="278" rx="12" fill="#26262A" stroke="#3A3A3E"/>
+
+  <!-- Metadonnees -->
+  <text x="492" y="146" fill="#F2F2F7" font-size="28" font-weight="700">Titre de la serie</text>
+  <text x="492" y="176" fill="#C7C7CC" font-size="14">Nom de l auteur  et  nom du dessinateur</text>
+  <text x="492" y="200" fill="#8E8E93" font-size="13">En cours  Japonais  MangaDex</text>
+
+  <rect x="492" y="216" width="86" height="26" rx="13" fill="#2C2C30"/><text x="535" y="234" fill="#C7C7CC" font-size="12" text-anchor="middle">Action</text>
+  <rect x="588" y="216" width="98" height="26" rx="13" fill="#2C2C30"/><text x="637" y="234" fill="#C7C7CC" font-size="12" text-anchor="middle">Aventure</text>
+  <rect x="696" y="216" width="86" height="26" rx="13" fill="#2C2C30"/><text x="739" y="234" fill="#C7C7CC" font-size="12" text-anchor="middle">Drame</text>
+
+  <rect x="492" y="262" width="150" height="38" rx="10" fill="#0A84FF"/>
+  <text x="567" y="286" fill="#FFFFFF" font-size="14" font-weight="600" text-anchor="middle">Reprendre ch. 42</text>
+  <rect x="654" y="262" width="130" height="38" rx="10" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="719" y="286" fill="#F2F2F7" font-size="14" text-anchor="middle">Dans ma liste</text>
+  <rect x="796" y="262" width="112" height="38" rx="10" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="852" y="286" fill="#F2F2F7" font-size="14" text-anchor="middle">Suivre</text>
+  <rect x="920" y="262" width="48" height="38" rx="10" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="944" y="287" fill="#F2F2F7" font-size="16" text-anchor="middle">...</text>
+
+  <text x="492" y="336" fill="#C7C7CC" font-size="13">Resume de la serie sur trois lignes maximum avec un bouton Afficher plus si le texte deborde.</text>
+  <text x="492" y="356" fill="#C7C7CC" font-size="13">La typographie du resume reste secondaire pour ne pas concurrencer le titre.</text>
+  <text x="492" y="376" fill="#0A84FF" font-size="13">Afficher plus</text>
+
+  <!-- Barre chapitres -->
+  <line x1="272" y1="420" x2="1380" y2="420" stroke="#2A2A2E"/>
+  <text x="272" y="456" fill="#F2F2F7" font-size="16" font-weight="700">248 chapitres</text>
+  <text x="1150" y="456" fill="#0A84FF" font-size="13">Filtrer</text>
+  <text x="1220" y="456" fill="#0A84FF" font-size="13">Trier</text>
+  <text x="1290" y="456" fill="#0A84FF" font-size="13">Tout marquer lu</text>
+
+  <!-- Lignes de chapitres -->
+  <g>
+    <rect x="272" y="476" width="1108" height="56" rx="10" fill="#202023"/>
+    <text x="292" y="502" fill="#F2F2F7" font-size="14" font-weight="600">Chapitre 43  Le titre du chapitre</text>
+    <text x="292" y="521" fill="#8E8E93" font-size="12">12 aout 2026  Team de traduction  24 pages</text>
+    <circle cx="1290" cy="504" r="11" fill="none" stroke="#0A84FF" stroke-width="1.6"/>
+    <path d="M1290 499 v10 M1285 505 l5 5 l5 -5" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+    <circle cx="1340" cy="504" r="6" fill="#0A84FF"/>
+
+    <rect x="272" y="540" width="1108" height="56" rx="10" fill="#1A1A1C"/>
+    <text x="292" y="566" fill="#8E8E93" font-size="14">Chapitre 42  Le titre du chapitre</text>
+    <text x="292" y="585" fill="#5A5A5F" font-size="12">Lu  page 14 sur 22</text>
+    <rect x="292" y="592" width="500" height="3" rx="1.5" fill="#0A84FF" opacity="0.6"/>
+
+    <rect x="272" y="604" width="1108" height="56" rx="10" fill="#1A1A1C"/>
+    <text x="292" y="630" fill="#8E8E93" font-size="14">Chapitre 41  Le titre du chapitre</text>
+    <text x="292" y="649" fill="#5A5A5F" font-size="12">Lu  telecharge</text>
+
+    <rect x="272" y="668" width="1108" height="56" rx="10" fill="#1A1A1C"/>
+    <text x="292" y="694" fill="#8E8E93" font-size="14">Chapitre 40  Le titre du chapitre</text>
+    <text x="292" y="713" fill="#5A5A5F" font-size="12">Lu</text>
+  </g>
+
+  <g font-size="11" fill="#6E6E73">
+    <text x="272" y="770">Chapitre non lu : fond legerement plus clair, titre en blanc, pastille bleue a droite</text>
+    <text x="272" y="790">Chapitre lu : texte grise, pastille absente, barre de progression si lecture partielle</text>
+    <text x="272" y="810">Selection multiple par clic maintenu ou Cmd clic, barre d actions contextuelle en bas</text>
+  </g>
+</svg>

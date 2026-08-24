@@ -1,0 +1,378 @@
+{
+  "$schema": "https://design-tokens.org/format/v1",
+  "$meta": {
+    "projet": "TSUZUKI",
+    "version": "1.0.0",
+    "portee": "sections 2.1 a 2.8 du cahier des charges DESIGN",
+    "plateformes": ["macOS", "iPadOS", "iOS"],
+    "modeParDefaut": "sombre",
+    "themeParDefaut": "midnight",
+    "regleDeNommage": "point comme separateur de niveau, camelCase pour les segments composes",
+    "notesDeLecture": [
+      "Les quatre themes ne permutent que les jetons de surface.",
+      "Les jetons de texte et les jetons semantiques sont partages par variante (sombre ou claire), pas par theme.",
+      "Chaque theme possede une variante sombre et une variante claire. Le reglage Apparence choisit entre les deux.",
+      "Paper est le theme concu pour la variante claire, mais il possede une variante sombre pour que le reglage Apparence reste coherent.,
+      "En variante claire, card, field, menu et selected doivent rester quatre valeurs distinctes. Les ecraser tous sur #FFFFFF supprime la seule voie de hierarchie disponible, puisque la section 2.6 interdit l ombre sur les cartes.",
+      "surface.sheet est le fond des modales et des feuilles de configuration, releve du wireframe 09. Il est distinct de surface.menu, qui reste le fond des menus contextuels et des boutons secondaires.",
+      "surface.canvas peint la zone de contenu a l interieur de la fenetre, pas seulement l arriere plan hors fenetre. surface.window ne peint que la coquille."
+    ]
+  },
+
+  "color": {
+    "surface": {
+      "midnight": {
+        "$caractere": "gris neutre tres sombre, valeurs de reference du tableau 2.1",
+        "dark": {
+          "canvas": "#0E0E10",
+          "window": "#131315",
+          "chrome": "#161618",
+          "sidebar": "#1B1B1D",
+          "card": "#202023",
+          "cardHover": "#26262A",
+          "menu": "#2C2C30",
+          "selected": "#3A3A3E",
+          "field": "#141416",
+          "reader": "#000000",
+          "premium": "#1C2740",
+          "sheet": "#1F1F22"
+        },
+        "light": {
+          "canvas": "#F2F2F5",
+          "window": "#FAFAFC",
+          "chrome": "#F0F0F4",
+          "sidebar": "#E9E9EE",
+          "card": "#FFFFFF",
+          "cardHover": "#F4F4F8",
+          "menu": "#E6E6EB",
+          "selected": "#D5D5DC",
+          "field": "#FFFFFF",
+          "reader": "#FFFFFF",
+          "premium": "#E4EDFB",
+          "sheet": "#FFFFFF"
+        }
+      },
+      "obsidian": {
+        "$caractere": "noir absolu pour ecrans OLED, toutes les surfaces descendent d un cran",
+        "dark": {
+          "canvas": "#000000",
+          "window": "#000000",
+          "chrome": "#0B0B0C",
+          "sidebar": "#101012",
+          "card": "#161618",
+          "cardHover": "#1B1B1D",
+          "menu": "#202023",
+          "selected": "#2C2C30",
+          "field": "#050506",
+          "reader": "#000000",
+          "premium": "#151E33",
+          "sheet": "#1A1A1D"
+        },
+        "light": {
+          "canvas": "#FFFFFF",
+          "window": "#FFFFFF",
+          "chrome": "#F7F7F9",
+          "sidebar": "#F0F0F3",
+          "card": "#F4F4F7",
+          "cardHover": "#EDEDF1",
+          "menu": "#E8E8EC",
+          "selected": "#DADAE0",
+          "field": "#FFFFFF",
+          "reader": "#FFFFFF",
+          "premium": "#E4EDFC",
+          "sheet": "#FFFFFF"
+        }
+      },
+      "slate": {
+        "$caractere": "gris bleute, teinte decalee de 6 degres vers le bleu, contraste interne reduit",
+        "dark": {
+          "canvas": "#0E0F13",
+          "window": "#131418",
+          "chrome": "#16171C",
+          "sidebar": "#1B1C22",
+          "card": "#202128",
+          "cardHover": "#26272F",
+          "menu": "#2C2D36",
+          "selected": "#3A3B45",
+          "field": "#141519",
+          "reader": "#000000",
+          "premium": "#1C2740",
+          "sheet": "#1F2027"
+        },
+        "light": {
+          "canvas": "#EDEFF4",
+          "window": "#F7F8FC",
+          "chrome": "#EBEDF2",
+          "sidebar": "#E4E7EE",
+          "card": "#FFFFFF",
+          "cardHover": "#F2F4F9",
+          "menu": "#E0E4EC",
+          "selected": "#D0D5E0",
+          "field": "#FFFFFF",
+          "reader": "#FFFFFF",
+          "premium": "#E2EBFA",
+          "sheet": "#FFFFFF"
+        }
+      },
+      "paper": {
+        "$caractere": "mode clair de reference, inversion complete des surfaces",
+        "dark": {
+          "canvas": "#121110",
+          "window": "#171614",
+          "chrome": "#1A1917",
+          "sidebar": "#1F1E1B",
+          "card": "#242320",
+          "cardHover": "#2A2926",
+          "menu": "#302F2B",
+          "selected": "#3E3D39",
+          "field": "#171614",
+          "reader": "#000000",
+          "premium": "#1C2740",
+          "sheet": "#232220"
+        },
+        "light": {
+          "canvas": "#F5F5F7",
+          "window": "#FFFFFF",
+          "chrome": "#F2F2F4",
+          "sidebar": "#ECECEF",
+          "card": "#FFFFFF",
+          "cardHover": "#F5F5F7",
+          "menu": "#E8E8EB",
+          "selected": "#DBDBDF",
+          "field": "#FFFFFF",
+          "reader": "#FFFFFF",
+          "premium": "#E8F0FC",
+          "sheet": "#FFFFFF"
+        }
+      }
+    },
+
+    "text": {
+      "dark": {
+        "primary": "#F2F2F7",
+        "secondary": "#C7C7CC",
+        "tertiary": "#8E8E93",
+        "quaternary": "#6E6E73",
+        "disabled": "#48484C",
+        "onAccent": "#FFFFFF",
+        "emptyGlyph": "#4A4A4F"
+      },
+      "light": {
+        "primary": "#1C1C1E",
+        "secondary": "#3C3C43",
+        "tertiary": "#5C5C61",
+        "quaternary": "#6E6E73",
+        "disabled": "#ABABB0",
+        "onAccent": "#FFFFFF",
+        "emptyGlyph": "#B4B4BA"
+      },
+      "$note": "En variante claire, tertiary et quaternary sont assombris par rapport a la table 2.2 pour tenir le seuil 4.5:1 exige par la section 6. Voir $a11y."
+    },
+
+    "semantic": {
+      "dark": {
+        "accent": "#0A84FF",
+        "accentPressed": "#0774E0",
+        "accentText": "#0A84FF",
+        "accentQuiet": "rgba(10,132,255,0.16)",
+        "success": "#30D158",
+        "warning": "#FF9F0A",
+        "danger": "#FF453A",
+        "separator": "#2E2E32",
+        "border": "#3A3A3E",
+        "focusRing": "#0A84FF",
+        "scrim": "rgba(0,0,0,0.45)"
+      },
+      "light": {
+        "accent": "#0A84FF",
+        "accentPressed": "#0774E0",
+        "accentText": "#0B6BCB",
+        "accentQuiet": "rgba(10,132,255,0.12)",
+        "success": "#248A3D",
+        "warning": "#B25000",
+        "danger": "#D70015",
+        "separator": "#E3E3E6",
+        "border": "#D1D1D6",
+        "focusRing": "#0A84FF",
+        "scrim": "rgba(0,0,0,0.30)"
+      },
+      "$note": "accent reste inchange entre les variantes, conformement a la section 2.4. accentText est une derivation obligatoire : #0A84FF sur fond blanc plafonne a 3.3:1 et ne peut pas porter du texte sous 18 px. Les valeurs semantiques claires de success, warning et danger sont assombries pour la meme raison. En aplat (pastille, bouton principal, filet de progression), on utilise toujours accent."
+    },
+
+    "reader": {
+      "$usage": "fonds de page proposes par le reglage Fond du lecteur, section 5.7",
+      "oled": { "background": "#000000", "pageTint": "#FFFFFF" },
+      "grisSombre": { "background": "#1A1A1C", "pageTint": "#FFFFFF" },
+      "blanc": { "background": "#FFFFFF", "pageTint": "#FFFFFF" },
+      "sepia": { "background": "#EFE3CE", "pageTint": "#F6EEDD" }
+    },
+
+    "premiumSheet": {
+      "$usage": "mur premium, section 5.9",
+      "background": "#141A28",
+      "border": "#24344F"
+    }
+  },
+
+  "type": {
+    "$famille": {
+      "pile": "-apple-system, \"SF Pro Text\", \"SF Pro Display\", \"Helvetica Neue\", sans-serif",
+      "chiffres": "font-variant-numeric: tabular-nums",
+      "$note": "Chiffres tabulaires obligatoires sur tout nombre qui change en place : compteur de pages, pourcentage, taille de fichier, numero de chapitre."
+    },
+    "display":  { "size": 28, "weight": 700, "lineHeight": 34, "tracking": "-0.02em", "usage": "titre d une fiche de serie" },
+    "title1":   { "size": 22, "weight": 700, "lineHeight": 28, "tracking": "-0.01em", "usage": "titre d etat vide" },
+    "title2":   { "size": 17, "weight": 700, "lineHeight": 22, "tracking": "-0.01em", "usage": "titre de barre d outils" },
+    "headline": { "size": 15, "weight": 700, "lineHeight": 20, "tracking": "0",       "usage": "en tete de section de reglages" },
+    "body":     { "size": 15, "weight": 400, "lineHeight": 20, "tracking": "0",       "usage": "libelle de ligne, valeur de reglage" },
+    "callout":  { "size": 13, "weight": 400, "lineHeight": 18, "tracking": "0",       "usage": "texte courant, resume de serie" },
+    "footnote": { "size": 12, "weight": 400, "lineHeight": 16, "tracking": "0",       "usage": "description sous une section" },
+    "caption":  { "size": 11, "weight": 400, "lineHeight": 14, "tracking": "0.01em",  "usage": "mention legale, version, note de bas de page" },
+    "$graissesAutorisees": [400, 600, 700],
+    "$note": "600 est reserve a trois cas : libelle de barre laterale active, titre de carte de serie, texte de bouton principal."
+  },
+
+  "radius": {
+    "pastille": 6,
+    "field": 9,
+    "button": 10,
+    "iconContainer": 10,
+    "card": 12,
+    "sidebar": 14,
+    "menu": 14,
+    "sheet": 16,
+    "window": 18,
+    "modal": 20,
+    "capsule": 9999
+  },
+
+  "space": {
+    "$echelle": 4,
+    "$valeursAutorisees": [4, 8, 12, 16, 20, 24, 32, 40, 56, 72],
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 20,
+    "2xl": 24,
+    "3xl": 32,
+    "4xl": 40,
+    "5xl": 56,
+    "6xl": 72,
+    "$note": "Aucune autre valeur n est autorisee, y compris pour les marges optiques."
+  },
+
+  "elevation": {
+    "0": { "shadow": "none", "border": "none", "usage": "contenu, cartes de reglages, cartes de serie" },
+    "1": { "shadow": "0 8px 24px rgba(0,0,0,0.44)", "border": "1px solid var(--border)", "usage": "menu contextuel, popover" },
+    "2": { "shadow": "0 24px 64px rgba(0,0,0,0.60)", "scrim": "rgba(0,0,0,0.45)", "usage": "modale, feuille de configuration, mur premium" },
+    "$note": "Aucune ombre sur les cartes. La hierarchie passe par la valeur de surface."
+  },
+
+  "layout": {
+    "window": { "minWidth": 1024, "minHeight": 720, "defaultWidth": 1280, "defaultHeight": 860 },
+    "titlebar": { "height": 60, "unifiedWithToolbar": true },
+    "sidebar": { "width": 196, "inset": 12, "radius": 14, "rowHeight": 40, "rowRadius": 10, "iconInset": 14, "labelInset": 40, "collapsedWidth": 56, "resizable": false },
+    "contentWide": { "sideMargin": 24, "maxWidth": 1600, "centeredBeyondMax": true },
+    "contentColumn": { "width": 580, "centered": true, "stretches": false },
+    "iphone": { "columnBecomesFullWidth": true, "sideMargin": 16, "tabBarEntries": 5, "cardRadius": 12 },
+    "cover": { "aspect": "2:3", "radius": 10, "minWidth": 150, "maxWidth": 200 },
+    "reader": {
+      "topBar": { "height": 72, "surfaceAlpha": 0.94, "backdropBlur": 20 },
+      "bottomBar": { "height": 64 },
+      "tapZones": { "left": 0.28, "center": 0.44, "right": 0.28, "tutorialOpacity": 0.06, "tutorialDurationMs": 4000 },
+      "doublePageGutter": 4,
+      "autoHideMs": 3000
+    }
+  },
+
+  "control": {
+    "settingsRow": { "height": 52, "heightExpanded": 76, "sideInset": 20, "iconSize": 22, "gutter": 16 },
+    "toggle": { "width": 48, "height": 28, "knob": 24 },
+    "sourceRow": { "height": 72, "radius": 12, "iconBox": 40, "iconRadius": 10 },
+    "chapterRow": { "height": 56, "radius": 10, "dot": 12, "progressBar": 3 },
+    "unreadBadge": { "height": 20, "radius": 10, "paddingX": 8, "inset": 10 },
+    "coverProgress": { "height": 4 },
+    "button": { "heightContent": 38, "heightModal": 34, "heightToolbar": 28, "radius": 10 },
+    "menu": { "minWidth": 220, "rowHeight": 34, "iconSize": 16, "radius": 14 },
+    "modal": { "width": 380, "radius": 20 },
+    "configSheet": { "width": 440, "radius": 16 },
+    "premiumSheet": { "width": 360 },
+    "emptyState": { "glyphSize": 52, "maxWidth": 420 },
+    "hitTarget": { "touch": 44, "pointer": 28 },
+    "focusRing": { "width": 2, "offset": 2 }
+  },
+
+  "icon": {
+    "$famille": "SF Symbols, graisse regular, echelle medium",
+    "sizeSettingsRow": 22,
+    "sizeSidebar": 20,
+    "sizeToolbar": 18,
+    "sizeMenu": 16,
+    "map": {
+      "bibliotheque": "books.vertical",
+      "historique": "clock",
+      "parcourir": "safari",
+      "rechercher": "magnifyingglass",
+      "reglages": "gearshape",
+      "premium": "crown",
+      "incognito": "eye.slash",
+      "verrouillage": "lock",
+      "sensDeLecture": "text.book.closed",
+      "miseEnPage": "rectangle.split.2x1",
+      "rognerLesBords": "crop",
+      "luminosite": "sun.max",
+      "chaleur": "thermometer.medium",
+      "ameliorationIA": "wand.and.stars",
+      "colorisationIA": "paintbrush",
+      "telechargement": "arrow.down.circle",
+      "sauvegarde": "externaldrive",
+      "icloud": "icloud",
+      "aide": "questionmark.circle",
+      "signalerUnBug": "ladybug"
+    }
+  },
+
+  "motion": {
+    "hover":       { "duration": 120, "curve": "easeOut" },
+    "menu":        { "duration": 180, "curve": "spring(response: 0.28, damping: 0.86)" },
+    "modal":       { "duration": 240, "curve": "spring(response: 0.34, damping: 0.82)" },
+    "screenChange":{ "duration": 200, "curve": "fondu croise pur, aucun glissement" },
+    "pageTurn":    { "duration": 220, "curve": "easeInOut", "disableable": true },
+    "readerBars":  { "duration": 200, "curve": "fondu plus translation de 8 px" },
+    "skeletonPulse": { "duration": 1200, "opacityFrom": 0.4, "opacityTo": 0.8 },
+    "coverHoverScale": 1.02,
+    "$reduceMotion": "Le reglage systeme Reduire les animations supprime toutes les translations et ramene chaque transition a un fondu de 100 ms.",
+    "$interdits": ["rebond sur les cartes", "parallaxe", "entree en cascade sur les grilles", "rotation", "particules"]
+  },
+
+  "$a11y": {
+    "seuils": { "texteSous18px": 4.5, "texte18pxEtPlus": 3.0, "elementNonTextuel": 3.0 },
+    "ratiosMesures": {
+      "dark": {
+        "text.primary sur surface.card": 14.9,
+        "text.secondary sur surface.card": 9.6,
+        "text.tertiary sur surface.card": 4.8,
+        "text.quaternary sur surface.card": 3.1,
+        "semantic.accent sur surface.card": 4.9,
+        "text.primary sur surface.canvas": 16.6
+      },
+      "light": {
+        "text.primary sur surface.card": 16.7,
+        "text.secondary sur surface.card": 10.9,
+        "text.tertiary sur surface.card": 6.4,
+        "text.quaternary sur surface.card": 4.9,
+        "semantic.accentText sur surface.card": 5.6
+      }
+    },
+    "exceptions": [
+      "text.quaternary en variante sombre mesure 3.1:1. Il est reserve au texte redondant, jamais porteur d une information unique : numero de version, mention legale, note repetee ailleurs. Toute autre utilisation passe a text.tertiary.",
+      "semantic.accent en aplat porte du texte blanc a 3.5:1 sur la pastille de non lus. La pastille est doublee par un chiffre et par un libelle d accessibilite, donc l information ne depend pas de la couleur."
+    ],
+    "regles": [
+      "Aucune information transmise par la couleur seule.",
+      "Focus clavier visible partout : contour de 2 en accent, decalage de 2, jamais supprime.",
+      "Texte dynamique pris en charge jusqu a accessibilite extra extra large. Au dela de la taille large, les lignes de reglages passent en disposition verticale."
+    ]
+  }
+}

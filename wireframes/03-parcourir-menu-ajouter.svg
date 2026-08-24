@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="900" fill="#0E0E10"/>
+  <rect x="24" y="24" width="1392" height="852" rx="18" fill="#131315" stroke="#303034"/>
+  <rect x="24" y="24" width="1392" height="60" fill="#161618"/>
+  <line x1="24" y1="84" x2="1416" y2="84" stroke="#2A2A2E"/>
+  <circle cx="52" cy="54" r="6" fill="#3A3A3E"/><circle cx="72" cy="54" r="6" fill="#3A3A3E"/><circle cx="92" cy="54" r="6" fill="#3A3A3E"/>
+  <text x="172" y="60" fill="#F2F2F7" font-size="17" font-weight="700">Parcourir</text>
+
+  <rect x="1024" y="40" width="52" height="28" rx="8" fill="#2A2A2E"/>
+  <line x1="1044" y1="46" x2="1044" y2="62" stroke="#0A84FF" stroke-width="2"/>
+  <line x1="1036" y1="54" x2="1052" y2="54" stroke="#0A84FF" stroke-width="2"/>
+  <path d="M1058 51 L1062 55 L1066 51" stroke="#0A84FF" stroke-width="1.6" fill="none"/>
+  <rect x="1086" y="40" width="52" height="28" rx="8" fill="#2A2A2E"/>
+  <rect x="1150" y="40" width="242" height="28" rx="8" fill="#202023" stroke="#303034"/>
+  <text x="1172" y="59" fill="#6E6E73" font-size="13">Rechercher des sources</text>
+
+  <rect x="36" y="94" width="196" height="770" rx="14" fill="#1B1B1D" stroke="#2A2A2E"/>
+  <text x="86" y="131" fill="#C7C7CC" font-size="14">Bibliotheque</text>
+  <text x="86" y="175" fill="#C7C7CC" font-size="14">Historique</text>
+  <rect x="46" y="192" width="176" height="40" rx="10" fill="#3A3A3E"/>
+  <text x="86" y="217" fill="#F2F2F7" font-size="14" font-weight="600">Parcourir</text>
+  <text x="86" y="259" fill="#C7C7CC" font-size="14">Rechercher</text>
+  <text x="86" y="300" fill="#C7C7CC" font-size="14">Reglages</text>
+
+  <!-- Liste des sources -->
+  <text x="490" y="122" fill="#F2F2F7" font-size="15" font-weight="700">3 installees</text>
+
+  <g transform="translate(482 142)">
+    <rect width="580" height="72" rx="12" fill="#26262A" stroke="#303034"/>
+    <rect x="16" y="16" width="40" height="40" rx="10" fill="#1E3A5F"/>
+    <path d="M26 34 h8 l3 -4 h11 v16 h-22 z" fill="#0A84FF"/>
+    <text x="72" y="36" fill="#F2F2F7" font-size="15" font-weight="700">Fichiers locaux</text>
+    <text x="72" y="56" fill="#8E8E93" font-size="12">v1.0</text>
+    <circle cx="540" cy="36" r="3" fill="#6E6E73"/><circle cx="550" cy="36" r="3" fill="#6E6E73"/><circle cx="560" cy="36" r="3" fill="#6E6E73"/>
+  </g>
+  <g transform="translate(482 226)">
+    <rect width="580" height="72" rx="12" fill="#202023" stroke="#303034"/>
+    <rect x="16" y="16" width="40" height="40" rx="10" fill="#2A2A2E"/>
+    <text x="72" y="36" fill="#F2F2F7" font-size="15" font-weight="700">Komga  serveur maison</text>
+    <text x="72" y="56" fill="#8E8E93" font-size="12">https://komga.local  connecte</text>
+    <circle cx="524" cy="36" r="5" fill="#30D158"/>
+  </g>
+  <g transform="translate(482 310)">
+    <rect width="580" height="72" rx="12" fill="#202023" stroke="#303034"/>
+    <rect x="16" y="16" width="40" height="40" rx="10" fill="#2A2A2E"/>
+    <text x="72" y="36" fill="#F2F2F7" font-size="15" font-weight="700">MangaDex</text>
+    <text x="72" y="56" fill="#8E8E93" font-size="12">v1.4  multilingue</text>
+    <circle cx="524" cy="36" r="5" fill="#30D158"/>
+  </g>
+
+  <!-- Menu ajouter -->
+  <rect x="1024" y="76" width="324" height="470" rx="14" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="1064" y="106" fill="#F2F2F7" font-size="14">Transfert Wi-Fi</text>
+  <line x1="1040" y1="122" x2="1332" y2="122" stroke="#3A3A3E"/>
+  <text x="1064" y="150" fill="#F2F2F7" font-size="14">Ajouter un serveur Komga</text>
+  <text x="1064" y="184" fill="#F2F2F7" font-size="14">Ajouter un serveur Kavita</text>
+  <text x="1064" y="218" fill="#F2F2F7" font-size="14">Ajouter un serveur Jellyfin</text>
+  <text x="1064" y="252" fill="#F2F2F7" font-size="14">Ajouter un catalogue OPDS</text>
+  <text x="1064" y="286" fill="#F2F2F7" font-size="14">Ajouter SMB / NAS</text>
+  <text x="1064" y="320" fill="#F2F2F7" font-size="14">Ajouter un partage NFS</text>
+  <text x="1064" y="354" fill="#F2F2F7" font-size="14">Ajouter un serveur WebDAV</text>
+  <text x="1064" y="388" fill="#F2F2F7" font-size="14">Parcourir un dossier local</text>
+  <text x="1064" y="422" fill="#F2F2F7" font-size="14">Ajouter une bibliotheque iCloud Drive</text>
+  <text x="1064" y="456" fill="#F2F2F7" font-size="14">Ajouter un depot</text>
+  <text x="1064" y="490" fill="#F2F2F7" font-size="14">Installer une extension</text>
+  <g fill="#0A84FF">
+    <rect x="1042" y="96" width="12" height="12" rx="2"/>
+    <rect x="1042" y="140" width="12" height="12" rx="2"/>
+    <rect x="1042" y="174" width="12" height="12" rx="2"/>
+    <rect x="1042" y="208" width="12" height="12" rx="2"/>
+    <rect x="1042" y="242" width="12" height="12" rx="2"/>
+    <rect x="1042" y="276" width="12" height="12" rx="2"/>
+    <rect x="1042" y="310" width="12" height="12" rx="2"/>
+    <rect x="1042" y="344" width="12" height="12" rx="2"/>
+    <rect x="1042" y="378" width="12" height="12" rx="2"/>
+    <rect x="1042" y="412" width="12" height="12" rx="2"/>
+    <rect x="1042" y="446" width="12" height="12" rx="2"/>
+    <rect x="1042" y="480" width="12" height="12" rx="2"/>
+  </g>
+
+  <g font-size="11" fill="#6E6E73">
+    <text x="482" y="600">Ligne de source : hauteur 72, icone 40 dans un carre arrondi 10, pastille verte si le serveur repond</text>
+    <text x="482" y="620">Menu ancre sur le bouton plus, largeur 324, chaque entree ouvre une feuille de configuration dediee</text>
+    <text x="482" y="640">Reordonnancement des sources par glisser deposer lorsque le tri est en mode Personnalise</text>
+  </g>
+</svg>

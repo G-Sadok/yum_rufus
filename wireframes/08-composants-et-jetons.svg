@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1000" width="1440" height="1000" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="1000" fill="#0E0E10"/>
+  <text x="60" y="60" fill="#F2F2F7" font-size="22" font-weight="700">Jetons et composants</text>
+
+  <!-- Couleurs -->
+  <text x="60" y="110" fill="#8E8E93" font-size="13" font-weight="700">SURFACES</text>
+  <g>
+    <rect x="60" y="126" width="120" height="72" rx="10" fill="#0E0E10" stroke="#2E2E32"/><text x="60" y="216" fill="#C7C7CC" font-size="11">canvas</text><text x="60" y="232" fill="#6E6E73" font-size="11">#0E0E10</text>
+    <rect x="196" y="126" width="120" height="72" rx="10" fill="#131315" stroke="#2E2E32"/><text x="196" y="216" fill="#C7C7CC" font-size="11">fenetre</text><text x="196" y="232" fill="#6E6E73" font-size="11">#131315</text>
+    <rect x="332" y="126" width="120" height="72" rx="10" fill="#1B1B1D" stroke="#2E2E32"/><text x="332" y="216" fill="#C7C7CC" font-size="11">barre laterale</text><text x="332" y="232" fill="#6E6E73" font-size="11">#1B1B1D</text>
+    <rect x="468" y="126" width="120" height="72" rx="10" fill="#202023" stroke="#2E2E32"/><text x="468" y="216" fill="#C7C7CC" font-size="11">carte</text><text x="468" y="232" fill="#6E6E73" font-size="11">#202023</text>
+    <rect x="604" y="126" width="120" height="72" rx="10" fill="#26262A" stroke="#2E2E32"/><text x="604" y="216" fill="#C7C7CC" font-size="11">carte survol</text><text x="604" y="232" fill="#6E6E73" font-size="11">#26262A</text>
+    <rect x="740" y="126" width="120" height="72" rx="10" fill="#2C2C30" stroke="#2E2E32"/><text x="740" y="216" fill="#C7C7CC" font-size="11">menu</text><text x="740" y="232" fill="#6E6E73" font-size="11">#2C2C30</text>
+    <rect x="876" y="126" width="120" height="72" rx="10" fill="#3A3A3E" stroke="#2E2E32"/><text x="876" y="216" fill="#C7C7CC" font-size="11">selection</text><text x="876" y="232" fill="#6E6E73" font-size="11">#3A3A3E</text>
+    <rect x="1012" y="126" width="120" height="72" rx="10" fill="#000000" stroke="#2E2E32"/><text x="1012" y="216" fill="#C7C7CC" font-size="11">lecteur OLED</text><text x="1012" y="232" fill="#6E6E73" font-size="11">#000000</text>
+  </g>
+
+  <text x="60" y="286" fill="#8E8E93" font-size="13" font-weight="700">TEXTE ET ACCENTS</text>
+  <g>
+    <rect x="60" y="302" width="120" height="56" rx="10" fill="#F2F2F7"/><text x="60" y="378" fill="#C7C7CC" font-size="11">texte primaire  #F2F2F7</text>
+    <rect x="196" y="302" width="120" height="56" rx="10" fill="#C7C7CC"/><text x="196" y="378" fill="#C7C7CC" font-size="11">texte secondaire  #C7C7CC</text>
+    <rect x="332" y="302" width="120" height="56" rx="10" fill="#8E8E93"/><text x="332" y="378" fill="#C7C7CC" font-size="11">texte tertiaire  #8E8E93</text>
+    <rect x="468" y="302" width="120" height="56" rx="10" fill="#6E6E73"/><text x="468" y="378" fill="#C7C7CC" font-size="11">texte discret  #6E6E73</text>
+    <rect x="604" y="302" width="120" height="56" rx="10" fill="#0A84FF"/><text x="604" y="378" fill="#C7C7CC" font-size="11">accent  #0A84FF</text>
+    <rect x="740" y="302" width="120" height="56" rx="10" fill="#1C2740"/><text x="740" y="378" fill="#C7C7CC" font-size="11">fond premium  #1C2740</text>
+    <rect x="876" y="302" width="120" height="56" rx="10" fill="#30D158"/><text x="876" y="378" fill="#C7C7CC" font-size="11">succes  #30D158</text>
+    <rect x="1012" y="302" width="120" height="56" rx="10" fill="#FF453A"/><text x="1012" y="378" fill="#C7C7CC" font-size="11">danger  #FF453A</text>
+    <rect x="1148" y="302" width="120" height="56" rx="10" fill="#FF9F0A"/><text x="1148" y="378" fill="#C7C7CC" font-size="11">alerte  #FF9F0A</text>
+  </g>
+
+  <!-- Composants -->
+  <text x="60" y="440" fill="#8E8E93" font-size="13" font-weight="700">COMPOSANTS DE LIGNE</text>
+
+  <rect x="60" y="456" width="580" height="52" rx="12" fill="#202023"/>
+  <circle cx="82" cy="482" r="10" fill="none" stroke="#0A84FF" stroke-width="1.6"/>
+  <text x="118" y="488" fill="#F2F2F7" font-size="15">Ligne avec interrupteur</text>
+  <rect x="572" y="468" width="48" height="28" rx="14" fill="#0A84FF"/>
+  <circle cx="606" cy="482" r="12" fill="#FFFFFF"/>
+
+  <rect x="60" y="520" width="580" height="52" rx="12" fill="#202023"/>
+  <text x="118" y="552" fill="#F2F2F7" font-size="15">Ligne avec valeur et menu</text>
+  <text x="570" y="552" fill="#C7C7CC" font-size="15" text-anchor="end">Valeur</text>
+  <path d="M592 546 l6 -6 l6 6 M592 556 l6 6 l6 -6" stroke="#8E8E93" stroke-width="1.6" fill="none"/>
+
+  <rect x="60" y="584" width="580" height="52" rx="12" fill="#202023"/>
+  <text x="118" y="616" fill="#F2F2F7" font-size="15">Ligne de navigation</text>
+  <path d="M604 610 l6 6 l-6 6" stroke="#8E8E93" stroke-width="1.6" fill="none"/>
+
+  <rect x="60" y="648" width="580" height="52" rx="12" fill="#1C2740"/>
+  <text x="118" y="680" fill="#0A84FF" font-size="15">Ligne premium verrouillee</text>
+  <path d="M596 680 l6 -12 l6 8 l6 -8 l6 12 z" fill="#0A84FF"/>
+
+  <rect x="60" y="712" width="580" height="76" rx="12" fill="#202023"/>
+  <text x="118" y="742" fill="#F2F2F7" font-size="15">Ligne avec curseur</text>
+  <text x="620" y="742" fill="#8E8E93" font-size="13" text-anchor="end">100 %</text>
+  <rect x="118" y="762" width="502" height="4" rx="2" fill="#3A3A3E"/>
+  <rect x="118" y="762" width="440" height="4" rx="2" fill="#0A84FF"/>
+  <circle cx="558" cy="764" r="10" fill="#FFFFFF"/>
+
+  <rect x="60" y="800" width="580" height="76" rx="12" fill="#202023"/>
+  <text x="118" y="830" fill="#F2F2F7" font-size="15">Ligne avec description</text>
+  <rect x="572" y="812" width="48" height="28" rx="14" fill="#3A3A3E"/>
+  <circle cx="586" cy="826" r="12" fill="#FFFFFF"/>
+  <text x="118" y="854" fill="#8E8E93" font-size="12">La description explique la consequence du reglage en une phrase.</text>
+
+  <!-- Boutons et champs -->
+  <text x="720" y="440" fill="#8E8E93" font-size="13" font-weight="700">BOUTONS ET CHAMPS</text>
+  <rect x="720" y="456" width="150" height="38" rx="10" fill="#0A84FF"/><text x="795" y="480" fill="#FFFFFF" font-size="14" font-weight="600" text-anchor="middle">Action principale</text>
+  <rect x="886" y="456" width="150" height="38" rx="10" fill="#2C2C30" stroke="#3A3A3E"/><text x="961" y="480" fill="#F2F2F7" font-size="14" text-anchor="middle">Action secondaire</text>
+  <rect x="1052" y="456" width="150" height="38" rx="10" fill="none" stroke="#FF453A"/><text x="1127" y="480" fill="#FF453A" font-size="14" text-anchor="middle">Action destructive</text>
+
+  <rect x="720" y="514" width="482" height="36" rx="9" fill="#1A1A1C" stroke="#3A3A3E"/>
+  <text x="738" y="537" fill="#6E6E73" font-size="13">Champ de saisie au repos</text>
+  <rect x="720" y="562" width="482" height="36" rx="9" fill="#1A1A1C" stroke="#0A84FF" stroke-width="2"/>
+  <text x="738" y="585" fill="#F2F2F7" font-size="13">Champ de saisie actif</text>
+
+  <text x="720" y="642" fill="#8E8E93" font-size="13" font-weight="700">PASTILLES ET ETIQUETTES</text>
+  <rect x="720" y="658" width="44" height="22" rx="11" fill="#0A84FF"/><text x="742" y="674" fill="#FFFFFF" font-size="11" text-anchor="middle" font-weight="700">12</text>
+  <rect x="780" y="658" width="86" height="22" rx="11" fill="#2C2C30"/><text x="823" y="674" fill="#C7C7CC" font-size="11" text-anchor="middle">Genre</text>
+  <rect x="882" y="658" width="94" height="22" rx="11" fill="#1C2740"/><text x="929" y="674" fill="#0A84FF" font-size="11" text-anchor="middle" font-weight="600">Premium</text>
+  <circle cx="1006" cy="669" r="6" fill="#30D158"/><text x="1022" y="674" fill="#C7C7CC" font-size="12">Connecte</text>
+
+  <text x="720" y="730" fill="#8E8E93" font-size="13" font-weight="700">ECHELLE TYPOGRAPHIQUE</text>
+  <text x="720" y="762" fill="#F2F2F7" font-size="28" font-weight="700">Titre de page  28 gras</text>
+  <text x="720" y="794" fill="#F2F2F7" font-size="22" font-weight="700">Titre etat vide  22 gras</text>
+  <text x="720" y="820" fill="#F2F2F7" font-size="17" font-weight="700">Titre barre outils  17 gras</text>
+  <text x="720" y="844" fill="#F2F2F7" font-size="15" font-weight="700">Titre de section  15 gras</text>
+  <text x="720" y="866" fill="#F2F2F7" font-size="15">Libelle de ligne  15 normal</text>
+  <text x="720" y="886" fill="#C7C7CC" font-size="13">Texte courant  13</text>
+  <text x="720" y="906" fill="#8E8E93" font-size="12">Description sous une section  12</text>
+  <text x="720" y="926" fill="#6E6E73" font-size="11">Mention legale et note de bas de page  11</text>
+
+  <text x="60" y="930" fill="#8E8E93" font-size="13" font-weight="700">RAYONS ET ESPACEMENTS</text>
+  <text x="60" y="954" fill="#C7C7CC" font-size="12">Rayons : 6 pastille, 9 champ, 10 bouton et icone, 12 carte, 14 barre laterale et menu, 18 fenetre</text>
+  <text x="60" y="974" fill="#C7C7CC" font-size="12">Espacements : echelle de 4, valeurs usuelles 4, 8, 12, 16, 20, 24, 32, 40, 56</text>
+</svg>

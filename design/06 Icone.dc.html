@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  body { margin:0; background:#0E0E10; -webkit-font-smoothing:antialiased; }
+  a { color:#0A84FF; text-decoration:none; }
+  a:hover { color:#409CFF; }
+</style>
+</helmet>
+<div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;width:1440px;box-sizing:border-box;padding:56px 80px 72px;display:flex;flex-direction:column;gap:48px;background:#0E0E10;color:#F2F2F7">
+
+  <div style="display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #2E2E32;padding-bottom:24px">
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#6E6E73">Livrable 6 sur 6, Yum</div>
+    <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em">Icone d application</div>
+    <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:680px">Une case de manga vide, cadre et gouttiere seuls. Trois cases de tailles inegales, dont une seule est remplie en accent. Aucune lettre, aucun visage, aucun objet, aucune reprise d une marque existante.</div>
+  </div>
+
+  <div style="display:flex;gap:56px;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <img src="icone/yum-ios-1024.svg" width="320" height="320" style="border-radius:72px;display:block">
+      <div style="font-size:13px;font-weight:600">iOS et iPadOS</div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:320px">Pleine surface, le systeme applique son masque. Fichier livre en 1024 par 1024.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <img src="icone/yum-macos-1024.svg" width="320" height="320" style="display:block">
+      <div style="font-size:13px;font-weight:600">macOS</div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:320px">Squircle dessine, marge interieure de 100, rayon 184. Le contenu se resserre pour tenir la marge du dock.</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+      <div style="font-size:15px;font-weight:700">Geometrie, toile de 1024</div>
+      <div style="background:#202023;border-radius:12px;padding:6px 20px">
+        <sc-for list="{{ geo }}" as="g" hint-placeholder-count="7">
+          <div style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid #2E2E32">
+            <div style="flex:1;font-size:12px;color:#C7C7CC;line-height:16px">{{ g.k }}</div>
+            <div style="font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;width:200px">{{ g.v }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:11px;line-height:16px;color:#6E6E73">La case pleine est la seule masse coloree. C est le meme geste que la pastille de non lus : l accent bleu marque une chose, une seule, et jamais pour decorer.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:15px;font-weight:700">Tailles macOS</div>
+      <div style="font-size:12px;line-height:16px;color:#8E8E93">A 16 px, seules la masse bleue et la gouttiere restent lisibles. La composition est concue pour cela : deux masses et un vide.</div>
+    </div>
+    <div style="display:flex;gap:40px;align-items:flex-end">
+      <sc-for list="{{ sizes }}" as="s" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+          <img src="icone/yum-macos-1024.svg" width="{{ s.px }}" height="{{ s.px }}" style="display:block">
+          <div style="font-size:11px;color:#8E8E93;font-variant-numeric:tabular-nums">{{ s.n }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:56px;align-items:flex-start">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:15px;font-weight:700">Declinaison claire</div>
+      <div style="background:#F5F5F7;border-radius:16px;padding:24px;display:flex;gap:20px;align-items:center">
+        <img src="icone/yum-macos-1024-clair.svg" width="128" height="128" style="display:block">
+        <img src="icone/yum-macos-1024-clair.svg" width="64" height="64" style="display:block">
+        <img src="icone/yum-macos-1024-clair.svg" width="32" height="32" style="display:block">
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:340px">Fond `#F5F5F7`, cadres en `#1C1C1E`, accent inchange. Utilisee dans le reglage Icone de l application.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:15px;font-weight:700">Monochrome</div>
+      <div style="display:flex;gap:20px;align-items:center">
+        <div style="background:#2C2C30;border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center">
+          <img src="icone/yum-mono.svg" width="22" height="22" style="display:block;filter:invert(1)">
+          <div style="font-size:12px;color:#C7C7CC">barre de menus, 22</div>
+        </div>
+        <div style="background:#F5F5F7;border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center">
+          <img src="icone/yum-mono.svg" width="22" height="22" style="display:block">
+          <div style="font-size:12px;color:#3C3C43">mode teinte, 22</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:340px">Fond transparent, une seule couleur. La case pleine et les cadres partagent la teinte, la lecture repose sur l opposition masse contre contour.</div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:15px;font-weight:700">Fichiers livres</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ files }}" as="f" hint-placeholder-count="4">
+          <div style="background:#202023;border-radius:10px;padding:12px 16px;display:flex;align-items:baseline;gap:12px">
+            <div style="font-size:12px;color:#F2F2F7;font-weight:600">{{ f.n }}</div>
+            <div style="flex:1"></div>
+            <div style="font-size:11px;color:#6E6E73">{{ f.d }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      geo: [
+        { k: "Bloc de contenu", v: "672, centre" },
+        { k: "Gouttiere entre cases", v: "48" },
+        { k: "Trait de cadre", v: "32" },
+        { k: "Rayon de case", v: "6" },
+        { k: "Case superieure droite", v: "384 par 384, cadre" },
+        { k: "Case superieure gauche", v: "240 par 384, pleine accent" },
+        { k: "Case inferieure", v: "672 par 240, cadre" }
+      ],
+      sizes: [512, 256, 128, 64, 32, 16].map(n => ({ n, px: String(n) })),
+      files: [
+        { n: "yum-ios-1024.svg", d: "iOS, iPadOS, App Store" },
+        { n: "yum-macos-1024.svg", d: "macOS, squircle" },
+        { n: "yum-macos-1024-clair.svg", d: "declinaison claire" },
+        { n: "yum-mono.svg", d: "barre de menus, mode teinte" }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

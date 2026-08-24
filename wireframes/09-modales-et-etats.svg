@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 960" width="1440" height="960" font-family="-apple-system, SF Pro Text, Helvetica, Arial, sans-serif">
+  <rect width="1440" height="960" fill="#0E0E10"/>
+  <text x="60" y="56" fill="#F2F2F7" font-size="22" font-weight="700">Modales, feuilles et etats</text>
+
+  <!-- Modale courte -->
+  <text x="60" y="106" fill="#8E8E93" font-size="13" font-weight="700">MODALE COURTE</text>
+  <rect x="60" y="122" width="380" height="196" rx="20" fill="#1F1F22" stroke="#3A3A3E"/>
+  <text x="92" y="164" fill="#F2F2F7" font-size="16" font-weight="700">Ajouter depuis une URL</text>
+  <text x="92" y="192" fill="#C7C7CC" font-size="13">Collez l URL d un manga depuis une</text>
+  <text x="92" y="210" fill="#C7C7CC" font-size="13">source installee</text>
+  <rect x="92" y="228" width="316" height="34" rx="9" fill="#141416" stroke="#3A3A3E"/>
+  <text x="108" y="250" fill="#6E6E73" font-size="13">https://</text>
+  <rect x="92" y="274" width="150" height="34" rx="17" fill="#2C2C30" stroke="#48484C"/>
+  <text x="167" y="296" fill="#F2F2F7" font-size="14" text-anchor="middle">Annuler</text>
+  <rect x="258" y="274" width="150" height="34" rx="17" fill="#48484C"/>
+  <text x="333" y="296" fill="#F2F2F7" font-size="14" text-anchor="middle">Ajouter</text>
+  <text x="60" y="346" fill="#6E6E73" font-size="11">Largeur 380, rayon 20, ombre portee large, arriere plan assombri a 45 %</text>
+
+  <!-- Feuille de configuration serveur -->
+  <text x="520" y="106" fill="#8E8E93" font-size="13" font-weight="700">FEUILLE DE CONFIGURATION SERVEUR</text>
+  <rect x="520" y="122" width="440" height="420" rx="16" fill="#1F1F22" stroke="#3A3A3E"/>
+  <text x="548" y="160" fill="#F2F2F7" font-size="17" font-weight="700">Ajouter un serveur Komga</text>
+  <text x="548" y="184" fill="#8E8E93" font-size="12">Les identifiants sont stockes dans le trousseau du systeme.</text>
+
+  <text x="548" y="222" fill="#C7C7CC" font-size="12">Adresse du serveur</text>
+  <rect x="548" y="232" width="384" height="34" rx="9" fill="#141416" stroke="#3A3A3E"/>
+  <text x="564" y="254" fill="#6E6E73" font-size="13">https://komga.exemple.fr</text>
+
+  <text x="548" y="292" fill="#C7C7CC" font-size="12">Nom d utilisateur</text>
+  <rect x="548" y="302" width="384" height="34" rx="9" fill="#141416" stroke="#3A3A3E"/>
+
+  <text x="548" y="362" fill="#C7C7CC" font-size="12">Mot de passe</text>
+  <rect x="548" y="372" width="384" height="34" rx="9" fill="#141416" stroke="#3A3A3E"/>
+
+  <rect x="548" y="424" width="180" height="34" rx="9" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="638" y="446" fill="#F2F2F7" font-size="13" text-anchor="middle">Tester la connexion</text>
+  <circle cx="756" cy="441" r="6" fill="#30D158"/>
+  <text x="772" y="446" fill="#30D158" font-size="12">4 bibliotheques trouvees</text>
+
+  <rect x="548" y="482" width="120" height="34" rx="17" fill="#2C2C30" stroke="#48484C"/>
+  <text x="608" y="504" fill="#F2F2F7" font-size="13" text-anchor="middle">Annuler</text>
+  <rect x="812" y="482" width="120" height="34" rx="17" fill="#0A84FF"/>
+  <text x="872" y="504" fill="#FFFFFF" font-size="13" text-anchor="middle" font-weight="600">Enregistrer</text>
+
+  <!-- Paywall -->
+  <text x="1020" y="106" fill="#8E8E93" font-size="13" font-weight="700">MUR PREMIUM</text>
+  <rect x="1020" y="122" width="360" height="420" rx="16" fill="#141A28" stroke="#24344F"/>
+  <path d="M1186 190 l14 -28 l14 20 l14 -20 l14 28 z" fill="#0A84FF"/>
+  <text x="1200" y="234" fill="#F2F2F7" font-size="20" font-weight="700" text-anchor="middle">Premium</text>
+  <text x="1200" y="260" fill="#8E8E93" font-size="12" text-anchor="middle">Debloquez toutes les fonctions avancees</text>
+  <g font-size="13" fill="#C7C7CC">
+    <text x="1064" y="298">Traduction et colorisation par IA</text>
+    <text x="1064" y="326">Serveurs Komga, Kavita, Jellyfin, OPDS</text>
+    <text x="1064" y="354">Suivis AniList, MyAnimeList, Kitsu</text>
+    <text x="1064" y="382">Telechargements hors ligne</text>
+    <text x="1064" y="410">Sauvegarde et synchronisation iCloud</text>
+  </g>
+  <g fill="#0A84FF">
+    <path d="M1044 293 l4 5 l8 -10" stroke="#0A84FF" stroke-width="2" fill="none"/>
+    <path d="M1044 321 l4 5 l8 -10" stroke="#0A84FF" stroke-width="2" fill="none"/>
+    <path d="M1044 349 l4 5 l8 -10" stroke="#0A84FF" stroke-width="2" fill="none"/>
+    <path d="M1044 377 l4 5 l8 -10" stroke="#0A84FF" stroke-width="2" fill="none"/>
+    <path d="M1044 405 l4 5 l8 -10" stroke="#0A84FF" stroke-width="2" fill="none"/>
+  </g>
+  <rect x="1052" y="442" width="296" height="42" rx="12" fill="#0A84FF"/>
+  <text x="1200" y="469" fill="#FFFFFF" font-size="15" font-weight="600" text-anchor="middle">Essayer 7 jours gratuitement</text>
+  <text x="1200" y="508" fill="#6E6E73" font-size="11" text-anchor="middle">Puis 3,99 euros par mois. Resiliable a tout moment.</text>
+
+  <!-- Etats -->
+  <text x="60" y="606" fill="#8E8E93" font-size="13" font-weight="700">ETATS DE CONTENU</text>
+
+  <rect x="60" y="622" width="300" height="240" rx="14" fill="#161618" stroke="#2A2A2E"/>
+  <circle cx="210" cy="700" r="26" fill="none" stroke="#4A4A4F" stroke-width="3"/>
+  <text x="210" y="756" fill="#F2F2F7" font-size="15" font-weight="700" text-anchor="middle">Titre de l etat vide</text>
+  <text x="210" y="780" fill="#8E8E93" font-size="12" text-anchor="middle">Phrase qui indique quoi faire.</text>
+  <rect x="150" y="800" width="120" height="32" rx="9" fill="#0A84FF"/>
+  <text x="210" y="821" fill="#FFFFFF" font-size="13" text-anchor="middle" font-weight="600">Action</text>
+  <text x="60" y="884" fill="#6E6E73" font-size="11">Etat vide : icone, titre, phrase, action</text>
+
+  <rect x="392" y="622" width="300" height="240" rx="14" fill="#161618" stroke="#2A2A2E"/>
+  <rect x="420" y="650" width="80" height="118" rx="8" fill="#202023"/>
+  <rect x="512" y="650" width="80" height="118" rx="8" fill="#232326"/>
+  <rect x="604" y="650" width="60" height="118" rx="8" fill="#202023"/>
+  <rect x="420" y="782" width="150" height="12" rx="6" fill="#202023"/>
+  <rect x="420" y="806" width="100" height="12" rx="6" fill="#1C1C1F"/>
+  <text x="392" y="884" fill="#6E6E73" font-size="11">Chargement : squelettes pulsants, jamais de roue seule</text>
+
+  <rect x="724" y="622" width="300" height="240" rx="14" fill="#161618" stroke="#2A2A2E"/>
+  <circle cx="874" cy="700" r="24" fill="none" stroke="#FF9F0A" stroke-width="3"/>
+  <line x1="874" y1="688" x2="874" y2="704" stroke="#FF9F0A" stroke-width="3"/>
+  <circle cx="874" cy="712" r="2" fill="#FF9F0A"/>
+  <text x="874" y="756" fill="#F2F2F7" font-size="15" font-weight="700" text-anchor="middle">Le serveur ne repond pas</text>
+  <text x="874" y="780" fill="#8E8E93" font-size="12" text-anchor="middle">Verifiez l adresse et la connexion.</text>
+  <rect x="814" y="800" width="120" height="32" rx="9" fill="#2C2C30" stroke="#3A3A3E"/>
+  <text x="874" y="821" fill="#F2F2F7" font-size="13" text-anchor="middle">Reessayer</text>
+  <text x="724" y="884" fill="#6E6E73" font-size="11">Erreur : cause precise et voie de sortie, jamais d excuse</text>
+
+  <rect x="1056" y="622" width="324" height="240" rx="14" fill="#161618" stroke="#2A2A2E"/>
+  <rect x="1084" y="654" width="268" height="52" rx="10" fill="#202023"/>
+  <circle cx="1110" cy="680" r="12" fill="none" stroke="#0A84FF" stroke-width="2.5" stroke-dasharray="50 25"/>
+  <text x="1138" y="676" fill="#F2F2F7" font-size="13">Chapitre 43</text>
+  <text x="1138" y="694" fill="#8E8E93" font-size="11">14 sur 24 pages</text>
+  <rect x="1084" y="718" width="268" height="52" rx="10" fill="#202023"/>
+  <circle cx="1110" cy="744" r="12" fill="#30D158"/>
+  <text x="1138" y="740" fill="#F2F2F7" font-size="13">Chapitre 42</text>
+  <text x="1138" y="758" fill="#8E8E93" font-size="11">Termine  32 Mo</text>
+  <rect x="1084" y="782" width="268" height="52" rx="10" fill="#202023"/>
+  <circle cx="1110" cy="808" r="12" fill="none" stroke="#6E6E73" stroke-width="2"/>
+  <text x="1138" y="804" fill="#F2F2F7" font-size="13">Chapitre 41</text>
+  <text x="1138" y="822" fill="#8E8E93" font-size="11">En attente</text>
+  <text x="1056" y="884" fill="#6E6E73" font-size="11">File de telechargement : progression par chapitre, pause et reprise</text>
+
+  <text x="60" y="928" fill="#8E8E93" font-size="12">Toutes les modales se ferment par Echap, par clic hors zone, et rendent le focus a l element declencheur.</text>
+</svg>

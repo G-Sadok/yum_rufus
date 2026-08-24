@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin:0; background:#0E0E10; -webkit-font-smoothing:antialiased; }
+  a { color:#0A84FF; text-decoration:none; }
+  a:hover { color:#409CFF; }
+  @keyframes yumPulse { 0%,100% { opacity:0.4 } 50% { opacity:0.8 } }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+<div style="font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;background:#0E0E10;color:#F2F2F7;padding:56px 56px 72px;display:flex;flex-direction:column;gap:56px;width:1520px;box-sizing:border-box">
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:40px;border-bottom:1px solid #2E2E32;padding-bottom:24px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#6E6E73">Livrable 2 sur 6, Yum</div>
+      <div style="font-size:28px;font-weight:700;line-height:34px;letter-spacing:-0.02em">Planche de composants</div>
+      <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:660px">Chaque composant de la section 4 dans tous ses etats. Les etats sont montres cote a cote et figes, pas seulement au survol, pour qu ils soient verifiables sur une capture. Mode sombre, theme Midnight.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;text-align:right;font-size:11px;color:#6E6E73;line-height:16px">
+      <div>repos</div><div>survol</div><div>presse</div><div>focus clavier</div><div>desactive</div><div>verrouille premium</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:15px;font-weight:700">L element signature</div>
+      <div style="font-size:12px;line-height:16px;color:#8E8E93;max-width:760px">La pastille de non lus et le filet de progression sont le seul endroit du produit ou l accent bleu apparait en aplat sur du contenu. Geometrie identique sur couverture claire et sur couverture sombre.</div>
+    </div>
+    <div style="display:flex;gap:32px;align-items:flex-start">
+      <sc-for list="{{ signature }}" as="sg" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:12px;width:200px">
+          <div style="position:relative;width:200px;height:300px;border-radius:10px;overflow:hidden;background:{{ sg.bg }}">
+            <div style="position:absolute;left:{{ sg.mx }};top:{{ sg.my }};width:{{ sg.ms }};height:{{ sg.ms }};border-radius:{{ sg.mr }};background:{{ sg.mc }}"></div>
+            <div style="position:absolute;left:0;right:0;top:{{ sg.bt }};height:14px;background:{{ sg.bc }}"></div>
+            <div style="position:absolute;left:14px;right:14px;bottom:18px;font-size:15px;font-weight:700;line-height:19px;color:{{ sg.tc }}">{{ sg.title }}</div>
+            <div style="position:absolute;top:10px;right:10px;height:20px;min-width:20px;border-radius:10px;padding:0 8px;background:#0A84FF;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums">{{ sg.unread }}</div>
+            <div style="position:absolute;left:0;bottom:0;height:4px;background:#0A84FF;width:{{ sg.progress }}"></div>
+          </div>
+          <div style="font-size:11px;color:#8E8E93;line-height:15px">{{ sg.note }}</div>
+        </div>
+      </sc-for>
+      <div style="flex:1;background:#202023;border-radius:12px;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:13px;font-weight:700">Geometrie imposee</div>
+        <sc-for list="{{ signatureSpecs }}" as="ss" hint-placeholder-count="7">
+          <div style="display:flex;gap:16px;align-items:baseline;padding-bottom:12px;border-bottom:1px solid #2E2E32">
+            <div style="flex:1;font-size:12px;color:#C7C7CC;line-height:16px">{{ ss.k }}</div>
+            <div style="font-size:12px;font-weight:700;color:#F2F2F7;font-variant-numeric:tabular-nums;text-align:right;width:190px">{{ ss.v }}</div>
+          </div>
+        </sc-for>
+        <div style="font-size:11px;color:#6E6E73;line-height:15px">La pastille est masquee a zero non lu. Le filet est masque a zero et a cent pour cent. Aucune ombre, aucun contour, aucune autre marque au repos.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:580px minmax(0,1fr);gap:56px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">4.1 Ligne de reglage, cinq variantes</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Colonne de 580. Marge 20, icone 22 en accent, gouttiere 16, libelle a 58 du bord.</div>
+      </div>
+
+      <div style="width:580px;background:#202023;border-radius:12px;overflow:hidden">
+        <div style="height:52px;display:flex;align-items:center;padding:0 20px;gap:16px">
+          <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+          <div style="flex:1;font-size:15px">Navigation privee</div>
+          <div style="width:48px;height:28px;border-radius:14px;background:#0A84FF;position:relative;flex:none">
+            <div style="position:absolute;top:2px;left:22px;width:24px;height:24px;border-radius:12px;background:#FFFFFF"></div>
+          </div>
+        </div>
+        <div style="height:1px;background:#2E2E32;margin-left:20px"></div>
+        <div style="height:52px;display:flex;align-items:center;padding:0 20px;gap:16px">
+          <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+          <div style="flex:1;font-size:15px">Sens de lecture</div>
+          <div style="display:flex;align-items:center;gap:4px">
+            <div style="font-size:15px;color:#C7C7CC">Droite a gauche</div>
+            <div style="width:12px;height:20px;display:flex;flex-direction:column;justify-content:center;gap:4px;color:#8E8E93">
+              <div style="width:10px;height:5px;clip-path:polygon(50% 0,100% 100%,0 100%);background:#8E8E93"></div>
+              <div style="width:10px;height:5px;clip-path:polygon(50% 100%,100% 0,0 0);background:#8E8E93"></div>
+            </div>
+          </div>
+        </div>
+        <div style="height:1px;background:#2E2E32;margin-left:20px"></div>
+        <div style="height:52px;display:flex;align-items:center;padding:0 20px;gap:16px">
+          <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+          <div style="flex:1;font-size:15px">Prereglages de lecture</div>
+          <div style="width:8px;height:14px;clip-path:polygon(0 0,100% 50%,0 100%);background:#8E8E93"></div>
+        </div>
+        <div style="height:1px;background:#2E2E32;margin-left:20px"></div>
+        <div style="height:76px;display:flex;flex-direction:column;justify-content:center;padding:0 20px;gap:10px">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+            <div style="flex:1;font-size:15px">Luminosite</div>
+            <div style="font-size:12px;color:#8E8E93;font-variant-numeric:tabular-nums">88 %</div>
+          </div>
+          <div style="margin-left:38px;height:20px;display:flex;align-items:center;position:relative">
+            <div style="position:absolute;left:0;right:0;height:4px;border-radius:2px;background:#3A3A3E"></div>
+            <div style="position:absolute;left:0;width:88%;height:4px;border-radius:2px;background:#0A84FF"></div>
+            <div style="position:absolute;left:88%;margin-left:-10px;width:20px;height:20px;border-radius:10px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,0.4)"></div>
+          </div>
+        </div>
+        <div style="height:1px;background:#2E2E32;margin-left:20px"></div>
+        <div style="height:52px;display:flex;align-items:center;padding:0 20px;gap:16px">
+          <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+          <div style="flex:1;font-size:15px">Pages en memoire</div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="font-size:15px;color:#C7C7CC;font-variant-numeric:tabular-nums">12</div>
+            <div style="width:30px;height:28px;border-radius:8px;background:#2C2C30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px">
+              <div style="width:9px;height:5px;clip-path:polygon(50% 0,100% 100%,0 100%);background:#C7C7CC"></div>
+              <div style="width:9px;height:5px;clip-path:polygon(50% 100%,100% 0,0 0);background:#C7C7CC"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px">
+        <div style="font-size:15px;font-weight:700">Ligne de reglage, matrice d etats</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Meme ligne, six etats. Le focus clavier est un contour de 2 en accent avec un decalage de 2, jamais supprime.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;width:580px">
+        <sc-for list="{{ rowStates }}" as="rs" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="width:96px;flex:none;font-size:11px;color:#6E6E73;text-align:right">{{ rs.label }}</div>
+            <div style="flex:1;height:52px;border-radius:12px;display:flex;align-items:center;padding:0 20px;gap:16px;background:{{ rs.bg }};outline:{{ rs.outline }};outline-offset:2px">
+              <div style="width:22px;height:22px;border-radius:5px;flex:none;box-shadow:inset 0 0 0 1.6px {{ rs.icon }}"></div>
+              <div style="flex:1;font-size:15px;color:{{ rs.text }}">{{ rs.title }}</div>
+              <div style="width:48px;height:28px;border-radius:14px;position:relative;flex:none;background:{{ rs.track }};display:{{ rs.toggleDisplay }}">
+                <div style="position:absolute;top:2px;left:{{ rs.knobLeft }};width:24px;height:24px;border-radius:12px;background:{{ rs.knob }}"></div>
+              </div>
+              <div style="display:{{ rs.crownDisplay }};width:22px;height:16px;flex:none;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:#0A84FF"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:15px;font-weight:700">4.2 Carte de section</div>
+          <div style="font-size:12px;line-height:16px;color:#8E8E93">En tete a 14 au dessus de la carte, description a 12 en dessous, separateur encastre de 20 a gauche et affleurant a droite.</div>
+        </div>
+        <div style="width:580px;display:flex;flex-direction:column">
+          <div style="font-size:15px;font-weight:700;padding-bottom:14px">Confidentialite</div>
+          <div style="background:#202023;border-radius:12px;overflow:hidden">
+            <sc-for list="{{ sectionRows }}" as="sr" hint-placeholder-count="3">
+              <div style="height:52px;display:flex;align-items:center;padding:0 20px;gap:16px;border-top:{{ sr.border }}">
+                <div style="width:22px;height:22px;border-radius:5px;box-shadow:inset 0 0 0 1.6px #0A84FF;flex:none"></div>
+                <div style="flex:1;font-size:15px">{{ sr.label }}</div>
+                <div style="font-size:15px;color:#C7C7CC">{{ sr.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;line-height:16px;color:#8E8E93;padding-top:12px;max-width:580px">La navigation privee n enregistre ni historique ni progression. Les chapitres deja telecharges restent accessibles.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:15px;font-weight:700">4.6 Boutons</div>
+          <div style="font-size:12px;line-height:16px;color:#8E8E93">Quatre variantes, cinq etats. Hauteur 38 en contenu, 34 en modale, 28 en barre d outils.</div>
+        </div>
+        <div style="display:flex;gap:12px;padding-left:84px">
+          <sc-for list="{{ btnStateLabels }}" as="bl" hint-placeholder-count="5">
+            <div style="width:120px;font-size:11px;color:#6E6E73">{{ bl }}</div>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ buttonRows }}" as="br" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:72px;flex:none;font-size:12px;color:#C7C7CC;text-align:right">{{ br.variant }}</div>
+              <sc-for list="{{ br.states }}" as="bs" hint-placeholder-count="5">
+                <div style="width:120px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;background:{{ bs.bg }};color:{{ bs.fg }};font-weight:{{ bs.weight }};box-shadow:inset 0 0 0 1px {{ bs.border }};outline:{{ bs.outline }};outline-offset:2px;opacity:{{ bs.opacity }}">{{ bs.label }}</div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding-left:84px">
+          <div style="height:38px;padding:0 20px;border-radius:10px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center">Hauteur 38</div>
+          <div style="height:34px;padding:0 20px;border-radius:9999px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center">Capsule 34</div>
+          <div style="height:28px;padding:0 14px;border-radius:10px;background:#2C2C30;color:#F2F2F7;font-size:13px;display:flex;align-items:center;box-shadow:inset 0 0 0 1px #3A3A3E">Barre 28</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div style="font-size:15px;font-weight:700">Champs de saisie, interrupteurs, curseurs</div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap">
+          <sc-for list="{{ fieldStates }}" as="fs" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:8px;width:270px">
+              <div style="height:36px;border-radius:9px;display:flex;align-items:center;padding:0 14px;font-size:13px;background:#141416;color:{{ fs.fg }};box-shadow:inset 0 0 0 {{ fs.ringW }} {{ fs.ring }}">{{ fs.text }}</div>
+              <div style="font-size:11px;color:#6E6E73">{{ fs.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+          <sc-for list="{{ toggleStates }}" as="ts" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center;width:104px">
+              <div style="width:48px;height:28px;border-radius:14px;position:relative;background:{{ ts.track }};outline:{{ ts.outline }};outline-offset:2px;opacity:{{ ts.opacity }}">
+                <div style="position:absolute;top:2px;left:{{ ts.knobLeft }};width:24px;height:24px;border-radius:12px;background:{{ ts.knob }}"></div>
+              </div>
+              <div style="font-size:11px;color:#6E6E73;text-align:center;line-height:14px">{{ ts.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:15px;font-weight:700">4.3 Carte de serie</div>
+      <div style="font-size:12px;line-height:16px;color:#8E8E93">Couverture 2:3, rayon 10, largeur 150 a 200. Titre en callout graisse 600 sur deux lignes maximum, source en caption tertiaire.</div>
+    </div>
+    <div style="display:flex;gap:28px;align-items:flex-start">
+      <sc-for list="{{ seriesCards }}" as="sc" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;gap:12px;width:170px">
+          <div style="width:170px;height:255px;position:relative;transform:{{ sc.transform }}">
+            <div style="position:absolute;inset:0;border-radius:10px;overflow:hidden;background:{{ sc.bg }};box-shadow:inset 0 0 0 {{ sc.ringW }} #0A84FF">
+              <div style="position:absolute;left:{{ sc.mx }};top:{{ sc.my }};width:{{ sc.ms }};height:{{ sc.ms }};border-radius:{{ sc.mr }};background:{{ sc.mc }}"></div>
+              <div style="position:absolute;left:0;right:0;top:{{ sc.bt }};height:12px;background:{{ sc.bc }}"></div>
+              <div style="position:absolute;left:12px;right:12px;bottom:16px;font-size:13px;font-weight:700;line-height:17px;color:{{ sc.tc }}">{{ sc.coverTitle }}</div>
+              <div style="position:absolute;left:0;bottom:0;height:4px;background:#0A84FF;width:{{ sc.progress }}"></div>
+            </div>
+            <div style="position:absolute;top:10px;right:10px;height:20px;min-width:20px;border-radius:10px;padding:0 8px;background:#0A84FF;display:{{ sc.badgeDisplay }};align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FFFFFF;font-variant-numeric:tabular-nums">{{ sc.unread }}</div>
+            <div style="position:absolute;top:8px;left:8px;width:26px;height:26px;border-radius:13px;background:rgba(20,20,22,0.82);display:{{ sc.optionsDisplay }};align-items:center;justify-content:center;gap:3px">
+              <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+              <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+              <div style="width:3px;height:3px;border-radius:2px;background:#F2F2F7"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="font-size:13px;font-weight:600;line-height:17px;color:#F2F2F7">{{ sc.title }}</div>
+            <div style="font-size:11px;color:#8E8E93">{{ sc.source }}</div>
+          </div>
+          <div style="font-size:11px;color:#6E6E73;line-height:15px">{{ sc.state }}</div>
+        </div>
+      </sc-for>
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:170px">
+        <div style="width:170px;height:255px;border-radius:10px;background:#202023;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="width:140px;height:13px;border-radius:4px;background:#202023;animation:yumPulse 1200ms ease-in-out infinite"></div>
+          <div style="width:76px;height:11px;border-radius:4px;background:#202023;animation:yumPulse 1200ms ease-in-out infinite"></div>
+        </div>
+        <div style="font-size:11px;color:#6E6E73;line-height:15px">chargement, squelette aux dimensions exactes, pulsation 0.4 a 0.8 sur 1200 ms</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:170px">
+        <div style="width:170px;height:255px;border-radius:10px;overflow:hidden;position:relative">
+          <image-slot id="comp-cover-slot" shape="rounded" radius="10" placeholder="couverture reelle a deposer"></image-slot>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="font-size:13px;font-weight:600;line-height:17px;color:#F2F2F7">Emplacement de couverture</div>
+          <div style="font-size:11px;color:#8E8E93">a fournir</div>
+        </div>
+        <div style="font-size:11px;color:#6E6E73;line-height:15px">les maquettes melangent aplats abstraits originaux et emplacements a remplir</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">4.4 Ligne de source</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Hauteur 72, rayon 12. Pastille d etat doublee d un texte, jamais de couleur seule.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ sourceRows }}" as="so" hint-placeholder-count="5">
+          <div style="height:72px;border-radius:12px;display:flex;align-items:center;gap:16px;padding:0 20px;background:{{ so.bg }};outline:{{ so.outline }};outline-offset:2px">
+            <div style="width:40px;height:40px;border-radius:10px;flex:none;background:{{ so.iconBg }};display:flex;align-items:center;justify-content:center">
+              <div style="width:18px;height:18px;border-radius:{{ so.glyphRadius }};background:{{ so.glyph }}"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+              <div style="font-size:15px;font-weight:700;color:{{ so.fg }}">{{ so.name }}</div>
+              <div style="font-size:12px;color:#8E8E93">{{ so.sub }}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:8px;height:8px;border-radius:4px;background:{{ so.dot }};display:{{ so.dotDisplay }}"></div>
+              <div style="font-size:12px;color:{{ so.statusFg }}">{{ so.status }}</div>
+            </div>
+            <div style="width:26px;height:26px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:3px;background:{{ so.optionsBg }}">
+              <div style="width:3px;height:3px;border-radius:2px;background:#8E8E93"></div>
+              <div style="width:3px;height:3px;border-radius:2px;background:#8E8E93"></div>
+              <div style="width:3px;height:3px;border-radius:2px;background:#8E8E93"></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:15px;font-weight:700">4.5 Ligne de chapitre</div>
+        <div style="font-size:12px;line-height:16px;color:#8E8E93">Hauteur 56, rayon 10. Le fond disparait quand le chapitre est lu.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ chapterRows }}" as="ch" hint-placeholder-count="6">
+          <div style="height:56px;border-radius:10px;display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;background:{{ ch.bg }};outline:{{ ch.outline }};outline-offset:2px">
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+              <div style="font-size:15px;color:{{ ch.fg }};font-variant-numeric:tabular-nums">{{ ch.title }}</div>
+              <div style="font-size:12px;color:#8E8E93;display:{{ ch.subDisplay }}">{{ ch.sub }}</div>
+            </div>
+            <div style="font-size:12px;color:#6E6E73;font-variant-numeric:tabular-nums">{{ ch.date }}</div>
+            <div style="width:16px;height:16px;border-radius:8px;display:{{ ch.dlDisplay }};box-shadow:inset 0 0 0 1.5px #8E8E93"></div>
+            <div style="width:12px;height:12px;border-radius:6px;background:#0A84FF;display:{{ ch.dotDisplay }}"></div>
+            <div style="position:absolute;left:0;bottom:0;height:3px;background:rgba(10,132,255,0.6);width:{{ ch.progress }}"></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:52px;border-radius:12px;background:#2C2C30;box-shadow:inset 0 0 0 1px #3A3A3E,0 8px 24px rgba(0,0,0,0.44);display:flex;align-items:center;gap:16px;padding:0 18px;margin-top:8px">
+        <div style="font-size:13px;font-weight:700;font-variant-numeric:tabular-nums">4 selectionnes</div>
+        <div style="flex:1"></div>
+        <div style="font-size:13px;color:#0A84FF">Marquer lu</div>
+        <div style="font-size:13px;color:#0A84FF">Telecharger</div>
+        <div style="font-size:13px;color:#FF453A">Supprimer</div>
+      </div>
+      <div style="font-size:11px;color:#6E6E73">barre d actions contextuelle de la selection multiple, elevation 1</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:15px;font-weight:700">4.7 Menu contextuel</div>
+      <div style="width:240px;background:#2C2C30;border-radius:14px;border:1px solid #3A3A3E;box-shadow:0 8px 24px rgba(0,0,0,0.44);padding:6px 0">
+        <div style="height:26px;display:flex;align-items:center;padding:0 14px;font-size:11px;color:#8E8E93">Trier</div>
+        <sc-for list="{{ menuRows }}" as="mr" hint-placeholder-count="6">
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 14px;background:{{ mr.bg }};border-top:{{ mr.border }}">
+            <div style="width:14px;height:14px;flex:none;display:{{ mr.checkDisplay }};clip-path:polygon(14% 52%,0 66%,40% 100%,100% 16%,86% 4%,38% 74%);background:#0A84FF"></div>
+            <div style="width:14px;flex:none;display:{{ mr.spacerDisplay }}"></div>
+            <div style="flex:1;font-size:15px;color:{{ mr.fg }}">{{ mr.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:240px">Largeur minimale 220, ligne 34, coche a gauche pour un groupe a choix unique, separateur pleine largeur entre deux groupes.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:15px;font-weight:700">4.8 Modale courte</div>
+      <div style="width:380px;border-radius:20px;background:#1F1F22;border:1px solid #3A3A3E;box-shadow:0 24px 64px rgba(0,0,0,0.60);padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:17px;font-weight:700">Effacer l historique</div>
+        <div style="font-size:13px;line-height:18px;color:#C7C7CC">Les chapitres restent dans votre bibliotheque. Seule la trace de lecture est supprimee.</div>
+        <div style="height:36px;border-radius:9px;background:#141416;box-shadow:inset 0 0 0 1px #3A3A3E;display:flex;align-items:center;padding:0 14px;font-size:13px;color:#6E6E73">Tapez EFFACER pour confirmer</div>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;height:34px;border-radius:9999px;background:#3A3A3E;color:#F2F2F7;font-size:15px;display:flex;align-items:center;justify-content:center">Annuler</div>
+          <div style="flex:1;height:34px;border-radius:9999px;background:#FF453A;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center">Effacer</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:380px">Confirmation a droite. Fermeture par Echap et par clic sur le voile.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:15px;font-weight:700">4.9 Feuille de configuration</div>
+      <div style="width:440px;border-radius:16px;background:#1F1F22;border:1px solid #3A3A3E;box-shadow:0 24px 64px rgba(0,0,0,0.60);padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:17px;font-weight:700">Ajouter un serveur Komga</div>
+        <div style="font-size:13px;line-height:18px;color:#C7C7CC">Yum lit votre serveur, il n en heberge aucun contenu.</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ sheetFields }}" as="sf" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:12px;color:#8E8E93">{{ sf.label }}</div>
+              <div style="height:36px;border-radius:9px;background:#141416;box-shadow:inset 0 0 0 1px #3A3A3E;display:flex;align-items:center;padding:0 14px;font-size:13px;color:{{ sf.fg }}">{{ sf.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="height:34px;padding:0 18px;border-radius:10px;background:#3A3A3E;color:#F2F2F7;font-size:15px;display:flex;align-items:center">Tester la connexion</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:8px;height:8px;border-radius:4px;background:#30D158"></div>
+            <div style="font-size:12px;color:#C7C7CC">Serveur joint, 412 series</div>
+          </div>
+        </div>
+        <div style="height:1px;background:#3A3A3E"></div>
+        <div style="display:flex;gap:12px;justify-content:space-between">
+          <div style="height:34px;padding:0 22px;border-radius:10px;background:#3A3A3E;color:#F2F2F7;font-size:15px;display:flex;align-items:center">Annuler</div>
+          <div style="height:34px;padding:0 22px;border-radius:10px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center">Enregistrer</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:440px">Enregistrer reste desactive tant que le test n a pas reussi. Etat desactive : fond #2C2C30, texte #48484C.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="font-size:15px;font-weight:700">5.9 Mur premium</div>
+      <div style="width:360px;border-radius:16px;background:#141A28;border:1px solid #24344F;box-shadow:0 24px 64px rgba(0,0,0,0.60);padding:32px 28px 24px;display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:center"><div style="width:56px;height:40px;clip-path:polygon(0 100%,12% 22%,32% 56%,50% 8%,68% 56%,88% 22%,100% 100%);background:#0A84FF"></div></div>
+        <div style="font-size:20px;font-weight:700;text-align:center;padding-top:24px">Premium</div>
+        <div style="font-size:12px;color:#8E8E93;text-align:center;padding-top:8px">Debloquez toutes les fonctions avancees</div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:28px 0 32px">
+          <sc-for list="{{ premiumPerks }}" as="pp" hint-placeholder-count="5">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="width:14px;height:14px;flex:none;margin-top:2px;clip-path:polygon(14% 52%,0 66%,40% 100%,100% 16%,86% 4%,38% 74%);background:#0A84FF"></div>
+              <div style="font-size:13px;line-height:18px;color:#C7C7CC">{{ pp }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:42px;border-radius:12px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center">Essayer 7 jours gratuitement</div>
+        <div style="font-size:11px;line-height:15px;color:#6E6E73;text-align:center;padding-top:16px">Puis 3,99 euros par mois. Resiliable a tout moment.</div>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:360px">Aucun compte a rebours, aucune formulation qui presse l utilisateur.</div>
+
+      <div style="font-size:15px;font-weight:700;padding-top:12px">File de telechargement</div>
+      <div style="width:324px;border-radius:14px;background:#161618;box-shadow:inset 0 0 0 1px #2A2A2E;padding:28px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ downloadRows }}" as="dl" hint-placeholder-count="3">
+          <div style="height:52px;border-radius:10px;background:#202023;display:flex;align-items:center;gap:14px;padding:0 14px;box-sizing:border-box">
+            <div style="width:24px;height:24px;border-radius:12px;flex:none;background:{{ dl.ringFill }};box-shadow:inset 0 0 0 {{ dl.ringW }} {{ dl.ring }}"></div>
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <div style="font-size:13px;color:#F2F2F7;font-variant-numeric:tabular-nums">{{ dl.title }}</div>
+              <div style="font-size:11px;color:#8E8E93;font-variant-numeric:tabular-nums">{{ dl.sub }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:11px;color:#6E6E73;line-height:15px;width:324px">Progression par chapitre, pause et reprise. Anneau accent en cours, disque succes termine, anneau discret en attente.</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:15px;font-weight:700">4.10 Etats de contenu</div>
+      <div style="font-size:12px;line-height:16px;color:#8E8E93">Trois etats obligatoires par ecran. Aucune illustration vectorielle generique dans l etat vide, seulement le glyphe systeme a 52 en #4A4A4F.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+      <div style="background:#131315;border-radius:12px;height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:0 40px;text-align:center">
+        <div style="display:flex;gap:4px;align-items:flex-end;margin-bottom:6px">
+          <div style="width:14px;height:38px;border-radius:2px;box-shadow:inset 0 0 0 2.5px #4A4A4F"></div>
+          <div style="width:14px;height:46px;border-radius:2px;box-shadow:inset 0 0 0 2.5px #4A4A4F"></div>
+          <div style="width:14px;height:32px;border-radius:2px;box-shadow:inset 0 0 0 2.5px #4A4A4F;transform:rotate(10deg)"></div>
+        </div>
+        <div style="font-size:22px;font-weight:700;line-height:28px">Votre bibliotheque est vide</div>
+        <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:420px">Parcourez les sources pour trouver des mangas et les ajouter a votre bibliotheque.</div>
+        <div style="height:38px;padding:0 20px;border-radius:10px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;margin-top:6px">Parcourir les sources</div>
+        <div style="font-size:11px;color:#6E6E73;margin-top:8px">vide</div>
+      </div>
+
+      <div style="background:#131315;border-radius:12px;height:340px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+          <sc-for list="{{ skeletons }}" as="sk" hint-placeholder-count="8">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="width:100%;aspect-ratio:2/3;border-radius:10px;background:#202023;animation:yumPulse 1200ms ease-in-out infinite"></div>
+              <div style="width:80%;height:11px;border-radius:4px;background:#202023;animation:yumPulse 1200ms ease-in-out infinite"></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex:1"></div>
+        <div style="font-size:11px;color:#6E6E73;text-align:center">chargement, jamais de roue seule sur une zone pleine</div>
+      </div>
+
+      <div style="background:#131315;border-radius:12px;height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:0 40px;text-align:center">
+        <div style="width:52px;height:52px;border-radius:26px;box-shadow:inset 0 0 0 3px #FF9F0A;position:relative;margin-bottom:6px">
+          <div style="position:absolute;left:24.5px;top:13px;width:3px;height:17px;border-radius:2px;background:#FF9F0A"></div>
+          <div style="position:absolute;left:23.5px;top:34px;width:5px;height:5px;border-radius:3px;background:#FF9F0A"></div>
+        </div>
+        <div style="font-size:22px;font-weight:700;line-height:28px">Le serveur ne repond pas</div>
+        <div style="font-size:13px;line-height:18px;color:#8E8E93;max-width:420px">Yum a joint komga.local a 21:04 puis plus rien. Verifiez que le serveur est allume, ou lisez vos chapitres telecharges.</div>
+        <div style="display:flex;gap:12px;margin-top:6px">
+          <div style="height:38px;padding:0 20px;border-radius:10px;background:#2C2C30;box-shadow:inset 0 0 0 1px #3A3A3E;color:#F2F2F7;font-size:15px;display:flex;align-items:center">Reessayer</div>
+          <div style="height:38px;padding:0 20px;border-radius:10px;background:#2C2C30;box-shadow:inset 0 0 0 1px #3A3A3E;color:#F2F2F7;font-size:15px;display:flex;align-items:center">Voir les telechargements</div>
+        </div>
+        <div style="font-size:11px;color:#6E6E73;margin-top:8px">erreur, la cause est nommee, la sortie est donnee, action secondaire</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:20px;border-top:1px solid #2E2E32;padding-top:32px">
+    <div style="font-size:15px;font-weight:700">Focus clavier et cibles de pointage</div>
+    <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:20px;align-items:center">
+          <div style="width:44px;height:44px;border-radius:10px;background:#2C2C30;box-shadow:inset 0 0 0 1px #3A3A3E;display:flex;align-items:center;justify-content:center;font-size:11px;color:#8E8E93;font-variant-numeric:tabular-nums">44</div>
+          <div style="width:28px;height:28px;border-radius:10px;background:#2C2C30;box-shadow:inset 0 0 0 1px #3A3A3E;display:flex;align-items:center;justify-content:center;font-size:10px;color:#8E8E93;font-variant-numeric:tabular-nums">28</div>
+          <div style="font-size:12px;color:#8E8E93;line-height:16px;max-width:320px">44 par 44 minimum sur iOS et iPadOS, 28 par 28 sur macOS. Une icone plus petite garde une zone de clic conforme.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:24px;align-items:center">
+        <div style="height:38px;padding:0 20px;border-radius:10px;background:#0A84FF;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;outline:2px solid #0A84FF;outline-offset:2px">Bouton au focus</div>
+        <div style="width:150px;height:36px;border-radius:9px;background:#141416;box-shadow:inset 0 0 0 1px #3A3A3E;outline:2px solid #0A84FF;outline-offset:2px;display:flex;align-items:center;padding:0 14px;font-size:13px;color:#F2F2F7">Champ au focus</div>
+        <div style="font-size:12px;color:#8E8E93;line-height:16px;max-width:300px">Contour de 2 en accent, decalage de 2, sur toutes les surfaces, jamais supprime.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1520,&quot;height&quot;:3200}}">
+class Component extends DCLogic {
+  renderVals() {
+    const A = "#0A84FF";
+
+    const signature = [
+      { bg: "#E8E4DC", mc: "#1B1B1D", mx: "26px", my: "44px", ms: "148px", mr: "74px", bc: "#C2382B", bt: "196px", tc: "#1B1B1D",
+        title: "Vagabond de la nuit blanche", unread: "12", progress: "62%", note: "couverture claire, pastille et filet gardent 3.5:1 sur l aplat" },
+      { bg: "#141416", mc: "#2C2C30", mx: "-20px", my: "60px", ms: "180px", mr: "0", bc: "#F2F2F7", bt: "210px", tc: "#F2F2F7",
+        title: "Le sel et la cendre", unread: "3", progress: "28%", note: "couverture sombre, meme geometrie, aucun contour ajoute" },
+      { bg: "#9AA7B4", mc: "#F2F2F7", mx: "44px", my: "26px", ms: "112px", mr: "12px", bc: "#1B2530", bt: "170px", tc: "#F2F2F7",
+        title: "Quatorze etes", unread: "148", progress: "91%", note: "pastille large, le remplissage horizontal de 8 absorbe trois chiffres" }
+    ];
+
+    const signatureSpecs = [
+      { k: "Pastille, ancrage", v: "haut a droite, marge 10" },
+      { k: "Pastille, hauteur et rayon", v: "20, rayon 10" },
+      { k: "Pastille, remplissage horizontal", v: "8 de chaque cote" },
+      { k: "Pastille, texte", v: "caption 11, graisse 700, blanc" },
+      { k: "Filet, hauteur", v: "4, cale au bord inferieur" },
+      { k: "Filet, largeur", v: "proportionnelle a la progression" },
+      { k: "Survol de la carte", v: "echelle 1.02, 120 ms, easeOut" }
+    ];
+
+    const baseRow = { title: "Amelioration IA", icon: A, text: "#F2F2F7", track: "#3A3A3E", knob: "#FFFFFF", knobLeft: "2px", outline: "none", toggleDisplay: "block", crownDisplay: "none", bg: "#202023" };
+    const rowStates = [
+      { ...baseRow, label: "repos" },
+      { ...baseRow, label: "survol", bg: "#26262A" },
+      { ...baseRow, label: "presse", bg: "#26262A", track: "#0774E0", knobLeft: "22px" },
+      { ...baseRow, label: "focus clavier", outline: "2px solid " + A },
+      { ...baseRow, label: "desactive", text: "#48484C", icon: "#48484C", track: "#26262A", knob: "#48484C" },
+      { ...baseRow, label: "verrouille premium", bg: "#1C2740", text: A, toggleDisplay: "none", crownDisplay: "block", title: "Colorisation IA" }
+    ];
+
+    const sectionRows = [
+      { label: "Navigation privee", value: "", border: "none" },
+      { label: "Verrouillage de l application", value: "Face ID", border: "1px solid #2E2E32" },
+      { label: "Masquer dans le selecteur d apps", value: "", border: "1px solid #2E2E32" }
+    ];
+
+    const btnStateLabels = ["repos", "survol", "presse", "focus clavier", "desactive"];
+    const mkBtn = (variant, label, spec) => {
+      const s = [];
+      const st = [
+        { key: "repos" }, { key: "survol" }, { key: "presse" }, { key: "focus" }, { key: "desactive" }
+      ];
+      st.forEach(x => {
+        let o = { label, weight: spec.weight, bg: spec.bg, fg: spec.fg, border: spec.border, outline: "none", opacity: 1 };
+        if (x.key === "survol") { o.bg = spec.bgHover; o.fg = spec.fgHover || spec.fg; }
+        if (x.key === "presse") { o.bg = spec.bgPressed; o.fg = spec.fgPressed || spec.fg; }
+        if (x.key === "focus") { o.outline = "2px solid " + A; }
+        if (x.key === "desactive") { o.bg = spec.bgOff; o.fg = "#48484C"; o.border = spec.borderOff; }
+        s.push(o);
+      });
+      return { variant, states: s };
+    };
+
+    const buttonRows = [
+      mkBtn("Principal", "Commencer", { weight: 600, bg: A, fg: "#FFFFFF", border: "transparent", bgHover: "#2A95FF", bgPressed: "#0774E0", bgOff: "#1E2A38" }),
+      mkBtn("Secondaire", "Dans ma liste", { weight: 400, bg: "#2C2C30", fg: "#F2F2F7", border: "#3A3A3E", bgHover: "#34343A", bgPressed: "#26262A", bgOff: "#202023", borderOff: "#2E2E32" }),
+      mkBtn("Discret", "Afficher plus", { weight: 400, bg: "transparent", fg: A, border: "transparent", bgHover: "rgba(10,132,255,0.12)", bgPressed: "rgba(10,132,255,0.20)", bgOff: "transparent" }),
+      mkBtn("Destructif", "Supprimer", { weight: 400, bg: "transparent", fg: "#FF453A", border: "#FF453A", bgHover: "rgba(255,69,58,0.12)", bgPressed: "rgba(255,69,58,0.20)", bgOff: "transparent", borderOff: "#3A2A2A" })
+    ];
+
+    const fieldStates = [
+      { label: "repos, espace reserve", text: "Rechercher la bibliotheque", fg: "#6E6E73", ring: "#3A3A3E", ringW: "1px" },
+      { label: "actif, contour accent de 2", text: "vagabond", fg: "#F2F2F7", ring: A, ringW: "2px" },
+      { label: "rempli, hors focus", text: "komga.local:25600", fg: "#F2F2F7", ring: "#3A3A3E", ringW: "1px" },
+      { label: "erreur de validation", text: "adresse injoignable", fg: "#FF453A", ring: "#FF453A", ringW: "1.5px" }
+    ];
+
+    const toggleStates = [
+      { label: "inactif", track: "#3A3A3E", knob: "#FFFFFF", knobLeft: "2px", outline: "none", opacity: 1 },
+      { label: "actif", track: A, knob: "#FFFFFF", knobLeft: "22px", outline: "none", opacity: 1 },
+      { label: "presse", track: "#0774E0", knob: "#FFFFFF", knobLeft: "22px", outline: "none", opacity: 1 },
+      { label: "focus clavier", track: A, knob: "#FFFFFF", knobLeft: "22px", outline: "2px solid " + A, opacity: 1 },
+      { label: "desactive", track: "#26262A", knob: "#48484C", knobLeft: "2px", outline: "none", opacity: 1 }
+    ];
+
+    const cover1 = { bg: "#E8E4DC", mc: "#1B1B1D", mx: "20px", my: "36px", ms: "120px", mr: "60px", bc: "#C2382B", bt: "172px", tc: "#1B1B1D", coverTitle: "Vagabond de la nuit blanche" };
+    const cover2 = { bg: "#141416", mc: "#2C2C30", mx: "-16px", my: "52px", ms: "150px", mr: "0", bc: "#F2F2F7", bt: "186px", tc: "#F2F2F7", coverTitle: "Le sel et la cendre" };
+    const cover3 = { bg: "#9AA7B4", mc: "#F2F2F7", mx: "38px", my: "22px", ms: "94px", mr: "10px", bc: "#1B2530", bt: "150px", tc: "#F2F2F7", coverTitle: "Quatorze etes" };
+
+    const seriesCards = [
+      { ...cover1, title: "Vagabond de la nuit blanche", source: "Komga, salon", unread: "12", progress: "62%", badgeDisplay: "flex", optionsDisplay: "none", transform: "none", ringW: "0", state: "repos, douze non lus, progression 62 %" },
+      { ...cover2, title: "Le sel et la cendre", source: "Dossier local", unread: "3", progress: "28%", badgeDisplay: "flex", optionsDisplay: "flex", transform: "scale(1.02)", ringW: "0", state: "survol, echelle 1.02, bouton d options en haut a gauche" },
+      { ...cover3, title: "Quatorze etes", source: "OPDS, bibliotheque publique", unread: "0", progress: "0", badgeDisplay: "none", optionsDisplay: "none", transform: "none", ringW: "3px", state: "selection multiple, contour de 3 en accent a l interieur du rayon" },
+      { ...cover1, title: "Marches basses", source: "Kavita, atelier", unread: "0", progress: "0", badgeDisplay: "none", optionsDisplay: "none", transform: "none", ringW: "0", state: "tout lu, ni pastille ni filet" },
+      { ...cover2, title: "Sept nuits a Otaru", source: "SMB, nas", unread: "1", progress: "8%", badgeDisplay: "flex", optionsDisplay: "none", transform: "none", ringW: "0", state: "un seul non lu, filet minimal encore visible" }
+    ];
+
+    const sourceRows = [
+      { name: "Dossier local", sub: "Documents, Manga, 84 series", bg: "#202023", fg: "#F2F2F7", iconBg: "#2C2C30", glyph: "#C7C7CC", glyphRadius: "3px", dot: "transparent", dotDisplay: "none", status: "", statusFg: "#8E8E93", optionsBg: "transparent", outline: "none" },
+      { name: "Komga, salon", sub: "komga.local:25600, version 1.9.2", bg: "#202023", fg: "#F2F2F7", iconBg: "#1C2740", glyph: A, glyphRadius: "9px", dot: "#30D158", dotDisplay: "block", status: "Connecte", statusFg: "#C7C7CC", optionsBg: "transparent", outline: "none" },
+      { name: "Kavita, atelier", sub: "kavita.maison:5000, version 0.8.1", bg: "#26262A", fg: "#F2F2F7", iconBg: "#1C2740", glyph: A, glyphRadius: "9px", dot: "#30D158", dotDisplay: "block", status: "Connecte", statusFg: "#C7C7CC", optionsBg: "#3A3A3E", outline: "none" },
+      { name: "WebDAV, sauvegarde", sub: "dav.exemple.net, derniere tentative a 21:04", bg: "#202023", fg: "#F2F2F7", iconBg: "#2C2C30", glyph: "#FF9F0A", glyphRadius: "3px", dot: "#FF9F0A", dotDisplay: "block", status: "Sans reponse", statusFg: "#C7C7CC", optionsBg: "transparent", outline: "none" },
+      { name: "Catalogue OPDS", sub: "opds.exemple.org, 12 400 titres", bg: "#202023", fg: "#F2F2F7", iconBg: "#2C2C30", glyph: "#C7C7CC", glyphRadius: "9px", dot: "#30D158", dotDisplay: "block", status: "Connecte", statusFg: "#C7C7CC", optionsBg: "transparent", outline: "2px solid " + A }
+    ];
+
+    const chapterRows = [
+      { title: "Chapitre 148", sub: "", date: "12 aout", bg: "#202023", fg: "#F2F2F7", dotDisplay: "block", dlDisplay: "none", subDisplay: "none", progress: "0", outline: "none" },
+      { title: "Chapitre 147", sub: "", date: "5 aout", bg: "#202023", fg: "#F2F2F7", dotDisplay: "block", dlDisplay: "block", subDisplay: "none", progress: "0", outline: "none" },
+      { title: "Chapitre 146", sub: "page 14 sur 38", date: "29 juillet", bg: "transparent", fg: "#8E8E93", dotDisplay: "none", dlDisplay: "none", subDisplay: "block", progress: "37%", outline: "none" },
+      { title: "Chapitre 145", sub: "", date: "22 juillet", bg: "transparent", fg: "#8E8E93", dotDisplay: "none", dlDisplay: "none", subDisplay: "none", progress: "0", outline: "none" },
+      { title: "Chapitre 144", sub: "", date: "15 juillet", bg: "#26262A", fg: "#F2F2F7", dotDisplay: "none", dlDisplay: "none", subDisplay: "none", progress: "0", outline: "none" },
+      { title: "Chapitre 143", sub: "", date: "8 juillet", bg: "transparent", fg: "#8E8E93", dotDisplay: "none", dlDisplay: "none", subDisplay: "none", progress: "0", outline: "2px solid " + A }
+    ];
+
+    const menuRows = [
+      { label: "Personnalise", bg: "transparent", fg: "#F2F2F7", checkDisplay: "block", spacerDisplay: "none", border: "none" },
+      { label: "Nom", bg: "transparent", fg: "#F2F2F7", checkDisplay: "none", spacerDisplay: "block", border: "none" },
+      { label: "Langue", bg: "#3A3A3E", fg: "#F2F2F7", checkDisplay: "none", spacerDisplay: "block", border: "none" },
+      { label: "Transfert Wi-Fi", bg: "transparent", fg: "#F2F2F7", checkDisplay: "none", spacerDisplay: "block", border: "1px solid #3A3A3E" },
+      { label: "Parcourir un dossier local", bg: "transparent", fg: "#F2F2F7", checkDisplay: "none", spacerDisplay: "block", border: "none" },
+      { label: "Installer une extension", bg: "transparent", fg: "#48484C", checkDisplay: "none", spacerDisplay: "block", border: "none" }
+    ];
+
+    const sheetFields = [
+      { label: "Adresse du serveur", value: "komga.local:25600", fg: "#F2F2F7" },
+      { label: "Nom d utilisateur", value: "lecteur", fg: "#F2F2F7" },
+      { label: "Mot de passe", value: "bulletsbulletsbullets", fg: "#F2F2F7" }
+    ];
+
+    const premiumPerks = [
+      "Traduction et colorisation par IA",
+      "Serveurs Komga, Kavita, Jellyfin, OPDS",
+      "Suivis sur vos services de suivi",
+      "Telechargements hors ligne",
+      "Sauvegarde et synchronisation iCloud"
+    ];
+
+    const downloadRows = [
+      { title: "Chapitre 43", sub: "14 sur 24 pages", ring: A, ringW: "2.5px", ringFill: "transparent" },
+      { title: "Chapitre 42", sub: "Termine  32 Mo", ring: "transparent", ringW: "0", ringFill: "#30D158" },
+      { title: "Chapitre 41", sub: "En attente", ring: "#6E6E73", ringW: "2px", ringFill: "transparent" }
+    ];
+
+    return {
+      signature, signatureSpecs, rowStates, sectionRows, btnStateLabels, buttonRows,
+      fieldStates, toggleStates, seriesCards, sourceRows, chapterRows, menuRows,
+      sheetFields, premiumPerks, downloadRows, skeletons: [1, 2, 3, 4, 5, 6, 7, 8]
+    };
+  }
+}
+</script>
+</body>
+</html>

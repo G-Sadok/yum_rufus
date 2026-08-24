@@ -1,0 +1,32 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Secrets et signature
+.env
+*.p12
+*.mobileprovision
+*.cer
+
+# Claude Code, configuration locale non partagee
+.claude/settings.local.json
+
+# Etat volatil de la boucle, ne doit jamais etre suivi par git
+# sinon un checkout l ecrase en pleine execution
+loop/etat-boucle.json
+loop/verdict.json
+loop/journal/
+
+# Systeme
+.DS_Store
+
+# Jeux de test volumineux
+Tests/JeuDeDonnees/genere/

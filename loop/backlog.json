@@ -162,7 +162,8 @@
       "depend_de": [
         "F003"
       ],
-      "statut": "en_cours"
+      "statut": "termine",
+      "termine_le": "2026-08-24T23:07:30Z"
     },
     {
       "id": "F008",

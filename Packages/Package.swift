@@ -67,6 +67,11 @@ let package = Package(
             path: "Storage/Tests"
         ),
         .testTarget(
+            name: "ArchiveTests",
+            dependencies: ["Archive", "Core"],
+            path: "Archive/Tests"
+        ),
+        .testTarget(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem"],
             path: "DesignSystem/Tests"

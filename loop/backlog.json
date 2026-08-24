@@ -29,7 +29,8 @@
         "Le fichier .gitignore couvre DerivedData, .build, xcuserdata et .claude/settings.local.json"
       ],
       "depend_de": [],
-      "statut": "en_cours"
+      "statut": "termine",
+      "termine_le": "2026-08-24T21:38:33Z"
     },
     {
       "id": "F002",

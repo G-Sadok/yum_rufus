@@ -16,11 +16,28 @@ ECHECS=0
 # Le dossier App existe des l etape 0, mais son projet Xcode n arrive qu avec
 # la coquille de l application. Tester la seule presence du dossier ferait
 # echouer xcodebuild sur un schema inexistant, alors que rien n est casse.
-# On bascule donc sur xcodebuild uniquement quand un projet existe vraiment.
+# On ajoute donc xcodebuild uniquement quand un projet existe vraiment.
+#
+# Trois corrections apportees avec F008, quand le projet Xcode est apparu.
+#
+# 1. L ancienne version appelait xcodebuild sans lui passer le projet trouve,
+#    depuis la racine du depot, qui n en contient aucun. L appel echouait sur
+#    "does not contain an Xcode project", quel que soit l etat du code.
+# 2. L ancienne version remplacait la compilation et les tests de paquet par
+#    ceux du projet Xcode. Le schema de l application ne porte pas les cibles
+#    de test des paquets, la couche metier cessait donc d etre testee au moment
+#    precis ou l interface arrivait. Les deux jeux tournent desormais.
+# 3. xcodebuild test echoue quand le schema ne declare aucun testable. On ne
+#    lance l action de test du projet que s il en declare un.
 PROJET_XCODE=""
+SCHEMA_A_DES_TESTS=0
 if [ -d "App" ]; then
   PROJET_XCODE="$(find App -maxdepth 2 \
     \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)"
+fi
+if [ -n "$PROJET_XCODE" ] \
+  && grep -rq "<TestableReference" "$PROJET_XCODE/xcshareddata/xcschemes" 2>/dev/null; then
+  SCHEMA_A_DES_TESTS=1
 fi
 
 # Les controles de texte lisent l arborescence de travail, pas le code suivi par
@@ -47,25 +64,9 @@ echouer() { rouge "$1"; ECHECS=$((ECHECS + 1)); }
 # ---------------------------------------------------------------------------
 titre "1. Compilation"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
-  SORTIE="$(mktemp)"
-  if xcodebuild build \
-      -scheme "$SCHEMA" \
-      -destination 'platform=macOS' \
-      -quiet > "$SORTIE" 2>&1; then
-    NB_AVERT="$(grep -c "warning:" "$SORTIE" || true)"
-    if [ "$NB_AVERT" -gt 0 ]; then
-      echouer "Compilation avec $NB_AVERT avertissement(s)"
-      grep "warning:" "$SORTIE" | head -10
-    else
-      vert "Compilation sans avertissement"
-    fi
-  else
-    echouer "La compilation a echoue"
-    tail -40 "$SORTIE"
-  fi
-  rm -f "$SORTIE"
-elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
+COMPILATION_TENTEE=0
+
+if command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
   # On se fie au code de sortie et non a la presence de la chaine error: dans
   # la sortie. Un echec de lien ou de manifeste ne l ecrit pas toujours, et le
   # controle repondait OK sur une compilation cassee.
@@ -83,26 +84,41 @@ elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
     tail -40 "$SORTIE"
   fi
   rm -f "$SORTIE"
-else
+  COMPILATION_TENTEE=1
+fi
+
+if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
+  SORTIE="$(mktemp)"
+  if xcodebuild build \
+      -project "$PROJET_XCODE" \
+      -scheme "$SCHEMA" \
+      -destination 'platform=macOS' \
+      -quiet > "$SORTIE" 2>&1; then
+    NB_AVERT="$(grep -c "warning:" "$SORTIE" || true)"
+    if [ "$NB_AVERT" -gt 0 ]; then
+      echouer "Compilation de l application avec $NB_AVERT avertissement(s)"
+      grep "warning:" "$SORTIE" | head -10
+    else
+      vert "Compilation de l application sans avertissement"
+    fi
+  else
+    echouer "La compilation de l application a echoue"
+    tail -40 "$SORTIE"
+  fi
+  rm -f "$SORTIE"
+  COMPILATION_TENTEE=1
+fi
+
+if [ "$COMPILATION_TENTEE" -eq 0 ]; then
   jaune "Aucun projet compilable detecte pour l instant"
 fi
 
 # ---------------------------------------------------------------------------
 titre "2. Tests"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
-  SORTIE="$(mktemp)"
-  if xcodebuild test \
-      -scheme "$SCHEMA" \
-      -destination 'platform=macOS' \
-      -quiet > "$SORTIE" 2>&1; then
-    vert "Tests passes"
-  else
-    echouer "Des tests ont echoue"
-    grep -E "(failed|error:)" "$SORTIE" | head -20
-  fi
-  rm -f "$SORTIE"
-elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
+TESTS_TENTES=0
+
+if command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
   SORTIE="$(mktemp)"
   if swift test --package-path Packages > "$SORTIE" 2>&1; then
     vert "Tests des paquets passes"
@@ -111,7 +127,28 @@ elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
     grep -E "(recorded an issue|failed|error:)" "$SORTIE" | head -20
   fi
   rm -f "$SORTIE"
-else
+  TESTS_TENTES=1
+fi
+
+if command -v xcodebuild >/dev/null 2>&1 && [ "$SCHEMA_A_DES_TESTS" -eq 1 ]; then
+  SORTIE="$(mktemp)"
+  if xcodebuild test \
+      -project "$PROJET_XCODE" \
+      -scheme "$SCHEMA" \
+      -destination 'platform=macOS' \
+      -quiet > "$SORTIE" 2>&1; then
+    vert "Tests de l application passes"
+  else
+    echouer "Des tests de l application ont echoue"
+    grep -E "(failed|error:)" "$SORTIE" | head -20
+  fi
+  rm -f "$SORTIE"
+  TESTS_TENTES=1
+elif [ -n "$PROJET_XCODE" ]; then
+  jaune "Le schema $SCHEMA ne declare aucune cible de test"
+fi
+
+if [ "$TESTS_TENTES" -eq 0 ]; then
   jaune "Aucune cible de test detectee pour l instant"
 fi
 

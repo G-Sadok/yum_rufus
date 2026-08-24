@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# pre-commit
+# Regle de redaction numero un : aucun tiret cadratin dans le depot.
+#
+# Le controle complet vit dans scripts/verifications.sh. Celui ci ne regarde
+# que les fichiers indexes, pour rester instantane a chaque commit.
+#
+# Installe par scripts/installer-hooks-git.sh via core.hooksPath.
+
+set -uo pipefail
+
+INDEXES="$(git diff --cached --name-only --diff-filter=ACMR)"
+[ -z "$INDEXES" ] && exit 0
+
+# Le caractere interdit est construit par printf plutot qu ecrit en clair,
+# sinon ce fichier declencherait le controle qu il applique. La forme octale
+# fonctionne aussi avec le bash 3.2 livre par macOS.
+TIRET="$(printf '\342\200\224')"
+
+TROUVES=""
+while IFS= read -r FICHIER; do
+  [ -f "$FICHIER" ] || continue
+  case "$FICHIER" in
+    *.swift|*.md|*.json|*.yml|*.yaml|*.sh|*.strings|*.xcstrings|*.txt)
+      if git show ":$FICHIER" 2>/dev/null | grep -qI -e "$TIRET"; then
+        TROUVES="$TROUVES  $FICHIER"$'\n'
+      fi
+      ;;
+  esac
+done <<< "$INDEXES"
+
+if [ -n "$TROUVES" ]; then
+  {
+    printf '\033[31mCommit refuse : tiret cadratin trouve dans :\033[0m\n'
+    printf '%s' "$TROUVES"
+    printf 'Remplace le par une virgule, un deux points ou une phrase separee.\n'
+  } >&2
+  exit 1
+fi
+
+exit 0

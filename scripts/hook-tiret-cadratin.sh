@@ -19,7 +19,12 @@ case "$FICHIER" in
   *) exit 0 ;;
 esac
 
-LIGNES="$(grep -n $'\u2014' "$FICHIER" 2>/dev/null || true)"
+# Motif construit en octal, pas via $'\\u...' que le bash 3.2 de macOS
+# n interprete pas. Sans cela le hook cherchait le mot du code du caractere
+# et laissait passer tous les vrais tirets cadratins.
+TIRET_CADRATIN="$(printf '\342\200\224')"
+
+LIGNES="$(grep -n -e "$TIRET_CADRATIN" "$FICHIER" 2>/dev/null || true)"
 
 if [ -n "$LIGNES" ]; then
   {

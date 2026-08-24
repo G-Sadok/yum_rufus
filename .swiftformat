@@ -1,0 +1,25 @@
+# Mise en forme du projet.
+# Verifiee par le controle 3 de scripts/verifications.sh avec --lint.
+# Les reglages sont choisis pour ne jamais entrer en conflit avec .swiftlint.yml.
+
+--swiftversion 6.0
+
+--exclude .build,Packages/.build,App/.build,Tests/JeuDeDonnees
+
+--indent 4
+--maxwidth 120
+--commas always
+--trimwhitespace always
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--closingparen balanced
+--self remove
+--stripunusedargs closure-only
+--importgrouping testable-bottom
+--emptybraces no-space
+--voidtype void
+--ranges no-space
+--extensionacl on-declarations
+--patternlet hoist
+--semicolons never

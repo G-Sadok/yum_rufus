@@ -1,0 +1,222 @@
+{
+  "sourceLanguage" : "fr",
+  "strings" : {
+    "etatVide.bibliotheque.action" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourir les sources"
+          }
+        }
+      }
+    },
+    "etatVide.bibliotheque.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourez les sources pour trouver des mangas et les ajouter a votre bibliotheque."
+          }
+        }
+      }
+    },
+    "etatVide.bibliotheque.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre bibliotheque est vide"
+          }
+        }
+      }
+    },
+    "etatVide.historique.action" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la bibliotheque"
+          }
+        }
+      }
+    },
+    "etatVide.historique.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les chapitres que vous lisez apparaitront ici."
+          }
+        }
+      }
+    },
+    "etatVide.historique.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun historique"
+          }
+        }
+      }
+    },
+    "etatVide.parcourir.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez un serveur, un dossier local ou un catalogue public pour commencer a lire."
+          }
+        }
+      }
+    },
+    "etatVide.parcourir.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune source installee"
+          }
+        }
+      }
+    },
+    "etatVide.rechercher.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche dans toutes les sources installees"
+          }
+        }
+      }
+    },
+    "etatVide.rechercher.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher un manga"
+          }
+        }
+      }
+    },
+    "navigation.bibliotheque" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, barre laterale 1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotheque"
+          }
+        }
+      }
+    },
+    "navigation.historique" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, barre laterale 2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique"
+          }
+        }
+      }
+    },
+    "navigation.parcourir" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, barre laterale 3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourir"
+          }
+        }
+      }
+    },
+    "navigation.rechercher" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, barre laterale 4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
+          }
+        }
+      }
+    },
+    "navigation.reglages" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, barre laterale 5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglages"
+          }
+        }
+      }
+    },
+    "navigation.repli" : {
+      "comment" : "Bascule de repli de la barre laterale, absente du tableau 6.1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replier la barre laterale"
+          }
+        }
+      }
+    },
+    "premium.sousTitre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, bloc bas de barre laterale",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 jours offerts"
+          }
+        }
+      }
+    },
+    "premium.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, bloc bas de barre laterale",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer a Premium"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

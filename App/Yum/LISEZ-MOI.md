@@ -2,16 +2,12 @@
 
 Cible multiplateforme macOS, iPadOS et iOS. Vues, navigation, cycle de vie.
 
-Ce dossier est volontairement vide de code a l etape 0. La coquille de
-l application et sa navigation arrivent avec F008, apres la generation des
-jetons de design (F002) et le schema de base de donnees (F003).
+## Ce qui vit ici
 
-## Ce qui vivra ici
-
-- le point d entree de l application et la scene principale
-- les vues et la navigation, qui n existent que dans cette cible
-- le catalogue de chaines localisees
-- les ressources de la cible, icone comprise
+- `YumApp.swift`, le point d entree et la scene principale
+- `Coquille/`, l assemblage de la coquille et le contenu de chaque destination
+- `Chaines.swift`, le seul endroit du code ou une cle du catalogue apparait
+- `Ressources/Localizable.xcstrings`, le catalogue de chaines
 
 ## Ce qui ne vivra jamais ici
 
@@ -20,7 +16,18 @@ jetons de design (F002) et le schema de base de donnees (F003).
 - une chaine en dur dans une vue, tout passe par le catalogue de chaines
 - de la logique metier, qui appartient aux paquets sous `Packages/`
 
-Le projet Xcode de cette cible n existe pas encore. Tant qu il est absent,
-`scripts/verifications.sh` compile et teste la couche metier avec Swift Package
-Manager, puis bascule automatiquement sur `xcodebuild` des que le projet
-apparait ici.
+## Projet Xcode
+
+`Yum.xcodeproj` est arrive avec F008. Il emploie un groupe synchronise sur le
+dossier `Yum`, donc un fichier ajoute ici entre dans la cible sans passer par le
+manifeste. Les paquets sont references en local depuis `../Packages`.
+
+Le schema `Yum` est partage et ne declare aucune cible de test. La logique de la
+coquille, ordre des destinations, repli, presentation par gabarit, raccourcis,
+vit dans `Core` et `DesignSystem`, ou elle est couverte par les tests que Swift
+Package Manager execute a chaque commit. Une cible de test propre a la cible
+d application arrivera avec le premier code qui ne pourra pas descendre dans un
+paquet.
+
+`scripts/verifications.sh` compile et teste les paquets, puis compile
+l application avec `xcodebuild` des que ce projet est present.

@@ -23,6 +23,20 @@ if [ -d "App" ]; then
     \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)"
 fi
 
+# Les controles de texte lisent l arborescence de travail, pas le code suivi par
+# git. Depuis que Storage depend de GRDB, SwiftPM depose le depot amont sous
+# Packages/.build/checkouts. Ce code tiers contient des tirets cadratins et des
+# force unwrap parfaitement legitimes chez son auteur, et les controles 4, 5, 8
+# et 9 le signalaient comme s il etait du notre. La regle porte sur ce que nous
+# ecrivons, donc on retire des greps les dossiers d artefacts, exactement comme
+# .swiftlint.yml et .swiftformat le font deja de leur cote.
+EXCLUSIONS=(
+  --exclude-dir=.build
+  --exclude-dir=.swiftpm
+  --exclude-dir=.git
+  --exclude-dir=DerivedData
+)
+
 rouge()  { printf '\033[31m  ECHEC   %s\033[0m\n' "$1"; }
 vert()   { printf '\033[32m  OK      %s\033[0m\n' "$1"; }
 jaune()  { printf '\033[33m  IGNORE  %s\033[0m\n' "$1"; }
@@ -140,7 +154,8 @@ TROUVES="$(grep -rIln -e "$TIRET_CADRATIN" \
   --include='*.swift' --include='*.md' --include='*.json' \
   --include='*.yml' --include='*.yaml' --include='*.sh' \
   --include='*.strings' --include='*.xcstrings' \
-  . 2>/dev/null | grep -v '.git/' || true)"
+  "${EXCLUSIONS[@]}" \
+  . 2>/dev/null || true)"
 
 if [ -n "$TROUVES" ]; then
   echouer "Tiret cadratin trouve dans :"
@@ -153,7 +168,7 @@ fi
 titre "5. Aucune valeur visuelle en dur hors du systeme de design"
 # ---------------------------------------------------------------------------
 if [ -d "App" ] || [ -d "Packages" ]; then
-  COULEURS="$(grep -rIn --include='*.swift' \
+  COULEURS="$(grep -rIn --include='*.swift' "${EXCLUSIONS[@]}" \
     -E 'Color\(red:|Color\(\.sRGB|#[0-9A-Fa-f]{6}|UIColor\(red:|NSColor\(red:' \
     App Packages 2>/dev/null \
     | grep -v 'Packages/DesignSystem' || true)"
@@ -165,7 +180,7 @@ if [ -d "App" ] || [ -d "Packages" ]; then
     vert "Aucune couleur en dur hors du systeme de design"
   fi
 
-  POLICES="$(grep -rIn --include='*.swift' \
+  POLICES="$(grep -rIn --include='*.swift' "${EXCLUSIONS[@]}" \
     -E '\.font\(\.system\(size:|Font\.system\(size:' \
     App Packages 2>/dev/null \
     | grep -v 'Packages/DesignSystem' || true)"
@@ -203,7 +218,8 @@ fi
 titre "7. Aucune interface dans les paquets metier"
 # ---------------------------------------------------------------------------
 if [ -d "Packages" ]; then
-  FUITES="$(grep -rIln --include='*.swift' 'import SwiftUI' Packages 2>/dev/null \
+  FUITES="$(grep -rIln --include='*.swift' "${EXCLUSIONS[@]}" \
+    'import SwiftUI' Packages 2>/dev/null \
     | grep -v 'Packages/DesignSystem' || true)"
 
   if [ -n "$FUITES" ]; then
@@ -218,8 +234,9 @@ fi
 titre "8. Aucun secret dans le depot"
 # ---------------------------------------------------------------------------
 SECRETS="$(grep -rIn --include='*.swift' --include='*.json' --include='*.plist' \
+  "${EXCLUSIONS[@]}" \
   -E '(api[_-]?key|client[_-]?secret|password)[[:space:]]*[:=][[:space:]]*"[^"]{8,}"' \
-  . 2>/dev/null | grep -v '.git/' | grep -v 'Tests/' || true)"
+  . 2>/dev/null | grep -v 'Tests/' || true)"
 
 if [ -n "$SECRETS" ]; then
   echouer "Secret potentiel en clair :"
@@ -232,7 +249,8 @@ fi
 titre "9. Aucune force unwrap hors des tests"
 # ---------------------------------------------------------------------------
 if [ -d "App" ] || [ -d "Packages" ]; then
-  FORCES="$(grep -rIn --include='*.swift' -E 'try!|as!' App Packages 2>/dev/null \
+  FORCES="$(grep -rIn --include='*.swift' "${EXCLUSIONS[@]}" \
+    -E 'try!|as!' App Packages 2>/dev/null \
     | grep -v '/Tests/' | grep -v '// force-ok' || true)"
 
   if [ -n "$FORCES" ]; then

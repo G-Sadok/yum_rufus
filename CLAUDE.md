@@ -20,7 +20,7 @@ L application n heberge aucun contenu. Elle lit ce que l utilisateur possede dej
 
 **2. `DESIGN-SPEC.md` avant toute vue.** Absent, tu ne codes aucune interface. Tu peux travailler la couche metier, qui n en depend pas.
 
-**3. Une fonctionnalite, une branche, une pull request.** Jamais deux fonctionnalites sur la meme branche. Jamais de commit direct sur `main`.
+**3. Une fonctionnalite, une branche.** Jamais deux fonctionnalites sur la meme branche. La branche est poussee, puis integree dans la branche principale par un pull. Aucune pull request. Jamais de commit direct sur la branche principale.
 
 **4. Aucune valeur visuelle hors de `DesignSystem`.** Couleurs, polices, rayons, espacements, durees.
 

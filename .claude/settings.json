@@ -13,7 +13,6 @@
       "Bash(git tag:*)",
       "Bash(git show-ref:*)",
       "Bash(git rev-parse:*)",
-      "Bash(gh pr:*)",
       "Bash(gh release:*)",
       "Bash(gh run:*)",
       "Bash(jq:*)",
@@ -26,20 +25,22 @@
       "Bash(./scripts/boucle-terminer.sh:*)",
       "Bash(./scripts/boucle-statut.sh:*)",
       "Bash(./scripts/verifications.sh:*)",
-      "Bash(./scripts/build-dmg.sh:*)"
+      "Bash(./scripts/build-dmg.sh:*)",
+      "Bash(git merge:*)",
+      "Bash(git fetch:*)"
     ],
     "ask": [
       "Bash(git push --force:*)",
       "Bash(git reset --hard:*)",
-      "Bash(gh release create:*)",
-      "Bash(xcrun notarytool:*)"
+      "Bash(xcrun notarytool:*)",
+      "Bash(gh release create:*)"
     ],
     "deny": [
-      "Bash(git push origin dev:*)",
       "Bash(rm -rf /:*)",
-      "Read(./**/*.mobileprovision)",
+      "Bash(git push origin main:*)",
+      "Read(./.env)",
       "Read(./**/*.p12)",
-      "Read(./.env)"
+      "Read(./**/*.mobileprovision)"
     ]
   },
   "hooks": {

@@ -103,7 +103,7 @@ fi
 etape "4. Branche principale"
 # ---------------------------------------------------------------------------
 # Toute la boucle se cale sur cette branche : elle y revient entre deux
-# fonctionnalites, y fusionne les pull requests, et y pousse le backlog.
+# fonctionnalites, y integre chaque branche par un pull, et y pousse le backlog.
 BRANCHE_COURANTE="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo main)"
 [ "$BRANCHE_COURANTE" = "HEAD" ] && BRANCHE_COURANTE=main
 
@@ -153,16 +153,18 @@ else
 fi
 
 # 4c. Les chaines GitHub. Sans cela, aucun controle ne se declenche sur les
-# pull requests, et boucle-terminer.sh attend indefiniment un resultat.
+# branches de fonctionnalite, et les regressions passent inapercues.
 for FICHIER in .github/workflows/ci.yml .github/workflows/release.yml; do
   [ -f "$FICHIER" ] || continue
-  if [ "$PRINCIPALE" != "main" ] && grep -q "branches: \[main\]" "$FICHIER"; then
+  if [ "$PRINCIPALE" != "main" ] && grep -q "\[main" "$FICHIER"; then
     python3 - "$FICHIER" "$PRINCIPALE" <<'PY'
 import pathlib, sys
 p = pathlib.Path(sys.argv[1])
-p.write_text(p.read_text(encoding="utf-8")
-             .replace("branches: [main]", "branches: [%s]" % sys.argv[2]),
-             encoding="utf-8")
+texte = p.read_text(encoding="utf-8")
+texte = texte.replace("branches: [main, 'feat/**']",
+                      "branches: [%s, 'feat/**']" % sys.argv[2])
+texte = texte.replace("branches: [main]", "branches: [%s]" % sys.argv[2])
+p.write_text(texte, encoding="utf-8")
 PY
     vert "$FICHIER : declenchement sur $PRINCIPALE"
   fi
@@ -235,7 +237,7 @@ if git remote get-url origin >/dev/null 2>&1; then
   vert "Distant deja configure"
   gris "$(git remote get-url origin)"
 else
-  jaune "Aucun distant. La boucle en a besoin pour pousser et ouvrir les pull requests."
+  jaune "Aucun distant. La boucle en a besoin pour pousser les branches."
   DEPOT="$(demander "Depot GitHub a creer, format compte/nom, vide pour ignorer" "")"
   if [ -n "$DEPOT" ]; then
     PRIVE="$(demander "Depot prive" "oui")"
@@ -289,19 +291,18 @@ fi
 # ---------------------------------------------------------------------------
 etape "9. Protection de branche"
 # ---------------------------------------------------------------------------
+# La boucle pousse directement sur la branche principale apres fusion locale.
+# Une protection exigeant une pull request ou des controles ferait echouer
+# chaque cloture. On verifie donc qu il n y en a pas, et on previent.
 DEPOT_ACTUEL="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || echo '')"
 if [ -n "$DEPOT_ACTUEL" ]; then
-  if gh api -X PUT "repos/$DEPOT_ACTUEL/branches/$PRINCIPALE/protection" \
-      -H "Accept: application/vnd.github+json" \
-      -f "required_status_checks[strict]=true" \
-      -f "required_status_checks[contexts][]=Verifications" \
-      -F "enforce_admins=false" \
-      -F "required_pull_request_reviews[required_approving_review_count]=0" \
-      -F "restrictions=null" >/dev/null 2>&1; then
-    vert "Branche $PRINCIPALE protegee sur GitHub"
+  if gh api "repos/$DEPOT_ACTUEL/branches/$PRINCIPALE/protection" >/dev/null 2>&1; then
+    jaune "La branche $PRINCIPALE est protegee sur GitHub."
+    jaune "La boucle poussant directement dessus, chaque cloture echouera."
+    jaune "Retire la protection dans Settings, Branches, ou autorise ton compte"
+    jaune "a contourner la regle."
   else
-    jaune "Protection non appliquee, courant sur un depot prive sans abonnement"
-    jaune "Le hook local protege deja $PRINCIPALE de son cote"
+    vert "Aucune protection sur $PRINCIPALE, la boucle pourra pousser"
   fi
 fi
 

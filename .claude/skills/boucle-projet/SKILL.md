@@ -9,7 +9,7 @@ Tu pilotes la construction complete du projet, une fonctionnalite a la fois, du 
 
 ## Regles qui ne se negocient pas
 
-1. **Une fonctionnalite, une branche, un commit, une pull request.** Jamais deux fonctionnalites sur la meme branche.
+1. **Une fonctionnalite, une branche, un commit.** La branche est poussee, puis recuperee dans la branche principale par un pull. Le projet n utilise pas de pull request.
 2. **Jamais de tiret cadratin.** Ni dans le code, ni dans les commentaires, ni dans les chaines, ni dans les messages de commit, ni dans tes reponses. Le script de verification bloque le commit s il en trouve un.
 3. **`DESIGN-SPEC.md` avant toute vue.** Si le fichier est absent et que la fonctionnalite touche a l interface, tu t arretes et tu le dis. Le script bloque deja, ne cherche pas a le contourner.
 4. **Les verifications ne se contournent pas.** Si `verifications.sh` echoue, tu corriges. Tu ne desactives pas un controle, tu ne commentes pas un test, tu ne mets pas de commentaire d exemption sans raison ecrite.
@@ -68,7 +68,7 @@ Reprends ensuite la liste des criteres d acceptation de la fiche et coche les un
 ./scripts/boucle-terminer.sh
 ```
 
-Le script verifie, commite, pousse, ouvre la pull request, attend l integration continue, fusionne, marque la fonctionnalite terminee et enchaine automatiquement sur la suivante.
+Le script verifie, commite, pousse la branche, bascule sur la branche principale, l y integre par un pull, pousse, supprime la branche, marque la fonctionnalite terminee et enchaine sur la suivante.
 
 ### 7. Recommencer
 
@@ -102,5 +102,6 @@ L etiquette declenche la chaine GitHub qui produit le DMG signe, sa somme de con
 ./scripts/boucle-statut.sh              avancement
 ./scripts/boucle-statut.sh --detail     detail par etape
 ./scripts/boucle-demarrer.sh F014       forcer une fonctionnalite
-./scripts/boucle-terminer.sh --sans-fusion    laisser la pull request ouverte
+./scripts/boucle-terminer.sh --sans-fusion    pousser sans integrer
+./scripts/boucle-terminer.sh --garder-branche  ne pas supprimer la branche
 ```

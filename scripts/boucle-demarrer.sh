@@ -21,7 +21,8 @@ jaune()  { printf '\033[33m%s\033[0m\n' "$1"; }
 bleu()   { printf '\033[36m%s\033[0m\n' "$1"; }
 
 command -v jq >/dev/null 2>&1 || { rouge "jq est requis. Installe le avec brew install jq"; exit 1; }
-command -v gh >/dev/null 2>&1 || { rouge "gh est requis. Installe le avec brew install gh"; exit 1; }
+# gh ne sert plus au cycle : la fusion se fait par pull, sans pull request.
+# Il reste utile pour la publication de la release.
 
 # ---------------------------------------------------------------------------
 # Verifier qu aucune fonctionnalite n est deja en cours

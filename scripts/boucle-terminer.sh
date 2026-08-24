@@ -1,26 +1,38 @@
 #!/usr/bin/env bash
 #
 # boucle-terminer.sh
-# Verifie, commite, pousse, ouvre une pull request, la fusionne,
-# marque la fonctionnalite comme terminee et enchaine sur la suivante.
+# Verifie, commite, pousse la branche de fonctionnalite, puis bascule sur la
+# branche principale et l y integre par un pull, sans passer par une pull request.
 #
 # Usage :
-#   ./scripts/boucle-terminer.sh                     fusion automatique
-#   ./scripts/boucle-terminer.sh --sans-fusion       laisse la pull request ouverte
-#   ./scripts/boucle-terminer.sh --sans-enchainer    ne demarre pas la suivante
+#   ./scripts/boucle-terminer.sh                    cycle complet
+#   ./scripts/boucle-terminer.sh --sans-fusion      pousse seulement, n integre pas
+#   ./scripts/boucle-terminer.sh --sans-enchainer   n ouvre pas la fonctionnalite suivante
+#   ./scripts/boucle-terminer.sh --garder-branche   ne supprime pas la branche apres fusion
+#
+# Reglages :
+#   STRATEGIE_FUSION=no-ff   no-ff pour un commit de fusion par fonctionnalite,
+#                            ff pour une avance rapide quand elle est possible
 
 set -euo pipefail
 
 RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKLOG="$RACINE/loop/backlog.json"
 BRANCHE_PRINCIPALE="$(jq -r '.meta.branche_principale' "$BACKLOG")"
+STRATEGIE_FUSION="${STRATEGIE_FUSION:-no-ff}"
+
+# Un editeur qui s ouvre bloquerait une boucle sans surveillance
+export GIT_MERGE_AUTOEDIT=no
+export GIT_EDITOR=true
 
 FUSIONNER=1
 ENCHAINER=1
+GARDER_BRANCHE=0
 for ARG in "$@"; do
   case "$ARG" in
     --sans-fusion)    FUSIONNER=0 ;;
     --sans-enchainer) ENCHAINER=0 ;;
+    --garder-branche) GARDER_BRANCHE=1 ;;
   esac
 done
 
@@ -35,15 +47,20 @@ bleu()  { printf '\033[36m%s\033[0m\n' "$1"; }
 ID="$(jq -r 'first(.features[] | select(.statut == "en_cours")) | .id // empty' "$BACKLOG")"
 if [ -z "$ID" ]; then
   rouge "Aucune fonctionnalite en cours."
-  jaune "Demarre en avec ./scripts/boucle-demarrer.sh"
+  jaune "Demarre en une avec ./scripts/boucle-demarrer.sh"
   exit 1
 fi
 
 FICHE="$(jq -r --arg id "$ID" '.features[] | select(.id == $id)' "$BACKLOG")"
-SLUG="$(echo "$FICHE" | jq -r '.slug')"
 TITRE="$(echo "$FICHE" | jq -r '.titre')"
 ETAPE="$(echo "$FICHE" | jq -r '.etape')"
 BRANCHE="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$BRANCHE" = "$BRANCHE_PRINCIPALE" ]; then
+  rouge "Tu es sur $BRANCHE_PRINCIPALE, pas sur une branche de fonctionnalite."
+  jaune "La cloture doit partir de la branche de travail."
+  exit 1
+fi
 
 bleu "Cloture de $ID sur la branche $BRANCHE"
 
@@ -62,7 +79,7 @@ vert "Verifications passees"
 # Commit
 # ---------------------------------------------------------------------------
 if [ -z "$(git status --porcelain)" ]; then
-  jaune "Aucun changement a commiter. La fonctionnalite est peut etre deja commitee."
+  jaune "Aucun changement a commiter, la fonctionnalite est peut etre deja commitee."
 else
   git add -A
 
@@ -84,71 +101,73 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Push
+# Push de la branche de fonctionnalite
 # ---------------------------------------------------------------------------
-bleu "Envoi vers origin"
-git push --quiet -u origin "$BRANCHE"
-vert "Branche poussee"
-
-# ---------------------------------------------------------------------------
-# Pull request
-# ---------------------------------------------------------------------------
-CORPS_TMP="$(mktemp)"
-{
-  echo "## $TITRE"
-  echo ""
-  echo "$(echo "$FICHE" | jq -r '.description')"
-  echo ""
-  echo "### Criteres d acceptation"
-  echo "$FICHE" | jq -r '.criteres[] | "- [x] " + .'
-  echo ""
-  echo "### Competences mobilisees"
-  echo "$FICHE" | jq -r '.skills[] | "- " + .'
-  echo ""
-  echo "### Controles automatiques"
-  echo "- [x] Compilation sans avertissement"
-  echo "- [x] Tests unitaires et d integration"
-  echo "- [x] Analyse statique"
-  echo "- [x] Absence de tiret cadratin"
-  echo "- [x] Absence de valeur visuelle en dur"
-  echo "- [x] Absence de chaine en dur dans les vues"
-  echo ""
-  echo "Identifiant backlog : $ID, etape $ETAPE."
-} > "$CORPS_TMP"
-
-if gh pr view "$BRANCHE" >/dev/null 2>&1; then
-  jaune "Une pull request existe deja pour cette branche."
+bleu "Envoi de $BRANCHE vers origin"
+if git push --quiet -u origin "$BRANCHE"; then
+  vert "Branche poussee"
 else
-  gh pr create \
-    --base "$BRANCHE_PRINCIPALE" \
-    --head "$BRANCHE" \
-    --title "feat($ID): $TITRE" \
-    --body-file "$CORPS_TMP"
-  vert "Pull request creee"
+  rouge "Le push a echoue. La fonctionnalite reste en cours."
+  exit 1
 fi
-rm -f "$CORPS_TMP"
+
+if [ "$FUSIONNER" -eq 0 ]; then
+  jaune "Fusion non demandee, la branche reste isolee."
+  jaune "Integre la plus tard avec :"
+  jaune "  git checkout $BRANCHE_PRINCIPALE && git pull origin $BRANCHE"
+  exit 0
+fi
 
 # ---------------------------------------------------------------------------
-# Fusion
+# Integration sur la branche principale
 # ---------------------------------------------------------------------------
-if [ "$FUSIONNER" -eq 1 ]; then
-  bleu "Attente des controles d integration continue"
-  if ! gh pr checks "$BRANCHE" --watch --fail-fast; then
-    rouge "Les controles distants ont echoue. La pull request reste ouverte."
-    exit 1
+bleu "Bascule sur $BRANCHE_PRINCIPALE"
+if ! git checkout "$BRANCHE_PRINCIPALE" --quiet; then
+  rouge "Impossible de basculer sur $BRANCHE_PRINCIPALE."
+  exit 1
+fi
+
+# Se mettre a jour avant de fusionner, sinon le push sera refuse
+bleu "Mise a jour depuis origin/$BRANCHE_PRINCIPALE"
+if ! git pull --ff-only --quiet origin "$BRANCHE_PRINCIPALE" 2>/dev/null; then
+  jaune "Impossible d avancer en ff depuis origin, $BRANCHE_PRINCIPALE a peut etre diverge."
+  jaune "Resous la divergence a la main, puis relance la cloture."
+  git checkout "$BRANCHE" --quiet
+  exit 1
+fi
+
+# Recuperation de la branche de fonctionnalite
+bleu "Recuperation de $BRANCHE dans $BRANCHE_PRINCIPALE"
+
+if [ "$STRATEGIE_FUSION" = "ff" ]; then
+  OPTIONS_FUSION="--no-edit"
+else
+  OPTIONS_FUSION="--no-ff --no-edit"
+fi
+
+# shellcheck disable=SC2086
+if git pull $OPTIONS_FUSION origin "$BRANCHE"; then
+  vert "$BRANCHE integree dans $BRANCHE_PRINCIPALE"
+else
+  rouge "Conflit lors de la recuperation de $BRANCHE."
+
+  if [ -d "$(git rev-parse --git-dir)/MERGE_HEAD" ] || git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+    jaune "Fichiers en conflit :"
+    git diff --name-only --diff-filter=U | sed 's/^/  /'
+    git merge --abort 2>/dev/null || true
+    vert "Fusion annulee, $BRANCHE_PRINCIPALE est revenue a son etat anterieur."
   fi
 
-  gh pr merge "$BRANCHE" --squash --delete-branch
-  vert "Pull request fusionnee et branche supprimee"
-
-  git checkout "$BRANCHE_PRINCIPALE" --quiet
-  git pull --ff-only origin "$BRANCHE_PRINCIPALE" --quiet
-else
-  jaune "Fusion non demandee, la pull request reste ouverte."
+  git checkout "$BRANCHE" --quiet 2>/dev/null || true
+  jaune "Resous le conflit a la main :"
+  jaune "  git checkout $BRANCHE_PRINCIPALE"
+  jaune "  git pull origin $BRANCHE"
+  jaune "  ... resoudre, puis git commit et git push"
+  exit 1
 fi
 
 # ---------------------------------------------------------------------------
-# Marquer terminee
+# Marquer terminee, avant le push pour que le statut parte avec
 # ---------------------------------------------------------------------------
 TMP="$(mktemp)"
 jq --arg id "$ID" --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
@@ -157,10 +176,36 @@ jq --arg id "$ID" --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   "$BACKLOG" > "$TMP"
 mv "$TMP" "$BACKLOG"
 
-if [ "$FUSIONNER" -eq 1 ]; then
+if [ -n "$(git status --porcelain -- "$BACKLOG")" ]; then
   git add "$BACKLOG"
   git commit --quiet -m "chore($ID): marquer la fonctionnalite comme terminee"
-  git push --quiet origin "$BRANCHE_PRINCIPALE"
+fi
+
+# ---------------------------------------------------------------------------
+# Push de la branche principale
+# ---------------------------------------------------------------------------
+bleu "Envoi de $BRANCHE_PRINCIPALE vers origin"
+if git push --quiet origin "$BRANCHE_PRINCIPALE"; then
+  vert "$BRANCHE_PRINCIPALE poussee"
+else
+  rouge "Le push de $BRANCHE_PRINCIPALE a echoue."
+  jaune "Cause frequente : la branche est protegee sur GitHub et refuse les"
+  jaune "pushs directs. Retire la protection dans Settings, Branches."
+  jaune "La fusion locale est faite, seul le push manque."
+  exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# Nettoyage de la branche de fonctionnalite
+# ---------------------------------------------------------------------------
+if [ "$GARDER_BRANCHE" -eq 0 ]; then
+  git branch -d "$BRANCHE" --quiet 2>/dev/null \
+    && vert "Branche locale $BRANCHE supprimee" \
+    || jaune "Branche locale $BRANCHE conservee, elle n etait pas totalement fusionnee"
+
+  git push --quiet origin --delete "$BRANCHE" 2>/dev/null \
+    && vert "Branche distante $BRANCHE supprimee" \
+    || jaune "Branche distante $BRANCHE conservee"
 fi
 
 TOTAL="$(jq -r '.features | length' "$BACKLOG")"

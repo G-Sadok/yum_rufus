@@ -99,7 +99,7 @@ preflight() {
     succes "bash ${BASH_VERSION%%(*}"
   fi
 
-  for outil in claude git gh jq python3; do
+  for outil in claude git jq python3; do
     if command -v "$outil" >/dev/null 2>&1; then
       succes "$outil present"
     else
@@ -113,11 +113,11 @@ preflight() {
     alerte "installe le avec : brew install coreutils"
   fi
 
-  if gh auth status >/dev/null 2>&1; then
-    succes "gh authentifie"
+  # gh ne sert plus au cycle, seulement a la publication de la release
+  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    succes "gh authentifie, publication de release possible"
   else
-    erreur "gh non authentifie, lance : gh auth login"
-    ko=1
+    alerte "gh absent ou non authentifie, le cycle fonctionne quand meme"
   fi
 
   if [ -f "$BACKLOG" ] && jq empty "$BACKLOG" 2>/dev/null; then
@@ -463,9 +463,9 @@ traiter() {
         ecrire_etat derniere_reussie "$id"
         return 0
       fi
-      erreur "La cloture a echoue, la pull request reste ouverte"
+      erreur "La cloture a echoue, la branche reste poussee mais non integree"
       definir_statut "$id" "bloque"
-      noter_echec "$id" "echec de la cloture ou de l integration continue"
+      noter_echec "$id" "echec de la cloture, conflit de fusion ou push refuse"
       return 1
     fi
 

@@ -15,7 +15,16 @@ import Core
 /// la section 12.
 public enum ZonesDeToucher {
     /// Part de la surface occupee par chaque bande active.
-    public static let partDUneBandeActive = 1.0 / 3.0
+    ///
+    /// La section 5.7 de DESIGN-SPEC.md chiffre les trois colonnes du lecteur
+    /// pagine a 28, 44 et 28 pour cent. La premiere version de ce fichier
+    /// coupait la surface en trois parts egales, ce qui elargissait les bandes
+    /// actives de cinq points au detriment de la bande centrale, celle qui
+    /// appelle les barres.
+    public static let partDUneBandeActive = 0.28
+
+    /// Part de la surface occupee par la bande centrale.
+    public static let partDeLaBandeCentrale = 1 - 2 * partDUneBandeActive
 
     /// Intention produite par un appui sur la surface de lecture.
     ///

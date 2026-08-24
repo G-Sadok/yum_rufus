@@ -20,7 +20,7 @@ esac
 
 BRANCHE="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo inconnue)"
 
-if [ "$BRANCHE" = "main" ] || [ "$BRANCHE" = "master" ]; then
+if [ "$BRANCHE" = "main" ] || [ "$BRANCHE" = "master" ] || [ "$BRANCHE" = "dev" ]; then
   case "$COMMANDE" in
     *"git commit"*|*"git push"*)
       {

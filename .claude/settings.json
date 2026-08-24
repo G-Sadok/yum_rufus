@@ -36,11 +36,11 @@
       "Bash(gh release create:*)"
     ],
     "deny": [
+      "Bash(git push origin dev:*)",
       "Bash(rm -rf /:*)",
-      "Bash(git push origin main:*)",
-      "Read(./.env)",
+      "Read(./**/*.mobileprovision)",
       "Read(./**/*.p12)",
-      "Read(./**/*.mobileprovision)"
+      "Read(./.env)"
     ]
   },
   "hooks": {

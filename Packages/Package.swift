@@ -42,7 +42,9 @@ let package = Package(
             dependencies: ["Core", .product(name: "GRDB", package: "GRDB.swift")],
             path: "Storage/Sources"
         ),
-        .target(name: "Sources", dependencies: ["Core"], path: "Sources/Sources"),
+        // Sources depend d Archive pour compter les pages d un chapitre range
+        // dans un conteneur, sans redupliquer la lecture d index central.
+        .target(name: "Sources", dependencies: ["Core", "Archive"], path: "Sources/Sources"),
         .target(name: "Archive", dependencies: ["Core"], path: "Archive/Sources"),
         .target(name: "ImagePipeline", dependencies: ["Core"], path: "ImagePipeline/Sources"),
         .target(
@@ -70,6 +72,11 @@ let package = Package(
             name: "ArchiveTests",
             dependencies: ["Archive", "Core"],
             path: "Archive/Tests"
+        ),
+        .testTarget(
+            name: "SourcesTests",
+            dependencies: ["Sources", "Core", "Archive"],
+            path: "Sources/Tests"
         ),
         .testTarget(
             name: "DesignSystemTests",

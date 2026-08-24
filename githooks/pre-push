@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# pre-push
+# Protection locale de la branche principale.
+#
+# Le projet interdit les pull requests et fusionne en local, la boucle pousse
+# donc directement sur main. On ne bloque pas ce cas la, on bloque ce qui
+# detruit reellement de l historique : la suppression de la branche et le
+# push non fast forward.
+#
+# Installe par scripts/installer-hooks-git.sh via core.hooksPath.
+
+set -uo pipefail
+
+BRANCHES_PROTEGEES="main master dev"
+ZERO="0000000000000000000000000000000000000000"
+
+refuser() {
+  printf '\033[31mPush refuse sur %s : %s\033[0m\n' "$1" "$2" >&2
+  printf 'Si c est vraiment voulu, fais le a la main hors de la boucle.\n' >&2
+  exit 1
+}
+
+while read -r _ SHA_LOCAL REF_DISTANTE SHA_DISTANT; do
+  [ -z "${REF_DISTANTE:-}" ] && continue
+
+  BRANCHE="${REF_DISTANTE#refs/heads/}"
+  PROTEGEE=0
+  for CANDIDATE in $BRANCHES_PROTEGEES; do
+    [ "$BRANCHE" = "$CANDIDATE" ] && PROTEGEE=1
+  done
+  [ "$PROTEGEE" -eq 0 ] && continue
+
+  if [ "$SHA_LOCAL" = "$ZERO" ]; then
+    refuser "$BRANCHE" "suppression de la branche"
+  fi
+
+  # Nouvelle branche cote distant, rien a comparer.
+  [ "$SHA_DISTANT" = "$ZERO" ] && continue
+
+  if ! git merge-base --is-ancestor "$SHA_DISTANT" "$SHA_LOCAL" 2>/dev/null; then
+    refuser "$BRANCHE" "push non fast forward, il reecrirait l historique distant"
+  fi
+done
+
+exit 0

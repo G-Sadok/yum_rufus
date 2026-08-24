@@ -1,0 +1,80 @@
+# Analyse statique du projet.
+# Lance en mode strict par le controle 3 de scripts/verifications.sh,
+# donc toute infraction est bloquante, y compris les avertissements.
+
+included:
+  - Packages
+  - App
+
+excluded:
+  - .build
+  - Packages/.build
+  - App/.build
+  - Tests/JeuDeDonnees
+
+analyzer_rules:
+  - unused_import
+
+opt_in_rules:
+  - array_init
+  - closure_spacing
+  - collection_alignment
+  - contains_over_filter_count
+  - contains_over_first_not_nil
+  - empty_count
+  - empty_string
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - last_where
+  - literal_expression_end_indentation
+  - multiline_parameters
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prefer_self_type_over_type_of_self
+  - redundant_nil_coalescing
+  - sorted_first_last
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - yoda_condition
+
+line_length:
+  warning: 120
+  error: 140
+  ignores_comments: true
+  ignores_urls: true
+
+# Aligne SwiftLint sur SwiftFormat, qui ajoute la virgule finale.
+# Sans cela les deux outils se contredisent et aucun etat du code ne passe.
+trailing_comma:
+  mandatory_comma: true
+
+# La force unwrap est interdite hors des tests, comme au controle 9.
+force_unwrapping:
+  severity: error
+
+force_cast:
+  severity: error
+
+force_try:
+  severity: error
+
+# Le domaine metier est nomme en francais, les identifiants sont donc longs.
+identifier_name:
+  min_length:
+    warning: 2
+  max_length:
+    warning: 60
+    error: 80
+
+type_name:
+  max_length:
+    warning: 60
+    error: 80
+
+nesting:
+  type_level: 2
+
+todo:
+  severity: warning

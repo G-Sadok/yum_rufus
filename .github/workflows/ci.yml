@@ -39,7 +39,11 @@ jobs:
 
       - name: Verifier l absence de tiret cadratin
         run: |
-          TROUVES=$(grep -rIln $'\u2014' \
+          # Motif construit en octal. Le bash livre par macOS est un 3.2 qui
+          # n interprete pas l echappee unicode, le motif se reduisait alors au
+          # mot du code du caractere et le controle ne detectait rien.
+          TIRET_CADRATIN=$(printf '\342\200\224')
+          TROUVES=$(grep -rIln -e "$TIRET_CADRATIN" \
             --include='*.swift' --include='*.md' --include='*.json' \
             --include='*.yml' --include='*.yaml' --include='*.sh' \
             --include='*.strings' --include='*.xcstrings' \
@@ -56,33 +60,52 @@ jobs:
           chmod +x scripts/*.sh
           ./scripts/verifications.sh
 
+      # Le dossier App existe des l etape 0, mais son projet Xcode n arrive
+      # qu avec la coquille de l application. Sans cette detection, les etapes
+      # xcodebuild echouent sur un schema inexistant alors que rien n est casse.
+      - name: Detecter le projet Xcode
+        id: detection
+        run: |
+          PROJET=$(find App -maxdepth 2 \
+            \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)
+          if [ -n "$PROJET" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Projet Xcode detecte : $PROJET"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Pas encore de projet Xcode, la couche metier est couverte par verifications.sh."
+          fi
+
       - name: Compiler pour macOS
+        if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild build \
-            -scheme Tsuzuki \
+            -scheme Yum \
             -destination 'platform=macOS' \
             -configuration Debug \
             | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Compiler pour iOS
+        if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild build \
-            -scheme Tsuzuki \
+            -scheme Yum \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -configuration Debug \
             | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Lancer les tests
+        if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild test \
-            -scheme Tsuzuki \
+            -scheme Yum \
             -destination 'platform=macOS' \
             -enableCodeCoverage YES \
             -resultBundlePath TestResults.xcresult \
             | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Publier les resultats de test
-        if: always()
+        if: always() && steps.detection.outputs.present == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: resultats-de-test
@@ -112,10 +135,23 @@ jobs:
             exit 0
           fi
 
+      - name: Detecter le projet Xcode
+        id: detection
+        run: |
+          PROJET=$(find App -maxdepth 2 \
+            \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)
+          if [ -n "$PROJET" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Pas encore de projet Xcode, aucun budget a mesurer."
+          fi
+
       - name: Mesurer les budgets
+        if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild test \
-            -scheme Tsuzuki \
+            -scheme Yum \
             -destination 'platform=macOS' \
-            -only-testing:TsuzukiPerformanceTests \
+            -only-testing:YumPerformanceTests \
             | xcpretty && exit ${PIPESTATUS[0]}

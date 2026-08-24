@@ -144,7 +144,9 @@ jobs:
 
       - name: Verifier l absence de tiret cadratin dans les notes
         run: |
-          if grep -q $'\u2014' notes-de-version.md; then
+          # Motif construit en octal, voir la meme correction dans ci.yml.
+          TIRET_CADRATIN=$(printf '\342\200\224')
+          if grep -q -e "$TIRET_CADRATIN" notes-de-version.md; then
             echo "Tiret cadratin trouve dans les notes de version."
             exit 1
           fi

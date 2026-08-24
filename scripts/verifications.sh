@@ -13,6 +13,16 @@ cd "$RACINE"
 SCHEMA="${SCHEMA_XCODE:-Yum}"
 ECHECS=0
 
+# Le dossier App existe des l etape 0, mais son projet Xcode n arrive qu avec
+# la coquille de l application. Tester la seule presence du dossier ferait
+# echouer xcodebuild sur un schema inexistant, alors que rien n est casse.
+# On bascule donc sur xcodebuild uniquement quand un projet existe vraiment.
+PROJET_XCODE=""
+if [ -d "App" ]; then
+  PROJET_XCODE="$(find App -maxdepth 2 \
+    \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)"
+fi
+
 rouge()  { printf '\033[31m  ECHEC   %s\033[0m\n' "$1"; }
 vert()   { printf '\033[32m  OK      %s\033[0m\n' "$1"; }
 jaune()  { printf '\033[33m  IGNORE  %s\033[0m\n' "$1"; }
@@ -23,7 +33,7 @@ echouer() { rouge "$1"; ECHECS=$((ECHECS + 1)); }
 # ---------------------------------------------------------------------------
 titre "1. Compilation"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
+if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
   SORTIE="$(mktemp)"
   if xcodebuild build \
       -scheme "$SCHEMA" \
@@ -41,13 +51,24 @@ if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
     tail -40 "$SORTIE"
   fi
   rm -f "$SORTIE"
-elif command -v swift >/dev/null 2>&1 && [ -d "Packages" ]; then
-  if swift build --package-path Packages 2>&1 | tee /tmp/swiftbuild.log | grep -q "error:"; then
-    echouer "La compilation des paquets a echoue"
-    grep "error:" /tmp/swiftbuild.log | head -20
+elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
+  # On se fie au code de sortie et non a la presence de la chaine error: dans
+  # la sortie. Un echec de lien ou de manifeste ne l ecrit pas toujours, et le
+  # controle repondait OK sur une compilation cassee.
+  SORTIE="$(mktemp)"
+  if swift build --package-path Packages > "$SORTIE" 2>&1; then
+    NB_AVERT="$(grep -c "warning:" "$SORTIE" || true)"
+    if [ "$NB_AVERT" -gt 0 ]; then
+      echouer "Compilation des paquets avec $NB_AVERT avertissement(s)"
+      grep "warning:" "$SORTIE" | head -10
+    else
+      vert "Compilation des paquets sans avertissement"
+    fi
   else
-    vert "Compilation des paquets reussie"
+    echouer "La compilation des paquets a echoue"
+    tail -40 "$SORTIE"
   fi
+  rm -f "$SORTIE"
 else
   jaune "Aucun projet compilable detecte pour l instant"
 fi
@@ -55,7 +76,7 @@ fi
 # ---------------------------------------------------------------------------
 titre "2. Tests"
 # ---------------------------------------------------------------------------
-if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
+if command -v xcodebuild >/dev/null 2>&1 && [ -n "$PROJET_XCODE" ]; then
   SORTIE="$(mktemp)"
   if xcodebuild test \
       -scheme "$SCHEMA" \
@@ -67,12 +88,15 @@ if command -v xcodebuild >/dev/null 2>&1 && [ -d "App" ]; then
     grep -E "(failed|error:)" "$SORTIE" | head -20
   fi
   rm -f "$SORTIE"
-elif command -v swift >/dev/null 2>&1 && [ -d "Packages" ]; then
-  if swift test --package-path Packages >/dev/null 2>&1; then
+elif command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
+  SORTIE="$(mktemp)"
+  if swift test --package-path Packages > "$SORTIE" 2>&1; then
     vert "Tests des paquets passes"
   else
     echouer "Des tests de paquet ont echoue"
+    grep -E "(recorded an issue|failed|error:)" "$SORTIE" | head -20
   fi
+  rm -f "$SORTIE"
 else
   jaune "Aucune cible de test detectee pour l instant"
 fi
@@ -104,7 +128,15 @@ fi
 # ---------------------------------------------------------------------------
 titre "4. Regle de redaction, aucun tiret cadratin"
 # ---------------------------------------------------------------------------
-TROUVES="$(grep -rIln $'\u2014' \
+# Le motif est construit par printf en octal, jamais ecrit en clair et jamais
+# via $'\\u...'. Le bash 3.2 livre par macOS n interprete pas cette echappee,
+# le motif devenait alors la chaine litterale, et grep BRE la reduisait au
+# simple mot du code du caractere. Resultat : le controle signalait ses propres
+# fichiers et ne detectait aucun vrai tiret cadratin.
+# La forme octale fonctionne sur bash 3.2 comme sur bash 5.
+TIRET_CADRATIN="$(printf '\342\200\224')"
+
+TROUVES="$(grep -rIln -e "$TIRET_CADRATIN" \
   --include='*.swift' --include='*.md' --include='*.json' \
   --include='*.yml' --include='*.yaml' --include='*.sh' \
   --include='*.strings' --include='*.xcstrings' \

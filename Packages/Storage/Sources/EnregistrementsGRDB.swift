@@ -73,6 +73,9 @@ extension ReglageDeSensDeLecture: TableRecord, FetchableRecord, PersistableRecor
 // textuelle. La conformance permet de les utiliser directement dans un filtre
 // de requete, sans passer par leur rawValue a chaque appel.
 extension SensDeLecture: DatabaseValueConvertible {}
+extension FiltreDeChapitres: DatabaseValueConvertible {}
+extension CritereDeTriDeChapitres: DatabaseValueConvertible {}
+extension OrdreDeTri: DatabaseValueConvertible {}
 extension TypeDeSource: DatabaseValueConvertible {}
 extension EtatConnexion: DatabaseValueConvertible {}
 extension StatutSerie: DatabaseValueConvertible {}

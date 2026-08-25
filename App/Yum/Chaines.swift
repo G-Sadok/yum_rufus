@@ -58,6 +58,77 @@ enum Chaines {
         static let sousTitre = String(localized: "premium.sousTitre")
     }
 
+    /// Fiche de serie, sections 5.6 et 4.5, tableaux 6.1 et 6.5.
+    ///
+    /// Trois libelles ne figurent pas dans la section 6 : le repli du resume,
+    /// l etiquette d accessibilite du bouton d options, et les deux commandes de
+    /// selection du menu contextuel. Le document ne dessine ni le resume deplie
+    /// ni ce menu. Ils suivent les regles d ecriture de la section 6 : voix
+    /// active, le libelle dit ce qui se passe.
+    enum Fiche {
+        static let commencerLaLecture = String(localized: "fiche.commencerLaLecture")
+        static let reprendreChapitre = String(localized: "fiche.reprendreChapitre")
+        static let toutEstLu = String(localized: "fiche.toutEstLu")
+        static let aucunChapitre = String(localized: "fiche.aucunChapitre")
+        static let dansMaListe = String(localized: "fiche.dansMaListe")
+        static let suivre = String(localized: "fiche.suivre")
+        static let options = String(localized: "fiche.options")
+        static let afficherPlus = String(localized: "fiche.afficherPlus")
+        static let afficherMoins = String(localized: "fiche.afficherMoins")
+        static let retour = String(localized: "fiche.retour")
+    }
+
+    /// En tete de la liste de chapitres, section 5.6 et tableau 6.5.
+    enum Liste {
+        static let compteurDeChapitres = String(localized: "liste.compteurDeChapitres")
+        static let filtrer = String(localized: "liste.filtrer")
+        static let trier = String(localized: "liste.trier")
+        static let toutMarquerLu = String(localized: "liste.toutMarquerLu")
+    }
+
+    /// Ligne de chapitre, tableau 4.5.
+    enum Chapitre {
+        static let numerote = String(localized: "chapitre.numerote")
+        static let lu = String(localized: "chapitre.lu")
+        static let nombreDePages = String(localized: "chapitre.nombreDePages")
+        static let pageSurTotal = String(localized: "chapitre.pageSurTotal")
+        static let telecharge = String(localized: "chapitre.telecharge")
+        static let etiquetteDeTelechargement = String(
+            localized: "chapitre.etiquetteDeTelechargement"
+        )
+    }
+
+    /// Barre d actions de selection multiple, section 4.5 et tableau 6.5.
+    enum Selection {
+        static let compteur = String(localized: "selection.compteur")
+        static let marquerLu = String(localized: "selection.marquerLu")
+        static let telecharger = String(localized: "selection.telecharger")
+        static let supprimer = String(localized: "selection.supprimer")
+        static let fermer = String(localized: "selection.fermer")
+        static let selectionner = String(localized: "selection.selectionner")
+        static let etendreLaSelection = String(localized: "selection.etendreLaSelection")
+    }
+
+    /// Statut editorial d une serie, premier fragment de la ligne d etat de la
+    /// section 5.6.
+    ///
+    /// Seul `En cours` figure dans le document, dans l exemple de ligne d etat.
+    /// Les trois autres reprennent les cas de `StatutSerie` et suivent les
+    /// memes regles d ecriture.
+    enum Statut {
+        static let enCours = String(localized: "statut.enCours")
+        static let termine = String(localized: "statut.termine")
+        static let enPause = String(localized: "statut.enPause")
+        static let abandonne = String(localized: "statut.abandonne")
+    }
+
+    /// Etats d erreur, tableau 6.4.
+    enum Erreur {
+        static let reessayer = String(localized: "erreur.reessayer")
+        static let ficheDeSerieTitre = String(localized: "erreur.ficheDeSerie.titre")
+        static let ficheDeSeriePhrase = String(localized: "erreur.ficheDeSerie.phrase")
+    }
+
     /// Etats vides, tableau 6.3.
     enum EtatVide {
         static let bibliothequeTitre = String(localized: "etatVide.bibliotheque.titre")
@@ -73,5 +144,9 @@ enum Chaines {
 
         static let rechercherTitre = String(localized: "etatVide.rechercher.titre")
         static let rechercherPhrase = String(localized: "etatVide.rechercher.phrase")
+
+        static let ficheDeSerieTitre = String(localized: "etatVide.ficheDeSerie.titre")
+        static let ficheDeSeriePhrase = String(localized: "etatVide.ficheDeSerie.phrase")
+        static let ficheDeSerieAction = String(localized: "etatVide.ficheDeSerie.action")
     }
 }

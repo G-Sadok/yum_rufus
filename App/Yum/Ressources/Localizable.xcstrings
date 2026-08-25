@@ -169,6 +169,42 @@
         }
       }
     },
+    "erreur.historique.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le fichier d historique est corrompu. Yum peut le repartir de zero, votre bibliotheque n est pas touchee."
+          }
+        }
+      }
+    },
+    "erreur.historique.repartirDeZero" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4, seule action de cet etat d erreur",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repartir de zero"
+          }
+        }
+      }
+    },
+    "erreur.historique.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L historique n a pas pu etre lu"
+          }
+        }
+      }
+    },
     "erreur.reessayer" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.5, bouton secondaire de tout etat d erreur",
       "extractionState" : "manual",
@@ -453,6 +489,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tout est lu"
+          }
+        }
+      }
+    },
+    "historique.aujourdHui" : {
+      "comment" : "En tete collant, section 5.2. Absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd hui"
+          }
+        }
+      }
+    },
+    "historique.confirmation.annuler" : {
+      "comment" : "Modale courte, section 4.8. Meme mot que la modale d ajout du tableau 6.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        }
+      }
+    },
+    "historique.confirmation.description" : {
+      "comment" : "Modale courte, section 4.8. Nomme ce que l effacement ne touche pas",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos series et votre progression de lecture restent intactes. Les lectures deja consignees seront oubliees."
+          }
+        }
+      }
+    },
+    "historique.confirmation.effacer" : {
+      "comment" : "Modale courte, section 4.8. Le bouton dit ce qui se passe",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer"
+          }
+        }
+      }
+    },
+    "historique.confirmation.titre" : {
+      "comment" : "Modale courte, section 4.8. Reprend le libelle du bouton du tableau 6.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l historique"
+          }
+        }
+      }
+    },
+    "historique.effacer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, commande de la barre d outils",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l historique"
+          }
+        }
+      }
+    },
+    "historique.hier" : {
+      "comment" : "En tete collant, section 5.2. Absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier"
+          }
+        }
+      }
+    },
+    "historique.supprimerLEntree" : {
+      "comment" : "Etiquette d accessibilite du bouton de suppression, section 5.2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer de l historique"
           }
         }
       }

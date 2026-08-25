@@ -15,7 +15,7 @@ import SwiftUI
 //
 
 /// Coquille de l application et sa navigation principale.
-public struct VueDeCoquille<Contenu: View>: View {
+public struct VueDeCoquille<Contenu: View, Actions: View>: View {
     @Environment(\.palette) private var palette
     #if !os(macOS)
         @Environment(\.horizontalSizeClass) private var classeHorizontale
@@ -25,6 +25,7 @@ public struct VueDeCoquille<Contenu: View>: View {
     private let entrees: [EntreeDeNavigation]
     private let appelPremium: AppelPremium?
     private let libelleDuRepli: String
+    private let actions: (DestinationPrincipale) -> Actions
     private let contenu: (DestinationPrincipale) -> Contenu
 
     /// Construit la coquille.
@@ -35,18 +36,21 @@ public struct VueDeCoquille<Contenu: View>: View {
     ///   - appelPremium: bloc cale en bas de la barre laterale, facultatif.
     ///   - libelleDuRepli: libelle de la bascule de repli, pris dans le
     ///     catalogue de chaines de l application.
+    ///   - actions: commandes de barre d outils propres a une destination.
     ///   - contenu: vue affichee pour une destination.
     public init(
         etat: EtatDeCoquille,
         entrees: [EntreeDeNavigation],
         appelPremium: AppelPremium? = nil,
         libelleDuRepli: String,
+        @ViewBuilder actions: @escaping (DestinationPrincipale) -> Actions,
         @ViewBuilder contenu: @escaping (DestinationPrincipale) -> Contenu
     ) {
         self.etat = etat
         self.entrees = entrees
         self.appelPremium = appelPremium
         self.libelleDuRepli = libelleDuRepli
+        self.actions = actions
         self.contenu = contenu
     }
 
@@ -72,7 +76,9 @@ public struct VueDeCoquille<Contenu: View>: View {
 
     private var coquilleALaterale: some View {
         VStack(spacing: 0) {
-            BarreDOutilsDeCoquille(titre: titreCourant, bascule: bascule)
+            BarreDOutilsDeCoquille(titre: titreCourant, bascule: bascule) {
+                actions(etat.destination)
+            }
 
             HStack(spacing: 0) {
                 BarreLateraleDeNavigation(
@@ -90,7 +96,9 @@ public struct VueDeCoquille<Contenu: View>: View {
 
     private var coquilleAOnglets: some View {
         VStack(spacing: 0) {
-            BarreDOutilsDeCoquille(titre: titreCourant, bascule: nil)
+            BarreDOutilsDeCoquille(titre: titreCourant, bascule: nil) {
+                actions(etat.destination)
+            }
 
             TabView(selection: destinationSelectionnee) {
                 ForEach(entrees) { entree in
@@ -149,5 +157,28 @@ public struct VueDeCoquille<Contenu: View>: View {
                 estEnPaysage: taille.width > taille.height
             )
         #endif
+    }
+}
+
+extension VueDeCoquille where Actions == EmptyView {
+    /// Coquille sans commande de barre d outils.
+    ///
+    /// Les ecrans qui n en portent aucune, comme Reglages, appellent cette
+    /// forme plutot que de passer une vue vide.
+    public init(
+        etat: EtatDeCoquille,
+        entrees: [EntreeDeNavigation],
+        appelPremium: AppelPremium? = nil,
+        libelleDuRepli: String,
+        @ViewBuilder contenu: @escaping (DestinationPrincipale) -> Contenu
+    ) {
+        self.init(
+            etat: etat,
+            entrees: entrees,
+            appelPremium: appelPremium,
+            libelleDuRepli: libelleDuRepli,
+            actions: { _ in EmptyView() },
+            contenu: contenu
+        )
     }
 }

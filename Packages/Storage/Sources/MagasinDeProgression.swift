@@ -16,6 +16,10 @@ import GRDB
 // IndexEtDeclencheurs.swift le corrigent des que `estLu` change, y compris
 // quand le changement vient du marquage automatique.
 //
+// La trace dans l historique part dans la meme transaction que la position.
+// C est le seul chemin d ecriture de l historique : lire, c est laisser une
+// trace, et une trace ecrite ailleurs finirait par diverger de la reprise.
+//
 
 /// Erreurs que la sauvegarde de position peut remonter.
 public enum ErreurDeProgression: Error, Sendable, Equatable {
@@ -65,9 +69,13 @@ public struct MagasinDeProgression: Sendable {
     /// chapitre et date de derniere lecture de la serie partent dans la meme
     /// transaction. Une fermeture brutale au milieu ne laisse donc pas une page
     /// enregistree sans son decalage.
-    public func enregistrer(_ position: PositionDeLecture, le date: Date = Date()) throws {
+    public func enregistrer(
+        _ position: PositionDeLecture,
+        le date: Date = Date(),
+        calendrier: Calendar = .autoupdatingCurrent
+    ) throws {
         try base.ecrivain.write { connexion in
-            try Self.appliquer(position, le: date, dans: connexion)
+            try Self.appliquer(position, le: date, calendrier: calendrier, dans: connexion)
         }
     }
 
@@ -80,6 +88,7 @@ public struct MagasinDeProgression: Sendable {
     private static func appliquer(
         _ position: PositionDeLecture,
         le date: Date,
+        calendrier: Calendar,
         dans connexion: Database
     ) throws {
         guard var chapitre = try Chapitre.fetchOne(connexion, key: position.chapitreId) else {
@@ -108,6 +117,14 @@ public struct MagasinDeProgression: Sendable {
             sql: "UPDATE manga SET dateDerniereLecture = ? WHERE id = ?",
             arguments: [date, chapitre.mangaId]
         )
+
+        try MagasinDHistorique.consigner(
+            chapitre: bornee.chapitreId,
+            pageAtteinte: bornee.pageIndex,
+            le: date,
+            calendrier: calendrier,
+            dans: connexion
+        )
     }
 }
 
@@ -121,9 +138,10 @@ public struct MagasinDeProgression: Sendable {
 extension MagasinDeProgression: EnregistreurDePosition {
     public func enregistrer(_ position: PositionDeLecture) async throws {
         let date = Date()
+        let calendrier = Calendar.autoupdatingCurrent
 
         try await base.ecrivain.write { connexion in
-            try Self.appliquer(position, le: date, dans: connexion)
+            try Self.appliquer(position, le: date, calendrier: calendrier, dans: connexion)
         }
     }
 }

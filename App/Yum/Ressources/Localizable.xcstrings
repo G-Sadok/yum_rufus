@@ -217,6 +217,42 @@
         }
       }
     },
+    "erreur.reglages.ouvrirLesReglagesDuSysteme" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, second bouton de la banniere de l ecran Reglages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les reglages du systeme"
+          }
+        }
+      }
+    },
+    "erreur.reglages.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4, banniere de l ecran Reglages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le compte iCloud de cet appareil n autorise plus Yum. Ouvrez les reglages du systeme, puis reactivez Yum dans la liste des applications iCloud."
+          }
+        }
+      }
+    },
+    "erreur.reglages.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4, banniere de l ecran Reglages. Le nombre est la valeur reelle",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud n a pas synchronise depuis %lld jours"
+          }
+        }
+      }
+    },
     "etatVide.bibliotheque.action" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.3",
       "extractionState" : "manual",
@@ -729,6 +765,1506 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passer a Premium"
+          }
+        }
+      }
+    },
+    "reglages.aucunPrereglage" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, etat vide de la ligne Prereglages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun prereglage"
+          }
+        }
+      }
+    },
+    "reglages.aucunServiceConnecte" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, etat vide de la ligne Services de suivi",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun service connecte"
+          }
+        }
+      }
+    },
+    "reglages.augmenter" : {
+      "comment" : "DESIGN-SPEC.md, section 4.1, chevron du haut d un compteur, libelle ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenter"
+          }
+        }
+      }
+    },
+    "reglages.couronne" : {
+      "comment" : "DESIGN-SPEC.md, section 7, etiquette de la couronne d une fonction verrouillee",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fonction reservee a l abonnement"
+          }
+        }
+      }
+    },
+    "reglages.description.aPropos" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yum ne heberge aucun contenu. L application lit les fichiers et les serveurs que vous lui indiquez. Vous restez responsable de la legalite de vos sources."
+          }
+        }
+      }
+    },
+    "reglages.description.abonnement" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debloquez la traduction, la colorisation, les suivis, la sauvegarde, le mode incognito, les serveurs Komga, Kavita, Jellyfin et OPDS, la synchronisation iCloud et bien plus."
+          }
+        }
+      }
+    },
+    "reglages.description.bibliothequeComportement" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deuxieme carte Bibliotheque, comportement, distincte de la carte de tri plus haut."
+          }
+        }
+      }
+    },
+    "reglages.description.bibliothequeTri" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce tri s applique a la grille et au mode liste compacte."
+          }
+        }
+      }
+    },
+    "reglages.description.confidentialite" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigation privee : l activite de lecture n est pas enregistree dans l historique."
+          }
+        }
+      }
+    },
+    "reglages.description.lecteur" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La double page se replie automatiquement en portrait."
+          }
+        }
+      }
+    },
+    "reglages.description.pontNavigateur" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le pont laisse une page de catalogue ouverte dans le navigateur envoyer une serie vers Yum."
+          }
+        }
+      }
+    },
+    "reglages.description.stockage" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, description sous une carte",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les chapitres supprimes restent lisibles depuis leur source."
+          }
+        }
+      }
+    },
+    "reglages.diminuer" : {
+      "comment" : "DESIGN-SPEC.md, section 4.1, chevron du bas d un compteur, libelle ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diminuer"
+          }
+        }
+      }
+    },
+    "reglages.ligne.aPropos.mentionsLegales" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mentions legales"
+          }
+        }
+      }
+    },
+    "reglages.ligne.aPropos.nouveautes" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveautes"
+          }
+        }
+      }
+    },
+    "reglages.ligne.aPropos.version" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "reglages.ligne.abonnement.passerAPremium" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer a Premium"
+          }
+        }
+      }
+    },
+    "reglages.ligne.abonnement.restaurerLesAchats" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer les achats"
+          }
+        }
+      }
+    },
+    "reglages.ligne.assistance.aide" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aide"
+          }
+        }
+      }
+    },
+    "reglages.ligne.assistance.signalerUnBug" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signaler un bug"
+          }
+        }
+      }
+    },
+    "reglages.ligne.assistance.statistiquesDeLecture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiques de lecture"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeComportement.marquerLuALaDernierePage" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer lu a la derniere page"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeComportement.mettreAJourAuLancement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre a jour au lancement"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeComportement.supprimerApresLecture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer apres lecture"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeTri.grouperParCategorie" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grouper par categorie"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeTri.ordre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordre"
+          }
+        }
+      }
+    },
+    "reglages.ligne.bibliothequeTri.trierPar" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par"
+          }
+        }
+      }
+    },
+    "reglages.ligne.comportementDuLecteur.garderLEcranAllume" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garder l ecran allume"
+          }
+        }
+      }
+    },
+    "reglages.ligne.comportementDuLecteur.luminositeDuLecteur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luminosite du lecteur"
+          }
+        }
+      }
+    },
+    "reglages.ligne.comportementDuLecteur.pagesGardeesEnMemoire" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages gardees en memoire"
+          }
+        }
+      }
+    },
+    "reglages.ligne.comportementDuLecteur.tourneDePageAnimee" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tourne de page animee"
+          }
+        }
+      }
+    },
+    "reglages.ligne.comportementDuLecteur.tournerAvecLesTouchesDeVolume" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tourner avec les touches de volume"
+          }
+        }
+      }
+    },
+    "reglages.ligne.confidentialite.incognito" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incognito"
+          }
+        }
+      }
+    },
+    "reglages.ligne.confidentialite.verrouillageDeLApp" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouillage de l app"
+          }
+        }
+      }
+    },
+    "reglages.ligne.general.apparence" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
+          }
+        }
+      }
+    },
+    "reglages.ligne.general.langue" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue"
+          }
+        }
+      }
+    },
+    "reglages.ligne.general.notificationsDeNouveauxChapitres" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications de nouveaux chapitres"
+          }
+        }
+      }
+    },
+    "reglages.ligne.general.theme" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme"
+          }
+        }
+      }
+    },
+    "reglages.ligne.iCloud.dernierEnvoi" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernier envoi"
+          }
+        }
+      }
+    },
+    "reglages.ligne.iCloud.synchroniserLaBibliotheque" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la bibliotheque"
+          }
+        }
+      }
+    },
+    "reglages.ligne.iCloud.synchroniserLaProgression" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser la progression"
+          }
+        }
+      }
+    },
+    "reglages.ligne.lecteur.fondDuLecteur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fond du lecteur"
+          }
+        }
+      }
+    },
+    "reglages.ligne.lecteur.miseEnPage" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mise en page"
+          }
+        }
+      }
+    },
+    "reglages.ligne.lecteur.rognerLesBords" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rogner les bords"
+          }
+        }
+      }
+    },
+    "reglages.ligne.lecteur.sensDeLecture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sens de lecture"
+          }
+        }
+      }
+    },
+    "reglages.ligne.pontNavigateur.extensionSafari" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extension Safari"
+          }
+        }
+      }
+    },
+    "reglages.ligne.pontNavigateur.ouvrirLesLiensDansLApplication" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir les liens dans Yum"
+          }
+        }
+      }
+    },
+    "reglages.ligne.prereglagesDeLecture.appliquerAuChapitreSuivant" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliquer au chapitre suivant"
+          }
+        }
+      }
+    },
+    "reglages.ligne.prereglagesDeLecture.prereglages" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5. Le document ecrit N prereglages : le nombre est la valeur de la ligne, le libelle nomme la destination",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prereglages"
+          }
+        }
+      }
+    },
+    "reglages.ligne.sauvegardeEtRestauration.restaurerDepuisUnFichier" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer depuis un fichier"
+          }
+        }
+      }
+    },
+    "reglages.ligne.sauvegardeEtRestauration.sauvegardeAutomatique" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde automatique"
+          }
+        }
+      }
+    },
+    "reglages.ligne.sauvegardeEtRestauration.sauvegarderMaintenant" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarder maintenant"
+          }
+        }
+      }
+    },
+    "reglages.ligne.stockage.detail" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detail du stockage"
+          }
+        }
+      }
+    },
+    "reglages.ligne.stockage.supprimerTousLesTelechargements" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer tous les telechargements"
+          }
+        }
+      }
+    },
+    "reglages.ligne.stockage.viderLeCacheDImages" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider le cache d images"
+          }
+        }
+      }
+    },
+    "reglages.ligne.suivis.confirmerAvantDEnvoyer" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer avant d envoyer"
+          }
+        }
+      }
+    },
+    "reglages.ligne.suivis.envoyerLaProgression" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer la progression"
+          }
+        }
+      }
+    },
+    "reglages.ligne.suivis.services" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5. Le document ecrit N service connecte : le nombre est la valeur de la ligne, le libelle nomme la destination",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Services de suivi"
+          }
+        }
+      }
+    },
+    "reglages.ligne.telechargements.chapitresALAvance" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres a l avance"
+          }
+        }
+      }
+    },
+    "reglages.ligne.telechargements.emplacement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Emplacement"
+          }
+        }
+      }
+    },
+    "reglages.ligne.telechargements.enWiFiSeulement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En Wi-Fi seulement"
+          }
+        }
+      }
+    },
+    "reglages.ligne.telechargements.qualite" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qualite"
+          }
+        }
+      }
+    },
+    "reglages.ligne.traduction.langueCible" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langue cible"
+          }
+        }
+      }
+    },
+    "reglages.ligne.traduction.policeDeRemplacement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Police de remplacement"
+          }
+        }
+      }
+    },
+    "reglages.ligne.traduction.traduireLesBulles" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traduire les bulles"
+          }
+        }
+      }
+    },
+    "reglages.nombreDePrereglages" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, valeur de la ligne Prereglages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld prereglages"
+          }
+        }
+      }
+    },
+    "reglages.nombreDeServices" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, valeur de la ligne Services de suivi",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld services connectes"
+          }
+        }
+      }
+    },
+    "reglages.note" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, note en caption sous la carte A propos. La section 9 du cahier de developpement y attend la provenance et la licence du jeu de donnees du detecteur de cases. Aucun modele n est livre a ce stade, la note dit donc ce qui est vrai aujourd hui",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun jeu de donnees tiers n est embarque a ce jour. La provenance et la licence du modele de detection de cases apparaitront ici des sa livraison."
+          }
+        }
+      }
+    },
+    "reglages.section.aPropos" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A propos"
+          }
+        }
+      }
+    },
+    "reglages.section.abonnement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonnement"
+          }
+        }
+      }
+    },
+    "reglages.section.assistance" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistance"
+          }
+        }
+      }
+    },
+    "reglages.section.bibliothequeComportement" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de la neuvieme section. Meme nom que la quatrieme, leurs descriptions les distinguent",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotheque"
+          }
+        }
+      }
+    },
+    "reglages.section.bibliothequeTri" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de la quatrieme section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotheque"
+          }
+        }
+      }
+    },
+    "reglages.section.comportementDuLecteur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comportement du lecteur"
+          }
+        }
+      }
+    },
+    "reglages.section.confidentialite" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confidentialite"
+          }
+        }
+      }
+    },
+    "reglages.section.general" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
+      }
+    },
+    "reglages.section.iCloud" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud"
+          }
+        }
+      }
+    },
+    "reglages.section.lecteur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lecteur"
+          }
+        }
+      }
+    },
+    "reglages.section.pontNavigateur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pont navigateur"
+          }
+        }
+      }
+    },
+    "reglages.section.prereglagesDeLecture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prereglages de lecture"
+          }
+        }
+      }
+    },
+    "reglages.section.sauvegardeEtRestauration" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde et restauration"
+          }
+        }
+      }
+    },
+    "reglages.section.stockage" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stockage"
+          }
+        }
+      }
+    },
+    "reglages.section.suivis" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivis"
+          }
+        }
+      }
+    },
+    "reglages.section.telechargements" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telechargements"
+          }
+        }
+      }
+    },
+    "reglages.section.traduction" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, en tete de section",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traduction"
+          }
+        }
+      }
+    },
+    "reglages.valeur.aAZ" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, menu de tri de la bibliotheque",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A a Z"
+          }
+        }
+      }
+    },
+    "reglages.valeur.apres1Jour" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apres 1 jour"
+          }
+        }
+      }
+    },
+    "reglages.valeur.apres7Jours" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apres 7 jours"
+          }
+        }
+      }
+    },
+    "reglages.valeur.blanc" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blanc"
+          }
+        }
+      }
+    },
+    "reglages.valeur.chaqueJour" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaque jour"
+          }
+        }
+      }
+    },
+    "reglages.valeur.chaqueMois" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaque mois"
+          }
+        }
+      }
+    },
+    "reglages.valeur.chaqueSemaine" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaque semaine"
+          }
+        }
+      }
+    },
+    "reglages.valeur.clair" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clair"
+          }
+        }
+      }
+    },
+    "reglages.valeur.continuVertical" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continu vertical"
+          }
+        }
+      }
+    },
+    "reglages.valeur.croissant" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Croissant"
+          }
+        }
+      }
+    },
+    "reglages.valeur.dateAjout" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, menu de tri de la bibliotheque",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date d ajout"
+          }
+        }
+      }
+    },
+    "reglages.valeur.decroissant" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decroissant"
+          }
+        }
+      }
+    },
+    "reglages.valeur.derniereLecture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, menu de tri de la bibliotheque",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derniere lecture"
+          }
+        }
+      }
+    },
+    "reglages.valeur.derniereMiseAJour" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, menu de tri de la bibliotheque",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Derniere mise a jour"
+          }
+        }
+      }
+    },
+    "reglages.valeur.desactivee" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivee"
+          }
+        }
+      }
+    },
+    "reglages.valeur.deutsch" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deutsch"
+          }
+        }
+      }
+    },
+    "reglages.valeur.doublePage" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double page"
+          }
+        }
+      }
+    },
+    "reglages.valeur.droiteGauche" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droite a gauche"
+          }
+        }
+      }
+    },
+    "reglages.valeur.elevee" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elevee"
+          }
+        }
+      }
+    },
+    "reglages.valeur.english" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
+          }
+        }
+      }
+    },
+    "reglages.valeur.espanol" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espanol"
+          }
+        }
+      }
+    },
+    "reglages.valeur.francais" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Francais"
+          }
+        }
+      }
+    },
+    "reglages.valeur.gaucheDroite" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauche a droite"
+          }
+        }
+      }
+    },
+    "reglages.valeur.grisSombre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gris sombre"
+          }
+        }
+      }
+    },
+    "reglages.valeur.immediatement" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Immediatement"
+          }
+        }
+      }
+    },
+    "reglages.valeur.jamais" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7 et section 5.5, valeur de reglage et etat vide de Dernier envoi",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jamais"
+          }
+        }
+      }
+    },
+    "reglages.valeur.japonais" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Japonais"
+          }
+        }
+      }
+    },
+    "reglages.valeur.midnight" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, nom de theme, identique dans toutes les langues",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Midnight"
+          }
+        }
+      }
+    },
+    "reglages.valeur.moyenne" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moyenne"
+          }
+        }
+      }
+    },
+    "reglages.valeur.noirOled" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noir OLED"
+          }
+        }
+      }
+    },
+    "reglages.valeur.nonLu" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, menu de tri de la bibliotheque",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non lu"
+          }
+        }
+      }
+    },
+    "reglages.valeur.obsidian" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, nom de theme, identique dans toutes les langues",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obsidian"
+          }
+        }
+      }
+    },
+    "reglages.valeur.originale" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Originale"
+          }
+        }
+      }
+    },
+    "reglages.valeur.pageUnique" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page unique"
+          }
+        }
+      }
+    },
+    "reglages.valeur.paper" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, nom de theme, identique dans toutes les langues",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paper"
+          }
+        }
+      }
+    },
+    "reglages.valeur.sepia" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sepia"
+          }
+        }
+      }
+    },
+    "reglages.valeur.slate" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, nom de theme, identique dans toutes les langues",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slate"
+          }
+        }
+      }
+    },
+    "reglages.valeur.sombre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sombre"
+          }
+        }
+      }
+    },
+    "reglages.valeur.systeme" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur heritee du systeme, posee en accent par la section 4.1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeme"
+          }
+        }
+      }
+    },
+    "reglages.versionEtCompilation" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, valeur de la ligne Version. Section 9 du cahier de developpement, numero et numero de compilation",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ (%2$@)"
           }
         }
       }

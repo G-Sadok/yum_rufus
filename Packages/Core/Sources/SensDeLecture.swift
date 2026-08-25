@@ -44,4 +44,25 @@ public enum SensDeLecture: String, Sendable, Codable, CaseIterable, Hashable {
     public var commenceParLaDroite: Bool {
         self == .droiteGauche
     }
+
+    /// Sens proposes par le menu Sens de lecture de la section 5.5.
+    ///
+    /// Le tableau 6.7 n en propose que deux. Le sens vertical existe bien dans
+    /// le modele, mais il n est pas choisi ici : il vient de la mise en page
+    /// `continuVertical`. Offrir les trois au meme menu laisserait l utilisateur
+    /// composer un sens vertical avec une mise en page en double page, qui ne
+    /// veut rien dire.
+    public static let choixDuMenuDeReglages: [SensDeLecture] = [.droiteGauche, .gaucheDroite]
+
+    /// Sens tel que le tableau 6.7 l ecrit, jamais affiche.
+    ///
+    /// Sert a rapprocher le code du document. Le texte affiche passe par le
+    /// catalogue de chaines.
+    public var valeurDuDocument: String {
+        switch self {
+        case .droiteGauche: "Droite a gauche"
+        case .gaucheDroite: "Gauche a droite"
+        case .hautBas: "Vertical"
+        }
+    }
 }

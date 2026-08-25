@@ -1,0 +1,87 @@
+//
+// Lignes des sections 1 a 6 de l ecran Reglages, section 5.5 de DESIGN-SPEC.md.
+//
+// Les quatre premieres sections et la sixieme ont leur contenu impose par le
+// wireframe 05. Rien n y est interprete.
+//
+
+extension CatalogueDeReglages {
+    /// Sections Abonnement, Confidentialite, General, Bibliotheque, Traduction
+    /// et Lecteur.
+    static let lignesDesSectionsUnASix: [LigneDeReglage] =
+        abonnement + confidentialite + general + bibliothequeTri + traduction + lecteur
+
+    /// 1. Abonnement.
+    ///
+    /// `Passer a Premium` est la seule ligne du produit en forme d appel a
+    /// l abonnement : couronne a gauche, chevron a droite, aucun controle.
+    private static let abonnement: [LigneDeReglage] = [
+        .navigation(.passerAPremium, .abonnement, premium: .appelALAbonnement),
+        .navigation(.restaurerLesAchats, .abonnement),
+    ]
+
+    /// 2. Confidentialite.
+    ///
+    /// Incognito est une fonction premium. Le tableau de la section 5.5 la type
+    /// `premium, couronne`, et le wireframe 05 la dessine sans interrupteur :
+    /// la couronne prend la place du controle tant que l abonnement n est pas
+    /// pris. La variante reste l interrupteur, parce que c est bien un reglage
+    /// a deux etats une fois debloque.
+    private static let confidentialite: [LigneDeReglage] = [
+        .interrupteur(.incognito, .confidentialite, actifParDefaut: false, premium: .fonctionVerrouillee),
+        .interrupteur(.verrouillageDeLApp, .confidentialite, actifParDefaut: false),
+    ]
+
+    /// 3. General.
+    private static let general: [LigneDeReglage] = [
+        .menu(.langue, .general, ChoixDeLangue.self),
+        .menu(.apparence, .general, ChoixDApparence.self),
+        .menu(.theme, .general, ChoixDeTheme.self),
+        .interrupteur(.notificationsDeNouveauxChapitres, .general, actifParDefaut: false),
+    ]
+
+    /// 4. Bibliotheque, tri.
+    ///
+    /// Le critere et le sens du tri existent deja dans le modele, poses par la
+    /// grille de la section 5.1. La section 5.5 ne les redefinit pas, elle leur
+    /// donne un endroit ou se regler.
+    private static let bibliothequeTri: [LigneDeReglage] = [
+        .menu(
+            .trierPar,
+            .bibliothequeTri,
+            choix: CritereDeTri.allCases.map(\.rawValue),
+            defaut: TriDeBibliotheque.defaut.critere.rawValue
+        ),
+        .menu(
+            .ordreDeTri,
+            .bibliothequeTri,
+            choix: OrdreDeTri.allCases.map(\.rawValue),
+            defaut: TriDeBibliotheque.defaut.ordre.rawValue
+        ),
+        .interrupteur(.grouperParCategorie, .bibliothequeTri, actifParDefaut: false),
+    ]
+
+    /// 5. Traduction.
+    private static let traduction: [LigneDeReglage] = [
+        .interrupteur(.traduireLesBulles, .traduction, actifParDefaut: false, premium: .fonctionVerrouillee),
+        .menu(.langueCible, .traduction, ChoixDeLangue.self),
+        .navigation(.policeDeRemplacement, .traduction),
+    ]
+
+    /// 6. Lecteur.
+    ///
+    /// Le menu du sens de lecture ne propose que les deux sens horizontaux du
+    /// tableau 6.7. Le sens vertical vient de la mise en page `continuVertical`,
+    /// et non d un choix concurrent qui pourrait la contredire.
+    private static let lecteur: [LigneDeReglage] = [
+        .menu(
+            .sensDeLecture,
+            .lecteur,
+            choix: SensDeLecture.choixDuMenuDeReglages.map(\.rawValue),
+            defaut: SensDeLecture.parDefaut.rawValue
+        ),
+        .menu(.miseEnPage, .lecteur, MiseEnPage.self),
+        .menu(.fondDuLecteur, .lecteur, ChoixDeFondDuLecteur.self),
+        .interrupteur(.rognerLesBords, .lecteur, actifParDefaut: false),
+    ]
+}

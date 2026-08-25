@@ -44,6 +44,15 @@ public enum SchemaDeBase {
     /// ici, sans rien detruire.
     public static let decalageDeDefilement = "2026-08-25-04-decalage-de-defilement"
 
+    /// Identifiant de la migration qui installe la table des reglages de
+    /// l application.
+    ///
+    /// La section 5.5 de DESIGN-SPEC.md compte dix sept sections et cinquante
+    /// deux lignes. La table est une table cle valeur, elle n a donc a etre
+    /// creee qu une fois : l ajout d un reglage ne demandera aucune migration
+    /// supplementaire. Purement additive, comme les precedentes.
+    public static let reglagesDeLApplication = "2026-08-25-05-reglages-de-l-application"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -51,6 +60,7 @@ public enum SchemaDeBase {
         totalDeChapitres,
         reglageDeListeDeChapitres,
         decalageDeDefilement,
+        reglagesDeLApplication,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -80,6 +90,10 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(decalageDeDefilement) { base in
             try ajouterLeDecalageDeDefilement(base)
+        }
+
+        migrateur.registerMigration(reglagesDeLApplication) { base in
+            try creerLaTableDesReglagesDeLApplication(base)
         }
 
         return migrateur

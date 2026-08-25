@@ -39,6 +39,27 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
     /// d un conteneur, et se lit par le protocole `DocumentLocal`.
     case pageNonAdressableParRequete(entree: String)
 
+    /// Le transport a echoue, avec la panne nommee par `ErreurReseau`.
+    ///
+    /// Le nom de la source est porte ici et non dans `ErreurReseau` : une meme
+    /// panne de transport frappe n importe quelle source, et la dupliquer par
+    /// source rendrait la traduction impossible a tester une fois pour toutes.
+    case reseau(ErreurReseau, source: String)
+
+    /// La lecture du conteneur a echoue, avec la cause nommee par
+    /// `ErreurDeDocument`.
+    ///
+    /// Le cas existe pour que le message precis d une archive cassee survive au
+    /// passage par le registre, au lieu d etre reduit a un echec inattendu.
+    case document(ErreurDeDocument, source: String)
+
+    /// Echec qu aucun cas ne nomme, ce qui est toujours un defaut a corriger.
+    ///
+    /// La raison ne porte que le nom du type d erreur, jamais sa description :
+    /// celle du systeme contient regulierement un chemin de fichier ou une
+    /// adresse de serveur, que la regle de journalisation interdit d ecrire.
+    case echecInattendu(source: String, raison: String)
+
     /// Message destine a l utilisateur, qui nomme la cause et indique la sortie.
     public var messageUtilisateur: String {
         switch self {
@@ -66,7 +87,69 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
         case let .pageNonAdressableParRequete(entree):
             "La page \(nomCourt(entree)) est rangee dans une archive."
                 + " Elle se lit par le conteneur, pas par une requete."
+        case let .reseau(reseau, source):
+            "La source \(source) est en echec. " + reseau.messageUtilisateur
+        case let .document(document, source):
+            "La source \(source) n a pas pu lire ce fichier. " + document.messageUtilisateur
+        case let .echecInattendu(source, _):
+            "La source \(source) a echoue pour une raison que l application ne sait pas nommer."
+                + " Relance la verification, et signale le probleme si il se repete."
         }
+    }
+
+    /// Etat de connexion a retenir pour la source apres cette erreur.
+    ///
+    /// L ecran Parcourir en tire sa pastille, et la feuille de configuration
+    /// s ouvre ou non selon que les identifiants sont en cause.
+    public var etatDeConnexion: EtatConnexion {
+        switch self {
+        case let .reseau(reseau, _):
+            reseau.etatDeConnexion
+        case .sourceInjoignable, .accesAuDossierPerdu:
+            .injoignable
+        default:
+            .erreur
+        }
+    }
+
+    /// Identifiant stable pour le journal, sans aucune donnee personnelle.
+    ///
+    /// Ni le nom de la source, ni l identifiant de serie, ni le nom de fichier
+    /// n y figurent : les trois viennent de la bibliotheque de l utilisateur.
+    public var codeDeJournal: String {
+        switch self {
+        case .capaciteIndisponible: "source.capaciteIndisponible"
+        case .sectionNonPriseEnCharge: "source.sectionNonPriseEnCharge"
+        case .sourceInjoignable: "source.injoignable"
+        case .accesAuDossierPerdu: "source.accesAuDossierPerdu"
+        case .mangaIntrouvable: "source.mangaIntrouvable"
+        case .chapitreIntrouvable: "source.chapitreIntrouvable"
+        case .formatNonPrisEnCharge: "source.formatNonPrisEnCharge"
+        case .pageNonAdressableParRequete: "source.pageNonAdressableParRequete"
+        case let .reseau(reseau, _): "source." + reseau.codeDeJournal
+        case .document: "source.document"
+        case let .echecInattendu(_, raison): "source.echecInattendu.\(raison)"
+        }
+    }
+
+    /// Traduit une erreur quelconque levee par une source.
+    ///
+    /// Point de passage unique du registre. Une erreur deja typee traverse sans
+    /// etre deguisee, une erreur de transport devient `reseau`, une erreur de
+    /// conteneur devient `document`, et ce qui reste devient `echecInattendu`
+    /// avec le seul nom de son type. Rien n est perdu et rien n est invente.
+    public static func depuis(_ erreur: any Error, source: String) -> ErreurDeSource {
+        if let deja = erreur as? ErreurDeSource {
+            return deja
+        }
+        if let reseau = ErreurReseau.depuis(erreur) {
+            return .reseau(reseau, source: source)
+        }
+        if let document = erreur as? ErreurDeDocument {
+            return .document(document, source: source)
+        }
+
+        return .echecInattendu(source: source, raison: String(describing: type(of: erreur)))
     }
 
     /// Nom lisible d une capacite, pour les messages.

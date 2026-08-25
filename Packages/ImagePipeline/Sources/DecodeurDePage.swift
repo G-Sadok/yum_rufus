@@ -118,6 +118,10 @@ public struct DecodeurDePage: Sendable {
         dans zone: TailleEnPixels,
         budget: BudgetDeDecodage = .parDefaut
     ) throws -> ImageDePage {
+        if FormatDImage.depuis(octets: donnees, nom: nom)?.estVectoriel == true {
+            return try RasterisateurSvg.rasteriser(donnees, nom: nom, dans: zone, budget: budget)
+        }
+
         let source = try Self.source(de: donnees, nom: nom)
         let tailleDOrigine = try Self.dimensions(de: source, nom: nom)
         let coteAjuste = AjustementDePage.coteMaximalADecoder(page: tailleDOrigine, dans: zone)
@@ -149,7 +153,11 @@ public struct DecodeurDePage: Sendable {
     /// Sert a la precharge et au tuilage, qui ont besoin du format de la page
     /// avant de decider quoi decoder.
     public func dimensions(_ donnees: Data, nom: String) throws -> TailleEnPixels {
-        try Self.dimensions(de: Self.source(de: donnees, nom: nom), nom: nom)
+        if FormatDImage.depuis(octets: donnees, nom: nom)?.estVectoriel == true {
+            return try RasterisateurSvg.dimensions(donnees, nom: nom)
+        }
+
+        return try Self.dimensions(de: Self.source(de: donnees, nom: nom), nom: nom)
     }
 
     /// Decode la page entiere, sans borne.

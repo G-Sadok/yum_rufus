@@ -14,19 +14,12 @@ import Foundation
 /// Regles de selection des entrees d une archive ou d un dossier de pages.
 public enum EntreesDArchive {
     /// Extensions des formats image pris en charge, section 5.2.
-    public static let extensionsImage: Set<String> = [
-        "jpg", "jpeg", "jpe", "jfif",
-        "png", "apng",
-        "gif",
-        "bmp",
-        "tif", "tiff",
-        "webp",
-        "avif", "avifs",
-        "heic", "heif",
-        "jp2", "j2k", "jpf", "jpx", "jpm",
-        "jxl",
-        "svg",
-    ]
+    ///
+    /// La liste n est plus ecrite ici mais derivee du catalogue des formats.
+    /// Deux listes finissent toujours par diverger, et la divergence se serait
+    /// vue le jour ou une page d un format ajoute au catalogue aurait ete
+    /// silencieusement ecartee de l enumeration d un chapitre.
+    public static let extensionsImage: Set<String> = FormatDImage.toutesLesExtensions
 
     /// Nom du fichier de metadonnees lu en priorite, section 5.3.
     public static let nomDesMetadonneesComic = "comicinfo.xml"

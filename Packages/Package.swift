@@ -86,10 +86,15 @@ let package = Package(
             dependencies: ["Sources", "Core", "Archive", "ImagePipeline"],
             path: "Sources/Tests"
         ),
+        // Le dossier Fichiers porte le jeu de fichiers de test des formats de la
+        // section 5.2. Il est copie tel quel et non traite : une ressource
+        // traitee passerait par les outils d image de Xcode, qui recompressent,
+        // et un test de format lirait alors autre chose que le fichier suivi.
         .testTarget(
             name: "ImagePipelineTests",
             dependencies: ["ImagePipeline", "Core"],
-            path: "ImagePipeline/Tests"
+            path: "ImagePipeline/Tests",
+            resources: [.copy("Fichiers")]
         ),
         // ImagePipeline apparait ici avec la precharge : les tests du moteur
         // manipulent des pages decodees et le cache memoire, tous deux definis

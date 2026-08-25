@@ -70,7 +70,18 @@ let package = Package(
         // Seul paquet autorise a importer SwiftUI.
         .target(name: "DesignSystem", dependencies: ["Core"], path: "DesignSystem/Sources"),
 
-        .testTarget(name: "CoreTests", dependencies: ["Core"], path: "Core/Tests"),
+        // Le dossier Fichiers porte le jeu de ComicInfo.xml et de commentaires
+        // ComicBookInfo reels de la section 5.3, dont deux ne sont pas en
+        // UTF-8. Copie et non traite, pour la meme raison que celui des formats
+        // d image : un traitement par les outils de Xcode reecrirait les
+        // fichiers, et un test d encodage lirait alors autre chose que ce que
+        // le depot suit.
+        .testTarget(
+            name: "CoreTests",
+            dependencies: ["Core"],
+            path: "Core/Tests",
+            resources: [.copy("Fichiers")]
+        ),
         .testTarget(
             name: "StorageTests",
             dependencies: ["Storage", "Core"],

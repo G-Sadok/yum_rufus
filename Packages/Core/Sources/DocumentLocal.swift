@@ -70,9 +70,34 @@ public protocol DocumentLocal: Sendable {
     /// Ici le conteneur se contente de le retrouver et de le rendre, parce que
     /// sa localisation depend du conteneur et rien d autre.
     func donneesDeMetadonnees() throws -> Data?
+
+    /// Commentaire global du conteneur, quand le format en porte un.
+    ///
+    /// La section 5.3 y range le `ComicBookInfo`, lu en secours quand l archive
+    /// ne porte pas de `ComicInfo.xml`. Seul le ZIP en a un ; les autres
+    /// formats se contentent de la valeur par defaut, qui est nulle.
+    var commentaireDeConteneur: String? { get }
+
+    /// Metadonnees du chapitre, section 5.1.
+    ///
+    /// Jamais mises en cache par le protocole : l implementation par defaut
+    /// relit et reanalyse a chaque acces. C est volontaire, une structure ne
+    /// peut pas memoriser paresseusement, et analyser a l ouverture ferait
+    /// payer le cout a tous les chapitres alors que la fiche de serie est le
+    /// seul ecran qui lise ces valeurs. L appelant garde le resultat.
+    var metadonnees: MetadonneesComic? { get }
 }
 
 extension DocumentLocal {
+    /// Aucun commentaire, comportement de tous les formats sauf le ZIP.
+    public var commentaireDeConteneur: String? {
+        nil
+    }
+
+    public var metadonnees: MetadonneesComic? {
+        LectureDeMetadonnees.metadonnees(de: self)
+    }
+
     /// Rend les octets de la page a la position demandee.
     ///
     /// Raccourci des appelants qui n ont pas besoin de conserver la reference.

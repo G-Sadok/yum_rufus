@@ -162,7 +162,7 @@ struct DocumentZipTests {
 
         let document = try DocumentZip(source: OctetsEnMemoire(archive.octets, nom: "tome.cbz"))
 
-        #expect(document.commentaire == "{\"appID\":\"test\"}")
+        #expect(document.commentaireDeConteneur == "{\"appID\":\"test\"}")
     }
 
     // MARK: Bornes

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Series>Yoru no Hikari</Series>
+  <LocalizedSeries>Lumiere de la nuit</LocalizedSeries>
+  <Title>Chapitre bonus</Title>
+  <Number>3.5</Number>
+  <Volume>4</Volume>
+  <Summary><![CDATA[Un interlude sans dialogue, entierement mis en scene sous la pluie. Les auteurs le placent apres le chapitre 3 et avant le chapitre 4.]]></Summary>
+  <Writer>Haruna Sato</Writer>
+  <Penciller>Haruna Sato</Penciller>
+  <Publisher>Kaze Shobo</Publisher>
+  <Genre>Tranche de vie</Genre>
+  <PageCount>18</PageCount>
+  <LanguageISO>ja</LanguageISO>
+  <Manga>YesAndRightToLeft</Manga>
+</ComicInfo>

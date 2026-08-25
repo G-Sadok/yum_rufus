@@ -27,9 +27,9 @@ public struct DocumentZip: DocumentLocal {
     /// Commentaire global de l archive.
     ///
     /// La section 5.3 y range le `ComicBookInfo`, lu en secours quand l archive
-    /// ne porte pas de `ComicInfo.xml`. Son analyse appartient a la
-    /// fonctionnalite de metadonnees, ce document se contente de l exposer.
-    public let commentaire: String?
+    /// ne porte pas de `ComicInfo.xml`. Son analyse appartient a
+    /// `LectureDeMetadonnees`, ce document se contente de l exposer.
+    public let commentaireDeConteneur: String?
 
     public var nombrePages: Int {
         references.count
@@ -54,7 +54,7 @@ public struct DocumentZip: DocumentLocal {
 
         self.source = source
         self.entreesParNom = entreesParNom
-        commentaire = contenu.commentaire
+        commentaireDeConteneur = contenu.commentaire
         references = noms.enumerated().map { rang, nom in
             ReferencePage(
                 index: rang,

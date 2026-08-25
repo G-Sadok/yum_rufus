@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import GRDB
 
@@ -61,5 +62,24 @@ extension MangaDeGrille: TableRecord, FetchableRecord {
         MangaDeGrille
             .filter(Column("estDansBibliotheque") == true)
             .order(Column("dateDerniereLecture").desc)
+    }
+
+    /// Series de la bibliotheque affichees par un onglet de la barre de
+    /// categories, section 5.1 de DESIGN-SPEC.md.
+    ///
+    /// L onglet Tout ne pose aucun filtre supplementaire. Le filtre de
+    /// categorie s appuie sur la cle primaire de `mangaCategorie`, dont la
+    /// seconde colonne est indexee.
+    public static func enBibliotheque(
+        dans selection: SelectionDeCategorie
+    ) -> QueryInterfaceRequest<MangaDeGrille> {
+        guard let categorie = selection.identifiant else {
+            return enBibliotheque()
+        }
+
+        return enBibliotheque().filter(
+            sql: "id IN (SELECT mangaId FROM mangaCategorie WHERE categorieId = ?)",
+            arguments: [categorie]
+        )
     }
 }

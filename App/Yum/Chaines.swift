@@ -33,6 +33,25 @@ enum Chaines {
         static let repli = String(localized: "navigation.repli")
     }
 
+    /// Barre de categories, section 5.1.
+    ///
+    /// Seul `tout` est fixe par le document. La section 6 ne nomme pas les
+    /// commandes de gestion des categories, l ecran n etant pas dessine : elles
+    /// suivent les regles d ecriture de la section 6, voix active, le libelle
+    /// dit ce qui se passe.
+    ///
+    /// Les deux deplacements parlent de rang dans la barre et non de gauche ou
+    /// de droite. Une direction d ecran s inverserait avec la direction de
+    /// l interface, le rang non.
+    enum Categorie {
+        static let tout = String(localized: "categorie.tout")
+        static let creer = String(localized: "categorie.creer")
+        static let renommer = String(localized: "categorie.renommer")
+        static let supprimer = String(localized: "categorie.supprimer")
+        static let deplacerAvant = String(localized: "categorie.deplacerAvant")
+        static let deplacerApres = String(localized: "categorie.deplacerApres")
+    }
+
     /// Bloc d appel a l abonnement, tableau 6.1.
     enum Premium {
         static let titre = String(localized: "premium.titre")

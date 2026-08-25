@@ -47,6 +47,20 @@ public enum ErreurDeDocument: Error, Sendable, Equatable {
     /// Le conteneur est protege par un mot de passe.
     case conteneurChiffre(chemin: String)
 
+    /// Le format est reconnu mais volontairement exclu du lecteur.
+    ///
+    /// La section 5.2 exclut CBA et ACE pour raison de securite : leur
+    /// decompresseur de reference n a pas d implementation libre auditee, et le
+    /// format porte un historique de depassements de tampon. Le lecteur refuse
+    /// donc de les ouvrir plutot que d embarquer ce risque.
+    case formatExclu(chemin: String, format: String)
+
+    /// Aucun moteur de lecture n est disponible pour ce format sur cet appareil.
+    ///
+    /// Distinct de `conteneurIllisible` : le fichier est sain, c est le lecteur
+    /// qui n a pas de quoi le decoder ici.
+    case moteurIndisponible(chemin: String, format: String)
+
     /// Message destine a l utilisateur, qui nomme la cause et indique la sortie.
     public var messageUtilisateur: String {
         switch self {
@@ -77,6 +91,13 @@ public enum ErreurDeDocument: Error, Sendable, Equatable {
         case let .conteneurChiffre(chemin):
             "Le fichier \(nomCourt(chemin)) est protege par un mot de passe."
                 + " Retire la protection avant de le lire."
+        case let .formatExclu(chemin, format):
+            "Le fichier \(nomCourt(chemin)) est au format \(format), que le lecteur refuse"
+                + " d ouvrir pour raison de securite : ce format n a pas de decompresseur"
+                + " libre auditable. Convertis le en CBZ ou en CB7 pour le lire."
+        case let .moteurIndisponible(chemin, format):
+            "Le fichier \(nomCourt(chemin)) est au format \(format), qui n est pas lisible"
+                + " sur cet appareil. Convertis le en CBZ pour le lire partout."
         }
     }
 

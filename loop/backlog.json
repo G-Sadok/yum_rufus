@@ -362,7 +362,9 @@
       "depend_de": [
         "F014"
       ],
-      "statut": "a_faire"
+      "statut": "bloque",
+      "modifie_le": "2026-08-25T01:33:08Z",
+      "derniere_erreur": "aucune progression sur deux tentatives"
     },
     {
       "id": "F017",

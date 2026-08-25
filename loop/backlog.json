@@ -362,7 +362,7 @@
       "depend_de": [
         "F014"
       ],
-      "statut": "bloque",
+      "statut": "a_faire",
       "modifie_le": "2026-08-25T10:13:37Z",
       "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },

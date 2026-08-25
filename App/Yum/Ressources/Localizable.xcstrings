@@ -1,6 +1,78 @@
 {
   "sourceLanguage" : "fr",
   "strings" : {
+    "categorie.creer" : {
+      "comment" : "Barre de categories, section 5.1. Libelle absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle categorie"
+          }
+        }
+      }
+    },
+    "categorie.deplacerApres" : {
+      "comment" : "Barre de categories, section 5.1. Rang dans la barre, jamais une direction d ecran",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deplacer apres"
+          }
+        }
+      }
+    },
+    "categorie.deplacerAvant" : {
+      "comment" : "Barre de categories, section 5.1. Rang dans la barre, jamais une direction d ecran",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deplacer avant"
+          }
+        }
+      }
+    },
+    "categorie.renommer" : {
+      "comment" : "Barre de categories, section 5.1. Libelle absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
+          }
+        }
+      }
+    },
+    "categorie.supprimer" : {
+      "comment" : "Barre de categories, section 5.1. Meme libelle que la selection multiple du tableau 6.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "categorie.tout" : {
+      "comment" : "DESIGN-SPEC.md, section 5.1, premier onglet de la barre de categories",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout"
+          }
+        }
+      }
+    },
     "etatVide.bibliotheque.action" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.3",
       "extractionState" : "manual",

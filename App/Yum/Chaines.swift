@@ -122,11 +122,36 @@ enum Chaines {
         static let abandonne = String(localized: "statut.abandonne")
     }
 
+    /// Historique, section 5.2, tableau 6.5, et modale de la section 4.8.
+    ///
+    /// Le tableau 6.5 ne nomme que `Effacer l historique`. Les deux en tetes de
+    /// jour, l etiquette du bouton de suppression et les trois textes de la
+    /// modale de confirmation ne sont pas dessines par le document : ils
+    /// suivent les regles d ecriture de la section 6, voix active, le libelle
+    /// dit ce qui se passe, la description nomme ce qui n est pas touche.
+    enum Historique {
+        static let effacer = String(localized: "historique.effacer")
+        static let aujourdHui = String(localized: "historique.aujourdHui")
+        static let hier = String(localized: "historique.hier")
+        static let supprimerLEntree = String(localized: "historique.supprimerLEntree")
+        static let confirmationTitre = String(localized: "historique.confirmation.titre")
+        static let confirmationDescription = String(
+            localized: "historique.confirmation.description"
+        )
+        static let confirmationAnnuler = String(localized: "historique.confirmation.annuler")
+        static let confirmationEffacer = String(localized: "historique.confirmation.effacer")
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")
         static let ficheDeSerieTitre = String(localized: "erreur.ficheDeSerie.titre")
         static let ficheDeSeriePhrase = String(localized: "erreur.ficheDeSerie.phrase")
+        static let historiqueTitre = String(localized: "erreur.historique.titre")
+        static let historiquePhrase = String(localized: "erreur.historique.phrase")
+        static let historiqueRepartirDeZero = String(
+            localized: "erreur.historique.repartirDeZero"
+        )
     }
 
     /// Etats vides, tableau 6.3.

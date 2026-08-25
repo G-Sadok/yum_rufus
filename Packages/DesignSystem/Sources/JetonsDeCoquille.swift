@@ -98,6 +98,18 @@ extension Jetons {
         public static let hauteurDeBouton: Double = 28
         /// Rayon d un bouton de barre d outils, section 4.6.
         public static let rayonDeBouton = Rayon.ongletActif
+        /// Ecart entre deux commandes de la barre.
+        ///
+        /// Le document chiffre la largeur de chaque commande de la section 5.1
+        /// sans chiffrer leur ecart. Il sort donc de l echelle de la section
+        /// 1.7, au premier cran qui separe deux cibles sans les coller.
+        public static let ecartEntreCommandes = Espace.x3
+        /// Ecart entre le symbole et le libelle d une commande.
+        public static let ecartDansUneCommande = Espace.x2
+        /// Remplissage horizontal d une commande a libelle.
+        public static let remplissageDeCommande = Espace.x3
+        /// Libelle d une commande de barre d outils.
+        public static let libelleDeCommande = Typo.callout
     }
 
     /// Zone de contenu, sections 2.3 et 2.5.

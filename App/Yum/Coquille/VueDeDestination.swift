@@ -20,6 +20,10 @@ struct VueDeDestination: View {
     /// Destination affichee.
     let destination: DestinationPrincipale
 
+    /// Etat de l ecran Historique, partage avec la barre d outils qui porte sa
+    /// commande d effacement.
+    let historique: EtatDHistorique
+
     /// Ouvre une autre destination, pour les actions des etats vides.
     let ouvrir: (DestinationPrincipale) -> Void
 
@@ -38,15 +42,14 @@ struct VueDeDestination: View {
             )
 
         case .historique:
-            VueDEtatDeContenu(
-                .vide(
-                    symbole: Jetons.icone(de: destination),
-                    titre: Chaines.EtatVide.historiqueTitre,
-                    phrase: Chaines.EtatVide.historiquePhrase,
-                    action: ActionDEtat(libelle: Chaines.EtatVide.historiqueAction) {
-                        ouvrir(.bibliotheque)
-                    }
-                )
+            // La navigation vers le lecteur n existe pas encore dans la
+            // coquille. Plutot qu une ligne qui ne repond pas au clic, les
+            // entrees restent inertes tant que rien ne peut les ouvrir : un
+            // bouton qui ment coute plus cher qu un bouton absent.
+            EcranDHistorique(
+                etat: historique,
+                ouvrirLeChapitre: nil,
+                ouvrirLaBibliotheque: { ouvrir(.bibliotheque) }
             )
 
         case .parcourir:

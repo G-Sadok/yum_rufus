@@ -13,10 +13,22 @@ import SwiftUI
 @main
 struct YumApp: App {
     @State private var etat = EtatDeCoquille()
+    @State private var services: ServicesDeLApplication
+    @State private var historique: EtatDHistorique
+
+    /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
+    /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
+    /// chaque apparition paierait la migration a chaque aller retour.
+    init() {
+        let services = ServicesDeLApplication()
+
+        _services = State(initialValue: services)
+        _historique = State(initialValue: EtatDHistorique(magasin: services.historique))
+    }
 
     var body: some Scene {
         WindowGroup {
-            CoquilleDeLApplication(etat: etat)
+            CoquilleDeLApplication(etat: etat, historique: historique)
         }
         #if os(macOS)
         .defaultSize(

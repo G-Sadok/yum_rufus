@@ -6,8 +6,10 @@ import SwiftUI
 // Hauteur 60, unifiee avec la barre de titre, fond `surface.chrome`, filet de
 // 1 px en dessous. Le titre de l ecran se pose a 172 du bord de la fenetre.
 //
-// La barre ne porte ici que le titre et la bascule de repli. Les commandes
-// propres a chaque ecran, tri, ajout, recherche, arrivent avec l ecran.
+// Outre le titre et la bascule de repli, la barre accueille les commandes
+// propres a l ecran affiche, comme `Effacer l historique` de la section 5.2.
+// Elles arrivent avec leur ecran, sous forme de vues deja composees : la
+// coquille leur donne une place, elle n en connait aucune.
 //
 
 /// Bascule de repli de la barre laterale, posee dans la barre d outils.
@@ -21,12 +23,13 @@ struct BasculeDeRepli {
 }
 
 /// Barre d outils de la coquille.
-struct BarreDOutilsDeCoquille: View {
+struct BarreDOutilsDeCoquille<Actions: View>: View {
     @Environment(\.palette) private var palette
     @FocusState private var basculeFocalisee: Bool
 
     let titre: String
     let bascule: BasculeDeRepli?
+    @ViewBuilder let actions: Actions
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -35,11 +38,15 @@ struct BarreDOutilsDeCoquille: View {
                 .foregroundStyle(palette.textes.primary.couleur)
                 .padding(.leading, Jetons.BarreDOutils.decalageDuTitre)
 
-            if let bascule {
-                boutonDeBascule(bascule)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, Jetons.Contenu.margeLaterale)
+            HStack(spacing: Jetons.BarreDOutils.ecartEntreCommandes) {
+                actions
+
+                if let bascule {
+                    boutonDeBascule(bascule)
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.trailing, Jetons.Contenu.margeLaterale)
         }
         .frame(maxWidth: .infinity, minHeight: Jetons.BarreDOutils.hauteur)
         .background(palette.surfaces.chrome.couleur)

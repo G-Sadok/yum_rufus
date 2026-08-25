@@ -15,19 +15,45 @@ struct CoquilleDeLApplication: View {
     /// Etat de la navigation principale.
     let etat: EtatDeCoquille
 
+    /// Etat de l ecran Historique, partage entre sa zone de contenu et la
+    /// commande d effacement de la barre d outils.
+    let historique: EtatDHistorique
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
             entrees: entrees,
             appelPremium: appelPremium,
-            libelleDuRepli: Chaines.Navigation.repli
-        ) { destination in
-            VueDeDestination(destination: destination) { cible in
-                etat.selectionner(cible)
-            }
-        }
+            libelleDuRepli: Chaines.Navigation.repli,
+            actions: commandes(de:),
+            contenu: contenu(de:)
+        )
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
+    }
+
+    private func contenu(de destination: DestinationPrincipale) -> some View {
+        VueDeDestination(destination: destination, historique: historique) { cible in
+            etat.selectionner(cible)
+        }
+    }
+
+    /// Commandes de barre d outils de la destination affichee.
+    ///
+    /// La section 5.2 pose `Effacer l historique` dans la barre d outils. Le
+    /// bouton disparait quand l historique est deja vide : une commande qui n a
+    /// rien a effacer n a rien a faire la, et l etat vide invite deja a agir
+    /// ailleurs.
+    @ViewBuilder
+    private func commandes(de destination: DestinationPrincipale) -> some View {
+        if destination == .historique, historique.porteDesEntrees {
+            CommandeDeBarreDOutils(
+                libelle: Chaines.Historique.effacer,
+                symbole: Jetons.IconeDHistorique.effacer
+            ) {
+                historique.demanderLEffacement()
+            }
+        }
     }
 
     private var entrees: [EntreeDeNavigation] {

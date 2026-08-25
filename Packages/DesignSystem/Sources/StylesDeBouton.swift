@@ -3,9 +3,10 @@ import SwiftUI
 //
 // Boutons, section 4.6 de DESIGN-SPEC.md.
 //
-// Deux variantes suffisent a la coquille : principal, aplat accent, et
-// secondaire, fond `surface.menu` avec contour. Les variantes discrete et
-// destructive arrivent avec les ecrans qui en ont besoin.
+// Trois variantes sur les quatre du tableau : principal, aplat accent,
+// secondaire, fond `surface.menu` avec contour, et destructif, transparent avec
+// texte et contour en `danger`. La variante discrete arrive avec l ecran qui en
+// a besoin.
 //
 
 /// Bouton principal, aplat `accent`, texte blanc en graisse 600.
@@ -76,6 +77,49 @@ public struct BoutonSecondaire: ButtonStyle {
                 RoundedRectangle(cornerRadius: rayon, style: .continuous)
                     .strokeBorder(
                         palette.semantiques.border.couleur,
+                        lineWidth: Jetons.Fenetre.epaisseurDuFilet
+                    )
+            }
+    }
+}
+
+/// Bouton destructif, fond transparent, texte et contour en `danger`.
+///
+/// Reserve a ce qui detruit, comme la confirmation d un effacement. Le tableau
+/// 4.6 ne lui donne pas d aplat : une action irreversible ne doit pas etre le
+/// bouton le plus attirant d une modale.
+public struct BoutonDestructif: ButtonStyle {
+    @Environment(\.palette) private var palette
+
+    /// Hauteur du bouton.
+    public let hauteur: Double
+    /// Rayon du bouton.
+    public let rayon: Double
+
+    public init(hauteur: Double, rayon: Double) {
+        self.hauteur = hauteur
+        self.rayon = rayon
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .style(Jetons.Typo.body)
+            .foregroundStyle(palette.semantiques.danger.couleur)
+            .padding(.horizontal, Jetons.Bouton.remplissageHorizontal)
+            .frame(minHeight: hauteur)
+            .background(fond(pressee: configuration.isPressed))
+            .contentShape(Rectangle())
+    }
+
+    /// Le tableau 4.6 ne donne aucun fond a cette variante au repos. L etat
+    /// presse reprend la regle generale du meme tableau, le fond de survol.
+    private func fond(pressee: Bool) -> some View {
+        RoundedRectangle(cornerRadius: rayon, style: .continuous)
+            .fill(pressee ? palette.surfaces.cardHover.couleur : .clear)
+            .overlay {
+                RoundedRectangle(cornerRadius: rayon, style: .continuous)
+                    .strokeBorder(
+                        palette.semantiques.danger.couleur,
                         lineWidth: Jetons.Fenetre.epaisseurDuFilet
                     )
             }

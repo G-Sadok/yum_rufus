@@ -20,8 +20,19 @@ public enum SchemaDeBase {
     /// reglage arrive par une migration supplementaire, purement additive.
     public static let reglageDeSensDeLecture = "2026-08-25-01-reglage-de-sens-de-lecture"
 
+    /// Identifiant de la migration qui ajoute le total de chapitres par serie.
+    ///
+    /// Le filet de progression de la grille a besoin d une part, donc d un
+    /// denominateur. Comme le nombre de non lus, il est denormalise et maintenu
+    /// par declencheur, jamais calcule pendant le defilement.
+    public static let totalDeChapitres = "2026-08-25-02-total-de-chapitres"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
-    public static let migrationsAttendues = [creationDuSchema, reglageDeSensDeLecture]
+    public static let migrationsAttendues = [
+        creationDuSchema,
+        reglageDeSensDeLecture,
+        totalDeChapitres,
+    ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
     public static func migrateur() -> DatabaseMigrator {
@@ -37,6 +48,11 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(reglageDeSensDeLecture) { base in
             try creerLaTableDeReglageDeLecture(base)
+        }
+
+        migrateur.registerMigration(totalDeChapitres) { base in
+            try ajouterLeTotalDeChapitres(base)
+            try creerLesDeclencheursDeTotal(base)
         }
 
         return migrateur

@@ -79,6 +79,11 @@ let package = Package(
             path: "Sources/Tests"
         ),
         .testTarget(
+            name: "ImagePipelineTests",
+            dependencies: ["ImagePipeline", "Core"],
+            path: "ImagePipeline/Tests"
+        ),
+        .testTarget(
             name: "ReaderEngineTests",
             dependencies: ["ReaderEngine", "Core"],
             path: "ReaderEngine/Tests"

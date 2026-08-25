@@ -83,9 +83,12 @@ let package = Package(
             dependencies: ["ImagePipeline", "Core"],
             path: "ImagePipeline/Tests"
         ),
+        // ImagePipeline apparait ici avec la precharge : les tests du moteur
+        // manipulent des pages decodees et le cache memoire, tous deux definis
+        // par ce paquet.
         .testTarget(
             name: "ReaderEngineTests",
-            dependencies: ["ReaderEngine", "Core"],
+            dependencies: ["ReaderEngine", "Core", "ImagePipeline"],
             path: "ReaderEngine/Tests"
         ),
         .testTarget(

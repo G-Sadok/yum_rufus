@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ComicInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Title>Le Retour</Title>
+  <Series>Chroniques de la Cite Basse</Series>
+  <Number>12</Number>
+  <Count>24</Count>
+  <Volume>2</Volume>
+  <AlternateSeries />
+  <Summary>La cite se reveille apres trois jours de silence. Nara comprend que la panne n avait rien d accidentel, et que le registre des acces a ete efface le meme soir.</Summary>
+  <Notes>Etiquete avec un outil de catalogage, revision 3</Notes>
+  <Year>2019</Year>
+  <Month>7</Month>
+  <Day>3</Day>
+  <Writer>A. Mercier</Writer>
+  <Penciller>A. Mercier</Penciller>
+  <Inker>L. Baradan</Inker>
+  <Letterer>L. Baradan</Letterer>
+  <Publisher>Editions du Quai</Publisher>
+  <Genre>Science Fiction, Drame</Genre>
+  <Web>https://exemple.invalid/cite-basse/12</Web>
+  <PageCount>32</PageCount>
+  <LanguageISO>fr</LanguageISO>
+  <Format>Serie</Format>
+  <BlackAndWhite>No</BlackAndWhite>
+  <Manga>No</Manga>
+  <Pages>
+    <Page Image="0" ImageSize="512000" Type="FrontCover" ImageWidth="1988" ImageHeight="3056" />
+    <Page Image="1" ImageSize="480312" ImageWidth="1988" ImageHeight="3056" />
+    <Page Image="2" ImageSize="491004" ImageWidth="1988" ImageHeight="3056" />
+  </Pages>
+</ComicInfo>

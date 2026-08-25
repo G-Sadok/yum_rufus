@@ -44,8 +44,19 @@ public enum ErreurDeDocument: Error, Sendable, Equatable {
     /// L entree est compressee avec une methode que le lecteur ne connait pas.
     case compressionNonPriseEnCharge(nom: String, methode: Int)
 
-    /// Le conteneur est protege par un mot de passe.
+    /// Le conteneur est protege par un mot de passe, et aucun n a ete fourni.
+    ///
+    /// C est une demande, pas un echec definitif : l appelant reessaie la meme
+    /// ouverture avec le mot de passe saisi par l utilisateur.
     case conteneurChiffre(chemin: String)
+
+    /// Un mot de passe a ete fourni, le conteneur l a refuse.
+    ///
+    /// Distinct de `conteneurChiffre` pour que l ecran sache s il doit demander
+    /// un mot de passe ou dire que celui saisi ne convient pas. Confondre les
+    /// deux donnerait une invite qui se rouvre a l identique sans jamais dire a
+    /// l utilisateur qu il se trompe.
+    case motDePasseIncorrect(chemin: String)
 
     /// Le format est reconnu mais volontairement exclu du lecteur.
     ///
@@ -90,7 +101,10 @@ public enum ErreurDeDocument: Error, Sendable, Equatable {
                 + " Reencode l archive en ZIP standard."
         case let .conteneurChiffre(chemin):
             "Le fichier \(nomCourt(chemin)) est protege par un mot de passe."
-                + " Retire la protection avant de le lire."
+                + " Saisis le pour ouvrir ce chapitre."
+        case let .motDePasseIncorrect(chemin):
+            "Le mot de passe ne convient pas pour \(nomCourt(chemin))."
+                + " Verifie la casse et la disposition du clavier, puis reessaie."
         case let .formatExclu(chemin, format):
             "Le fichier \(nomCourt(chemin)) est au format \(format), que le lecteur refuse"
                 + " d ouvrir pour raison de securite : ce format n a pas de decompresseur"

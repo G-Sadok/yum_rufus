@@ -1,6 +1,7 @@
 import Archive
 import Core
 import Foundation
+import ImagePipeline
 
 //
 // SourceFichiersLocaux
@@ -290,6 +291,13 @@ public actor SourceFichiersLocaux: SourceProvider {
         }
         if DocumentTar.extensions.contains(format) {
             return try DocumentTar(contenuDe: emplacement)
+        }
+        // Le PDF protege remonte ici son `ErreurDeDocument.conteneurChiffre`
+        // telle quelle. C est ce que l ecran attend pour demander le mot de
+        // passe, et la traduire en erreur de source la rendrait indiscernable
+        // d une archive cassee.
+        if DocumentPdf.extensions.contains(format) {
+            return try DocumentPdf(contenuDe: emplacement)
         }
 
         throw ErreurDeSource.formatNonPrisEnCharge(nom: chapitre.titre, format: format)

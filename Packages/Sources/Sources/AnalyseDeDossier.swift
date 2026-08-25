@@ -1,6 +1,7 @@
 import Archive
 import Core
 import Foundation
+import ImagePipeline
 
 //
 // AnalyseDeDossier
@@ -37,6 +38,7 @@ public enum FormatsDeConteneur {
     /// Extensions que le projet sait deja ouvrir.
     public static let lisibles: Set<String> = DocumentZip.extensions
         .union(DocumentTar.extensions)
+        .union(DocumentPdf.extensions)
 
     /// Extensions reconnues comme chapitres, lisibles ou non.
     ///
@@ -53,7 +55,6 @@ public enum FormatsDeConteneur {
         // n a pas d acces aleatoire, donc pas d index a mettre en cache. Il
         // demande une extraction complete, qui viendra avec le 7z solide.
         "gz",
-        "pdf",
         "epub",
     ])
 }

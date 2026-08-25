@@ -75,6 +75,48 @@ struct SourceFichiersLocauxTests {
         }
     }
 
+    @Test("Les pages d un chapitre en PDF sont enumerees comme celles d une archive")
+    func pagesDUnPdf() async throws {
+        let arbre = try ArbreDeTest()
+        try arbre.pdf("Serie E/Chapitre 1.pdf", pages: 7)
+
+        let environnement = try EnvironnementDeSource(arbre: arbre)
+        let source = try environnement.sourcePremierLancement()
+        let pages = try await source.pages(pour: "Serie E/Chapitre 1.pdf")
+
+        #expect(pages.map(\.index) == Array(0..<7))
+        #expect(pages.first?.entree == "page-0001")
+        #expect(pages.map(\.estDansUnConteneur) == Array(repeating: true, count: 7))
+
+        withExtendedLifetime(environnement) {}
+    }
+
+    @Test("Un PDF protege demande son mot de passe au lieu de se dire illisible")
+    func pdfProtege() async throws {
+        let arbre = try ArbreDeTest()
+        let emplacement = try arbre.pdf("Serie E/Chapitre 2.pdf", pages: 3, motDePasse: "kokoro")
+
+        let environnement = try EnvironnementDeSource(arbre: arbre)
+        let source = try environnement.sourcePremierLancement()
+
+        let erreur = await #expect(throws: ErreurDeDocument.self) {
+            _ = try await source.pages(pour: "Serie E/Chapitre 2.pdf")
+        }
+
+        // Le cas est compare, pas le chemin en entier : la source travaille sur
+        // le dossier tel que le systeme le lui a rendu, prefixe /private compris,
+        // qui n est pas celui que l arbre de test a fabrique.
+        guard case let .conteneurChiffre(chemin) = try #require(erreur) else {
+            Issue.record("erreur inattendue : \(String(describing: erreur))")
+
+            return
+        }
+
+        #expect(chemin.hasSuffix(emplacement.lastPathComponent))
+
+        withExtendedLifetime(environnement) {}
+    }
+
     @Test("Un format pas encore lisible nomme le format dans son refus")
     func formatNonLisible() async throws {
         let arbre = try ArbreDeTest()

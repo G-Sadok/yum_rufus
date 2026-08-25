@@ -362,9 +362,9 @@
       "depend_de": [
         "F014"
       ],
-      "statut": "a_faire",
-      "modifie_le": "2026-08-25T01:33:08Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "statut": "bloque",
+      "modifie_le": "2026-08-25T10:13:37Z",
+      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },
     {
       "id": "F017",
@@ -425,9 +425,7 @@
       "depend_de": [
         "F008"
       ],
-      "statut": "a_faire",
-      "modifie_le": "2026-08-25T01:33:20Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "statut": "a_faire"
     },
     {
       "id": "F020",
@@ -470,9 +468,7 @@
       "depend_de": [
         "F005"
       ],
-      "statut": "a_faire",
-      "modifie_le": "2026-08-25T01:33:32Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "statut": "a_faire"
     },
     {
       "id": "F022",

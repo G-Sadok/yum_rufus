@@ -36,6 +36,7 @@ import Foundation
 public enum FormatsDeConteneur {
     /// Extensions que le projet sait deja ouvrir.
     public static let lisibles: Set<String> = DocumentZip.extensions
+        .union(DocumentTar.extensions)
 
     /// Extensions reconnues comme chapitres, lisibles ou non.
     ///
@@ -48,8 +49,9 @@ public enum FormatsDeConteneur {
         "rar",
         "cb7",
         "7z",
-        "cbt",
-        "tar",
+        // Le TAR compresse reste absent de la liste des lisibles : un flux gzip
+        // n a pas d acces aleatoire, donc pas d index a mettre en cache. Il
+        // demande une extraction complete, qui viendra avec le 7z solide.
         "gz",
         "pdf",
         "epub",

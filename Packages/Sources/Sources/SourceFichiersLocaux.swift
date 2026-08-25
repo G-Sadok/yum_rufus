@@ -252,19 +252,16 @@ public actor SourceFichiersLocaux: SourceProvider {
 
     /// Pages d un chapitre range dans un conteneur.
     ///
-    /// L archive est ouverte ici et refermee aussitot : seul son index central
-    /// est lu, aucune page n est decompressee. Les octets viendront a la
-    /// demande, par le protocole `DocumentLocal`.
+    /// L archive est ouverte ici et refermee aussitot : seul son index est lu,
+    /// aucune page n est decompressee. Pour un TAR, qui ne porte pas d index,
+    /// c est le cache sur disque qui evite d en reconstruire un a chaque fois.
+    /// Les octets viendront a la demande, par le protocole `DocumentLocal`.
     private func pagesDArchive(
         _ emplacement: URL,
         format: String,
         chapitre: ChapitreLocal
     ) throws -> [PageDistante] {
-        guard FormatsDeConteneur.lisibles.contains(format) else {
-            throw ErreurDeSource.formatNonPrisEnCharge(nom: chapitre.titre, format: format)
-        }
-
-        let document = try DocumentZip(contenuDe: emplacement)
+        let document = try Self.ouvrir(emplacement, format: format, chapitre: chapitre)
 
         return try document.toutesLesPages().map { reference in
             PageDistante(
@@ -275,6 +272,27 @@ public actor SourceFichiersLocaux: SourceProvider {
                 octets: reference.tailleOctets
             )
         }
+    }
+
+    /// Choisit le lecteur qui correspond a l extension du conteneur.
+    ///
+    /// Le format decide, jamais le contenu : un fichier renomme en .cbz reste
+    /// annonce comme un ZIP par le systeme de fichiers, et un lecteur qui
+    /// devinerait au vu des premiers octets ouvrirait sans le dire une archive
+    /// que l utilisateur croit d un autre type.
+    private static func ouvrir(
+        _ emplacement: URL,
+        format: String,
+        chapitre: ChapitreLocal
+    ) throws -> any DocumentLocal {
+        if DocumentZip.extensions.contains(format) {
+            return try DocumentZip(contenuDe: emplacement)
+        }
+        if DocumentTar.extensions.contains(format) {
+            return try DocumentTar(contenuDe: emplacement)
+        }
+
+        throw ErreurDeSource.formatNonPrisEnCharge(nom: chapitre.titre, format: format)
     }
 
     // MARK: Conversions

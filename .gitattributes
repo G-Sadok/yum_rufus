@@ -1,0 +1,14 @@
+# Etat de la boucle, jamais fusionne ligne a ligne.
+#
+# Chaque branche de fonctionnalite commite loop/backlog.json avec le statut
+# qu elle vient d ecrire, pendant que la branche principale en commite un
+# autre. Fusionner les deux textes produit un conflit des qu une branche vit
+# un peu longtemps, et ce conflit bloque l integration d un travail par
+# ailleurs valide.
+#
+# La branche principale fait foi. Le statut definitif est de toute facon
+# ecrit apres la fusion, par boucle-terminer.sh.
+#
+# Le pilote de fusion doit exister dans la configuration locale :
+#   git config merge.ours.driver true
+loop/backlog.json merge=ours

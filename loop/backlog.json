@@ -475,9 +475,10 @@
       "depend_de": [
         "F005"
       ],
-      "statut": "en_cours",
+      "statut": "termine",
       "modifie_le": "2026-08-25T12:19:27Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "derniere_erreur": "aucune progression sur deux tentatives",
+      "termine_le": "2026-08-25T17:16:28Z"
     },
     {
       "id": "F022",

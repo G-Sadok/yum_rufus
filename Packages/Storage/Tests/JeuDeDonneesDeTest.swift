@@ -19,12 +19,15 @@ enum JeuDeDonneesDeTest {
 
     /// Insere une source, une serie et le nombre de chapitres demande.
     ///
-    /// Les chapitres sont crees non lus, avec une page chacun, et numerotes de
-    /// un a `nombreDeChapitres`.
+    /// Les chapitres sont crees non lus, avec `pagesParChapitre` pages chacun,
+    /// et numerotes de un a `nombreDeChapitres`. Les tests de seuil de lecture
+    /// ont besoin de chapitres assez longs pour que quatre vingt quinze pour
+    /// cent tombe ailleurs que sur la premiere page.
     @discardableResult
     static func inserer(
         dans base: BaseDeDonnees,
         nombreDeChapitres: Int,
+        pagesParChapitre: Int = 1,
         titre: String = "Serie de test"
     ) throws -> Contenu {
         let source = Source(type: .fichiersLocaux, nom: "Dossier de test")
@@ -40,7 +43,7 @@ enum JeuDeDonneesDeTest {
                 mangaId: manga.id,
                 identifiantDistant: "chapitre-\(rang)",
                 numero: Double(rang + 1),
-                nombrePages: 1,
+                nombrePages: pagesParChapitre,
                 ordreDansSerie: rang
             )
         }
@@ -51,7 +54,10 @@ enum JeuDeDonneesDeTest {
 
             for chapitre in chapitres {
                 try chapitre.insert(connexion)
-                try Page(chapitreId: chapitre.id, index: 0).insert(connexion)
+
+                for index in 0..<pagesParChapitre {
+                    try Page(chapitreId: chapitre.id, index: index).insert(connexion)
+                }
             }
         }
 

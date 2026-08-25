@@ -35,12 +35,22 @@ public enum SchemaDeBase {
     /// Comme les precedentes, la migration est purement additive.
     public static let reglageDeListeDeChapitres = "2026-08-25-03-reglage-de-liste-de-chapitres"
 
+    /// Identifiant de la migration qui ajoute le decalage de defilement a la
+    /// position de reprise.
+    ///
+    /// La section 7.5 decrit une position en trois parties : le chapitre, la
+    /// page, et le decalage de defilement des modes verticaux. Les deux
+    /// premieres existent depuis la creation du schema, la troisieme arrive
+    /// ici, sans rien detruire.
+    public static let decalageDeDefilement = "2026-08-25-04-decalage-de-defilement"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
         reglageDeSensDeLecture,
         totalDeChapitres,
         reglageDeListeDeChapitres,
+        decalageDeDefilement,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -66,6 +76,10 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(reglageDeListeDeChapitres) { base in
             try creerLaTableDeListeDeChapitres(base)
+        }
+
+        migrateur.registerMigration(decalageDeDefilement) { base in
+            try ajouterLeDecalageDeDefilement(base)
         }
 
         return migrateur

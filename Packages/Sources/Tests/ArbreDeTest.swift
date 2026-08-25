@@ -1,3 +1,4 @@
+import CoreGraphics
 import Foundation
 
 //
@@ -70,6 +71,12 @@ final class ArbreDeTest {
         return try fichier(chemin, contenu: ConstructeurDeZipDeTest.octets(entrees))
     }
 
+    /// Ecrit un PDF de `pages` pages vides au format A4.
+    @discardableResult
+    func pdf(_ chemin: String, pages: Int, motDePasse: String? = nil) throws -> URL {
+        try fichier(chemin, contenu: ConstructeurDePdfDeTest.octets(pages: pages, motDePasse: motDePasse))
+    }
+
     /// Renomme une entree de l arbre et rend sa nouvelle URL.
     @discardableResult
     func renommer(_ chemin: String, en nouveau: String) throws -> URL {
@@ -102,6 +109,47 @@ final class ArbreDeTest {
         racine = cible
 
         return cible
+    }
+}
+
+/// Ecrit des PDF de test, en clair ou proteges.
+///
+/// Meme raison que pour le ZIP ci dessous : le constructeur de la suite
+/// ImagePipeline n est pas visible d ici, et ces tests n ont pas besoin de ses
+/// options. Une page A4 vide suffit a verifier que la source enumere bien le
+/// chapitre et que la protection remonte jusqu a l appelant.
+enum ConstructeurDePdfDeTest {
+    static func octets(pages: Int, motDePasse: String? = nil) -> Data {
+        let sortie = NSMutableData()
+
+        guard let consommateur = CGDataConsumer(data: sortie) else { return Data() }
+
+        var boite = CGRect(x: 0, y: 0, width: 595, height: 842)
+        var informations: [CFString: Any] = [:]
+
+        if let motDePasse {
+            informations[kCGPDFContextUserPassword] = motDePasse
+            informations[kCGPDFContextOwnerPassword] = motDePasse
+        }
+
+        guard let contexte = CGContext(
+            consumer: consommateur,
+            mediaBox: &boite,
+            informations as CFDictionary
+        ) else {
+            return Data()
+        }
+
+        for _ in 0..<pages {
+            contexte.beginPDFPage(nil)
+            contexte.setFillColor(gray: 0.5, alpha: 1)
+            contexte.fill(boite)
+            contexte.endPDFPage()
+        }
+
+        contexte.closePDF()
+
+        return sortie as Data
     }
 }
 

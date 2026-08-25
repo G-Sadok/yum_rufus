@@ -44,7 +44,15 @@ let package = Package(
         ),
         // Sources depend d Archive pour compter les pages d un chapitre range
         // dans un conteneur, sans redupliquer la lecture d index central.
-        .target(name: "Sources", dependencies: ["Core", "Archive"], path: "Sources/Sources"),
+        // ImagePipeline apparait avec le PDF : une page de PDF n existe qu une
+        // fois rasterisee, son lecteur vit donc dans la chaine d images, et la
+        // source locale a besoin de lui pour enumerer les pages d un chapitre
+        // range en PDF comme elle le fait pour un CBZ.
+        .target(
+            name: "Sources",
+            dependencies: ["Core", "Archive", "ImagePipeline"],
+            path: "Sources/Sources"
+        ),
         .target(name: "Archive", dependencies: ["Core"], path: "Archive/Sources"),
         .target(name: "ImagePipeline", dependencies: ["Core"], path: "ImagePipeline/Sources"),
         .target(
@@ -75,7 +83,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SourcesTests",
-            dependencies: ["Sources", "Core", "Archive"],
+            dependencies: ["Sources", "Core", "Archive", "ImagePipeline"],
             path: "Sources/Tests"
         ),
         .testTarget(

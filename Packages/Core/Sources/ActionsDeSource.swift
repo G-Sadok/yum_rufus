@@ -1,0 +1,101 @@
+//
+// ActionsDeSource
+//
+// La traduction des capacites de la section 4.1 en actions offertes par
+// l interface. La regle est ecrite ainsi : l interface ne propose que les
+// actions correspondant aux capacites declarees, et une source sans capacite de
+// recherche n affiche pas de champ de recherche.
+//
+// Ce tableau vit dans Core et non dans la couche vue, pour deux raisons. La
+// vue en aurait fait une suite de conditions dispersees dans plusieurs ecrans,
+// donc plusieurs endroits ou oublier une capacite. Et un tableau declaratif se
+// teste sur les soixante quatre combinaisons possibles, ce qu une suite de
+// conditions dans une vue ne permet pas.
+//
+
+/// Une action que l interface peut offrir sur une source.
+///
+/// L enumeration couvre a la fois les actions conditionnees par une capacite et
+/// celles que toute source rend, sans quoi la liste ne dirait pas ce que
+/// l interface a le droit d afficher, seulement ce qu elle doit cacher.
+public enum ActionDeSource: String, Sendable, Codable, CaseIterable, Hashable {
+    /// Ouvrir le catalogue de la source sur une section.
+    case parcourir
+
+    /// Ouvrir la fiche d une serie du catalogue.
+    case ouvrirUneSerie
+
+    /// Afficher la liste des chapitres d une serie.
+    case listerLesChapitres
+
+    /// Ouvrir un chapitre dans le lecteur.
+    case lireUnChapitre
+
+    /// Afficher le champ de recherche.
+    case rechercher
+
+    /// Afficher les filtres de genre et de statut.
+    case filtrer
+
+    /// Charger la suite du catalogue au defilement.
+    case chargerLaSuite
+
+    /// Proposer le telechargement hors ligne.
+    case telecharger
+
+    /// Publier la progression de lecture vers le serveur.
+    case publierLaProgression
+
+    /// Proposer le choix de la langue.
+    case choisirLaLangue
+
+    /// Capacite sans laquelle l action ne doit pas etre offerte.
+    ///
+    /// Nul veut dire que l action est offerte par toute source. Ces quatre
+    /// actions la sont parce que le protocole les impose a toutes les
+    /// implementations : parcourir, ouvrir une serie, lister ses chapitres et
+    /// lire un chapitre n ont aucune capacite associee dans la section 4.1.
+    public var capaciteRequise: SourceCapacites? {
+        switch self {
+        case .parcourir, .ouvrirUneSerie, .listerLesChapitres, .lireUnChapitre: nil
+        case .rechercher: .recherche
+        case .filtrer: .filtres
+        case .chargerLaSuite: .pagination
+        case .telecharger: .telechargement
+        case .publierLaProgression: .progressionDistante
+        case .choisirLaLangue: .plusieursLangues
+        }
+    }
+
+    /// Les actions que toute source rend, quelles que soient ses capacites.
+    public static var inconditionnelles: [ActionDeSource] {
+        allCases.filter { $0.capaciteRequise == nil }
+    }
+}
+
+extension SourceCapacites {
+    /// Les actions que l interface a le droit d offrir pour ces capacites.
+    ///
+    /// C est le seul point de decision. Un ecran qui veut savoir s il affiche
+    /// un champ de recherche interroge cet ensemble, il ne teste pas la
+    /// capacite lui meme : la difference se voit le jour ou une action demande
+    /// deux capacites.
+    public var actionsOffertes: Set<ActionDeSource> {
+        Set(ActionDeSource.allCases.filter { action in
+            guard let requise = action.capaciteRequise else {
+                return true
+            }
+
+            return contains(requise)
+        })
+    }
+
+    /// Vrai quand cette action peut etre offerte.
+    public func offre(_ action: ActionDeSource) -> Bool {
+        guard let requise = action.capaciteRequise else {
+            return true
+        }
+
+        return contains(requise)
+    }
+}

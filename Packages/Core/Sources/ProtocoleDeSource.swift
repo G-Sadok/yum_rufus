@@ -130,4 +130,30 @@ extension SourceProvider {
             throw ErreurDeSource.capaciteIndisponible(capacite: capacite, source: nom)
         }
     }
+
+    /// Les actions que l interface a le droit d offrir sur cette source.
+    ///
+    /// C est la lecture directe du tableau d `ActionDeSource`, faite ici pour
+    /// que l ecran n ait ni a connaitre les capacites ni a refaire le calcul.
+    public var actionsOffertes: Set<ActionDeSource> {
+        capacites.actionsOffertes
+    }
+
+    /// Vrai quand cette action peut etre offerte par cette source.
+    public func offre(_ action: ActionDeSource) -> Bool {
+        capacites.offre(action)
+    }
+
+    /// Leve si l action n est pas offerte par cette source.
+    ///
+    /// Le pendant de `exiger(_:)` du cote de l interface : une action declenchee
+    /// alors qu elle n aurait pas du etre affichee est refusee par la meme
+    /// erreur typee que la capacite correspondante.
+    public func exiger(_ action: ActionDeSource) throws {
+        guard let capacite = action.capaciteRequise else {
+            return
+        }
+
+        try exiger(capacite)
+    }
 }

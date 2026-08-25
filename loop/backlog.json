@@ -605,7 +605,8 @@
         "F026",
         "F019"
       ],
-      "statut": "en_cours"
+      "statut": "termine",
+      "termine_le": "2026-08-25T23:19:40Z"
     },
     {
       "id": "F028",

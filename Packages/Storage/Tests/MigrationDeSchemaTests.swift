@@ -29,7 +29,8 @@ struct MigrationDeSchemaTests {
         "chapitre": [
             "id", "mangaId", "identifiantDistant", "numero", "titre",
             "groupeTraduction", "langue", "datePublication", "nombrePages",
-            "estLu", "pageAtteinte", "dateLecture", "ordreDansSerie",
+            "estLu", "pageAtteinte", "decalageDeDefilement", "dateLecture",
+            "ordreDansSerie",
         ],
         "page": [
             "id", "chapitreId", "index", "urlDistante", "cheminLocal",

@@ -159,6 +159,15 @@ public struct Chapitre: Sendable, Codable, Identifiable, Hashable {
     /// Derniere page atteinte, indexee a partir de zero.
     public var pageAtteinte: Int
 
+    /// Part de la page atteinte deja depassee par le defilement, entre zero et
+    /// un. Voir `PositionDeLecture`, qui porte la meme valeur cote lecteur.
+    ///
+    /// Zero dans les modes pagines. C est la seconde moitie de la position de
+    /// reprise de la section 7.5 : sans elle, un chapitre webtoon rouvre en
+    /// haut d une page de vingt mille pixels que l utilisateur avait presque
+    /// finie.
+    public var decalageDeDefilement: Double
+
     public var dateLecture: Date?
 
     /// Rang du chapitre dans la serie. Distinct de `numero`, qui peut etre
@@ -177,6 +186,7 @@ public struct Chapitre: Sendable, Codable, Identifiable, Hashable {
         nombrePages: Int = 0,
         estLu: Bool = false,
         pageAtteinte: Int = 0,
+        decalageDeDefilement: Double = 0,
         dateLecture: Date? = nil,
         ordreDansSerie: Int
     ) {
@@ -191,6 +201,7 @@ public struct Chapitre: Sendable, Codable, Identifiable, Hashable {
         self.nombrePages = nombrePages
         self.estLu = estLu
         self.pageAtteinte = pageAtteinte
+        self.decalageDeDefilement = decalageDeDefilement
         self.dateLecture = dateLecture
         self.ordreDansSerie = ordreDansSerie
     }

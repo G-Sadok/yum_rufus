@@ -27,11 +27,20 @@ public enum SchemaDeBase {
     /// par declencheur, jamais calcule pendant le defilement.
     public static let totalDeChapitres = "2026-08-25-02-total-de-chapitres"
 
+    /// Identifiant de la migration qui installe le filtre et le tri de la liste
+    /// des chapitres, une ligne par serie.
+    ///
+    /// La fiche de serie de la section 5.6 de DESIGN-SPEC.md porte deux actions
+    /// Filtrer et Trier dont le choix doit survivre a la fermeture de l ecran.
+    /// Comme les precedentes, la migration est purement additive.
+    public static let reglageDeListeDeChapitres = "2026-08-25-03-reglage-de-liste-de-chapitres"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
         reglageDeSensDeLecture,
         totalDeChapitres,
+        reglageDeListeDeChapitres,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -53,6 +62,10 @@ public enum SchemaDeBase {
         migrateur.registerMigration(totalDeChapitres) { base in
             try ajouterLeTotalDeChapitres(base)
             try creerLesDeclencheursDeTotal(base)
+        }
+
+        migrateur.registerMigration(reglageDeListeDeChapitres) { base in
+            try creerLaTableDeListeDeChapitres(base)
         }
 
         return migrateur

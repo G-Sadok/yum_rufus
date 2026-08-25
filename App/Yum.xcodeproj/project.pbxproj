@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F008C0DE000000000000A013 /* Core in Frameworks */ = {isa = PBXBuildFile; productRef = F008C0DE000000000000A011 /* Core */; };
 		F008C0DE000000000000A014 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = F008C0DE000000000000A012 /* DesignSystem */; };
+		F016C0DE000000000000A013 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = F016C0DE000000000000A011 /* Storage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 			files = (
 				F008C0DE000000000000A013 /* Core in Frameworks */,
 				F008C0DE000000000000A014 /* DesignSystem in Frameworks */,
+				F016C0DE000000000000A013 /* Storage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +72,7 @@
 			packageProductDependencies = (
 				F008C0DE000000000000A011 /* Core */,
 				F008C0DE000000000000A012 /* DesignSystem */,
+				F016C0DE000000000000A011 /* Storage */,
 			);
 			productName = Yum;
 			productReference = F008C0DE000000000000A00E /* Yum.app */;
@@ -315,6 +318,10 @@
 		F008C0DE000000000000A012 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DesignSystem;
+		};
+		F016C0DE000000000000A011 /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Storage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

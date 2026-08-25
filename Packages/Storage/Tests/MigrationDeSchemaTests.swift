@@ -55,6 +55,7 @@ struct MigrationDeSchemaTests {
             "chapitreVu", "note", "dateSynchronisation",
         ],
         "reglageDeSensDeLecture": ["id", "sensGlobal"],
+        "reglageDeListeDeChapitres": ["mangaId", "filtre", "critereDeTri", "ordreDeTri"],
     ]
 
     /// Les quatre index de la section 3.2, avec ce qui les distingue d un

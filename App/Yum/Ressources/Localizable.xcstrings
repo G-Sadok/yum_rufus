@@ -73,6 +73,114 @@
         }
       }
     },
+    "chapitre.etiquetteDeTelechargement" : {
+      "comment" : "DESIGN-SPEC.md, sections 4.5 et 7, etiquette de l icone de telechargement",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telecharge"
+          }
+        }
+      }
+    },
+    "chapitre.lu" : {
+      "comment" : "DESIGN-SPEC.md, tableau 4.5, sous ligne d un chapitre deja ouvert",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lu"
+          }
+        }
+      }
+    },
+    "chapitre.nombreDePages" : {
+      "comment" : "DESIGN-SPEC.md, tableau 4.5, sous ligne d un chapitre non lu",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pages"
+          }
+        }
+      }
+    },
+    "chapitre.numerote" : {
+      "comment" : "DESIGN-SPEC.md, tableau 4.5, titre de la ligne de chapitre",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitre %@"
+          }
+        }
+      }
+    },
+    "chapitre.pageSurTotal" : {
+      "comment" : "DESIGN-SPEC.md, tableau 4.5, sous ligne d un chapitre en cours",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "page %1$lld sur %2$lld"
+          }
+        }
+      }
+    },
+    "chapitre.telecharge" : {
+      "comment" : "DESIGN-SPEC.md, tableau 4.5, suffixe d un chapitre disponible hors ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "telecharge"
+          }
+        }
+      }
+    },
+    "erreur.ficheDeSerie.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4. Le nom et le nombre sont les valeurs reelles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ a repondu, puis a coupe la connexion. Les %2$lld chapitres telecharges restent lisibles."
+          }
+        }
+      }
+    },
+    "erreur.ficheDeSerie.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La liste des chapitres n a pas pu etre lue"
+          }
+        }
+      }
+    },
+    "erreur.reessayer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, bouton secondaire de tout etat d erreur",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reessayer"
+          }
+        }
+      }
+    },
     "etatVide.bibliotheque.action" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.3",
       "extractionState" : "manual",
@@ -105,6 +213,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre bibliotheque est vide"
+          }
+        }
+      }
+    },
+    "etatVide.ficheDeSerie.action" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivre la serie"
+          }
+        }
+      }
+    },
+    "etatVide.ficheDeSerie.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La source connait cette serie mais n expose encore aucun chapitre. Suivez la serie pour etre prevenu."
+          }
+        }
+      }
+    },
+    "etatVide.ficheDeSerie.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun chapitre dans cette serie"
           }
         }
       }
@@ -189,6 +333,174 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rechercher un manga"
+          }
+        }
+      }
+    },
+    "fiche.afficherMoins" : {
+      "comment" : "Repli du resume. Libelle absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher moins"
+          }
+        }
+      }
+    },
+    "fiche.afficherPlus" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, resume de la fiche",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher plus"
+          }
+        }
+      }
+    },
+    "fiche.aucunChapitre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.6, bouton principal desactive",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun chapitre"
+          }
+        }
+      }
+    },
+    "fiche.commencerLaLecture" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, aucun chapitre lu",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer la lecture"
+          }
+        }
+      }
+    },
+    "fiche.dansMaListe" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, action secondaire de la fiche",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans ma liste"
+          }
+        }
+      }
+    },
+    "fiche.options" : {
+      "comment" : "Etiquette d accessibilite du bouton d options dessine par le wireframe 04",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options de la serie"
+          }
+        }
+      }
+    },
+    "fiche.reprendreChapitre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, lecture en cours",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre ch. %@"
+          }
+        }
+      }
+    },
+    "fiche.retour" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.1, retour depuis la fiche",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bibliotheque"
+          }
+        }
+      }
+    },
+    "fiche.suivre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, action secondaire de la fiche",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivre"
+          }
+        }
+      }
+    },
+    "fiche.toutEstLu" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, tous les chapitres lus",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout est lu"
+          }
+        }
+      }
+    },
+    "liste.compteurDeChapitres" : {
+      "comment" : "DESIGN-SPEC.md, section 5.6, en tete de la liste de chapitres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld chapitres"
+          }
+        }
+      }
+    },
+    "liste.filtrer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, liste de chapitres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrer"
+          }
+        }
+      }
+    },
+    "liste.toutMarquerLu" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, liste de chapitres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout marquer lu"
+          }
+        }
+      }
+    },
+    "liste.trier" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, liste de chapitres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier"
           }
         }
       }
@@ -285,6 +597,138 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passer a Premium"
+          }
+        }
+      }
+    },
+    "selection.compteur" : {
+      "comment" : "DESIGN-SPEC.md, section 4.5, compteur de la barre de selection",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld selectionnes"
+          }
+        }
+      }
+    },
+    "selection.etendreLaSelection" : {
+      "comment" : "Equivalent atteignable du Maj clic de la section 4.5, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etendre la selection"
+          }
+        }
+      }
+    },
+    "selection.fermer" : {
+      "comment" : "Fermeture de la barre de selection, libelle ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout deselectionner"
+          }
+        }
+      }
+    },
+    "selection.marquerLu" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, selection multiple",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquer lu"
+          }
+        }
+      }
+    },
+    "selection.selectionner" : {
+      "comment" : "Equivalent atteignable du clic maintenu de la section 4.5, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selectionner"
+          }
+        }
+      }
+    },
+    "selection.supprimer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, selection multiple, seule action destructive",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "selection.telecharger" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, selection multiple",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telecharger"
+          }
+        }
+      }
+    },
+    "statut.abandonne" : {
+      "comment" : "Statut editorial de la ligne d etat, section 5.6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonne"
+          }
+        }
+      }
+    },
+    "statut.enCours" : {
+      "comment" : "DESIGN-SPEC.md, section 5.6, premier fragment de la ligne d etat",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En cours"
+          }
+        }
+      }
+    },
+    "statut.enPause" : {
+      "comment" : "Statut editorial de la ligne d etat, section 5.6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pause"
+          }
+        }
+      }
+    },
+    "statut.termine" : {
+      "comment" : "Statut editorial de la ligne d etat, section 5.6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine"
           }
         }
       }

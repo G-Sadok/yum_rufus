@@ -451,7 +451,7 @@
         "F019",
         "F002"
       ],
-      "statut": "bloque",
+      "statut": "a_faire",
       "modifie_le": "2026-08-25T16:56:42Z",
       "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },

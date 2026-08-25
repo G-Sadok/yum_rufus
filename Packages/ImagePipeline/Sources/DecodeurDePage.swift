@@ -192,6 +192,20 @@ public struct DecodeurDePage: Sendable {
     /// qui appelle, et rend une matrice a nous, de format connu et de taille
     /// connue. Le double tampon transitoire dure le temps du dessin.
     private static func materialiser(_ image: CGImage, nom: String) throws -> CGImage {
+        guard let materialisee = materialiser(image) else {
+            throw ErreurDeDecodage.decodageImpossible(nom: nom)
+        }
+
+        return materialisee
+    }
+
+    /// Meme redessin, rendu nil plutot que leve.
+    ///
+    /// Le rognage l emprunte pour poser sa page coupee dans une matrice a elle.
+    /// Il n a pas d erreur nommee a remonter : quand le systeme refuse la
+    /// matrice, la page s affiche non rognee, ce qui n a rien d un echec pour
+    /// l utilisateur.
+    static func materialiser(_ image: CGImage) -> CGImage? {
         let format = CGImageAlphaInfo.noneSkipLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
 
         guard image.width > 0,
@@ -206,7 +220,7 @@ public struct DecodeurDePage: Sendable {
                   bitmapInfo: format
               )
         else {
-            throw ErreurDeDecodage.decodageImpossible(nom: nom)
+            return nil
         }
 
         contexte.draw(
@@ -214,11 +228,7 @@ public struct DecodeurDePage: Sendable {
             in: CGRect(x: 0, y: 0, width: image.width, height: image.height)
         )
 
-        guard let materialisee = contexte.makeImage() else {
-            throw ErreurDeDecodage.decodageImpossible(nom: nom)
-        }
-
-        return materialisee
+        return contexte.makeImage()
     }
 
     /// Source Image I/O adossee aux octets, sans copie ni decodage.

@@ -133,21 +133,21 @@ struct AnalyseDesReponsesKomgaTests {
 
     @Test("Les trois formes de date rendues par Komga sont lues")
     func formesDeDate() {
-        #expect(LecteurDeDateKomga.lire("1990-11-26") == DatesDeTest.jour(1990, 11, 26))
+        #expect(LecteurDeDateDeServeur.lire("1990-11-26") == DatesDeTest.jour(1990, 11, 26))
         #expect(
-            LecteurDeDateKomga.lire("2026-02-04T07:10:00Z")
+            LecteurDeDateDeServeur.lire("2026-02-04T07:10:00Z")
                 == DatesDeTest.instant(2026, 2, 4, HeureDeTest(7, 10))
         )
         // Komga publie ses horodatages en temps universel sans le dire.
         #expect(
-            LecteurDeDateKomga.lire("2026-02-03T18:24:05")
+            LecteurDeDateDeServeur.lire("2026-02-03T18:24:05")
                 == DatesDeTest.instant(2026, 2, 3, HeureDeTest(18, 24, 5))
         )
     }
 
     @Test("Une fraction de seconde ne fait pas perdre la date")
     func dateAvecFraction() throws {
-        let lue = try #require(LecteurDeDateKomga.lire("2026-02-03T18:24:05.123Z"))
+        let lue = try #require(LecteurDeDateDeServeur.lire("2026-02-03T18:24:05.123Z"))
         let attendue = try #require(DatesDeTest.instant(2026, 2, 3, HeureDeTest(18, 24, 5)))
 
         #expect(abs(lue.timeIntervalSince(attendue) - 0.123) < 0.001)
@@ -155,9 +155,9 @@ struct AnalyseDesReponsesKomgaTests {
 
     @Test("Une date absente ou vide reste absente")
     func dateAbsente() {
-        #expect(LecteurDeDateKomga.lire(nil) == nil)
-        #expect(LecteurDeDateKomga.lire("   ") == nil)
-        #expect(LecteurDeDateKomga.lire("hier") == nil)
+        #expect(LecteurDeDateDeServeur.lire(nil) == nil)
+        #expect(LecteurDeDateDeServeur.lire("   ") == nil)
+        #expect(LecteurDeDateDeServeur.lire("hier") == nil)
     }
 
     // MARK: Vocabulaire

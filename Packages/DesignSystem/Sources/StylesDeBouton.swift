@@ -83,6 +83,48 @@ public struct BoutonSecondaire: ButtonStyle {
     }
 }
 
+/// Bouton discret, fond transparent, texte en `accent.text`.
+///
+/// La quatrieme variante du tableau 4.6. Elle porte les liens poses dans le
+/// contenu, comme `Tout voir` et `Reessayer` des rangees de l ecran Rechercher,
+/// ou `Afficher plus` du resume d une fiche.
+///
+/// Le role de texte est un parametre parce que le tableau 4.6 donne `body` a la
+/// variante, la ou la section 5.4 ecrit `callout` pour le lien Tout voir. La
+/// regle 0.1 tranche en faveur du chiffre le plus precis, celui de l ecran.
+public struct BoutonDiscret: ButtonStyle {
+    @Environment(\.palette) private var palette
+
+    /// Role de texte du libelle.
+    public let style: StyleTypographique
+    /// Hauteur minimale, qui vaut cible de pointage.
+    public let hauteur: Double
+
+    public init(
+        style: StyleTypographique = Jetons.Typo.body,
+        hauteur: Double = Jetons.Cible.auPointeur
+    ) {
+        self.style = style
+        self.hauteur = hauteur
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .style(style)
+            .foregroundStyle(couleur(pressee: configuration.isPressed))
+            .frame(minHeight: hauteur)
+            .contentShape(Rectangle())
+    }
+
+    /// `accent.text` et non `accent` : le libelle est sous 18 px, et seule la
+    /// derivation tient le seuil de 4.5:1 en apparence claire, section 1.3.
+    private func couleur(pressee: Bool) -> Color {
+        pressee
+            ? palette.semantiques.accentPressed.couleur
+            : palette.semantiques.accentText.couleur
+    }
+}
+
 /// Bouton destructif, fond transparent, texte et contour en `danger`.
 ///
 /// Reserve a ce qui detruit, comme la confirmation d un effacement. Le tableau

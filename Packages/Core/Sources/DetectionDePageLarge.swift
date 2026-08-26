@@ -1,19 +1,24 @@
-import Core
-
 //
 // DetectionDePageLarge
 //
-// Reconnait la page qui occupe l ecran seule en mode double page, section 7.1
-// du cahier de developpement.
+// Reconnait la page dont le rapport largeur sur hauteur depasse un, section 6.3
+// et section 7.1 du cahier de developpement.
 //
 // La detection porte sur la forme de l image et sur elle seule. Elle ne lit
 // aucun nom de fichier et n interroge aucune metadonnee : une page nommee
 // spread.jpg peut etre une page ordinaire, et une double page peut porter un
 // nom parfaitement banal.
 //
+// La regle vit dans Core parce que deux couches en dependent et doivent
+// repondre exactement la meme chose. Le moteur de lecture s en sert pour
+// afficher la page seule en mode double page, la chaine d images s en sert pour
+// decider de la couper en deux. Deux copies de la meme regle finiraient par
+// diverger, et le chapitre afficherait alors une planche a la fois seule et
+// coupee.
+//
 
-/// Decide si une page est une double page, donc affichee seule.
-public struct DetectionDePageLarge: Sendable, Equatable {
+/// Decide si une page est une double page, donc affichee seule ou divisee.
+public struct DetectionDePageLarge: Sendable, Hashable {
     /// Rapport largeur sur hauteur a partir duquel une page est declaree large.
     ///
     /// Un rapport de un signifie qu une page plus large que haute est une double

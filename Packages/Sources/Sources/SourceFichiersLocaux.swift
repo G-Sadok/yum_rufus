@@ -216,6 +216,18 @@ public actor SourceFichiersLocaux: SourceProvider {
         return resultat
     }
 
+    /// Rend le dossier racine de la source, en resolvant le signet au besoin.
+    ///
+    /// Le dossier sort d ici pour la reception Wi-Fi de la section 4.4, qui doit
+    /// y poser les fichiers recus. Rien d autre n a besoin de l URL : le reste
+    /// du projet passe par les identifiants de serie et de chapitre.
+    ///
+    /// - Throws: `ErreurDeSource.accesAuDossierPerdu` quand le signet ne designe
+    ///   plus rien.
+    public func racine() async throws -> URL {
+        try await acces.dossier()
+    }
+
     /// Relance l analyse du dossier et rend le resultat.
     ///
     /// A appeler quand l utilisateur demande une actualisation. Le systeme de

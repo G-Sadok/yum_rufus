@@ -17,9 +17,21 @@ import Foundation
 // caches disparaissent des deux cotes, et `page10.jpg` ne passe jamais devant
 // `page2.jpg`.
 //
+// Un dossier iCloud Drive fait exception sur un point, et un seul. Un fichier
+// qui n est pas sur l appareil peut y etre pose sous un substitut cache,
+// `.Chapitre 1.cbz.icloud`, que le filtrage des noms caches ferait disparaitre.
+// Le chapitre sortirait alors de la bibliotheque tant qu il n est pas
+// telecharge, c est a dire exactement quand il faudrait l afficher pour
+// permettre de le telecharger. L analyse sait donc lire ces substituts, et rend
+// dans les deux cas la meme bibliotheque sous les memes identifiants.
+//
 
 /// Parcourt un dossier et en deduit les series et les chapitres.
 public struct AnalyseurDeDossier: Sendable {
+    /// Vrai quand le dossier analyse peut porter des substituts de fichiers non
+    /// telecharges, ce qui est le cas d un dossier iCloud Drive et de lui seul.
+    private let substitutsUbiquitaires: Bool
+
     /// Le gestionnaire de fichiers n est pas `Sendable`, il n est donc pas
     /// retenu : chaque appel prend l instance partagee, dont les operations de
     /// listage sont sures depuis n importe quelle tache.
@@ -27,7 +39,9 @@ public struct AnalyseurDeDossier: Sendable {
         .default
     }
 
-    public init() {}
+    public init(substitutsUbiquitaires: Bool = false) {
+        self.substitutsUbiquitaires = substitutsUbiquitaires
+    }
 
     /// Analyse le dossier racine d une source de fichiers locaux.
     ///
@@ -71,7 +85,7 @@ public struct AnalyseurDeDossier: Sendable {
         let dates = ([entree.dateModification] + chapitres.map(\.dateModification)).compactMap(\.self)
 
         return SerieLocale(
-            identifiant: cheminRelatif(de: entree.url, racine: racine),
+            identifiant: cheminRelatif(de: entree.urlVisible, racine: racine),
             titre: entree.nom,
             chapitres: chapitres,
             dateModification: dates.max()
@@ -83,7 +97,7 @@ public struct AnalyseurDeDossier: Sendable {
     private func serieDepuisUneArchive(_ entree: EntreeDeDisque, racine: URL) -> SerieLocale? {
         guard FormatsDeConteneur.connus.contains(entree.format) else { return nil }
 
-        let identifiant = cheminRelatif(de: entree.url, racine: racine)
+        let identifiant = cheminRelatif(de: entree.urlVisible, racine: racine)
         let titre = entree.nomSansExtension
         let chapitre = ChapitreLocal(
             identifiant: identifiant,
@@ -145,7 +159,7 @@ public struct AnalyseurDeDossier: Sendable {
         }
 
         return ChapitreLocal(
-            identifiant: cheminRelatif(de: entree.url, racine: racine),
+            identifiant: cheminRelatif(de: entree.urlVisible, racine: racine),
             titre: entree.nomSansExtension,
             numero: NumeroDeChapitre.extraire(de: entree.nom) ?? Double(ordre + 1),
             ordre: ordre,
@@ -199,23 +213,49 @@ public struct AnalyseurDeDossier: Sendable {
     /// l analyse alors qu un sous dossier illisible se saute.
     private func contenu(de dossier: URL) -> [EntreeDeDisque]? {
         let cles: [URLResourceKey] = [.isDirectoryKey, .contentModificationDateKey, .nameKey]
+        // Les noms caches ne sont ecartes par le listage que quand aucun
+        // substitut n est attendu. Sinon le filtrage se fait juste apres, sur
+        // le vrai nom, pour ne laisser passer que les substituts.
+        let options: FileManager.DirectoryEnumerationOptions = substitutsUbiquitaires
+            ? [.skipsPackageDescendants]
+            : [.skipsHiddenFiles, .skipsPackageDescendants]
 
         guard let entrees = try? gestionnaire.contentsOfDirectory(
             at: dossier,
             includingPropertiesForKeys: cles,
-            options: [.skipsHiddenFiles, .skipsPackageDescendants]
+            options: options
         ) else {
             return nil
         }
 
         return entrees
-            .filter { EntreesDArchive.estParasite($0.lastPathComponent) == false }
-            .map(EntreeDeDisque.init(url:))
+            .filter(estRetenue)
+            .map { EntreeDeDisque(url: $0, visible: nomVisible(de: $0)) }
+    }
+
+    /// Vrai quand cette entree du disque concerne l analyse.
+    ///
+    /// Le substitut est juge sur le nom qu il annonce et non sur le sien : le
+    /// substitut d un `.DS_Store` reste un parasite, celui d un chapitre est un
+    /// chapitre.
+    private func estRetenue(_ url: URL) -> Bool {
+        let nom = url.lastPathComponent
+
+        guard substitutsUbiquitaires, let reel = EmplacementICloud.nomReel(de: nom) else {
+            return EntreesDArchive.estParasite(nom) == false
+        }
+
+        return EntreesDArchive.estParasite(reel) == false
+    }
+
+    /// Emplacement de l entree sous le nom que l utilisateur voit.
+    private func nomVisible(de url: URL) -> URL {
+        substitutsUbiquitaires ? EmplacementICloud.visible(url) : url
     }
 
     /// Rend le chemin d une entree relativement a la racine de la source.
     private func cheminRelatif(de url: URL, racine: URL) -> String {
-        let chemin = url.standardizedFileURL.path
+        let chemin = EmplacementICloud.cheminNormalise(url)
         let base = racine.standardizedFileURL.path
         let prefixe = base.hasSuffix("/") ? base : base + "/"
 
@@ -231,27 +271,39 @@ public struct AnalyseurDeDossier: Sendable {
 /// chaque relecture est un aller retour vers le systeme de fichiers et qu une
 /// bibliotheque de 200000 chapitres en ferait autant.
 struct EntreeDeDisque: Sendable {
+    /// Emplacement reel sur le disque, qui peut etre un substitut.
+    ///
+    /// C est celui a donner au systeme de fichiers, et le seul qui existe.
     let url: URL
+
+    /// Emplacement sous le nom que l utilisateur voit.
+    ///
+    /// Egal a `url` partout ailleurs que dans un dossier iCloud Drive. C est
+    /// lui qui decide du nom, du format et de l identifiant, pour qu un
+    /// chapitre garde le meme identifiant avant et apres son telechargement.
+    let urlVisible: URL
+
     let nom: String
     let estDossier: Bool
     let dateModification: Date?
 
-    init(url: URL) {
+    init(url: URL, visible: URL? = nil) {
         let valeurs = try? url.resourceValues(forKeys: [.isDirectoryKey, .contentModificationDateKey])
 
         self.url = url
-        nom = url.lastPathComponent
+        urlVisible = visible ?? url
+        nom = (visible ?? url).lastPathComponent
         estDossier = valeurs?.isDirectory ?? false
         dateModification = valeurs?.contentModificationDate
     }
 
     /// Extension en minuscules, vide quand l entree n en porte pas.
     var format: String {
-        url.pathExtension.lowercased()
+        urlVisible.pathExtension.lowercased()
     }
 
     /// Nom sans son extension.
     var nomSansExtension: String {
-        url.deletingPathExtension().lastPathComponent
+        urlVisible.deletingPathExtension().lastPathComponent
     }
 }

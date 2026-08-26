@@ -46,6 +46,13 @@ actor SourceDeTest: SourceProvider {
     private let panne: Panne?
     private let etat: EtatConnexion
 
+    /// Attente observee avant de repondre, pour jouer une source lente.
+    ///
+    /// Distincte de `Panne.muette`, qui ne repond jamais : une source lente
+    /// finit par rendre ses resultats, et c est justement ce qui permet de
+    /// verifier que les autres n ont pas attendu apres elle.
+    private let delaiAvantReponse: Duration?
+
     /// Fait annoncer une page suivante meme quand il n en reste aucune.
     ///
     /// Sert a verifier que le parcours ne boucle pas sur une source qui ment.
@@ -61,7 +68,8 @@ actor SourceDeTest: SourceProvider {
         tailleDePage: Int = 2,
         panne: Panne? = nil,
         etat: EtatConnexion = .connecte,
-        promettreUneSuiteSansFin: Bool = false
+        promettreUneSuiteSansFin: Bool = false,
+        delaiAvantReponse: Duration? = nil
     ) {
         self.id = id
         self.nom = nom
@@ -71,6 +79,7 @@ actor SourceDeTest: SourceProvider {
         self.panne = panne
         self.etat = etat
         self.promettreUneSuiteSansFin = promettreUneSuiteSansFin
+        self.delaiAvantReponse = delaiAvantReponse
     }
 
     /// Nombre de fois ou la source a ete interrogee.
@@ -158,6 +167,10 @@ actor SourceDeTest: SourceProvider {
     /// Compte l appel, puis applique la panne demandee s il y en a une.
     private func repondreOuEchouer() async throws {
         appels += 1
+
+        if let delaiAvantReponse {
+            try await Task.sleep(for: delaiAvantReponse)
+        }
 
         switch panne {
         case nil:

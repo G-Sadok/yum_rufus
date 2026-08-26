@@ -70,7 +70,14 @@ public actor RegistreDeSources {
     public static let delaiParDefaut: Duration = .seconds(15)
 
     private var inscrites: [any SourceProvider] = []
-    private let delaiMaximal: Duration
+
+    /// Delai accorde a une source avant qu elle soit declaree muette.
+    ///
+    /// Public et lisible sans attente : l ecran Rechercher l ecrit dans la ligne
+    /// d erreur d une source qui n a pas repondu, comme le demande le tableau
+    /// 6.4, et un message qui annoncerait un delai different de celui applique
+    /// serait pire que pas de message du tout.
+    public nonisolated let delaiMaximal: Duration
 
     public init(delaiMaximal: Duration = RegistreDeSources.delaiParDefaut) {
         self.delaiMaximal = delaiMaximal
@@ -159,6 +166,29 @@ public actor RegistreDeSources {
         await interroger(declarant: .recherche) { try await $0.rechercher(requete) }
     }
 
+    /// Interroge une seule source, avec la meme isolation que les autres.
+    ///
+    /// Rend nul quand la source n est plus inscrite, ce qui arrive si elle a ete
+    /// retiree entre l affichage de sa ligne d erreur et le clic sur Reessayer.
+    public func interroger<Valeur: Sendable>(
+        _ identifiant: SourceID,
+        _ travail: @Sendable @escaping (any SourceProvider) async throws -> Valeur
+    ) async -> ResultatDeSource<Valeur>? {
+        guard let source = source(identifiant) else {
+            return nil
+        }
+
+        return await Self.executer(source, delai: delaiMaximal, travail)
+    }
+
+    /// Relance la recherche dans une seule source, lien Reessayer de la 5.4.
+    public func rechercher(
+        _ requete: RequeteRecherche,
+        dans identifiant: SourceID
+    ) async -> ResultatDeSource<PageResultats<MangaDistant>>? {
+        await interroger(identifiant) { try await $0.rechercher(requete) }
+    }
+
     /// Parcourt une section dans toutes les sources.
     public func parcourir(
         _ section: SectionCatalogue,
@@ -167,7 +197,77 @@ public actor RegistreDeSources {
         await interroger { try await $0.parcourir(section, page: page) }
     }
 
+    // MARK: Interrogation au fil de l eau
+
+    /// Pose la meme question a toutes les sources, et rend chaque reponse des
+    /// qu elle arrive.
+    ///
+    /// C est la difference avec `interroger` : celui la attend la derniere
+    /// source pour rendre la liste complete, dans l ordre d inscription. Ici
+    /// l ordre est celui des reponses, ce qui est exactement ce que demande
+    /// l ecran Rechercher de la section 5.4. Une source lente ne retient plus
+    /// l affichage des autres, elle ne retient que sa propre rangee.
+    ///
+    /// Le flux se termine quand la derniere source a repondu. Abandonner le flux
+    /// annule les taches encore en cours, une recherche relancee ne laisse donc
+    /// pas la precedente consommer du reseau.
+    public func interrogerAuFilDeLEau<Valeur: Sendable>(
+        _ travail: @Sendable @escaping (any SourceProvider) async throws -> Valeur
+    ) -> AsyncStream<ResultatDeSource<Valeur>> {
+        flux(inscrites, travail)
+    }
+
+    /// Interroge au fil de l eau les seules sources qui declarent les capacites.
+    public func interrogerAuFilDeLEau<Valeur: Sendable>(
+        declarant capacites: SourceCapacites,
+        _ travail: @Sendable @escaping (any SourceProvider) async throws -> Valeur
+    ) -> AsyncStream<ResultatDeSource<Valeur>> {
+        flux(sourcesDeclarant(capacites), travail)
+    }
+
+    /// Cherche dans toutes les sources, une rangee affichable a chaque reponse.
+    public func rechercherAuFilDeLEau(
+        _ requete: RequeteRecherche
+    ) -> AsyncStream<ResultatDeSource<PageResultats<MangaDistant>>> {
+        interrogerAuFilDeLEau(declarant: .recherche) { try await $0.rechercher(requete) }
+    }
+
+    /// Les sources qui seront interrogees par une recherche, dans leur ordre.
+    ///
+    /// L ecran s en sert pour poser ses rangees en chargement avant meme la
+    /// premiere reponse : une rangee qui apparaitrait au moment de la reponse
+    /// ferait sauter la mise en page a chaque source qui repond.
+    public func sourcesInterrogeesParUneRecherche() -> [SourceInterrogee] {
+        sourcesDeclarant(.recherche).map { SourceInterrogee(source: $0.id, nom: $0.nom) }
+    }
+
     // MARK: Isolation
+
+    /// Lance une tache par source et rend les resultats dans l ordre d arrivee.
+    private func flux<Valeur: Sendable>(
+        _ sources: [any SourceProvider],
+        _ travail: @Sendable @escaping (any SourceProvider) async throws -> Valeur
+    ) -> AsyncStream<ResultatDeSource<Valeur>> {
+        let delai = delaiMaximal
+
+        return AsyncStream { suite in
+            let tache = Task {
+                await withTaskGroup(of: ResultatDeSource<Valeur>.self) { groupe in
+                    for source in sources {
+                        groupe.addTask { await Self.executer(source, delai: delai, travail) }
+                    }
+
+                    for await resultat in groupe {
+                        suite.yield(resultat)
+                    }
+                }
+
+                suite.finish()
+            }
+
+            suite.onTermination = { _ in tache.cancel() }
+        }
+    }
 
     /// Lance une tache par source et recolte les resultats dans l ordre donne.
     private func interroger<Valeur: Sendable>(

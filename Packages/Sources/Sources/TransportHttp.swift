@@ -25,6 +25,18 @@ public enum MethodeHttp: String, Sendable, Hashable {
     case post = "POST"
     case patch = "PATCH"
     case delete = "DELETE"
+
+    /// Les entetes seuls, sans le corps.
+    ///
+    /// WebDAV s en sert pour connaitre la taille d un fichier sans le
+    /// rapatrier.
+    case head = "HEAD"
+
+    /// Les proprietes d une ressource et de ses enfants, propre a WebDAV.
+    ///
+    /// Le serveur repond un 207 et un document XML, la ou les autres verbes
+    /// rendent un corps quelconque.
+    case propfind = "PROPFIND"
 }
 
 /// Ce qu un serveur a repondu, reduit a ce dont les sources ont besoin.

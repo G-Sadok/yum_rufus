@@ -53,6 +53,16 @@ public enum SchemaDeBase {
     /// supplementaire. Purement additive, comme les precedentes.
     public static let reglagesDeLApplication = "2026-08-25-05-reglages-de-l-application"
 
+    /// Identifiant de la migration qui installe le decalage de couverture du
+    /// mode double page.
+    ///
+    /// La section 7.1 decrit ce mode par deux contraintes, l ordre inverse en
+    /// droite a gauche et la couverture seule. La seconde est un reglage, donc
+    /// une valeur persistee : un decalage recalcule a chaque ouverture ferait
+    /// changer toutes les paires d un chapitre d une lecture a l autre. Comme
+    /// les precedentes, la migration est purement additive.
+    public static let decalageDeCouverture = "2026-08-26-01-decalage-de-couverture"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -61,6 +71,7 @@ public enum SchemaDeBase {
         reglageDeListeDeChapitres,
         decalageDeDefilement,
         reglagesDeLApplication,
+        decalageDeCouverture,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -94,6 +105,11 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(reglagesDeLApplication) { base in
             try creerLaTableDesReglagesDeLApplication(base)
+        }
+
+        migrateur.registerMigration(decalageDeCouverture) { base in
+            try creerLaTableDeDoublePage(base)
+            try ajouterLaSurchargeDeDecalage(base)
         }
 
         return migrateur

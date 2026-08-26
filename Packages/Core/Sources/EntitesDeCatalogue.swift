@@ -92,6 +92,14 @@ public struct Manga: Sendable, Codable, Identifiable, Hashable {
     /// reglage global.
     public var sensLectureForce: SensDeLecture?
 
+    /// Decalage de couverture impose a cette serie en mode double page. Nul
+    /// quand la serie suit le reglage global.
+    ///
+    /// La surcharge existe parce que le decalage juste depend de l ouvrage et
+    /// non du lecteur : un recueil sans page de couverture se lit sans decalage
+    /// la ou le volume suivant en demande un.
+    public var decalageDeCouvertureForce: DecalageDeCouverture?
+
     public var estDansBibliotheque: Bool
     public var dateAjout: Date
     public var dateDerniereMiseAJour: Date?
@@ -112,6 +120,7 @@ public struct Manga: Sendable, Codable, Identifiable, Hashable {
         urlCouverture: String? = nil,
         cheminCouvertureLocale: String? = nil,
         sensLectureForce: SensDeLecture? = nil,
+        decalageDeCouvertureForce: DecalageDeCouverture? = nil,
         estDansBibliotheque: Bool = false,
         dateAjout: Date = Date(),
         dateDerniereMiseAJour: Date? = nil,
@@ -131,6 +140,7 @@ public struct Manga: Sendable, Codable, Identifiable, Hashable {
         self.urlCouverture = urlCouverture
         self.cheminCouvertureLocale = cheminCouvertureLocale
         self.sensLectureForce = sensLectureForce
+        self.decalageDeCouvertureForce = decalageDeCouvertureForce
         self.estDansBibliotheque = estDansBibliotheque
         self.dateAjout = dateAjout
         self.dateDerniereMiseAJour = dateDerniereMiseAJour

@@ -23,8 +23,8 @@ struct MigrationDeSchemaTests {
             "id", "sourceId", "identifiantDistant", "titre", "titresAlternatifs",
             "auteurs", "dessinateurs", "resume", "genres", "statut", "langue",
             "urlCouverture", "cheminCouvertureLocale", "sensLectureForce",
-            "estDansBibliotheque", "dateAjout", "dateDerniereMiseAJour",
-            "dateDerniereLecture", "chapitresNonLus",
+            "decalageDeCouvertureForce", "estDansBibliotheque", "dateAjout",
+            "dateDerniereMiseAJour", "dateDerniereLecture", "chapitresNonLus",
         ],
         "chapitre": [
             "id", "mangaId", "identifiantDistant", "numero", "titre",

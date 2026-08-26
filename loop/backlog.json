@@ -818,9 +818,10 @@
       "depend_de": [
         "F006"
       ],
-      "statut": "en_cours",
+      "statut": "termine",
       "modifie_le": "2026-08-26T10:18:05Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "derniere_erreur": "aucune progression sur deux tentatives",
+      "termine_le": "2026-08-26T21:31:57Z"
     },
     {
       "id": "F038",

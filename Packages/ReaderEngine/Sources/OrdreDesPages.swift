@@ -7,12 +7,6 @@ import Core
 // reellement l ecran, et ordre des moities apres division d une image large.
 //
 
-/// Moitie d une image large coupee en deux.
-public enum MoitieDImageLarge: String, Sendable, CaseIterable, Hashable {
-    case gauche
-    case droite
-}
-
 /// Ordre des pages, a l ecran et apres division.
 public enum OrdreDesPages {
     /// Ordre narratif d un chapitre, indexe a partir de zero.
@@ -43,9 +37,12 @@ public enum OrdreDesPages {
 
     /// Ordre de lecture des deux moities d une image large.
     ///
-    /// En droite a gauche la moitie droite vient en premier. C est le bogue le
-    /// plus frequent de ce domaine et le plus invisible en test manuel.
+    /// En droite a gauche la moitie droite vient en premier. La regle elle meme
+    /// vit dans Core, aupres du sens de lecture, parce que la chaine d images en
+    /// depend autant que le moteur : c est elle qui rend les deux moities deja
+    /// rangees. Ce point d entree reste ici pour que le moteur nomme l ordre des
+    /// moities au meme endroit que l ordre des pages a l ecran.
     public static func ordreDesMoities(sens: SensDeLecture) -> [MoitieDImageLarge] {
-        sens.commenceParLaDroite ? [.droite, .gauche] : [.gauche, .droite]
+        sens.ordreDesMoities
     }
 }

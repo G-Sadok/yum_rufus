@@ -35,6 +35,21 @@ struct SensDeLectureTests {
         #expect(SensDeLecture.hautBas.commenceParLaDroite == false)
     }
 
+    @Test("En droite a gauche, la moitie droite d une image large vient en premier")
+    func ordreDesMoities() {
+        #expect(SensDeLecture.droiteGauche.ordreDesMoities == [.droite, .gauche])
+        #expect(SensDeLecture.gaucheDroite.ordreDesMoities == [.gauche, .droite])
+        #expect(SensDeLecture.hautBas.ordreDesMoities == [.gauche, .droite])
+    }
+
+    @Test("Les deux moities sont toujours rendues, chacune une seule fois")
+    func lesDeuxMoitiesSontRendues() {
+        for sens in SensDeLecture.allCases {
+            #expect(Set(sens.ordreDesMoities) == Set(MoitieDImageLarge.allCases), "Sens \(sens.rawValue)")
+            #expect(sens.ordreDesMoities.count == 2, "Sens \(sens.rawValue)")
+        }
+    }
+
     @Test(
         "Sans surcharge, la serie suit le reglage global",
         arguments: SensDeLecture.allCases

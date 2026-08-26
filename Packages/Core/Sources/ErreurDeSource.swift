@@ -53,6 +53,15 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
     /// passage par le registre, au lieu d etre reduit a un echec inattendu.
     case document(ErreurDeDocument, source: String)
 
+    /// Une extension declarative a ete refusee, avec la cause nommee par
+    /// `ErreurDExtension`.
+    ///
+    /// Le cas existe pour la meme raison que `document` : le refus precis d un
+    /// paquet ou d une regle doit survivre au passage par le registre au lieu
+    /// d etre reduit a un echec inattendu. C est ce qui permet a l interface de
+    /// distinguer une extension perimee d une extension dangereuse.
+    case declarative(ErreurDExtension, source: String)
+
     /// Echec qu aucun cas ne nomme, ce qui est toujours un defaut a corriger.
     ///
     /// La raison ne porte que le nom du type d erreur, jamais sa description :
@@ -91,6 +100,8 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
             "La source \(source) est en echec. " + reseau.messageUtilisateur
         case let .document(document, source):
             "La source \(source) n a pas pu lire ce fichier. " + document.messageUtilisateur
+        case let .declarative(extensionEnCause, source):
+            "L extension \(source) a ete refusee. " + extensionEnCause.messageUtilisateur
         case let .echecInattendu(source, _):
             "La source \(source) a echoue pour une raison que l application ne sait pas nommer."
                 + " Relance la verification, et signale le probleme si il se repete."
@@ -128,6 +139,7 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
         case .pageNonAdressableParRequete: "source.pageNonAdressableParRequete"
         case let .reseau(reseau, _): "source." + reseau.codeDeJournal
         case .document: "source.document"
+        case let .declarative(extensionEnCause, _): "source." + extensionEnCause.codeDeJournal
         case let .echecInattendu(_, raison): "source.echecInattendu.\(raison)"
         }
     }
@@ -147,6 +159,9 @@ public enum ErreurDeSource: Error, Sendable, Equatable {
         }
         if let document = erreur as? ErreurDeDocument {
             return .document(document, source: source)
+        }
+        if let declarative = erreur as? ErreurDExtension {
+            return .declarative(declarative, source: source)
         }
 
         return .echecInattendu(source: source, raison: String(describing: type(of: erreur)))

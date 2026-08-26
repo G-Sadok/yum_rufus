@@ -844,9 +844,10 @@
         "F012",
         "F007"
       ],
-      "statut": "en_cours",
+      "statut": "termine",
       "modifie_le": "2026-08-26T10:18:18Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "derniere_erreur": "aucune progression sur deux tentatives",
+      "termine_le": "2026-08-26T21:45:17Z"
     },
     {
       "id": "F039",

@@ -199,7 +199,7 @@ public struct DecodeurDePage: Sendable {
     /// Le passage par un contexte force le decodage tout de suite, sur le fil
     /// qui appelle, et rend une matrice a nous, de format connu et de taille
     /// connue. Le double tampon transitoire dure le temps du dessin.
-    private static func materialiser(_ image: CGImage, nom: String) throws -> CGImage {
+    static func materialiser(_ image: CGImage, nom: String) throws -> CGImage {
         guard let materialisee = materialiser(image) else {
             throw ErreurDeDecodage.decodageImpossible(nom: nom)
         }
@@ -240,7 +240,7 @@ public struct DecodeurDePage: Sendable {
     }
 
     /// Source Image I/O adossee aux octets, sans copie ni decodage.
-    private static func source(de donnees: Data, nom: String) throws -> CGImageSource {
+    static func source(de donnees: Data, nom: String) throws -> CGImageSource {
         guard let source = CGImageSourceCreateWithData(donnees as CFData, nil),
               CGImageSourceGetCount(source) > 0
         else {
@@ -251,7 +251,7 @@ public struct DecodeurDePage: Sendable {
     }
 
     /// Dimensions annoncees par l en tete du fichier, sans decodage.
-    private static func dimensions(de source: CGImageSource, nom: String) throws -> TailleEnPixels {
+    static func dimensions(de source: CGImageSource, nom: String) throws -> TailleEnPixels {
         guard let proprietes = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
               let largeur = proprietes[kCGImagePropertyPixelWidth] as? Int,
               let hauteur = proprietes[kCGImagePropertyPixelHeight] as? Int,

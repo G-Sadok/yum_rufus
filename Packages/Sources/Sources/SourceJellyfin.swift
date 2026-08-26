@@ -81,7 +81,7 @@ public actor SourceJellyfin: SourceProvider {
     /// Ou sont ranges les conteneurs rapatries.
     ///
     /// Interne et non prive : la lecture vit dans un autre fichier.
-    let cache: CacheDeConteneursJellyfin
+    let cache: CacheDeConteneursDistants
 
     private let magasin: any MagasinDIdentifiants
     private let transport: any TransportHttp
@@ -131,8 +131,8 @@ public actor SourceJellyfin: SourceProvider {
         self.transport = transport
         accepteLeHttpEnClair = configuration.accepteLeHttpEnClair
         self.tailleDePage = max(1, tailleDePage)
-        cache = dossierDeCache.map(CacheDeConteneursJellyfin.init(dossier:))
-            ?? CacheDeConteneursJellyfin.parDefaut(source: id)
+        cache = dossierDeCache.map(CacheDeConteneursDistants.init(dossier:))
+            ?? CacheDeConteneursDistants.parDefaut(famille: "Jellyfin", source: id)
     }
 
     // MARK: Protocole

@@ -216,14 +216,14 @@ struct SourceKomgaTests {
         let serveur = ServeurKomgaDeTest([])
         let source = try await serveur.source()
 
-        #expect(await source.capacites == [
+        #expect(source.capacites == [
             .recherche,
             .filtres,
             .pagination,
             .telechargement,
             .progressionDistante,
         ])
-        #expect(await source.declare(.plusieursLangues) == false)
-        #expect(await source.offre(.publierLaProgression))
+        #expect(source.declare(.plusieursLangues) == false)
+        #expect(source.offre(.publierLaProgression))
     }
 }

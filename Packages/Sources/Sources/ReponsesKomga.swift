@@ -193,7 +193,7 @@ extension LivreDeKomga {
             identifiantManga: seriesId ?? identifiantSerie,
             numero: numeroDeLecture(ordre: ordre),
             titre: metadata?.title?.sansBlancs ?? name?.sansBlancs,
-            datePublication: LecteurDeDateKomga.lire(metadata?.releaseDate),
+            datePublication: LecteurDeDateDeServeur.lire(metadata?.releaseDate),
             nombrePages: nombreDePagesConnu,
             ordre: ordre
         )
@@ -242,7 +242,7 @@ extension LivreDeKomga {
             pageAtteinte: max(0, (readProgress.page ?? 1) - 1),
             nombreDePages: nombreDePages,
             estLu: readProgress.completed ?? false,
-            dateDeLecture: LecteurDeDateKomga.lire(readProgress.readDate)
+            dateDeLecture: LecteurDeDateDeServeur.lire(readProgress.readDate)
         )
     }
 }
@@ -287,61 +287,6 @@ extension StatutSerie {
         case .abandonne: "ABANDONED"
         case .inconnu: nil
         }
-    }
-}
-
-/// Lecture des dates rendues par Komga.
-///
-/// Le serveur en emploie trois formes selon le champ : une date seule pour la
-/// date de parution, un instant avec fuseau pour la date de lecture, et un
-/// instant sans fuseau pour ses propres horodatages. Un seul lecteur pour les
-/// trois, essayes dans l ordre, parce qu un lecteur par champ multiplierait les
-/// endroits ou une forme nouvelle passerait au travers.
-enum LecteurDeDateKomga {
-    /// La date lue, ou nul quand la chaine est absente ou d une autre forme.
-    static func lire(_ texte: String?) -> Date? {
-        guard let texte = texte?.trimmingCharacters(in: .whitespacesAndNewlines), texte.isEmpty == false else {
-            return nil
-        }
-        if let avecFraction = lecteurAvecFraction.date(from: texte) {
-            return avecFraction
-        }
-        if let sansFraction = lecteurSansFraction.date(from: texte) {
-            return sansFraction
-        }
-        if let sansFuseau = lecteurSansFuseau.date(from: texte) {
-            return sansFuseau
-        }
-
-        return lecteurDeJour.date(from: texte)
-    }
-
-    /// Lecteurs des instants avec fuseau, avec puis sans fraction de seconde.
-    ///
-    /// Ils sont ecrits en `DateFormatter` et non en `ISO8601DateFormatter`, qui
-    /// serait plus court : ce dernier n est pas `Sendable`, et une instance
-    /// partagee entre plusieurs taches ne compile pas en concurrence stricte.
-    /// Le motif `XXXXX` accepte les deux ecritures du fuseau, `Z` et `+01:00`.
-    private static let lecteurAvecFraction = formateur("yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX")
-
-    private static let lecteurSansFraction = formateur("yyyy-MM-dd'T'HH:mm:ssXXXXX")
-
-    /// Lecteur des instants sans fuseau, que Komga rend pour ses horodatages.
-    ///
-    /// Le fuseau est fixe a GMT parce que le serveur publie ces instants en
-    /// temps universel sans le dire. Laisser le fuseau de l appareil decider
-    /// decalerait la date affichee de plusieurs heures selon le voyage.
-    private static let lecteurSansFuseau = formateur("yyyy-MM-dd'T'HH:mm:ss")
-
-    private static let lecteurDeJour = formateur("yyyy-MM-dd")
-
-    private static func formateur(_ format: String) -> DateFormatter {
-        let lecteur = DateFormatter()
-        lecteur.locale = Locale(identifier: "en_US_POSIX")
-        lecteur.timeZone = TimeZone(secondsFromGMT: 0)
-        lecteur.dateFormat = format
-
-        return lecteur
     }
 }
 

@@ -20,6 +20,12 @@ import Foundation
 // objet incomplet. Le corps vide enfin, parce qu il est indiscernable d un
 // document illisible une fois passe au decodeur.
 //
+// La preuve d identite n est pas posee a la construction de la requete mais a
+// son execution, et c est ce qui rend le rafraichissement de jeton possible.
+// Une requete construite reste donc anonyme tant qu elle n est pas partie, ce
+// qui permet de la rejouer telle quelle avec une preuve neuve apres un refus,
+// sans avoir a retirer un entete perime dont on ne connaitrait plus le nom.
+//
 
 /// Ce que le client presente au serveur pour prouver qui il est.
 ///
@@ -38,14 +44,17 @@ public enum AuthentificationHttp: Sendable, Hashable {
     case entete(nom: String, valeur: String)
 
     /// L entete a poser, ou nul quand il n y a rien a prouver.
-    var enteteDIdentite: (nom: String, valeur: String)? {
+    var enteteDIdentite: EnteteDIdentite? {
         switch self {
         case .aucune:
             nil
         case let .basique(compte, motDePasse):
-            ("Authorization", "Basic " + Data("\(compte):\(motDePasse)".utf8).base64EncodedString())
+            EnteteDIdentite(
+                nom: "Authorization",
+                valeur: "Basic " + Data("\(compte):\(motDePasse)".utf8).base64EncodedString()
+            )
         case let .entete(nom, valeur):
-            (nom, valeur)
+            EnteteDIdentite(nom: nom, valeur: valeur)
         }
     }
 }
@@ -56,7 +65,7 @@ public struct ClientHttp: Sendable {
     public let base: URL
 
     private let transport: any TransportHttp
-    private let authentification: AuthentificationHttp
+    private let identite: any IdentiteHttp
 
     /// Instant de reference, pour lire un `Retry-After` exprime en date.
     ///
@@ -64,7 +73,7 @@ public struct ClientHttp: Sendable {
     /// pour une date fixe changerait a chaque execution du test.
     private let maintenant: @Sendable () -> Date
 
-    /// Construit le client sur une adresse deja validee.
+    /// Construit le client sur une preuve d identite qui ne change pas.
     ///
     /// - Throws: `ErreurReseau.transportNonChiffre` quand l adresse est en clair
     ///   et que l utilisateur n a pas confirme l exception de la section 11.
@@ -72,6 +81,26 @@ public struct ClientHttp: Sendable {
         base: URL,
         transport: any TransportHttp,
         authentification: AuthentificationHttp = .aucune,
+        accepteLeHttpEnClair: Bool = false,
+        maintenant: @escaping @Sendable () -> Date = Date.init
+    ) throws {
+        try self.init(
+            base: base,
+            transport: transport,
+            identite: IdentiteFixe(authentification: authentification),
+            accepteLeHttpEnClair: accepteLeHttpEnClair,
+            maintenant: maintenant
+        )
+    }
+
+    /// Construit le client sur une preuve d identite qui sait se renouveler.
+    ///
+    /// - Throws: `ErreurReseau.transportNonChiffre` quand l adresse est en clair
+    ///   et que l utilisateur n a pas confirme l exception de la section 11.
+    public init(
+        base: URL,
+        transport: any TransportHttp,
+        identite: any IdentiteHttp,
         accepteLeHttpEnClair: Bool = false,
         maintenant: @escaping @Sendable () -> Date = Date.init
     ) throws {
@@ -86,7 +115,7 @@ public struct ClientHttp: Sendable {
 
         self.base = base
         self.transport = transport
-        self.authentification = authentification
+        self.identite = identite
         self.maintenant = maintenant
     }
 
@@ -98,33 +127,20 @@ public struct ClientHttp: Sendable {
     /// serveur publie derriere un sous chemin de proxy inverse. Une URL
     /// reconstruite depuis la racine perdrait ce sous chemin, et la source
     /// repondrait vide sans dire pourquoi.
+    ///
+    /// La requete rendue ne porte aucune preuve d identite. C est `executer(_:)`
+    /// qui la pose, juste avant le depart, pour pouvoir rejouer la meme requete
+    /// avec une preuve neuve quand le serveur refuse la premiere.
     public func requete(
         chemin: String,
         parametres: [URLQueryItem] = [],
         methode: MethodeHttp = .get,
         corpsJson: Data? = nil
     ) throws -> URLRequest {
-        let adresse = base.appending(path: chemin)
-
-        guard var composants = URLComponents(url: adresse, resolvingAgainstBaseURL: false) else {
-            throw ErreurReseau.serveurIntrouvable
-        }
-
-        if parametres.isEmpty == false {
-            composants.queryItems = parametres
-        }
-
-        guard let complete = composants.url else {
-            throw ErreurReseau.serveurIntrouvable
-        }
-
-        var requete = URLRequest(url: complete)
+        var requete = try URLRequest(url: Self.adresse(base: base, chemin: chemin, parametres: parametres))
         requete.httpMethod = methode.rawValue
         requete.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        if let entete = authentification.enteteDIdentite {
-            requete.setValue(entete.valeur, forHTTPHeaderField: entete.nom)
-        }
         if let corpsJson {
             requete.httpBody = corpsJson
             requete.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -133,18 +149,43 @@ public struct ClientHttp: Sendable {
         return requete
     }
 
+    /// Assemble une adresse a partir d une base, d un chemin et de parametres.
+    ///
+    /// - Throws: `ErreurReseau.serveurIntrouvable` quand l assemblage ne produit
+    ///   aucune adresse valable.
+    public static func adresse(base: URL, chemin: String, parametres: [URLQueryItem] = []) throws -> URL {
+        let complete = base.appending(path: chemin)
+
+        guard var composants = URLComponents(url: complete, resolvingAgainstBaseURL: false) else {
+            throw ErreurReseau.serveurIntrouvable
+        }
+
+        if parametres.isEmpty == false {
+            composants.queryItems = parametres
+        }
+
+        guard let assemblee = composants.url else {
+            throw ErreurReseau.serveurIntrouvable
+        }
+
+        return assemblee
+    }
+
     /// La requete qui rapporte les octets d une adresse deja construite.
     ///
     /// Sert aux images de page, dont l adresse est portee par `PageDistante` et
     /// non recalculee a partir d un chemin. La preuve d identite y est posee
     /// comme sur les autres requetes : un serveur protege refuse une image tout
     /// autant qu un document JSON.
-    public func requeteBrute(_ adresse: URL) -> URLRequest {
+    ///
+    /// Elle est posee ici et non a l execution parce que cette requete la n est
+    /// pas executee par le client : elle est rendue a la chaine d images, qui
+    /// l envoie elle meme. Demander la preuve maintenant garantit qu elle est
+    /// fraiche au moment ou la page part.
+    public func requeteBrute(_ adresse: URL) async throws -> URLRequest {
         var requete = URLRequest(url: adresse)
 
-        if let entete = authentification.enteteDIdentite {
-            requete.setValue(entete.valeur, forHTTPHeaderField: entete.nom)
-        }
+        try await Self.poser(identite.entete(), sur: &requete)
 
         return requete
     }
@@ -158,11 +199,37 @@ public struct ClientHttp: Sendable {
     public func lire<Valeur: Decodable>(
         _ type: Valeur.Type,
         chemin: String,
-        parametres: [URLQueryItem] = []
+        parametres: [URLQueryItem] = [],
+        methode: MethodeHttp = .get,
+        corpsJson: Data? = nil
     ) async throws -> Valeur {
-        let reponse = try await executer(requete(chemin: chemin, parametres: parametres))
+        try await lireAvecReponse(
+            type,
+            chemin: chemin,
+            parametres: parametres,
+            methode: methode,
+            corpsJson: corpsJson
+        ).valeur
+    }
 
-        return try Self.decoder(type, depuis: reponse)
+    /// Interroge le serveur, decode la reponse et rend aussi la reponse brute.
+    ///
+    /// Sert aux serveurs qui portent leur pagination dans un entete plutot que
+    /// dans le corps, Kavita en tete. Sans elle, la source devrait deviner
+    /// l existence d une page suivante en comptant les elements recus, ce qui
+    /// demande une requete vide de plus chaque fois que le total tombe juste.
+    public func lireAvecReponse<Valeur: Decodable>(
+        _ type: Valeur.Type,
+        chemin: String,
+        parametres: [URLQueryItem] = [],
+        methode: MethodeHttp = .get,
+        corpsJson: Data? = nil
+    ) async throws -> (valeur: Valeur, reponse: ReponseHttp) {
+        let reponse = try await executer(
+            requete(chemin: chemin, parametres: parametres, methode: methode, corpsJson: corpsJson)
+        )
+
+        return try (Self.decoder(type, depuis: reponse), reponse)
     }
 
     /// Envoie une requete dont la reponse ne porte rien a decoder.
@@ -179,14 +246,53 @@ public struct ClientHttp: Sendable {
     }
 
     /// Execute une requete deja construite et verifie ce qui revient.
+    ///
+    /// Un refus d identifiants declenche un renouvellement de la preuve
+    /// d identite et un seul nouvel essai. Un seul, parce qu une preuve neuve
+    /// refusee a son tour ne l est pas parce qu elle est vieille : elle l est
+    /// parce que le compte n a pas le droit, et reessayer en boucle serait la
+    /// meilleure facon de faire bloquer ce compte par le serveur.
     public func executer(_ requete: URLRequest) async throws -> ReponseHttp {
         try Task.checkCancellation()
 
-        let reponse = try await transport.executer(requete)
+        let presentee = try await identite.entete()
+
+        do {
+            return try await envoyer(requete, avec: presentee)
+        } catch ErreurReseau.authentificationRefusee {
+            guard let renouvelee = await identite.renouveler(apres: presentee) else {
+                throw ErreurReseau.authentificationRefusee
+            }
+
+            try Task.checkCancellation()
+
+            return try await envoyer(requete, avec: renouvelee)
+        }
+    }
+
+    /// Pose la preuve sur une copie de la requete, l envoie et valide la reponse.
+    ///
+    /// La preuve est posee sur une copie de la requete d origine et non sur
+    /// celle qui vient de partir : reprendre la premiere laisserait l ancien
+    /// entete en place quand le renouvellement change de nom d entete.
+    private func envoyer(_ requete: URLRequest, avec entete: EnteteDIdentite?) async throws -> ReponseHttp {
+        var partante = requete
+        Self.poser(entete, sur: &partante)
+
+        let reponse = try await transport.executer(partante)
 
         try valider(reponse)
 
         return reponse
+    }
+
+    /// Pose l entete d identite sur une requete, quand il y en a un.
+    private static func poser(_ entete: EnteteDIdentite?, sur requete: inout URLRequest) {
+        guard let entete else {
+            return
+        }
+
+        requete.setValue(entete.valeur, forHTTPHeaderField: entete.nom)
     }
 
     // MARK: Verification

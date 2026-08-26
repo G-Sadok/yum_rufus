@@ -76,6 +76,14 @@ struct RegleDeTransport: Sendable {
     /// prouvant le contraire de ce qu il annonce.
     let parametresAttendus: [String: String]
 
+    /// Entetes que la requete doit porter pour que la regle s applique.
+    ///
+    /// C est ce qui permet de refuser un jeton perime et d accepter le suivant
+    /// sur le meme chemin. Sans lui, un serveur de test ne saurait pas
+    /// distinguer les deux, et le test de rafraichissement prouverait seulement
+    /// qu une requete a ete rejouee, pas qu elle l a ete avec un jeton neuf.
+    let entetesAttendus: [String: String]
+
     /// Panne de transport a lever au lieu de rendre la reponse.
     let panne: ErreurReseau?
 
@@ -84,12 +92,14 @@ struct RegleDeTransport: Sendable {
         chemin: String,
         reponse: ReponseHttp,
         parametresAttendus: [String: String] = [:],
+        entetesAttendus: [String: String] = [:],
         panne: ErreurReseau? = nil
     ) {
         self.methode = methode
         self.chemin = chemin
         self.reponse = reponse
         self.parametresAttendus = parametresAttendus
+        self.entetesAttendus = entetesAttendus
         self.panne = panne
     }
 
@@ -97,8 +107,23 @@ struct RegleDeTransport: Sendable {
         guard requete.methode == methode.rawValue, requete.chemin.hasSuffix(chemin) else {
             return false
         }
+        guard parametresAttendus.allSatisfy({ requete.parametre($0.key) == $0.value }) else {
+            return false
+        }
 
-        return parametresAttendus.allSatisfy { requete.parametre($0.key) == $0.value }
+        return entetesAttendus.allSatisfy { requete.entete($0.key) == $0.value }
+    }
+
+    /// La meme regle, restreinte aux requetes qui portent cet entete.
+    func exigeant(entete nom: String, _ valeur: String) -> RegleDeTransport {
+        RegleDeTransport(
+            methode: methode,
+            chemin: chemin,
+            reponse: reponse,
+            parametresAttendus: parametresAttendus,
+            entetesAttendus: entetesAttendus.merging([nom: valeur]) { _, ajoute in ajoute },
+            panne: panne
+        )
     }
 
     // MARK: Fabriques
@@ -109,16 +134,18 @@ struct RegleDeTransport: Sendable {
         _ chemin: String,
         _ corps: String,
         code: Int = 200,
-        quand parametres: [String: String] = [:]
+        quand parametres: [String: String] = [:],
+        entetes: [String: String] = [:]
     ) -> RegleDeTransport {
         let octets = Data(corps.utf8)
+        let communs = ["Content-Type": "application/json", "Content-Length": String(octets.count)]
 
         return RegleDeTransport(
             methode: methode,
             chemin: chemin,
             reponse: ReponseHttp(
                 code: code,
-                entetes: ["Content-Type": "application/json", "Content-Length": String(octets.count)],
+                entetes: communs.merging(entetes) { _, ajoute in ajoute },
                 corps: octets
             ),
             parametresAttendus: parametres
@@ -163,9 +190,13 @@ struct RegleDeTransport: Sendable {
     }
 
     /// Une panne de transport, avant meme qu un serveur reponde.
-    static func panne(_ chemin: String, _ panne: ErreurReseau) -> RegleDeTransport {
+    static func panne(
+        _ chemin: String,
+        _ panne: ErreurReseau,
+        methode: MethodeHttp = .get
+    ) -> RegleDeTransport {
         RegleDeTransport(
-            methode: .get,
+            methode: methode,
             chemin: chemin,
             reponse: ReponseHttp(code: 0),
             panne: panne

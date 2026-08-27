@@ -1133,9 +1133,10 @@
       "depend_de": [
         "F049"
       ],
-      "statut": "en_cours",
+      "statut": "termine",
       "modifie_le": "2026-08-27T20:52:04Z",
-      "derniere_erreur": "echec de la cloture, conflit de fusion ou push refuse"
+      "derniere_erreur": "echec de la cloture, conflit de fusion ou push refuse",
+      "termine_le": "2026-08-27T21:19:51Z"
     },
     {
       "id": "F052",

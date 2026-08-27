@@ -24,6 +24,7 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
     private let etat: EtatDeCoquille
     private let entrees: [EntreeDeNavigation]
     private let appelPremium: AppelPremium?
+    private let ouvrirLeMurPremium: (@MainActor () -> Void)?
     private let libelleDuRepli: String
     private let actions: (DestinationPrincipale) -> Actions
     private let contenu: (DestinationPrincipale) -> Contenu
@@ -34,6 +35,8 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
     ///   - etat: destination courante, presentation et repli.
     ///   - entrees: les cinq entrees, dans l ordre de `DestinationPrincipale`.
     ///   - appelPremium: bloc cale en bas de la barre laterale, facultatif.
+    ///   - ouvrirLeMurPremium: geste demande par le bloc d appel, facultatif.
+    ///     Absent, le bloc reste un affichage et ne se comporte pas en bouton.
     ///   - libelleDuRepli: libelle de la bascule de repli, pris dans le
     ///     catalogue de chaines de l application.
     ///   - actions: commandes de barre d outils propres a une destination.
@@ -42,6 +45,7 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
         etat: EtatDeCoquille,
         entrees: [EntreeDeNavigation],
         appelPremium: AppelPremium? = nil,
+        ouvrirLeMurPremium: (@MainActor () -> Void)? = nil,
         libelleDuRepli: String,
         @ViewBuilder actions: @escaping (DestinationPrincipale) -> Actions,
         @ViewBuilder contenu: @escaping (DestinationPrincipale) -> Contenu
@@ -49,6 +53,7 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
         self.etat = etat
         self.entrees = entrees
         self.appelPremium = appelPremium
+        self.ouvrirLeMurPremium = ouvrirLeMurPremium
         self.libelleDuRepli = libelleDuRepli
         self.actions = actions
         self.contenu = contenu
@@ -84,7 +89,8 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
                 BarreLateraleDeNavigation(
                     etat: etat,
                     entrees: entrees,
-                    appelPremium: appelPremium
+                    appelPremium: appelPremium,
+                    ouvrirLeMurPremium: ouvrirLeMurPremium
                 )
                 .padding(Jetons.BarreLaterale.margeDEncastrement)
 
@@ -169,6 +175,7 @@ extension VueDeCoquille where Actions == EmptyView {
         etat: EtatDeCoquille,
         entrees: [EntreeDeNavigation],
         appelPremium: AppelPremium? = nil,
+        ouvrirLeMurPremium: (@MainActor () -> Void)? = nil,
         libelleDuRepli: String,
         @ViewBuilder contenu: @escaping (DestinationPrincipale) -> Contenu
     ) {
@@ -176,6 +183,7 @@ extension VueDeCoquille where Actions == EmptyView {
             etat: etat,
             entrees: entrees,
             appelPremium: appelPremium,
+            ouvrirLeMurPremium: ouvrirLeMurPremium,
             libelleDuRepli: libelleDuRepli,
             actions: { _ in EmptyView() },
             contenu: contenu

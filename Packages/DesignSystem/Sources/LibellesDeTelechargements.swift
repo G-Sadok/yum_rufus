@@ -191,29 +191,12 @@ public enum TexteDeTelechargement {
 
     /// Poids mis en forme, du plus petit multiple qui tienne en trois chiffres.
     ///
-    /// Base mille, comme le document qui ecrit `32 Mo`. Les paliers passent au
-    /// multiple suivant a mille et non a mille vingt quatre, sans quoi un
-    /// fichier de 999 500 octets s afficherait `1000 Ko`.
+    /// Le calcul vit dans `TexteDePoids`, partage avec les ecrans de stockage de
+    /// la section 15 : un chapitre qui pese `32 Mo` dans la file doit peser
+    /// `32 Mo` dans l ecran de detail, et deux calculs separes finiraient par ne
+    /// pas dire la meme chose.
     public static func poids(_ octets: Int, libelles: LibellesDeTelechargements) -> String {
-        let base = Jetons.Telechargements.baseDesPoids
-
-        guard octets >= base else {
-            return String(format: libelles.poidsEnOctets, octets)
-        }
-
-        let enKo = octets / base
-
-        guard enKo >= base else {
-            return String(format: libelles.poidsEnKo, enKo)
-        }
-
-        let enMo = enKo / base
-
-        guard enMo >= base else {
-            return String(format: libelles.poidsEnMo, enMo)
-        }
-
-        return String(format: libelles.poidsEnGo, Double(enMo) / Double(base))
+        TexteDePoids.poids(octets, motifs: libelles.motifsDePoids)
     }
 
     /// Etiquette lue par VoiceOver, qui porte tout ce que la ligne montre.

@@ -101,7 +101,7 @@ struct PanneauDeFiltresDansLaVueTests {
         #expect(phrase.contains("Colorisation IA est verrouillee premium"))
         #expect(phrase.contains("couronne"))
 
-        let sansAbonnement = panneau(premiumActif: false)
+        let sansAbonnement = panneau(abonnement: .gratuit)
 
         #expect(sansAbonnement.estVerrouille(.colorisationIA))
         #expect(sansAbonnement.estVerrouille(.ameliorationIA))
@@ -110,11 +110,20 @@ struct PanneauDeFiltresDansLaVueTests {
 
     @Test("L abonnement rend l interrupteur des traitements par IA")
     func couronneAvecAbonnement() {
-        let avecAbonnement = panneau(premiumActif: true)
+        let avecAbonnement = panneau(abonnement: .definitif)
 
         for traitement in TraitementDImage.allCases {
             #expect(avecAbonnement.estVerrouille(traitement) == false, "\(traitement.rawValue)")
         }
+    }
+
+    @Test("Un abonnement expire reverrouille les traitements par IA")
+    func couronneApresExpiration() {
+        let expire = panneau(abonnement: .expire(le: .distantPast))
+
+        #expect(expire.estVerrouille(.colorisationIA))
+        #expect(expire.estVerrouille(.ameliorationIA))
+        #expect(expire.estVerrouille(.reductionDuBruit) == false)
     }
 
     // MARK: Libelles
@@ -167,10 +176,10 @@ struct PanneauDeFiltresDansLaVueTests {
 
     // MARK: Materiel
 
-    private func panneau(premiumActif: Bool) -> VueDePanneauDeFiltres {
+    private func panneau(abonnement: EtatDePremium) -> VueDePanneauDeFiltres {
         VueDePanneauDeFiltres(
             reglages: .parDefaut,
-            premiumActif: premiumActif,
+            abonnement: abonnement,
             libelles: LibellesDePanneauDeFiltres(
                 titre: "Filtres",
                 libellesDeFiltre: [:],

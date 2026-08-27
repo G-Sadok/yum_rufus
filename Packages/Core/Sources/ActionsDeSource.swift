@@ -67,6 +67,22 @@ public enum ActionDeSource: String, Sendable, Codable, CaseIterable, Hashable {
         }
     }
 
+    /// Vrai quand l action ecrit quelque part au lieu de se contenter de lire.
+    ///
+    /// La distinction sert la regle de degradation de la section 10 du cahier de
+    /// developpement : une source premium dont l abonnement a expire passe en
+    /// lecture seule, elle ne perd donc que ces deux actions la. Telecharger
+    /// pose des fichiers sur le disque, publier une progression ecrit sur le
+    /// serveur. Tout le reste ne fait que consulter ce qui existe deja, et rien
+    /// n oblige a le fermer.
+    public var estUneEcriture: Bool {
+        switch self {
+        case .telecharger, .publierLaProgression: true
+        case .parcourir, .ouvrirUneSerie, .listerLesChapitres, .lireUnChapitre,
+             .rechercher, .filtrer, .chargerLaSuite, .choisirLaLangue: false
+        }
+    }
+
     /// Les actions que toute source rend, quelles que soient ses capacites.
     public static var inconditionnelles: [ActionDeSource] {
         allCases.filter { $0.capaciteRequise == nil }

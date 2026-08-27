@@ -33,7 +33,7 @@ public struct VueDePanneauDeFiltres: View {
     @Environment(\.palette) private var palette
 
     private let reglages: ReglagesDeFiltres
-    private let premiumActif: Bool
+    private let abonnement: EtatDePremium
     private let libelles: LibellesDePanneauDeFiltres
     private let commandes: CommandesDePanneauDeFiltres
 
@@ -42,18 +42,18 @@ public struct VueDePanneauDeFiltres: View {
     /// - Parameters:
     ///   - reglages: valeurs courantes des cinq curseurs et des trois
     ///     interrupteurs.
-    ///   - premiumActif: vrai quand l abonnement debloque les traitements par
-    ///     IA. La couronne tombe alors et l interrupteur revient.
+    ///   - abonnement: etat de l abonnement. Il ouvre les traitements par IA,
+    ///     la couronne tombe alors et l interrupteur revient.
     ///   - libelles: textes pris dans le catalogue de chaines.
     ///   - commandes: ce que les lignes declenchent.
     public init(
         reglages: ReglagesDeFiltres,
-        premiumActif: Bool = false,
+        abonnement: EtatDePremium = .gratuit,
         libelles: LibellesDePanneauDeFiltres,
         commandes: CommandesDePanneauDeFiltres
     ) {
         self.reglages = reglages
-        self.premiumActif = premiumActif
+        self.abonnement = abonnement
         self.libelles = libelles
         self.commandes = commandes
     }
@@ -117,8 +117,12 @@ public struct VueDePanneauDeFiltres: View {
     }
 
     /// Vrai quand ce traitement demande un abonnement que l utilisateur n a pas.
+    ///
+    /// La reponse vient de la matrice de la section 10 et non d une condition
+    /// ecrite ici. Le panneau n a pas a savoir lesquels des trois traitements
+    /// sont payants, il a a savoir lesquels sont ouverts maintenant.
     func estVerrouille(_ traitement: TraitementDImage) -> Bool {
-        traitement.estReserveAuPremium && premiumActif == false
+        MatriceDeVerrouillage.acces(a: traitement, selon: abonnement) == .verrouille
     }
 }
 

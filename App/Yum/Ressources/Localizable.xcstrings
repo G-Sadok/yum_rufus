@@ -1,6 +1,42 @@
 {
   "sourceLanguage" : "fr",
   "strings" : {
+    "banniere.reactivation.apresExpiration" : {
+      "comment" : "Section 10 du cahier de developpement, degradation. Phrase absente de la section 6, ecrite selon ses regles. Nomme ce qui reste intact avant de proposer la sortie",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre abonnement a pris fin le %@. Vos series, vos chapitres telecharges et vos reglages sont intacts. Reprenez Premium pour telecharger et publier votre progression a nouveau."
+          }
+        }
+      }
+    },
+    "banniere.reactivation.sansAbonnement" : {
+      "comment" : "Section 10 du cahier de developpement, degradation. Cas d une source premium sans achat prealable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette source demande Premium. Vous pouvez lire ce qui est deja la, Premium ouvre le telechargement et la publication de votre progression."
+          }
+        }
+      }
+    },
+    "banniere.reactivation.titre" : {
+      "comment" : "Section 10 du cahier de developpement, degradation. Le nom cite est celui de la source reelle, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ est en lecture seule"
+          }
+        }
+      }
+    },
     "categorie.creer" : {
       "comment" : "Barre de categories, section 5.1. Libelle absent de la section 6, ecrit selon ses regles",
       "extractionState" : "manual",

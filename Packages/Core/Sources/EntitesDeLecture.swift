@@ -68,6 +68,12 @@ public struct Signet: Sendable, Codable, Identifiable, Hashable {
 }
 
 /// Entree de la file de telechargement d un chapitre.
+///
+/// Les quatre derniers champs arrivent avec la file de la section 4.11 de
+/// DESIGN-SPEC.md. La section 3.1 donne les sept premiers, qui suffisent a dire
+/// qu une tache avance ; ils ne suffisent pas a dire ou elle reprend. Un
+/// telechargement interrompu qui ne saurait pas combien de pages sont deja la
+/// recommencerait le chapitre entier a chaque coupure.
 public struct Telechargement: Sendable, Codable, Identifiable, Hashable {
     public var id: UUID
     public var chapitreId: UUID
@@ -85,6 +91,19 @@ public struct Telechargement: Sendable, Codable, Identifiable, Hashable {
     /// `echoue`. Il nomme la cause et indique la sortie.
     public var messageErreur: String?
 
+    /// Rang de passage dans la file.
+    public var priorite: PrioriteDeTelechargement
+
+    /// Pages entierement recues et scellees, point de reprise du chapitre.
+    public var pagesTerminees: Int
+
+    /// Longueur du chapitre annoncee par la source, zero tant qu elle est
+    /// inconnue.
+    public var nombreDePages: Int
+
+    /// Octets deja recus, fragment de la page en cours compris.
+    public var octetsRecus: Int
+
     public init(
         id: UUID = UUID(),
         chapitreId: UUID,
@@ -92,7 +111,11 @@ public struct Telechargement: Sendable, Codable, Identifiable, Hashable {
         progression: Double = 0,
         octetsTotal: Int? = nil,
         dateAjout: Date = Date(),
-        messageErreur: String? = nil
+        messageErreur: String? = nil,
+        priorite: PrioriteDeTelechargement = .parDefaut,
+        pagesTerminees: Int = 0,
+        nombreDePages: Int = 0,
+        octetsRecus: Int = 0
     ) {
         self.id = id
         self.chapitreId = chapitreId
@@ -101,6 +124,10 @@ public struct Telechargement: Sendable, Codable, Identifiable, Hashable {
         self.octetsTotal = octetsTotal
         self.dateAjout = dateAjout
         self.messageErreur = messageErreur
+        self.priorite = priorite
+        self.pagesTerminees = pagesTerminees
+        self.nombreDePages = nombreDePages
+        self.octetsRecus = octetsRecus
     }
 }
 

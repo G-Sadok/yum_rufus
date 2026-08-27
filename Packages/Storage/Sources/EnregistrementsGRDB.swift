@@ -85,5 +85,6 @@ extension TypeDeSource: DatabaseValueConvertible {}
 extension EtatConnexion: DatabaseValueConvertible {}
 extension StatutSerie: DatabaseValueConvertible {}
 extension EtatTelechargement: DatabaseValueConvertible {}
+extension PrioriteDeTelechargement: DatabaseValueConvertible {}
 extension ServiceDeSuivi: DatabaseValueConvertible {}
 extension StatutDeSuivi: DatabaseValueConvertible {}

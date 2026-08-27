@@ -48,7 +48,8 @@ struct MigrationDeSchemaTests {
         ],
         "telechargement": [
             "id", "chapitreId", "etat", "progression", "octetsTotal", "dateAjout",
-            "messageErreur",
+            "messageErreur", "priorite", "pagesTerminees", "nombreDePages",
+            "octetsRecus",
         ],
         "prereglageLecture": ["id", "nom", "donneesReglages"],
         "liaisonSuivi": [

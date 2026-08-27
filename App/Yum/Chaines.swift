@@ -263,6 +263,60 @@ enum Chaines {
         static let videAction = String(localized: "etatVide.telechargements.action")
     }
 
+    /// Gestion du stockage, section 15 de l ecran Reglages.
+    ///
+    /// La section 6 ne dessine pas ces ecrans. Les trois categories reprennent
+    /// mot pour mot l inventaire de la section 9 du cahier de developpement,
+    /// `Chapitres telecharges`, `Cache des chapitres` et `Cache des images`. Le
+    /// reste suit les regles d ecriture de la section 6 : voix active, le bouton
+    /// dit ce qui se passe, et l erreur comme la confirmation nomment ce dont
+    /// elles parlent.
+    ///
+    /// Neuf libelles sont empruntes plutot que reecrits. Le titre et la
+    /// description viennent de la ligne de reglages qui mene ici, la sous ligne
+    /// `Lu` du tableau 4.5, le compteur et les commandes de la barre de
+    /// selection de la section 4.5, les paliers de poids de la section 4.11. Le
+    /// meme mot pour la meme chose d un bout a l autre du produit.
+    enum Stockage {
+        static let titre = String(localized: "reglages.ligne.stockage.detail")
+        static let description = String(localized: "reglages.description.stockage")
+        static let chapitreNumerote = String(localized: "chapitre.numerote")
+        static let chapitreLu = String(localized: "chapitre.lu")
+        static let chapitreNonLu = String(localized: "stockage.chapitreNonLu")
+        static let cacheDUneSource = String(localized: "stockage.cacheDUneSource")
+        static let elementsAnonymes = String(localized: "stockage.elementsAnonymes")
+        static let supprimer = String(localized: "selection.supprimer")
+        static let toutSupprimer = String(localized: "stockage.toutSupprimer")
+        static let compteurDeSelection = String(localized: "selection.compteur")
+        static let fermerLaSelection = String(localized: "selection.fermer")
+        static let selectionner = String(localized: "selection.selectionner")
+        static let confirmationTitre = String(localized: "stockage.confirmation.titre")
+        static let confirmationDescription = String(
+            localized: "stockage.confirmation.description"
+        )
+        static let confirmationAnnuler = String(localized: "historique.confirmation.annuler")
+        static let videTitre = String(localized: "etatVide.stockage.titre")
+        static let videPhrase = String(localized: "etatVide.stockage.phrase")
+
+        /// Libelle d une categorie, inventaire de la section 9.
+        static let categorieChapitresTelecharges = String(
+            localized: "stockage.categorie.chapitresTelecharges"
+        )
+        static let categorieCacheDeChapitres = String(
+            localized: "stockage.categorie.cacheDeChapitres"
+        )
+        static let categorieCacheDImages = String(localized: "stockage.categorie.cacheDImages")
+
+        /// Titre du poste qui regroupe les elements que rien ne nomme.
+        static let anonymesChapitresTelecharges = String(
+            localized: "stockage.anonymes.chapitresTelecharges"
+        )
+        static let anonymesCacheDeChapitres = String(
+            localized: "stockage.anonymes.cacheDeChapitres"
+        )
+        static let anonymesCacheDImages = String(localized: "stockage.anonymes.cacheDImages")
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")

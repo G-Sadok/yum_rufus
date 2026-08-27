@@ -457,6 +457,30 @@
         }
       }
     },
+    "etatVide.stockage.phrase" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Etat vide d un ecran de detail du stockage, section 15",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette categorie n occupe aucune place. Lisez ou telechargez un chapitre pour la remplir."
+          }
+        }
+      }
+    },
+    "etatVide.stockage.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Meme forme que Aucun signet de la section 5.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun fichier ici"
+          }
+        }
+      }
+    },
     "etatVide.telechargements.action" : {
       "comment" : "DESIGN-SPEC.md, section 4.10. Meme libelle que les etats vides voisins, meme destination",
       "extractionState" : "manual",
@@ -2769,6 +2793,150 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Termine"
+          }
+        }
+      }
+    },
+    "stockage.anonymes.cacheDImages" : {
+      "comment" : "Poste qui regroupe les pages du cache d images, dont le nom de fichier ne se lit pas",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages en cache"
+          }
+        }
+      }
+    },
+    "stockage.anonymes.cacheDeChapitres" : {
+      "comment" : "Poste qui regroupe le cache des sources que la bibliotheque ne connait plus",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sources retirees"
+          }
+        }
+      }
+    },
+    "stockage.anonymes.chapitresTelecharges" : {
+      "comment" : "Poste qui regroupe les chapitres telecharges que la bibliotheque ne connait plus",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres hors de la bibliotheque"
+          }
+        }
+      }
+    },
+    "stockage.cacheDUneSource" : {
+      "comment" : "Sous ligne du cache d une source, section 15. Aucune sous ligne n est vide, recette section 9",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres gardes en cache"
+          }
+        }
+      }
+    },
+    "stockage.categorie.cacheDImages" : {
+      "comment" : "Cahier de developpement, section 9, inventaire des reglages, section Stockage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache des images"
+          }
+        }
+      }
+    },
+    "stockage.categorie.cacheDeChapitres" : {
+      "comment" : "Cahier de developpement, section 9, inventaire des reglages, section Stockage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cache des chapitres"
+          }
+        }
+      }
+    },
+    "stockage.categorie.chapitresTelecharges" : {
+      "comment" : "Cahier de developpement, section 9, inventaire des reglages, section Stockage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres telecharges"
+          }
+        }
+      }
+    },
+    "stockage.chapitreNonLu" : {
+      "comment" : "Sous ligne d un chapitre telecharge pas encore lu, pendant de chapitre.lu du tableau 4.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non lu"
+          }
+        }
+      }
+    },
+    "stockage.confirmation.description" : {
+      "comment" : "Modale courte, section 4.8. La confirmation nomme ce qui part et ce que cela libere",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld elements partent du disque et liberent %2$@."
+          }
+        }
+      }
+    },
+    "stockage.confirmation.titre" : {
+      "comment" : "Modale courte, section 4.8. Voix active, le bouton dit ce qui se passe",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer du disque"
+          }
+        }
+      }
+    },
+    "stockage.elementsAnonymes" : {
+      "comment" : "Sous ligne d un poste groupe, section 15. Elle dit combien d elements le poste recouvre",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld elements"
+          }
+        }
+      }
+    },
+    "stockage.toutSupprimer" : {
+      "comment" : "Action qui vide une categorie entiere, section 15. Ecrite selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout supprimer"
           }
         }
       }

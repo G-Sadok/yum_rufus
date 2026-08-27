@@ -1063,7 +1063,7 @@
       "depend_de": [
         "F047"
       ],
-      "statut": "bloque",
+      "statut": "a_faire",
       "modifie_le": "2026-08-27T08:27:01Z",
       "derniere_erreur": "aucune progression sur deux tentatives"
     },
@@ -1087,7 +1087,7 @@
       "depend_de": [
         "F019"
       ],
-      "statut": "bloque",
+      "statut": "a_faire",
       "modifie_le": "2026-08-27T08:27:14Z",
       "derniere_erreur": "aucune progression sur deux tentatives"
     },
@@ -1292,7 +1292,7 @@
       "depend_de": [
         "F018"
       ],
-      "statut": "bloque",
+      "statut": "a_faire",
       "modifie_le": "2026-08-27T08:27:28Z",
       "derniere_erreur": "aucune progression sur deux tentatives"
     },

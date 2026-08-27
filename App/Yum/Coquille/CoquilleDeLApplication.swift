@@ -12,6 +12,8 @@ import SwiftUI
 
 /// Racine de l interface.
 struct CoquilleDeLApplication: View {
+    @Environment(\.scenePhase) private var phaseDeScene
+
     /// Etat de la navigation principale.
     let etat: EtatDeCoquille
 
@@ -21,6 +23,9 @@ struct CoquilleDeLApplication: View {
 
     /// Abonnement et mur premium.
     let premium: SessionPremium
+
+    /// Mode incognito et verrouillage de l app, section 11.
+    let confidentialite: SessionDeConfidentialite
 
     var body: some View {
         VueDeCoquille(
@@ -32,15 +37,49 @@ struct CoquilleDeLApplication: View {
             actions: commandes(de:),
             contenu: contenu(de:)
         )
+        .banniereDIncognito(confidentialite.banniere, etiquette: Chaines.Incognito.etiquette)
         .murPremium(
             demande: premium.demande,
             etat: premium.mur,
             libelles: .duCatalogue,
             commandes: premium.commandes
         )
+        // L ecran de verrouillage est pose en dernier, donc au dessus de tout le
+        // reste, mur premium compris. Une feuille qui resterait lisible par
+        // dessus le verrou annulerait le verrou.
+        .verrouillageDeLApp(
+            confidentialite.verrou.etat,
+            ecran: confidentialite.ecranDeVerrouillage,
+            libelles: .duCatalogue,
+            deverrouiller: deverrouiller
+        )
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
         .task { await premium.rafraichirLAbonnement() }
+        .onChange(of: phaseDeScene) { _, nouvelle in
+            suivreLaPhase(nouvelle)
+        }
+    }
+
+    /// Cycle de vie de la scene, section 11.
+    ///
+    /// La regle des trente secondes vit dans `Core`. L application ne fait que
+    /// lui dire quand elle part et quand elle revient, avec l heure.
+    private func suivreLaPhase(_ phase: ScenePhase) {
+        switch phase {
+        case .active:
+            confidentialite.revenirAuPremierPlan()
+
+        case .inactive, .background:
+            confidentialite.passerEnArrierePlan()
+
+        @unknown default:
+            break
+        }
+    }
+
+    private func deverrouiller() {
+        Task { await confidentialite.deverrouiller() }
     }
 
     /// Ouverture du mur depuis le bloc de la barre laterale, section 2.2.

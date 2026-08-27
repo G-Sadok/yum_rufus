@@ -15,6 +15,12 @@ import GRDB
 // donnerait mille huit cents entrees pour une heure de lecture, et un ecran
 // illisible des le premier chapitre.
 //
+// Le mode incognito de la section 11 ne ferme que la consignation. La
+// suppression d une entree et l effacement global restent offerts pendant une
+// session : ce sont des gestes explicites de l utilisateur, qui vont dans le
+// meme sens que le mode incognito et non contre lui. Une commande qui ne ferait
+// rien en silence serait un bogue, pas une protection.
+//
 
 /// Lit et ecrit l historique de lecture.
 public struct MagasinDHistorique: Sendable {
@@ -26,9 +32,17 @@ public struct MagasinDHistorique: Sendable {
     public static let limiteParDefaut = 500
 
     private let base: BaseDeDonnees
+    private let incognito: RegistreDIncognito
 
-    public init(base: BaseDeDonnees) {
+    /// Construit le magasin.
+    ///
+    /// - Parameters:
+    ///   - base: base deja ouverte et migree.
+    ///   - incognito: etat du mode incognito, section 11. Un registre neuf est
+    ///     inactif.
+    public init(base: BaseDeDonnees, incognito: RegistreDIncognito = RegistreDIncognito()) {
         self.base = base
+        self.incognito = incognito
     }
 
     // MARK: Lecture
@@ -81,6 +95,9 @@ public struct MagasinDHistorique: Sendable {
 
     /// Consigne une lecture, ou met a jour celle du jour pour ce chapitre.
     ///
+    /// Pendant une session incognito, l appel ne fait rien : la section 11
+    /// interdit toute ecriture dans l historique tant que la session court.
+    ///
     /// - Parameters:
     ///   - chapitre: chapitre lu.
     ///   - pageAtteinte: page atteinte a la fin du passage.
@@ -92,6 +109,10 @@ public struct MagasinDHistorique: Sendable {
         le date: Date = Date(),
         calendrier: Calendar = .autoupdatingCurrent
     ) throws {
+        guard incognito.autorise(.historiqueDeLecture) else {
+            return
+        }
+
         try base.ecrivain.write { connexion in
             try Self.consigner(
                 chapitre: chapitre,

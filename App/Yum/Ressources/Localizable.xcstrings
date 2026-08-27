@@ -901,6 +901,30 @@
         }
       }
     },
+    "incognito.banniere.etiquette" : {
+      "comment" : "Etiquette d accessibilite de la banniere du mode incognito, section 7",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode incognito actif, votre activite de lecture n est pas enregistree"
+          }
+        }
+      }
+    },
+    "incognito.banniere.phrase" : {
+      "comment" : "Section 11 du cahier de developpement, banniere du mode incognito. Absente de la section 6, ecrite selon ses regles, reprend les mots de la description de la carte Confidentialite du tableau 6.8",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre activite de lecture n est pas enregistree."
+          }
+        }
+      }
+    },
     "liste.compteurDeChapitres" : {
       "comment" : "DESIGN-SPEC.md, section 5.6, en tete de la liste de chapitres",
       "extractionState" : "manual",
@@ -3333,6 +3357,78 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telechargements"
+          }
+        }
+      }
+    },
+    "verrouillage.aucunMoyen.phrase" : {
+      "comment" : "Section 11 du cahier de developpement, appareil sans biometrie ni code. Nomme la cause et indique la sortie, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet appareil n a ni Face ID ni code. Ajoutez un code dans les reglages du systeme pour verrouiller l application."
+          }
+        }
+      }
+    },
+    "verrouillage.deverrouiller" : {
+      "comment" : "Section 11 du cahier de developpement, bouton de l ecran de verrouillage. Voix active, le bouton dit ce qui se passe",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deverrouiller"
+          }
+        }
+      }
+    },
+    "verrouillage.echec.phrase" : {
+      "comment" : "Section 11 du cahier de developpement, phrase de l etat d erreur. Nomme la cause et indique la sortie, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L identification n a pas abouti. Reessayez, ou utilisez le code de l appareil."
+          }
+        }
+      }
+    },
+    "verrouillage.echec.titre" : {
+      "comment" : "Section 11 du cahier de developpement, titre de l etat d erreur de l ecran de verrouillage, tableau 6.4",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identification refusee"
+          }
+        }
+      }
+    },
+    "verrouillage.phrase" : {
+      "comment" : "Section 11 du cahier de developpement, ecran de verrouillage. Absente de la section 6, ecrite selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifiez vous pour reprendre votre lecture."
+          }
+        }
+      }
+    },
+    "verrouillage.raison" : {
+      "comment" : "Section 11 du cahier de developpement, phrase montree par la feuille d authentification du systeme",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deverrouiller votre bibliotheque"
           }
         }
       }

@@ -421,6 +421,42 @@
         }
       }
     },
+    "etatVide.signets.action" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Meme libelle que l etat vide de l historique, meme destination",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la bibliotheque"
+          }
+        }
+      }
+    },
+    "etatVide.signets.phrase" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Etat vide du sous ecran Signets, absent du tableau 6.3, ecrit selon les regles de la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marquez une page depuis le lecteur pour la retrouver ici."
+          }
+        }
+      }
+    },
+    "etatVide.signets.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Meme forme que Aucun prereglage de la section 5.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun signet"
+          }
+        }
+      }
+    },
     "fiche.afficherMoins" : {
       "comment" : "Repli du resume. Libelle absent de la section 6, ecrit selon ses regles",
       "extractionState" : "manual",
@@ -2577,6 +2613,78 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telecharger"
+          }
+        }
+      }
+    },
+    "signets.description" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, sous ecran Signets. Description absente du document, ecrite selon les regles de la section 6, et qui nomme le bouton du tableau 6.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un signet garde la page, sa vignette et votre note. Posez en un avec le bouton Signet de la barre du lecteur."
+          }
+        }
+      }
+    },
+    "signets.options" : {
+      "comment" : "DESIGN-SPEC.md, section 7, etiquette d accessibilite du bouton d options d une ligne de signet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options du signet"
+          }
+        }
+      }
+    },
+    "signets.ouvrirLaPage" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, sous ecran Signets. Voix active, le libelle dit ce qui se passe",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la page"
+          }
+        }
+      }
+    },
+    "signets.pageNumerotee" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7. La page est comptee a partir de un, comme le compteur de la barre inferieure du lecteur",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld"
+          }
+        }
+      }
+    },
+    "signets.supprimer" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, sous ecran Signets. Meme libelle que la suppression d une categorie, meme action",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "signets.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, liste des sous ecrans a concevoir cote implementation",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signets"
           }
         }
       }

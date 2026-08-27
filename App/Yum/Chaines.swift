@@ -201,6 +201,32 @@ enum Chaines {
         }
     }
 
+    /// Signets, sous ecran de la section 5.5 et section 3.1 du cahier de
+    /// developpement.
+    ///
+    /// Le document nomme l ecran, `Signets`, et nomme le bouton qui pose un
+    /// signet, `Signet` au tableau 6.5. Il ne dessine ni la description, ni les
+    /// deux commandes du menu d une ligne, ni l etat vide : ils suivent les
+    /// regles d ecriture de la section 6, voix active, le libelle dit ce qui se
+    /// passe, et reprennent les mots deja employes ailleurs pour les memes
+    /// actions.
+    ///
+    /// Le motif du chapitre est celui de la ligne de chapitre du tableau 4.5, et
+    /// non une seconde formulation : c est le meme objet nomme au meme mot d un
+    /// bout a l autre du parcours.
+    enum Signets {
+        static let titre = String(localized: "signets.titre")
+        static let description = String(localized: "signets.description")
+        static let chapitreNumerote = String(localized: "chapitre.numerote")
+        static let pageNumerotee = String(localized: "signets.pageNumerotee")
+        static let options = String(localized: "signets.options")
+        static let ouvrirLaPage = String(localized: "signets.ouvrirLaPage")
+        static let supprimer = String(localized: "signets.supprimer")
+        static let videTitre = String(localized: "etatVide.signets.titre")
+        static let videPhrase = String(localized: "etatVide.signets.phrase")
+        static let videAction = String(localized: "etatVide.signets.action")
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")

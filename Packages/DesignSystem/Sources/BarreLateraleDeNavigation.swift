@@ -17,6 +17,7 @@ struct BarreLateraleDeNavigation: View {
     let etat: EtatDeCoquille
     let entrees: [EntreeDeNavigation]
     let appelPremium: AppelPremium?
+    let ouvrirLeMurPremium: (@MainActor () -> Void)?
 
     var body: some View {
         VStack(spacing: Jetons.BarreLaterale.espaceEntreLignes) {
@@ -36,7 +37,11 @@ struct BarreLateraleDeNavigation: View {
             Spacer(minLength: Jetons.Espace.x1)
 
             if let appelPremium {
-                BlocPremium(appel: appelPremium, estRepliee: etat.barreLateraleRepliee)
+                BlocPremium(
+                    appel: appelPremium,
+                    estRepliee: etat.barreLateraleRepliee,
+                    ouvrir: ouvrirLeMurPremium
+                )
             }
         }
         .padding(.vertical, Jetons.BarreLaterale.margeVerticale)
@@ -85,17 +90,53 @@ private struct NavigationAuClavier: ViewModifier {
 private struct BlocPremium: View {
     @Environment(\.palette) private var palette
 
+    @FocusState private var focalise: Bool
+
     let appel: AppelPremium
     let estRepliee: Bool
 
+    /// Ouvre le mur premium, nul tant qu aucun ecran ne sait le presenter.
+    ///
+    /// Un bloc sans action reste un bloc, pas un bouton : une cible qui ne
+    /// repond pas au clic coute plus cher qu une cible absente.
+    let ouvrir: (@MainActor () -> Void)?
+
     var body: some View {
+        Group {
+            if let ouvrir {
+                Button(action: ouvrir) { bloc }
+                    .buttonStyle(.plain)
+                    .focusEffectDisabled()
+                    .focused($focalise)
+                    .overlay(contourDeFocus)
+                    .accessibilityAddTraits(.isButton)
+            } else {
+                bloc
+            }
+        }
+        .help(appel.titre)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(appel.titre)
+        .accessibilityValue(appel.sousTitre)
+    }
+
+    private var bloc: some View {
         contenu
             .frame(maxWidth: .infinity, minHeight: Jetons.BarreLaterale.hauteurDuBlocPremium)
             .background(fond)
-            .help(appel.titre)
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel(appel.titre)
-            .accessibilityValue(appel.sousTitre)
+            .contentShape(Rectangle())
+    }
+
+    @ViewBuilder
+    private var contourDeFocus: some View {
+        if focalise {
+            RoundedRectangle(
+                cornerRadius: Jetons.BarreLaterale.rayonDuBlocPremium,
+                style: .continuous
+            )
+            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
+            .padding(-Jetons.Focus.decalage)
+        }
     }
 
     @ViewBuilder

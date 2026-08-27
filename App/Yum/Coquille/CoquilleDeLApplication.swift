@@ -19,17 +19,37 @@ struct CoquilleDeLApplication: View {
     /// commande d effacement de la barre d outils.
     let historique: EtatDHistorique
 
+    /// Abonnement et mur premium.
+    let premium: SessionPremium
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
             entrees: entrees,
             appelPremium: appelPremium,
+            ouvrirLeMurPremium: ouvrirLeMurPremium,
             libelleDuRepli: Chaines.Navigation.repli,
             actions: commandes(de:),
             contenu: contenu(de:)
         )
+        .murPremium(
+            demande: premium.demande,
+            etat: premium.mur,
+            libelles: .duCatalogue,
+            commandes: premium.commandes
+        )
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
+        .task { await premium.rafraichirLAbonnement() }
+    }
+
+    /// Ouverture du mur depuis le bloc de la barre laterale, section 2.2.
+    ///
+    /// C est aujourd hui le seul point d entree du produit vers l achat. La
+    /// section Abonnement de l ecran Reglages en ouvrira un second quand cet
+    /// ecran sera livre, et passera par la meme demande.
+    private func ouvrirLeMurPremium() {
+        premium.demander(.appelDeLaBarreLaterale)
     }
 
     private func contenu(de destination: DestinationPrincipale) -> some View {

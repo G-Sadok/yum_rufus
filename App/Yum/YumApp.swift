@@ -15,6 +15,7 @@ struct YumApp: App {
     @State private var etat = EtatDeCoquille()
     @State private var services: ServicesDeLApplication
     @State private var historique: EtatDHistorique
+    @State private var premium = SessionPremium()
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -28,7 +29,7 @@ struct YumApp: App {
 
     var body: some Scene {
         WindowGroup {
-            CoquilleDeLApplication(etat: etat, historique: historique)
+            CoquilleDeLApplication(etat: etat, historique: historique, premium: premium)
         }
         #if os(macOS)
         .defaultSize(

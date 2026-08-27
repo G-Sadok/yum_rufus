@@ -145,6 +145,30 @@
         }
       }
     },
+    "erreur.boutique.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4, etat d erreur du mur premium",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yum n a pas pu lire les tarifs. Votre abonnement actuel, s il existe, reste actif. Reessayez dans un moment."
+          }
+        }
+      }
+    },
+    "erreur.boutique.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.4, etat d erreur du mur premium",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La boutique ne repond pas"
+          }
+        }
+      }
+    },
     "erreur.ficheDeSerie.phrase" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.4. Le nom et le nombre sont les valeurs reelles",
       "extractionState" : "manual",
@@ -885,6 +909,138 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trier"
+          }
+        }
+      }
+    },
+    "murPremium.avantage.sauvegardeEtSynchronisation" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, cinquieme avantage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarde et synchronisation iCloud"
+          }
+        }
+      }
+    },
+    "murPremium.avantage.serveurs" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, deuxieme avantage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveurs Komga, Kavita, Jellyfin, OPDS"
+          }
+        }
+      }
+    },
+    "murPremium.avantage.suivis" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, troisieme avantage. Aucune marque tierce, regle 0.1",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivis sur vos services de suivi"
+          }
+        }
+      }
+    },
+    "murPremium.avantage.telechargements" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, quatrieme avantage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telechargements hors ligne"
+          }
+        }
+      }
+    },
+    "murPremium.avantage.traductionEtColorisation" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, premier avantage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traduction et colorisation par IA"
+          }
+        }
+      }
+    },
+    "murPremium.commencerLEssai" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, bouton principal du mur premium",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayer 7 jours gratuitement"
+          }
+        }
+      }
+    },
+    "murPremium.mentionDePrix" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, mention sous le bouton. Le tarif vient de la boutique",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puis %@ par mois. Resiliable a tout moment."
+          }
+        }
+      }
+    },
+    "murPremium.plusTard" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, sortie du mur premium",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus tard"
+          }
+        }
+      }
+    },
+    "murPremium.sAbonner" : {
+      "comment" : "Bouton principal du mur quand l essai est deja consomme. Libelle absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "S abonner"
+          }
+        }
+      }
+    },
+    "murPremium.sousTitre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, sous titre de la feuille",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debloquez toutes les fonctions avancees"
+          }
+        }
+      }
+    },
+    "murPremium.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.9, titre de la feuille",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Premium"
           }
         }
       }

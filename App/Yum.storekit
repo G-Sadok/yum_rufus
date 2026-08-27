@@ -1,0 +1,104 @@
+{
+  "identifier" : "F049A000-0000-0000-0000-00000000A049",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "79.99",
+      "familyShareable" : false,
+      "internalID" : "1000000049",
+      "localizations" : [
+        {
+          "description" : "Debloque toutes les fonctions avancees, une fois pour toutes.",
+          "displayName" : "Premium definitif",
+          "locale" : "fr_FR"
+        }
+      ],
+      "productID" : "com.yum.lecteur.premium.definitif",
+      "referenceName" : "Premium definitif",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "fr_FR",
+    "_storefront" : "FRA",
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "20000049",
+      "localizations" : [
+
+      ],
+      "name" : "Premium",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "2000000049",
+          "introductoryOffer" : {
+            "internalID" : "2100000049",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Toutes les fonctions avancees, chaque mois.",
+              "displayName" : "Premium mensuel",
+              "locale" : "fr_FR"
+            }
+          ],
+          "productID" : "com.yum.lecteur.premium.mensuel",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium mensuel",
+          "subscriptionGroupID" : "20000049",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "34.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "2000000050",
+          "introductoryOffer" : {
+            "internalID" : "2100000050",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P1W"
+          },
+          "localizations" : [
+            {
+              "description" : "Toutes les fonctions avancees, chaque annee.",
+              "displayName" : "Premium annuel",
+              "locale" : "fr_FR"
+            }
+          ],
+          "productID" : "com.yum.lecteur.premium.annuel",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium annuel",
+          "subscriptionGroupID" : "20000049",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

@@ -31,6 +31,12 @@ extension CatalogueDeReglages {
     /// La tourne de page animee est active par defaut, comme la section 1.9
     /// l implique en la declarant desactivable par reglage. Le reglage systeme
     /// Reduire les animations reste prioritaire sur elle.
+    ///
+    /// Les deux dernieres lignes ne figurent pas au tableau de la section 5.5
+    /// de DESIGN-SPEC.md, qui resume la section. Elles viennent de l inventaire
+    /// complet de la section 9 du cahier de developpement, qui les place apres
+    /// la luminosite : les ajouter en fin de section respecte donc les deux
+    /// documents a la fois, l ordre du tableau comme celui de l inventaire.
     private static let comportementDuLecteur: [LigneDeReglage] = [
         .interrupteur(.tourneDePageAnimee, .comportementDuLecteur, actifParDefaut: true),
         .interrupteur(.garderLEcranAllume, .comportementDuLecteur, actifParDefaut: false),
@@ -42,6 +48,8 @@ extension CatalogueDeReglages {
             bornes: bornesDeMemoire
         ),
         .curseur(.luminositeDuLecteur, .comportementDuLecteur, defaut: 100, bornes: .pourcentage),
+        .menu(.zonesDeToucher, .comportementDuLecteur, DispositionDeZones.self),
+        .interrupteur(.inverserLesZones, .comportementDuLecteur, actifParDefaut: false),
     ]
 
     /// Bornes du nombre de pages gardees en memoire.

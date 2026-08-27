@@ -52,6 +52,8 @@ public enum IdentifiantDeReglage: String, Sendable, Codable, CaseIterable, Hasha
     case tournerAvecLesTouchesDeVolume = "comportementDuLecteur.tournerAvecLesTouchesDeVolume"
     case pagesGardeesEnMemoire = "comportementDuLecteur.pagesGardeesEnMemoire"
     case luminositeDuLecteur = "comportementDuLecteur.luminositeDuLecteur"
+    case zonesDeToucher = "comportementDuLecteur.zonesDeToucher"
+    case inverserLesZones = "comportementDuLecteur.inverserLesZones"
 
     // 9. Bibliotheque, comportement
     case marquerLuALaDernierePage = "bibliothequeComportement.marquerLuALaDernierePage"

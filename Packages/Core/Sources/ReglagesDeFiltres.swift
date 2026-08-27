@@ -221,3 +221,107 @@ public struct ReglagesDeFiltres: Sendable, Equatable, Hashable {
         return (["filtres=1"] + morceaux + armes).joined(separator: ";")
     }
 }
+
+// MARK: Egalite
+
+extension ReglagesDeFiltres {
+    /// Deux etats sont egaux quand ils reglent les huit lignes pareil.
+    ///
+    /// L egalite synthetisee comparerait le dictionnaire des seules valeurs
+    /// ecrites, et distinguerait donc un curseur pose a la main sur sa valeur
+    /// par defaut d un curseur jamais touche. Les deux rendent la meme valeur a
+    /// la lecture et produisent la meme planche.
+    ///
+    /// Le cas n est pas theorique : la forme persistee ecrit les cinq curseurs,
+    /// defauts compris. Sans cette egalite, un prereglage relu depuis la base ne
+    /// serait jamais egal a celui qui vient d etre enregistre.
+    public static func == (gauche: ReglagesDeFiltres, droite: ReglagesDeFiltres) -> Bool {
+        FiltreDImage.allCases.allSatisfy { gauche.valeur($0) == droite.valeur($0) }
+            && TraitementDImage.allCases.allSatisfy { gauche.estActif($0) == droite.estActif($0) }
+    }
+
+    /// Empreinte de hachage prise sur les memes valeurs que l egalite.
+    ///
+    /// L ordre de parcours vient de `allCases` et non du dictionnaire, dont
+    /// l ordre varie d une execution a l autre.
+    public func hash(into hacheur: inout Hasher) {
+        for filtre in FiltreDImage.allCases {
+            hacheur.combine(valeur(filtre))
+        }
+
+        for traitement in TraitementDImage.allCases {
+            hacheur.combine(estActif(traitement))
+        }
+    }
+}
+
+// MARK: Forme persistee
+
+//
+// Un prereglage de lecture range l etat du panneau dans un bloc JSON, section
+// 3.1 du cahier de developpement. La forme ecrite est donc un contrat, pas un
+// detail : elle survit aux versions et se relit sur un autre appareil.
+//
+// La conformance est ecrite a la main plutot que synthetisee, pour deux
+// raisons. Un dictionnaire dont la cle est une enumeration serait encode par
+// Swift en tableau de paires, illisible dans un fichier de sauvegarde et
+// fragile au reordonnancement. Et une valeur inconnue doit etre ignoree plutot
+// que de faire echouer la lecture entiere : un prereglage ecrit par une version
+// plus recente s applique alors pour ce que cette version sait faire.
+//
+
+extension ReglagesDeFiltres: Codable {
+    private enum CleDeFiltres: String, CodingKey {
+        case curseurs
+        case traitements
+    }
+
+    /// Relit un etat de panneau depuis sa forme JSON.
+    ///
+    /// Un curseur ou un traitement que cette version ne connait pas est ecarte
+    /// en silence, et les valeurs relues repassent par les bornes du curseur.
+    public init(from decodeur: any Decoder) throws {
+        let conteneur = try decodeur.container(keyedBy: CleDeFiltres.self)
+
+        let curseursBruts = try conteneur.decodeIfPresent(
+            [String: Double].self,
+            forKey: .curseurs
+        ) ?? [:]
+
+        let traitementsBruts = try conteneur.decodeIfPresent(
+            [String].self,
+            forKey: .traitements
+        ) ?? []
+
+        self.init()
+
+        for (brut, valeur) in curseursBruts {
+            guard let filtre = FiltreDImage(rawValue: brut) else { continue }
+            regler(filtre, a: valeur)
+        }
+
+        for brut in traitementsBruts {
+            guard let traitement = TraitementDImage(rawValue: brut) else { continue }
+            basculer(traitement, true)
+        }
+    }
+
+    /// Ecrit les cinq curseurs et les seuls traitements armes.
+    ///
+    /// Les cinq curseurs sont ecrits meme neutres, contrairement a l empreinte
+    /// de cache : un prereglage doit pouvoir ramener un curseur a sa valeur par
+    /// defaut, ce qu une absence ne dirait pas.
+    public func encode(to encodeur: any Encoder) throws {
+        var conteneur = encodeur.container(keyedBy: CleDeFiltres.self)
+
+        let curseurs = Dictionary(
+            uniqueKeysWithValues: FiltreDImage.allCases.map { ($0.rawValue, valeur($0)) }
+        )
+
+        try conteneur.encode(curseurs, forKey: .curseurs)
+        try conteneur.encode(
+            TraitementDImage.ordreDuPanneau.filter(estActif).map(\.rawValue),
+            forKey: .traitements
+        )
+    }
+}

@@ -102,7 +102,7 @@ public struct MagasinDeSensDeLecture: Sendable {
     /// abimee. On la reecrit plutot que de retourner une valeur qui ne serait
     /// nulle part persistee, ce qui ferait diverger la vue de la base au
     /// prochain redemarrage.
-    private static func reglageGlobal(_ connexion: Database) throws -> ReglageDeSensDeLecture {
+    static func reglageGlobal(_ connexion: Database) throws -> ReglageDeSensDeLecture {
         let identifiant = ReglageDeSensDeLecture.identifiantDeLaLigneUnique
 
         if let reglage = try ReglageDeSensDeLecture.fetchOne(connexion, key: identifiant) {

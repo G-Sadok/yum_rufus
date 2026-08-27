@@ -32,37 +32,41 @@ public struct PresentationDeReglages: Sendable, Equatable {
     /// de l application, deja composes.
     public let valeursAffichees: [IdentifiantDeReglage: String]
 
-    /// Vrai quand l abonnement est actif.
+    /// Etat de l abonnement.
     ///
-    /// Les lignes premium reprennent alors leur forme ordinaire : la couronne
-    /// tombe, le controle revient, et le clic regle au lieu d ouvrir le mur.
-    public let premiumActif: Bool
+    /// L ecran porte l etat entier et non un booleen, parce que la couronne
+    /// n est pas la seule chose qui en depend : la section Abonnement dit ce
+    /// qui court, et la degradation de la section 10 distingue une expiration
+    /// d une installation qui n a jamais rien achete.
+    public let abonnement: EtatDePremium
 
     public init(
         reglages: ReglagesDeLApplication,
         valeursAffichees: [IdentifiantDeReglage: String] = [:],
-        premiumActif: Bool = false
+        abonnement: EtatDePremium = .gratuit
     ) {
         self.reglages = reglages
         self.valeursAffichees = valeursAffichees
-        self.premiumActif = premiumActif
+        self.abonnement = abonnement
+    }
+
+    /// Vrai quand les fonctions de la matrice premium sont ouvertes.
+    ///
+    /// Les lignes premium reprennent alors leur forme ordinaire : la couronne
+    /// tombe, le controle revient, et le clic regle au lieu d ouvrir le mur.
+    public var premiumActif: Bool {
+        abonnement.donneAccesAuxFonctionsPremium
     }
 
     /// Forme premium a appliquer a une ligne, nulle quand elle n en porte pas
     /// ou quand l abonnement la debloque.
+    ///
+    /// La reponse vient de la matrice de la section 10, pas du catalogue de
+    /// lignes. Le tableau de la section 5.5 ne marque d une couronne que deux
+    /// lignes sur les dix sept que la matrice place derriere l abonnement, et
+    /// la regle 0.1 tranche : le texte du cahier des charges est normatif.
     public func formePremium(de ligne: LigneDeReglage) -> FormeDeLignePremium? {
-        guard let premium = ligne.premium else {
-            return nil
-        }
-
-        // L appel a l abonnement reste visible une fois abonne, il mene alors a
-        // la gestion de l abonnement. Une fonction verrouillee, elle, cesse de
-        // l etre.
-        if premiumActif, premium == .fonctionVerrouillee {
-            return nil
-        }
-
-        return premium
+        MatriceDeVerrouillage.formePremium(de: ligne, selon: abonnement)
     }
 }
 

@@ -932,9 +932,10 @@
       "depend_de": [
         "F041"
       ],
-      "statut": "en_cours",
+      "statut": "termine",
       "modifie_le": "2026-08-26T22:38:37Z",
-      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
+      "derniere_erreur": "tentatives epuisees, verifications toujours en echec",
+      "termine_le": "2026-08-27T06:28:40Z"
     },
     {
       "id": "F043",

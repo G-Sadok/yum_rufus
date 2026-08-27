@@ -529,6 +529,114 @@
         }
       }
     },
+    "filtres.ameliorationIA" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, interrupteur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amelioration IA"
+          }
+        }
+      }
+    },
+    "filtres.chaleur" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, curseur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaleur"
+          }
+        }
+      }
+    },
+    "filtres.colorisationIA" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, interrupteur verrouille du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colorisation IA"
+          }
+        }
+      }
+    },
+    "filtres.contraste" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, curseur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contraste"
+          }
+        }
+      }
+    },
+    "filtres.gamma" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, curseur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gamma"
+          }
+        }
+      }
+    },
+    "filtres.luminosite" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, curseur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luminosite"
+          }
+        }
+      }
+    },
+    "filtres.nettete" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, curseur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nettete"
+          }
+        }
+      }
+    },
+    "filtres.reductionDuBruit" : {
+      "comment" : "DESIGN-SPEC.md, section 5.7, interrupteur du panneau de filtres",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reduction du bruit"
+          }
+        }
+      }
+    },
+    "filtres.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, action de la barre du lecteur qui ouvre le panneau",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtres"
+          }
+        }
+      }
+    },
     "historique.aujourdHui" : {
       "comment" : "En tete collant, section 5.2. Absent de la section 6, ecrit selon ses regles",
       "extractionState" : "manual",

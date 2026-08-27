@@ -142,6 +142,30 @@ enum Chaines {
         static let confirmationEffacer = String(localized: "historique.confirmation.effacer")
     }
 
+    /// Panneau de filtres du lecteur, section 5.7 et tableau 6.5.
+    ///
+    /// Le titre est celui de l action de la barre du lecteur qui ouvre le
+    /// panneau, `Filtres`, au tableau 6.5. Les huit lignes sont nommees par la
+    /// section 5.7 elle meme, qui enumere les cinq curseurs puis les trois
+    /// interrupteurs.
+    ///
+    /// L etiquette de la couronne est celle des reglages, et c est voulu : la
+    /// couronne dit la meme chose au meme endroit du parcours, une fonction
+    /// verrouillee par l abonnement. Lui donner deux formulations selon l ecran
+    /// romprait la regle du meme mot pour la meme action.
+    enum Filtres {
+        static let titre = String(localized: "filtres.titre")
+        static let luminosite = String(localized: "filtres.luminosite")
+        static let chaleur = String(localized: "filtres.chaleur")
+        static let nettete = String(localized: "filtres.nettete")
+        static let contraste = String(localized: "filtres.contraste")
+        static let gamma = String(localized: "filtres.gamma")
+        static let reductionDuBruit = String(localized: "filtres.reductionDuBruit")
+        static let ameliorationIA = String(localized: "filtres.ameliorationIA")
+        static let colorisationIA = String(localized: "filtres.colorisationIA")
+        static let couronne = String(localized: "reglages.couronne")
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")

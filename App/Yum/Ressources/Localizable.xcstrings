@@ -385,6 +385,18 @@
         }
       }
     },
+    "etatVide.prereglages.phrase" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.3 et section 4.10. Le titre de cet etat vide est reglages.aucunPrereglage, celui que la section 5.5 pose deja sur la ligne de reglages qui mene ici",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reglez le lecteur comme vous l aimez, puis enregistrez l ensemble sous un nom."
+          }
+        }
+      }
+    },
     "etatVide.rechercher.phrase" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.3",
       "extractionState" : "manual",
@@ -873,6 +885,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Passer a Premium"
+          }
+        }
+      }
+    },
+    "prereglages.appliquer" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, gestion des prereglages. Le meme mot que l action de la ligne, regle d ecriture de la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appliquer"
+          }
+        }
+      }
+    },
+    "prereglages.description" : {
+      "comment" : "Cahier de developpement, section 9, description de la section Prereglages de lecture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un prereglage capture tous les reglages de lecture ci dessous, le sens, les filtres, la teinte et les traitements IA, puis les reapplique en une seule action."
+          }
+        }
+      }
+    },
+    "prereglages.enregistrerLActuel" : {
+      "comment" : "Cahier de developpement, section 9, action de la section Prereglages de lecture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enregistrer l actuel comme prereglage"
+          }
+        }
+      }
+    },
+    "prereglages.options" : {
+      "comment" : "DESIGN-SPEC.md, section 7, etiquette d accessibilite du bouton d options d une ligne de prereglage",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options du prereglage"
+          }
+        }
+      }
+    },
+    "prereglages.remplacerParLActuel" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, gestion des prereglages. Voix active, le libelle dit ce qui se passe",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer par les reglages actuels"
+          }
+        }
+      }
+    },
+    "prereglages.renommer" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, gestion des prereglages. Meme libelle que le renommage d une categorie, meme action",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
+          }
+        }
+      }
+    },
+    "prereglages.supprimer" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, gestion des prereglages. Meme libelle que la suppression d une categorie, meme action",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
+          }
+        }
+      }
+    },
+    "prereglages.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 5.5, titre du sous ecran de gestion. Repris de l en tete de la section 7, meme mot pour le meme endroit",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prereglages de lecture"
           }
         }
       }
@@ -2181,6 +2289,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gris sombre"
+          }
+        }
+      }
+    },
+    "reglages.valeur.hautBas" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.7, sens de lecture vertical. Le menu Sens de lecture ne le propose pas, il vient de la mise en page continue, mais le resume d un prereglage doit pouvoir le nommer",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertical"
           }
         }
       }

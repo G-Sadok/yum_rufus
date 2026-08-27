@@ -166,6 +166,41 @@ enum Chaines {
         static let couronne = String(localized: "reglages.couronne")
     }
 
+    /// Gestion des prereglages, sous ecran de la section 5.5 et section 9 du
+    /// cahier de developpement.
+    ///
+    /// Le titre et la description viennent du document. Les quatre commandes du
+    /// menu d une ligne ne sont pas dessinees : elles suivent les regles
+    /// d ecriture de la section 6, voix active, le libelle dit ce qui se passe,
+    /// et reprennent les mots deja employes ailleurs pour les memes actions.
+    ///
+    /// Le titre de l etat vide est celui de la section 5.5, `Aucun prereglage`,
+    /// et non une seconde formulation : c est le meme mot au meme endroit du
+    /// parcours, de la ligne de reglages jusqu a l ecran qu elle ouvre.
+    enum Prereglages {
+        static let titre = String(localized: "prereglages.titre")
+        static let enregistrerLActuel = String(localized: "prereglages.enregistrerLActuel")
+        static let description = String(localized: "prereglages.description")
+        static let options = String(localized: "prereglages.options")
+        static let appliquer = String(localized: "prereglages.appliquer")
+        static let renommer = String(localized: "prereglages.renommer")
+        static let remplacerParLActuel = String(localized: "prereglages.remplacerParLActuel")
+        static let supprimer = String(localized: "prereglages.supprimer")
+        static let videTitre = String(localized: "reglages.aucunPrereglage")
+        static let videPhrase = String(localized: "etatVide.prereglages.phrase")
+
+        /// Libelle d une valeur de menu, sous la cle de l ecran Reglages.
+        ///
+        /// La cle est composee, ce que l extraction automatique ne saurait pas
+        /// suivre. Le catalogue du projet est tenu a la main, `extractionState`
+        /// vaut `manual` sur chacune de ses entrees, et la suite de tests
+        /// verifie que la table couvre bien tous les cas des trois
+        /// enumerations concernees.
+        static func valeur(_ brute: String) -> String {
+            String(localized: String.LocalizationValue("reglages.valeur.\(brute)"))
+        }
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")

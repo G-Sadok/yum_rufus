@@ -67,12 +67,7 @@ public struct MagasinDeReglages: Sendable {
     /// ecrire, et un reglage remis a son defaut n a pas a occuper la table.
     public func definir(_ valeur: ValeurDeReglage, pour identifiant: IdentifiantDeReglage) throws {
         try base.ecrivain.write { connexion in
-            guard let texte = valeur.texte else {
-                _ = try ReglagePersiste.deleteOne(connexion, key: identifiant.rawValue)
-                return
-            }
-
-            try ReglagePersiste(cle: identifiant.rawValue, valeur: texte).upsert(connexion)
+            try Self.ecrire(connexion, valeur, pour: identifiant)
         }
     }
 
@@ -92,13 +87,33 @@ public struct MagasinDeReglages: Sendable {
 
     // MARK: Acces a la connexion
 
+    /// Ecrit une valeur de reglage dans la connexion donnee.
+    ///
+    /// Le magasin des prereglages en a besoin pour poser tout un jeu de
+    /// reglages dans une seule transaction. Une application ligne par ligne
+    /// ferait passer les observateurs par des etats intermediaires, moitie
+    /// ancien prereglage moitie nouveau, et le lecteur repeindrait la page
+    /// autant de fois qu il y a de lignes.
+    static func ecrire(
+        _ connexion: Database,
+        _ valeur: ValeurDeReglage,
+        pour identifiant: IdentifiantDeReglage
+    ) throws {
+        guard let texte = valeur.texte else {
+            _ = try ReglagePersiste.deleteOne(connexion, key: identifiant.rawValue)
+            return
+        }
+
+        try ReglagePersiste(cle: identifiant.rawValue, valeur: texte).upsert(connexion)
+    }
+
     /// Lit la table et ecarte toute ligne que le catalogue ne reconnait plus.
     ///
     /// Une cle inconnue vient forcement d une version anterieure du produit.
     /// La garder en memoire ne servirait a rien, et la supprimer pendant une
     /// simple lecture serait pire : une bascule de version en arriere perdrait
     /// alors le reglage pour de bon. Elle reste donc en base, ignoree.
-    private static func lire(_ connexion: Database) throws -> ReglagesDeLApplication {
+    static func lire(_ connexion: Database) throws -> ReglagesDeLApplication {
         let lignes = try ReglagePersiste.fetchAll(connexion)
 
         let valeurs = lignes.reduce(into: [IdentifiantDeReglage: ValeurDeReglage]()) { resultat, ligne in

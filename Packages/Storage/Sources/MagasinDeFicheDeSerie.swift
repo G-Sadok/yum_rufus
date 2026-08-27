@@ -100,17 +100,27 @@ public struct MagasinDeFicheDeSerie: Sendable {
         }
 
         try base.ecrivain.write { connexion in
-            for identifiant in identifiants {
-                guard var chapitre = try Chapitre.fetchOne(connexion, key: identifiant) else {
-                    continue
-                }
+            try Self.marquer(identifiants, commeLus: lus, le: date, dans: connexion)
+        }
+    }
 
-                chapitre.estLu = lus
-                chapitre.dateLecture = lus ? date : nil
-                chapitre.pageAtteinte = lus ? max(chapitre.nombrePages - 1, 0) : 0
-
-                try chapitre.update(connexion)
+    /// Ecrit le marquage dans la transaction ouverte.
+    private static func marquer(
+        _ identifiants: [UUID],
+        commeLus lus: Bool,
+        le date: Date,
+        dans connexion: Database
+    ) throws {
+        for identifiant in identifiants {
+            guard var chapitre = try Chapitre.fetchOne(connexion, key: identifiant) else {
+                continue
             }
+
+            chapitre.estLu = lus
+            chapitre.dateLecture = lus ? date : nil
+            chapitre.pageAtteinte = lus ? max(chapitre.nombrePages - 1, 0) : 0
+
+            try chapitre.update(connexion)
         }
     }
 
@@ -167,5 +177,24 @@ public struct MagasinDeFicheDeSerie: Sendable {
     ) throws -> ReglageDeListeDeChapitres {
         let ligne = try LigneDeReglageDeListe.fetchOne(connexion, key: identifiant)
         return ligne?.reglage ?? .defaut
+    }
+}
+
+/// Le magasin est le marqueur que l enchainement de chapitres pilote.
+///
+/// `ReaderEngine` ne connait que ce protocole, defini par Core, exactement comme
+/// pour la sauvegarde de position. Le moteur decide quand un chapitre est
+/// quitte, la base sait ce que cela veut dire.
+///
+/// L ecriture ne se fait pas sur le fil appelant : le marquage tombe pendant un
+/// defilement, et bloquer ce fil se verrait sur le budget de defilement de la
+/// section 12.
+extension MagasinDeFicheDeSerie: MarqueurDeChapitreLu {
+    public func marquerLu(_ chapitreId: UUID) async throws {
+        let date = Date()
+
+        try await base.ecrivain.write { connexion in
+            try Self.marquer([chapitreId], commeLus: true, le: date, dans: connexion)
+        }
     }
 }

@@ -135,6 +135,18 @@ public enum MiseEnPage: String, ChoixDeReglage, Codable {
     public var sensImpose: SensDeLecture? {
         self == .continuVertical ? .hautBas : nil
     }
+
+    /// Vrai quand le chapitre suivant se charge sans quitter le lecteur.
+    ///
+    /// La section 7.4 reserve l enchainement aux modes verticaux, defilement
+    /// continu et webtoon, qui sont la meme mise en page ici : le webtoon est un
+    /// defilement continu dont les pages sont assez longues pour etre tuilees.
+    /// Les modes pagines gardent le lien Chapitre suivant de la barre
+    /// inferieure, ou c est l utilisateur qui decide de passer au chapitre
+    /// suivant.
+    public var enchaineAutomatiquement: Bool {
+        self == .continuVertical
+    }
 }
 
 /// Fond du lecteur, tableau 6.7 et section 1.4.

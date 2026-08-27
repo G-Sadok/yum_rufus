@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import Observation
 import Storage
@@ -24,6 +25,14 @@ final class ServicesDeLApplication {
     /// Nom du fichier de base, range dans le dossier de support.
     static let nomDuFichier = "bibliotheque.sqlite"
 
+    /// Etat du mode incognito, partage avec les magasins qui ecrivent.
+    ///
+    /// Il est construit ici et non dans l ecran des reglages, parce que c est
+    /// ici que les magasins sont construits. Un registre cree plus tard
+    /// n atteindrait plus la couche qui ecrit, et le mode incognito n aurait
+    /// d effet que sur la banniere.
+    let incognito = RegistreDIncognito()
+
     /// Ouvre la base et retient l echec plutot que de le laisser remonter.
     init() {
         base = try? Self.ouvrir()
@@ -38,7 +47,12 @@ final class ServicesDeLApplication {
 
     /// Magasin d historique, nul tant que la base n est pas ouverte.
     var historique: MagasinDHistorique? {
-        base.map(MagasinDHistorique.init(base:))
+        base.map { MagasinDHistorique(base: $0, incognito: incognito) }
+    }
+
+    /// Magasin de progression, nul tant que la base n est pas ouverte.
+    var progression: MagasinDeProgression? {
+        base.map { MagasinDeProgression(base: $0, incognito: incognito) }
     }
 
     private static func ouvrir() throws -> BaseDeDonnees {

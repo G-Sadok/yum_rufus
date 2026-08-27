@@ -16,20 +16,33 @@ struct YumApp: App {
     @State private var services: ServicesDeLApplication
     @State private var historique: EtatDHistorique
     @State private var premium = SessionPremium()
+    @State private var confidentialite: SessionDeConfidentialite
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
     /// chaque apparition paierait la migration a chaque aller retour.
+    ///
+    /// La confidentialite est construite avec le registre d incognito des
+    /// services, et non avec un registre neuf. C est ce qui relie l interrupteur
+    /// de l ecran Reglages aux magasins qui ecrivent.
     init() {
         let services = ServicesDeLApplication()
 
         _services = State(initialValue: services)
         _historique = State(initialValue: EtatDHistorique(magasin: services.historique))
+        _confidentialite = State(
+            initialValue: SessionDeConfidentialite(registre: services.incognito)
+        )
     }
 
     var body: some Scene {
         WindowGroup {
-            CoquilleDeLApplication(etat: etat, historique: historique, premium: premium)
+            CoquilleDeLApplication(
+                etat: etat,
+                historique: historique,
+                premium: premium,
+                confidentialite: confidentialite
+            )
         }
         #if os(macOS)
         .defaultSize(

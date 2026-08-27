@@ -20,6 +20,13 @@ import GRDB
 // C est le seul chemin d ecriture de l historique : lire, c est laisser une
 // trace, et une trace ecrite ailleurs finirait par diverger de la reprise.
 //
+// C est aussi pourquoi le mode incognito de la section 11 se garde ici et non
+// ailleurs. Ce magasin est le point de passage unique de la position, du
+// marquage automatique, du rang de la serie dans la grille et de l historique :
+// quatre des six traces de lecture que `EcritureDeSession` enumere. Une garde
+// posee plus haut, dans un decorateur ou dans une vue, laisserait ouverts tous
+// les chemins qui ne passent pas par elle.
+//
 
 /// Erreurs que la sauvegarde de position peut remonter.
 public enum ErreurDeProgression: Error, Sendable, Equatable {
@@ -32,9 +39,17 @@ public enum ErreurDeProgression: Error, Sendable, Equatable {
 /// Lit et ecrit la position de lecture d un chapitre.
 public struct MagasinDeProgression: Sendable {
     private let base: BaseDeDonnees
+    private let incognito: RegistreDIncognito
 
-    public init(base: BaseDeDonnees) {
+    /// Construit le magasin.
+    ///
+    /// - Parameters:
+    ///   - base: base deja ouverte et migree.
+    ///   - incognito: etat du mode incognito. Un registre neuf est inactif, un
+    ///     appelant qui ne s en soucie pas garde donc le comportement d avant.
+    public init(base: BaseDeDonnees, incognito: RegistreDIncognito = RegistreDIncognito()) {
         self.base = base
+        self.incognito = incognito
     }
 
     // MARK: Lecture
@@ -69,11 +84,20 @@ public struct MagasinDeProgression: Sendable {
     /// chapitre et date de derniere lecture de la serie partent dans la meme
     /// transaction. Une fermeture brutale au milieu ne laisse donc pas une page
     /// enregistree sans son decalage.
+    ///
+    /// Pendant une session incognito, l appel ne fait rien et ne remonte rien.
+    /// Le silence est voulu : la sauvegarde part toutes les deux secondes
+    /// pendant la lecture, et une erreur remontee a chaque echeance mettrait un
+    /// message d alerte sur une page de manga toutes les deux secondes.
     public func enregistrer(
         _ position: PositionDeLecture,
         le date: Date = Date(),
         calendrier: Calendar = .autoupdatingCurrent
     ) throws {
+        guard incognito.autorise(.positionDeLecture) else {
+            return
+        }
+
         try base.ecrivain.write { connexion in
             try Self.appliquer(position, le: date, calendrier: calendrier, dans: connexion)
         }
@@ -137,6 +161,10 @@ public struct MagasinDeProgression: Sendable {
 /// verrait sur la tourne de page.
 extension MagasinDeProgression: EnregistreurDePosition {
     public func enregistrer(_ position: PositionDeLecture) async throws {
+        guard incognito.autorise(.positionDeLecture) else {
+            return
+        }
+
         let date = Date()
         let calendrier = Calendar.autoupdatingCurrent
 

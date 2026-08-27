@@ -1156,7 +1156,9 @@
       "depend_de": [
         "F050"
       ],
-      "statut": "a_faire"
+      "statut": "bloque",
+      "modifie_le": "2026-08-27T21:36:07Z",
+      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },
     {
       "id": "F053",

@@ -96,7 +96,7 @@ public struct PaginationEnPageSimple: Sendable, Equatable {
         appliquer(NavigationDeLecture.intention(pourBalayage: balayage, sens: sens))
     }
 
-    /// Applique un appui sur la surface de lecture.
+    /// Applique un appui sur la surface de lecture, en disposition Standard.
     ///
     /// - Parameters:
     ///   - fraction: position de l appui le long de l axe, mesuree depuis le
@@ -108,6 +108,31 @@ public struct PaginationEnPageSimple: Sendable, Equatable {
             ZonesDeToucher.intention(
                 pourFraction: fraction,
                 sens: sens,
+                zonesInversees: zonesInversees
+            )
+        )
+    }
+
+    /// Applique un appui sur la surface de lecture, dans la disposition reglee.
+    ///
+    /// - Parameters:
+    ///   - abscisse: part de la largeur, mesuree depuis le bord gauche.
+    ///   - ordonnee: part de la hauteur, mesuree depuis le bord haut.
+    ///   - disposition: disposition choisie au reglage Zones de toucher.
+    ///   - zonesInversees: option Inverser les zones de la section 9.
+    @discardableResult
+    public mutating func appliquer(
+        appuiSurAbscisse abscisse: Double,
+        ordonnee: Double,
+        disposition: DispositionDeZones,
+        zonesInversees: Bool = false
+    ) -> Bool {
+        appliquer(
+            ZonesDeToucher.intention(
+                pourAbscisse: abscisse,
+                ordonnee: ordonnee,
+                sens: sens,
+                disposition: disposition,
                 zonesInversees: zonesInversees
             )
         )

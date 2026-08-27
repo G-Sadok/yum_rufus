@@ -227,6 +227,42 @@ enum Chaines {
         static let videAction = String(localized: "etatVide.signets.action")
     }
 
+    /// File de telechargement, section 4.11 et section 12 de l ecran Reglages.
+    ///
+    /// Le document nomme la section, `Telechargements`, et donne trois sous
+    /// lignes exactes : `14 sur 24 pages`, `Termine  32 Mo` et `En attente`.
+    /// Elles sont reprises au mot pres, y compris la paire d espaces qui separe
+    /// deux fragments d une meme ligne.
+    ///
+    /// Le reste, commandes de ligne et etat vide, suit les regles d ecriture de
+    /// la section 6 : voix active, le bouton dit ce qui se passe, et le meme mot
+    /// pour la meme action d un bout a l autre du parcours. C est pourquoi
+    /// l action produit bien l etat que le document annonce, `Telecharger`
+    /// produit `Termine`.
+    enum Telechargements {
+        static let titre = String(localized: "telechargements.titre")
+        static let description = String(localized: "telechargements.description")
+        static let chapitreNumerote = String(localized: "chapitre.numerote")
+        static let pagesFaites = String(localized: "telechargements.pagesFaites")
+        static let enAttente = String(localized: "telechargements.enAttente")
+        static let termineAvecPoids = String(localized: "telechargements.termineAvecPoids")
+        static let termine = String(localized: "telechargements.termine")
+        static let enPause = String(localized: "telechargements.enPause")
+        static let annulee = String(localized: "telechargements.annulee")
+        static let poidsEnOctets = String(localized: "telechargements.poidsEnOctets")
+        static let poidsEnKo = String(localized: "telechargements.poidsEnKo")
+        static let poidsEnMo = String(localized: "telechargements.poidsEnMo")
+        static let poidsEnGo = String(localized: "telechargements.poidsEnGo")
+        static let mettreEnPause = String(localized: "telechargements.mettreEnPause")
+        static let reprendre = String(localized: "telechargements.reprendre")
+        static let passerEnPremier = String(localized: "telechargements.passerEnPremier")
+        static let annuler = String(localized: "telechargements.annuler")
+        static let options = String(localized: "telechargements.options")
+        static let videTitre = String(localized: "etatVide.telechargements.titre")
+        static let videPhrase = String(localized: "etatVide.telechargements.phrase")
+        static let videAction = String(localized: "etatVide.telechargements.action")
+    }
+
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")

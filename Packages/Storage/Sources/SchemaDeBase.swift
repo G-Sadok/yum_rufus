@@ -63,6 +63,15 @@ public enum SchemaDeBase {
     /// les precedentes, la migration est purement additive.
     public static let decalageDeCouverture = "2026-08-26-01-decalage-de-couverture"
 
+    /// Identifiant de la migration qui installe la priorite et le point de
+    /// reprise de la file de telechargement.
+    ///
+    /// La section 4.11 de DESIGN-SPEC.md decrit une file a priorites dont les
+    /// lignes se mettent en pause et reprennent. Les sept colonnes de la section
+    /// 3.1 disent l avancement, pas le rang de passage ni la page ou reprendre.
+    /// Purement additive, comme les precedentes.
+    public static let repriseEtPrioriteDeTelechargement = "2026-08-27-01-reprise-et-priorite-de-telechargement"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -72,6 +81,7 @@ public enum SchemaDeBase {
         decalageDeDefilement,
         reglagesDeLApplication,
         decalageDeCouverture,
+        repriseEtPrioriteDeTelechargement,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -110,6 +120,11 @@ public enum SchemaDeBase {
         migrateur.registerMigration(decalageDeCouverture) { base in
             try creerLaTableDeDoublePage(base)
             try ajouterLaSurchargeDeDecalage(base)
+        }
+
+        migrateur.registerMigration(repriseEtPrioriteDeTelechargement) { base in
+            try ajouterLaRepriseEtLaPriorite(base)
+            try creerLIndexDeFileDeTelechargements(base)
         }
 
         return migrateur

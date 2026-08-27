@@ -457,6 +457,42 @@
         }
       }
     },
+    "etatVide.telechargements.action" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Meme libelle que les etats vides voisins, meme destination",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la bibliotheque"
+          }
+        }
+      }
+    },
+    "etatVide.telechargements.phrase" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Etat vide absent du tableau 6.3, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telechargez un chapitre depuis une fiche de serie pour le lire hors ligne."
+          }
+        }
+      }
+    },
+    "etatVide.telechargements.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10. Meme forme que Aucun signet du sous ecran voisin",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun telechargement"
+          }
+        }
+      }
+    },
     "fiche.afficherMoins" : {
       "comment" : "Repli du resume. Libelle absent de la section 6, ecrit selon ses regles",
       "extractionState" : "manual",
@@ -2733,6 +2769,210 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Termine"
+          }
+        }
+      }
+    },
+    "telechargements.annulee" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, tache retiree de la file. Libelle absent du document, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annule"
+          }
+        }
+      }
+    },
+    "telechargements.annuler" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, retrait d une ligne de la file",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler le telechargement"
+          }
+        }
+      }
+    },
+    "telechargements.description" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11. Description absente du document, ecrite selon les regles de la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les chapitres de cette file se telechargent un par un et reprennent la ou ils se sont arretes."
+          }
+        }
+      }
+    },
+    "telechargements.enAttente" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, sous ligne d une tache en attente",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En attente"
+          }
+        }
+      }
+    },
+    "telechargements.enPause" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, pause par ligne. Libelle absent du document, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En pause"
+          }
+        }
+      }
+    },
+    "telechargements.mettreEnPause" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, pause par ligne. Le bouton dit ce qui se passe, section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre en pause"
+          }
+        }
+      }
+    },
+    "telechargements.options" : {
+      "comment" : "Etiquette d accessibilite du bouton de commandes d une ligne, section 7",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options du telechargement"
+          }
+        }
+      }
+    },
+    "telechargements.pagesFaites" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, sous ligne d une tache en cours",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld sur %2$lld pages"
+          }
+        }
+      }
+    },
+    "telechargements.passerEnPremier" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, file a priorites. Libelle ecrit selon la section 6, voix active",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer en premier"
+          }
+        }
+      }
+    },
+    "telechargements.poidsEnGo" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, poids affiche au dela du milliard d octets",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%.1f Go"
+          }
+        }
+      }
+    },
+    "telechargements.poidsEnKo" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, poids affiche sous un million d octets",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Ko"
+          }
+        }
+      }
+    },
+    "telechargements.poidsEnMo" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, unite du poids ecrit par le document",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Mo"
+          }
+        }
+      }
+    },
+    "telechargements.poidsEnOctets" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, poids affiche sous mille octets",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld o"
+          }
+        }
+      }
+    },
+    "telechargements.reprendre" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, reprise par ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre"
+          }
+        }
+      }
+    },
+    "telechargements.termine" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, sous ligne d une tache terminee dont le poids est inconnu",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine"
+          }
+        }
+      }
+    },
+    "telechargements.termineAvecPoids" : {
+      "comment" : "DESIGN-SPEC.md, section 4.11, sous ligne d une tache terminee. Le separateur est la paire d espaces du document",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine  %@"
+          }
+        }
+      }
+    },
+    "telechargements.titre" : {
+      "comment" : "DESIGN-SPEC.md, tableau 5.5, section 12 de l ecran Reglages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telechargements"
           }
         }
       }

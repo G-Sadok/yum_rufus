@@ -65,7 +65,14 @@ let package = Package(
             dependencies: ["Core", "ImagePipeline"],
             path: "Intelligence/Sources"
         ),
-        .target(name: "Sync", dependencies: ["Core", "Storage"], path: "Sync/Sources"),
+        // Sources apparait avec les services de suivi. Sync est la couche qui
+        // pousse l etat local vers un service distant, et les quatre suivis de
+        // la section 9 en font partie autant que CloudKit. Ils parlent en HTTP,
+        // et le projet n a qu une seule couture reseau, `TransportHttp`, posee
+        // dans Sources avec le client REST qui verifie les reponses. La
+        // recopier dans Sync aurait donne deux traitements du corps tronque et
+        // du jeton refuse, qui divergeraient au premier correctif.
+        .target(name: "Sync", dependencies: ["Core", "Storage", "Sources"], path: "Sync/Sources"),
 
         // Seul paquet autorise a importer SwiftUI.
         .target(name: "DesignSystem", dependencies: ["Core"], path: "DesignSystem/Sources"),
@@ -119,6 +126,11 @@ let package = Package(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem", "Core"],
             path: "DesignSystem/Tests"
+        ),
+        .testTarget(
+            name: "SyncTests",
+            dependencies: ["Sync", "Core", "Sources"],
+            path: "Sync/Tests"
         ),
     ]
 )

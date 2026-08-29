@@ -44,20 +44,36 @@ public struct RequeteDeTrousseau: Sendable, Hashable {
         (Bundle.main.bundleIdentifier ?? "Yum") + ".identifiants-de-source"
     }
 
+    /// Service sous lequel les jetons des suivis sont ranges.
+    ///
+    /// Il est distinct de celui des sources, et ce n est pas un detail de
+    /// rangement. Purger les identifiants de source, ce qu une remise a zero de
+    /// la bibliotheque fait, ne doit pas deconnecter les services de suivi, et
+    /// deconnecter tous les suivis ne doit pas effacer le mot de passe d un
+    /// serveur. Deux services de trousseau donnent cette separation sans avoir
+    /// a filtrer les cles a la main.
+    public static var serviceDesSuivis: String {
+        (Bundle.main.bundleIdentifier ?? "Yum") + ".jetons-de-suivi"
+    }
+
     public init(service: String = RequeteDeTrousseau.serviceParDefaut) {
         self.service = service
     }
 
-    /// Attributs qui designent la ligne d une source, sans rien de secret.
+    /// Attributs qui designent une ligne, sans rien de secret.
     ///
     /// C est le socle commun de la lecture, de l ecriture et de la suppression.
     /// Le fait qu il ne porte aucune valeur est ce qui permet de le passer a
     /// `SecItemDelete` sans avoir a connaitre le mot de passe qu on efface.
-    public func designation(de source: SourceID) -> [String: Any] {
+    ///
+    /// La cle est une chaine et non un `SourceID` : les sources se designent
+    /// par leur identifiant, les services de suivi par leur nom, et les deux
+    /// familles partagent le meme code de trousseau.
+    public func designation(deCle cle: String) -> [String: Any] {
         [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: source.brut.uuidString,
+            kSecAttrAccount as String: cle,
 
             // Sans cela, macOS range la ligne dans le trousseau de fichier
             // historique, qui ignore purement et simplement `kSecAttrAccessible`.
@@ -67,8 +83,8 @@ public struct RequeteDeTrousseau: Sendable, Hashable {
     }
 
     /// Requete de lecture, qui demande les octets de la ligne.
-    public func lecture(de source: SourceID) -> [String: Any] {
-        var requete = designation(de: source)
+    public func lecture(deCle cle: String) -> [String: Any] {
+        var requete = designation(deCle: cle)
         requete[kSecReturnData as String] = true
         requete[kSecMatchLimit as String] = kSecMatchLimitOne
 
@@ -76,12 +92,27 @@ public struct RequeteDeTrousseau: Sendable, Hashable {
     }
 
     /// Requete de creation, qui porte les octets et l accessibilite.
-    public func creation(de source: SourceID, donnees: Data) -> [String: Any] {
-        var requete = designation(de: source)
+    public func creation(deCle cle: String, donnees: Data) -> [String: Any] {
+        var requete = designation(deCle: cle)
         requete[kSecValueData as String] = donnees
         requete[kSecAttrAccessible as String] = Self.accessibilite
 
         return requete
+    }
+
+    /// Attributs qui designent la ligne d une source.
+    public func designation(de source: SourceID) -> [String: Any] {
+        designation(deCle: source.brut.uuidString)
+    }
+
+    /// Requete de lecture de la ligne d une source.
+    public func lecture(de source: SourceID) -> [String: Any] {
+        lecture(deCle: source.brut.uuidString)
+    }
+
+    /// Requete de creation de la ligne d une source.
+    public func creation(de source: SourceID, donnees: Data) -> [String: Any] {
+        creation(deCle: source.brut.uuidString, donnees: donnees)
     }
 
     /// Attributs a ecrire quand la ligne existe deja.

@@ -341,7 +341,13 @@ public struct ClientHttp: Sendable {
     /// rend la meme erreur pour zero octet et pour du HTML, alors que les deux
     /// se reparent differemment, l un en reessayant, l autre en corrigeant
     /// l adresse de la source.
-    static func decoder<Valeur: Decodable>(_ type: Valeur.Type, depuis reponse: ReponseHttp) throws -> Valeur {
+    /// Elle est publique depuis les services de suivi : ils construisent leurs
+    /// requetes eux memes, parce que deux d entre eux n envoient pas du JSON,
+    /// mais ils doivent lire ce qui revient exactement comme les sources.
+    public static func decoder<Valeur: Decodable>(
+        _ type: Valeur.Type,
+        depuis reponse: ReponseHttp
+    ) throws -> Valeur {
         guard reponse.corps.isEmpty == false else {
             throw ErreurReseau.reponseVide
         }

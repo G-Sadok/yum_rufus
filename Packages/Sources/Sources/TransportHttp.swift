@@ -26,6 +26,12 @@ public enum MethodeHttp: String, Sendable, Hashable {
     case patch = "PATCH"
     case delete = "DELETE"
 
+    /// Le remplacement complet d une ressource.
+    ///
+    /// Il arrive avec les services de suivi : l un des quatre attend une
+    /// connexion en PUT sur son point d entree de session.
+    case put = "PUT"
+
     /// Les entetes seuls, sans le corps.
     ///
     /// WebDAV s en sert pour connaitre la taille d un fichier sans le

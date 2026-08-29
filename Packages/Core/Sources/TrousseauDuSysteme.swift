@@ -1,6 +1,3 @@
-import Foundation
-import Security
-
 //
 // TrousseauDuSysteme
 //
@@ -34,64 +31,24 @@ public struct TrousseauDuSysteme: MagasinDIdentifiants {
     }
 
     public func enregistrer(_ identifiants: IdentifiantsDeSource, pour source: SourceID) throws {
-        guard identifiants.estVide == false else {
-            try supprimer(pour: source)
-
-            return
-        }
-
-        let donnees = try CodageDIdentifiants.encoder(identifiants)
-        let designation = requetes.designation(de: source)
-
-        // On tente la mise a jour avant la creation plutot que l inverse.
-        // L ordre compte : `SecItemAdd` sur une ligne existante rend
-        // errSecDuplicateItem, et le rattraper par une suppression puis une
-        // seconde creation laisserait une fenetre pendant laquelle la source
-        // n a plus d identifiants du tout.
-        let miseAJour = SecItemUpdate(designation as CFDictionary, requetes.miseAJour(donnees: donnees) as CFDictionary)
-
-        if miseAJour == errSecSuccess {
-            return
-        }
-
-        guard miseAJour == errSecItemNotFound else {
-            throw ErreurDeTrousseau.refusParLeSysteme(code: miseAJour)
-        }
-
-        let creation = SecItemAdd(requetes.creation(de: source, donnees: donnees) as CFDictionary, nil)
-
-        guard creation == errSecSuccess else {
-            throw ErreurDeTrousseau.refusParLeSysteme(code: creation)
-        }
+        try ligne(de: source).ecrire(identifiants)
     }
 
     public func identifiants(pour source: SourceID) throws -> IdentifiantsDeSource {
-        var trouve: CFTypeRef?
-        let code = SecItemCopyMatching(requetes.lecture(de: source) as CFDictionary, &trouve)
-
-        if code == errSecItemNotFound {
-            return .aucun
-        }
-
-        guard code == errSecSuccess else {
-            throw ErreurDeTrousseau.refusParLeSysteme(code: code)
-        }
-
-        guard let donnees = trouve as? Data else {
-            throw ErreurDeTrousseau.donneeIllisible
-        }
-
-        return try CodageDIdentifiants.decoder(donnees)
+        try ligne(de: source).lire()
     }
 
     public func supprimer(pour source: SourceID) throws {
-        let code = SecItemDelete(requetes.designation(de: source) as CFDictionary)
+        try ligne(de: source).effacer()
+    }
 
-        // Une ligne absente n est pas un echec de suppression, c est le
-        // resultat attendu. La purge est appelee pour toute source retiree,
-        // y compris les sources locales qui n ont jamais eu de mot de passe.
-        guard code == errSecSuccess || code == errSecItemNotFound else {
-            throw ErreurDeTrousseau.refusParLeSysteme(code: code)
-        }
+    /// Ligne du trousseau ou vit cette source.
+    ///
+    /// Les trois methodes du protocole ne font plus que designer la ligne :
+    /// l ordre entre mise a jour et creation, la politique d accessibilite et
+    /// le traitement d une ligne absente vivent dans `LigneDeTrousseau`, qui
+    /// les partage avec les jetons des services de suivi.
+    private func ligne(de source: SourceID) -> LigneDeTrousseau {
+        LigneDeTrousseau(requetes: requetes, cle: source.brut.uuidString)
     }
 }

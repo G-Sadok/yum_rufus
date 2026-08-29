@@ -122,6 +122,14 @@ let package = Package(
             dependencies: ["ReaderEngine", "Core", "ImagePipeline"],
             path: "ReaderEngine/Tests"
         ),
+        // ImagePipeline apparait ici parce que la surelevation entre et sort en
+        // ImageDePage et se met en cache sous une ClePage, deux types que la
+        // chaine d images definit et que les tests manipulent directement.
+        .testTarget(
+            name: "IntelligenceTests",
+            dependencies: ["Intelligence", "Core", "ImagePipeline"],
+            path: "Intelligence/Tests"
+        ),
         .testTarget(
             name: "DesignSystemTests",
             dependencies: ["DesignSystem", "Core"],

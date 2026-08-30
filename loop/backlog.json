@@ -1400,9 +1400,9 @@
       "depend_de": [
         "F020"
       ],
-      "statut": "a_faire",
-      "modifie_le": "2026-08-30T13:37:52Z",
-      "derniere_erreur": "aucune progression sur deux tentatives"
+      "statut": "bloque",
+      "modifie_le": "2026-08-30T23:15:17Z",
+      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },
     {
       "id": "F064",

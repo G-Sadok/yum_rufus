@@ -1441,6 +1441,18 @@
         }
       }
     },
+    "reglages.description.traduction" : {
+      "comment" : "Cahier de developpement, section 9, description sous la carte Traduction",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La traduction sur l appareil est gratuite et privee. Le moteur dans le nuage donne de meilleurs resultats et consomme des credits."
+          }
+        }
+      }
+    },
     "reglages.diminuer" : {
       "comment" : "DESIGN-SPEC.md, section 4.1, chevron du bas d un compteur, libelle ecrit selon la section 6",
       "extractionState" : "manual",
@@ -2053,6 +2065,18 @@
         }
       }
     },
+    "reglages.ligne.traduction.moteur" : {
+      "comment" : "Cahier de developpement, section 9, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moteur de traduction"
+          }
+        }
+      }
+    },
     "reglages.ligne.traduction.policeDeRemplacement" : {
       "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
       "extractionState" : "manual",
@@ -2449,6 +2473,18 @@
         }
       }
     },
+    "reglages.valeur.dansLeNuage" : {
+      "comment" : "Cahier de developpement, section 9, valeur du menu Moteur de traduction",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IA dans le nuage"
+          }
+        }
+      }
+    },
     "reglages.valeur.decroissant" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.7, valeur de reglage",
       "extractionState" : "manual",
@@ -2781,6 +2817,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sombre"
+          }
+        }
+      }
+    },
+    "reglages.valeur.surLAppareil" : {
+      "comment" : "Cahier de developpement, section 9, valeur du menu Moteur de traduction",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur l appareil"
           }
         }
       }
@@ -3357,6 +3405,42 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Telechargements"
+          }
+        }
+      }
+    },
+    "traduction.nuage.etiquette" : {
+      "comment" : "Cahier de developpement, section 8, etiquette d accessibilite de la mention",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traduction dans le nuage, le texte des bulles est envoye a un service distant"
+          }
+        }
+      }
+    },
+    "traduction.nuage.phrase" : {
+      "comment" : "Cahier de developpement, section 8, phrase de la mention, ecrite selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le texte des bulles part vers un service distant."
+          }
+        }
+      }
+    },
+    "traduction.nuage.titre" : {
+      "comment" : "Cahier de developpement, section 8, titre de la mention, ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traduction dans le nuage"
           }
         }
       }

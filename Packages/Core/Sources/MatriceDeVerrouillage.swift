@@ -316,7 +316,7 @@ public enum MatriceDeVerrouillage {
     /// sans trou ni recouvrement.
     static let fonctionParLigne: [IdentifiantDeReglage: FonctionDeLApplication] = compose([
         (.incognito, [.incognito]),
-        (.traduction, [.traduireLesBulles, .langueCible, .policeDeRemplacement]),
+        (.traduction, [.traduireLesBulles, .moteurDeTraduction, .langueCible, .policeDeRemplacement]),
         (.suivis, [.servicesDeSuivi, .envoyerLaProgression, .confirmerAvantDEnvoyer]),
         (
             .telechargements,

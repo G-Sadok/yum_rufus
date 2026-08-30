@@ -62,8 +62,24 @@ extension CatalogueDeReglages {
     ]
 
     /// 5. Traduction.
+    ///
+    /// Quatre lignes la ou la section 5.5 en dessine trois. La quatrieme,
+    /// `Moteur de traduction`, vient de l inventaire de la section 9 du cahier
+    /// de developpement, qui la decrit comme un menu a deux valeurs livre sur
+    /// `Sur l appareil` et dont le second choix est reserve a l abonnement.
+    /// L arbitrage de la section 0.1 de DESIGN-SPEC.md donne le cahier des
+    /// charges normatif sur ce que le document ne fixe pas, et il ne fixe pas
+    /// le moyen de choisir le moteur alors que la section 8 fait de ce choix la
+    /// seule porte par laquelle une donnee quitte l appareil. Sans cette ligne,
+    /// la porte serait ouverte sans que rien ne la commande.
+    ///
+    /// Elle est posee en deuxieme position : l interrupteur arme la fonction,
+    /// le moteur dit ou le travail se fait, la langue dit vers quoi traduire, la
+    /// police dit avec quoi l ecrire. Les trois lignes du document gardent leur
+    /// ordre relatif.
     private static let traduction: [LigneDeReglage] = [
         .interrupteur(.traduireLesBulles, .traduction, actifParDefaut: false, premium: .fonctionVerrouillee),
+        .menu(.moteurDeTraduction, .traduction, ChoixDeMoteurDeTraduction.self),
         .menu(.langueCible, .traduction, ChoixDeLangue.self),
         .navigation(.policeDeRemplacement, .traduction),
     ]

@@ -20,8 +20,14 @@ extension Jetons {
 
         /// Rayon de flou applique a la couverture posee en banniere.
         public static let rayonDeFlou: Double = 40
+        /// Opacite du voile pose sur une image floutee.
+        ///
+        /// Sortie de la couleur pour etre nommee, parce que la surimpression de
+        /// traduction la reprend. C est la seule force de voile que le document
+        /// donne, et en poser une seconde reviendrait a decider sans lui.
+        public static let opaciteDuVoile: Double = 0.55
         /// Voile pose sur la couverture floutee.
-        public static let voile = CouleurHexadecimale(0x131315, opacite: 0.55)
+        public static let voile = CouleurHexadecimale(0x131315, opacite: opaciteDuVoile)
         /// Opacite de la barre de titre au dessus de la banniere.
         public static let opaciteDeLaBarreDeTitre: Double = 0.6
 

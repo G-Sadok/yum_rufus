@@ -517,6 +517,42 @@
         }
       }
     },
+    "etatVide.statistiques.action" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10, action de l etat vide",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir la bibliotheque"
+          }
+        }
+      }
+    },
+    "etatVide.statistiques.phrase" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10, l etat vide invite a agir",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les chapitres que vous lisez seront comptes ici, jour par jour."
+          }
+        }
+      }
+    },
+    "etatVide.statistiques.titre" : {
+      "comment" : "DESIGN-SPEC.md, section 4.10, etat vide du sous ecran",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune lecture comptee"
+          }
+        }
+      }
+    },
     "etatVide.stockage.phrase" : {
       "comment" : "DESIGN-SPEC.md, section 4.10. Etat vide d un ecran de detail du stockage, section 15",
       "extractionState" : "manual",
@@ -3009,6 +3045,258 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Signets"
+          }
+        }
+      }
+    },
+    "statistiques.chapitresLus" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres lus"
+          }
+        }
+      }
+    },
+    "statistiques.compteEnJours" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld jours"
+          }
+        }
+      }
+    },
+    "statistiques.compteEnPages" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pages"
+          }
+        }
+      }
+    },
+    "statistiques.comptePartiel" : {
+      "comment" : "Sous ecran Statistiques de lecture, compte du jour avec objectif",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld sur %2$lld chapitres"
+          }
+        }
+      }
+    },
+    "statistiques.compteSimple" : {
+      "comment" : "Sous ecran Statistiques de lecture, compte de chapitres sans cible",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld chapitres"
+          }
+        }
+      }
+    },
+    "statistiques.description.rappel" : {
+      "comment" : "Description sous la carte, section 4.2. %@ est l heure du rappel",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le rappel arrive a %@ et se tait des que l objectif est atteint."
+          }
+        }
+      }
+    },
+    "statistiques.description.serie" : {
+      "comment" : "Description sous la carte, section 4.2. Dit la regle sans la prescrire",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un jour compte quand l objectif est atteint. Sans objectif, un chapitre suffit."
+          }
+        }
+      }
+    },
+    "statistiques.joursDeLecture" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours de lecture"
+          }
+        }
+      }
+    },
+    "statistiques.lectureDuJour" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitres lus"
+          }
+        }
+      }
+    },
+    "statistiques.objectif" : {
+      "comment" : "Inventaire de la section 9 du cahier de developpement",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objectif quotidien"
+          }
+        }
+      }
+    },
+    "statistiques.objectifDesactive" : {
+      "comment" : "Inventaire de la section 9, cran le plus bas du compteur",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactive"
+          }
+        }
+      }
+    },
+    "statistiques.objectifEnChapitres" : {
+      "comment" : "Inventaire de la section 9, valeur du compteur de 1 a 20",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld chapitres"
+          }
+        }
+      }
+    },
+    "statistiques.pagesLues" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages lues"
+          }
+        }
+      }
+    },
+    "statistiques.rappel" : {
+      "comment" : "Rappel facultatif de F059, libelle ecrit selon la section 6",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rappel quotidien"
+          }
+        }
+      }
+    },
+    "statistiques.section.aujourdHui" : {
+      "comment" : "Sous ecran Statistiques de lecture, en tete de carte, section 4.2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd hui"
+          }
+        }
+      }
+    },
+    "statistiques.section.derniersJours" : {
+      "comment" : "Sous ecran Statistiques de lecture, en tete de carte, section 4.2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les sept derniers jours"
+          }
+        }
+      }
+    },
+    "statistiques.section.serie" : {
+      "comment" : "Sous ecran Statistiques de lecture, en tete de carte, section 4.2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serie de jours"
+          }
+        }
+      }
+    },
+    "statistiques.section.totaux" : {
+      "comment" : "Sous ecran Statistiques de lecture, en tete de carte, section 4.2",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Depuis le debut"
+          }
+        }
+      }
+    },
+    "statistiques.serie" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours de suite"
+          }
+        }
+      }
+    },
+    "statistiques.serieEnJours" : {
+      "comment" : "Sous ecran Statistiques de lecture, section 5.5 de DESIGN-SPEC.md",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld jours"
+          }
+        }
+      }
+    },
+    "statistiques.serieVide" : {
+      "comment" : "Serie a zero. Le critere de F059 ecarte un score, la phrase dit la suite",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La serie commence a la prochaine lecture"
           }
         }
       }

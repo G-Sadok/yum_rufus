@@ -55,6 +55,16 @@ final class ServicesDeLApplication {
         base.map { MagasinDeProgression(base: $0, incognito: incognito) }
     }
 
+    /// Magasin des statistiques de lecture, nul tant que la base n est pas
+    /// ouverte.
+    ///
+    /// Il recoit le meme registre que les deux autres. C est ce qui tient le
+    /// premier critere de F059 : le comptage se suspend avec le reste des
+    /// traces de lecture, et non selon un etat qui lui serait propre.
+    var statistiques: MagasinDeStatistiques? {
+        base.map { MagasinDeStatistiques(base: $0, incognito: incognito) }
+    }
+
     private static func ouvrir() throws -> BaseDeDonnees {
         let support = try FileManager.default.url(
             for: .applicationSupportDirectory,

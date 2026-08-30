@@ -1376,7 +1376,9 @@
       "depend_de": [
         "F049"
       ],
-      "statut": "a_faire"
+      "statut": "bloque",
+      "modifie_le": "2026-08-30T13:37:28Z",
+      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
     },
     {
       "id": "F063",

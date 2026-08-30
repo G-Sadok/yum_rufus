@@ -126,7 +126,7 @@ struct SourceOpdsTests {
         let catalogue = CatalogueOpdsDeTest([])
         let source = try await catalogue.source()
 
-        #expect(source.capacites == [.pagination, .telechargement])
+        #expect(source.capacites == [.pagination, .telechargement, .veilleDeNouveautes])
         #expect(source.declare(.recherche) == false)
         #expect(source.declare(.filtres) == false)
         #expect(source.declare(.progressionDistante) == false)

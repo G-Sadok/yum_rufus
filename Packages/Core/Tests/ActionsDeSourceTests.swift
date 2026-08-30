@@ -5,13 +5,13 @@ import Testing
 /// Couvre le premier critere de la fonctionnalite : l interface n expose que
 /// les actions correspondant aux capacites declarees.
 ///
-/// La verification porte sur les soixante quatre combinaisons de capacites et
+/// La verification porte sur les cent vingt huit combinaisons de capacites et
 /// non sur quelques exemples choisis. Une regle qui se lit comme un tableau se
 /// teste comme un tableau, sans quoi la combinaison oubliee sera exactement
 /// celle qu une source reelle declarera un jour.
 struct ActionsDeSourceTests {
-    /// Toutes les combinaisons possibles des six capacites.
-    private static let combinaisons: [SourceCapacites] = (0..<64).map { SourceCapacites(rawValue: $0) }
+    /// Toutes les combinaisons possibles des sept capacites.
+    private static let combinaisons: [SourceCapacites] = (0..<128).map { SourceCapacites(rawValue: $0) }
 
     // MARK: Tableau des actions
 
@@ -30,7 +30,7 @@ struct ActionsDeSourceTests {
         )
     }
 
-    @Test("Sur les soixante quatre combinaisons, une action est offerte si et seulement si sa capacite est declaree")
+    @Test("Sur les cent vingt huit combinaisons, une action est offerte si et seulement si sa capacite est declaree")
     func actionsOffertesSurToutesLesCombinaisons() {
         for capacites in Self.combinaisons {
             let offertes = capacites.actionsOffertes

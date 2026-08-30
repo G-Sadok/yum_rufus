@@ -29,8 +29,9 @@ import Foundation
 // capacite `telechargement` n est pas un supplement pour cette source, c est sa
 // condition d existence, et c est pourquoi elle est declaree.
 //
-// Les capacites offertes sont donc la recherche, la pagination et le
-// telechargement. Les filtres n y sont pas : une serie est un dossier chez
+// Les capacites offertes sont donc la recherche, la pagination, le
+// telechargement et la veille de nouveautes, le contenu d un dossier se
+// relisant a la demande. Les filtres n y sont pas : une serie est un dossier chez
 // Jellyfin, un dossier ne porte ni genre ni statut editorial, et une requete
 // filtree y rendrait toujours une liste vide. La progression distante n y est
 // pas non plus : le serveur tient une progression par utilisateur, une cle d API
@@ -45,6 +46,7 @@ public actor SourceJellyfin: SourceProvider {
         .recherche,
         .pagination,
         .telechargement,
+        .veilleDeNouveautes,
     ]
 
     /// Nombre de series demandees par page de catalogue, par defaut.

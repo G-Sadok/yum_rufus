@@ -14,10 +14,11 @@ import Foundation
 // verrouille en ouvrirait deux boites de dialogue.
 //
 // Les capacites declarees sont la recherche, les filtres, la pagination, le
-// telechargement et la progression distante. Elles correspondent une a une a ce
-// que le serveur sait faire : `search`, `genre` et `status` sur la liste des
-// series, la pagination de Spring, des pages servies par URL donc
-// telechargeables, et un point d entree de progression de lecture.
+// telechargement, la progression distante et la veille de nouveautes. Elles
+// correspondent une a une a ce que le serveur sait faire : `search`, `genre` et
+// `status` sur la liste des series, la pagination de Spring, des pages servies
+// par URL donc telechargeables, un point d entree de progression de lecture, et
+// une liste de livres relisable a la demande sans cout pour l utilisateur.
 //
 // Le choix de la langue n est pas declare, et ce n est pas un oubli. Komga
 // range une langue par serie, pas la meme serie en plusieurs langues. Declarer
@@ -33,6 +34,7 @@ public actor SourceKomga: SourceProvider {
         .pagination,
         .telechargement,
         .progressionDistante,
+        .veilleDeNouveautes,
     ]
 
     /// Nombre de series demandees par page de catalogue, par defaut.

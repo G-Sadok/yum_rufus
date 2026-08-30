@@ -44,7 +44,19 @@ public struct SourceCapacites: OptionSet, Sendable, Hashable {
     /// La source publie le meme contenu en plusieurs langues.
     public static let plusieursLangues = SourceCapacites(rawValue: 1 << 5)
 
-    /// Les six capacites, une par une.
+    /// La source accepte d etre relue periodiquement a la recherche de
+    /// chapitres parus depuis la derniere visite.
+    ///
+    /// La capacite existe parce que toutes les sources ne peuvent pas etre
+    /// relues sans consequence. Un dossier local repond en quelques
+    /// millisecondes et sans reseau, un catalogue ouvert repond au prix d une
+    /// requete qui compte dans le quota de l appareil et dans la charge du
+    /// serveur d en face. La veille de F060 n interroge donc que les sources
+    /// qui la declarent, exactement comme la recherche n interroge que celles
+    /// qui declarent `recherche`.
+    public static let veilleDeNouveautes = SourceCapacites(rawValue: 1 << 6)
+
+    /// Les sept capacites, une par une.
     ///
     /// Sert aux interfaces qui affichent ce qu une source sait faire, et aux
     /// tests qui verifient qu une capacite declaree correspond bien a une
@@ -56,6 +68,7 @@ public struct SourceCapacites: OptionSet, Sendable, Hashable {
         .telechargement,
         .progressionDistante,
         .plusieursLangues,
+        .veilleDeNouveautes,
     ]
 }
 

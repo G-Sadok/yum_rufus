@@ -188,12 +188,18 @@ actor SourceDeTest: SourceProvider {
         }
     }
 
-    /// Attend jusqu a l annulation, sans jamais rendre de resultat.
+    /// Duree pendant laquelle une source muette ne repond pas.
     ///
     /// Une heure plutot qu une boucle infinie : si l annulation ne parvenait pas
     /// jusqu ici, le test echouerait par delai au lieu de figer la suite.
+    ///
+    /// Elle est exposee parce que les cas qui mesurent une duree se comparent a
+    /// elle, et non a un nombre de secondes choisi a la main.
+    static let attenteSansFin: Duration = .seconds(3600)
+
+    /// Attend jusqu a l annulation, sans jamais rendre de resultat.
     private static func neJamaisRepondre() async {
-        try? await Task.sleep(for: .seconds(3600))
+        try? await Task.sleep(for: attenteSansFin)
     }
 
     /// Rend la tranche demandee, et dit s il en reste.

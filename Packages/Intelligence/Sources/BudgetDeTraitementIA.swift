@@ -41,6 +41,16 @@ public struct BudgetDeTraitementIA: Sendable, Hashable {
     /// refuserait toute page des que l amelioration est active.
     public static let colorisation = BudgetDeTraitementIA(octetsParPage: 48_000_000)
 
+    /// Budget de la detection de cases.
+    ///
+    /// Le detecteur ne produit pas de page, il produit une poignee de
+    /// rectangles. Le budget porte donc sur son entree, la planche recopiee en
+    /// matrice pour etre donnee au reseau, et il vaut le plafond de decodage de
+    /// la section 6.1 : une page que le decodage a laisse passer entre ici, une
+    /// page plus lourde n a pas a etre recopiee une seconde fois en memoire
+    /// pour un zoom.
+    public static let detectionDeCases = BudgetDeTraitementIA(octetsParPage: 12_000_000)
+
     /// Plus petit plafond accepte, celui d une tuile de 256 surelevee par deux.
     private static let plancher = 512 * 512 * MatriceDePixels.octetsParPixel
 

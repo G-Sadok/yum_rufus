@@ -19,7 +19,7 @@ import Core
 // propriete, ce qui rend impossible d afficher le mauvais libelle.
 //
 
-/// Un des deux traitements par modele embarque de la section 8.
+/// Un des traitements par modele embarque de la section 8.
 public enum TraitementIA: String, Sendable, Hashable, CaseIterable {
     /// Quatrieme etape de la chaine de la section 6.3.
     case amelioration
@@ -27,12 +27,39 @@ public enum TraitementIA: String, Sendable, Hashable, CaseIterable {
     /// Cinquieme etape de la chaine de la section 6.3.
     case colorisation
 
-    /// Libelle exact du reglage de la section 9 qui arme ce traitement.
-    public var libelleDuReglage: String {
+    /// Detecteur de cases, qui sert au zoom automatique case par case.
+    case detectionDeCases
+
+    /// Nom de la fonction tel que l utilisateur la connait.
+    public var libelleDeLaFonction: String {
         switch self {
         case .amelioration: "Amelioration IA en deux fois"
         case .colorisation: "Colorisation par IA"
+        case .detectionDeCases: "Zoom automatique case par case"
         }
+    }
+
+    /// Libelle exact du reglage de la section 9 qui arme ce traitement, nil
+    /// quand aucun reglage ne l arme.
+    ///
+    /// La detection de cases n en a pas. L inventaire des reglages de la
+    /// section 9 ne lui donne aucune ligne : elle s arme par le geste de zoom,
+    /// dans le lecteur, et un message qui inviterait a couper un interrupteur
+    /// inexistant enverrait l utilisateur chercher en vain.
+    public var libelleDuReglage: String? {
+        switch self {
+        case .amelioration, .colorisation: libelleDeLaFonction
+        case .detectionDeCases: nil
+        }
+    }
+
+    /// Vrai quand la section 8 exige la provenance du jeu de donnees
+    /// d entrainement pour ce traitement.
+    ///
+    /// Elle le demande nommement pour le detecteur de cases, dont la mention
+    /// ferme la section A propos.
+    public var exigeUnJeuDeDonnees: Bool {
+        self == .detectionDeCases
     }
 }
 
@@ -49,6 +76,10 @@ public enum ErreurDeTraitementIA: Error, Sendable, Equatable {
 
     /// Aucune fiche de licence ne couvre ce modele dans le depot.
     case licenceNonDocumentee(identifiant: String)
+
+    /// Le jeu de donnees d entrainement n est pas documente, ou sa licence ne
+    /// permet pas de distribuer les poids qui en sont tires.
+    case jeuDeDonneesNonAutorise(identifiant: String)
 
     /// Le modele a refuse la tuile ou n a rien rendu d exploitable.
     case modeleEnEchec(identifiant: String)
@@ -68,24 +99,37 @@ public enum ErreurDeTraitementIA: Error, Sendable, Equatable {
     /// Message destine a l utilisateur, pour le traitement qui a echoue.
     ///
     /// Il nomme la cause et indique la sortie, comme l impose la regle d erreur
-    /// du projet. La sortie est la meme dans tous les cas : la page reste
-    /// lisible sans traitement, et l interrupteur se coupe dans les reglages.
+    /// du projet. La sortie depend de ce qui arme le traitement : un
+    /// interrupteur des reglages pour les deux traitements de la chaine
+    /// d images, le geste de zoom pour la detection de cases, qui n a pas de
+    /// ligne dans l inventaire de la section 9.
     public func messageUtilisateur(pour traitement: TraitementIA) -> String {
-        let reglage = traitement.libelleDuReglage
+        let fonction = traitement.libelleDeLaFonction
 
         switch self {
         case .modeleIllisible:
-            return "Le modele n est pas installe. Desactivez \(reglage) dans les reglages."
+            return "Le modele n est pas installe. " + Self.sortie(de: traitement)
         case .modeleSansImage, .facteurInattendu:
-            return "Le modele installe n est pas celui que Yum attend pour \(reglage)."
+            return "Le modele installe n est pas celui que Yum attend pour \(fonction)."
         case .licenceNonDocumentee:
-            return "La licence du modele installe n est pas documentee. \(reglage) reste indisponible."
+            return "La licence du modele installe n est pas documentee. \(fonction) reste indisponible."
+        case .jeuDeDonneesNonAutorise:
+            return "Le jeu de donnees du modele installe n est pas documente. \(fonction) reste indisponible."
         case .modeleEnEchec:
-            return "\(reglage) a echoue sur cet appareil. La page reste lisible telle quelle."
+            return "\(fonction) a echoue sur cet appareil. La page reste lisible telle quelle."
         case .pageIllisible, .tuileRefusee, .tailleInattendue:
-            return "Cette page n a pas pu passer par \(reglage). Elle reste lisible telle quelle."
+            return "Cette page n a pas pu passer par \(fonction). Elle reste lisible telle quelle."
         case .pageTropLourde:
-            return "Cette page est trop grande pour \(reglage) sur cet appareil."
+            return "Cette page est trop grande pour \(fonction) sur cet appareil."
         }
+    }
+
+    /// Ce que l utilisateur peut faire quand le modele manque.
+    private static func sortie(de traitement: TraitementIA) -> String {
+        guard let reglage = traitement.libelleDuReglage else {
+            return "La lecture continue page par page."
+        }
+
+        return "Desactivez \(reglage) dans les reglages."
     }
 }

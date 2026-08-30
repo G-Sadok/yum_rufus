@@ -354,7 +354,7 @@ public enum MatriceDeVerrouillage {
         .passerAPremium, .restaurerLesAchats, .verrouillageDeLApp, .langue,
         .apparence, .theme, .notificationsDeNouveauxChapitres, .trierPar,
         .ordreDeTri, .marquerLuALaDernierePage, .supprimerApresLecture,
-        .mettreAJourAuLancement, .extensionSafari, .ouvrirLesLiensDansLApplication,
+        .mettreAJourAuLancement, .activerLePontNavigateur, .extensionSafari, .ouvrirLesLiensDansLApplication,
         .dernierEnvoi, .viderLeCacheDImages, .supprimerTousLesTelechargements,
         .aide, .signalerUnBug, .version, .nouveautes, .mentionsLegales,
     ]

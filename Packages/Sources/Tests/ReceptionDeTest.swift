@@ -15,6 +15,16 @@ import Foundation
 // pour entendre.
 //
 
+/// Ce que l ecoute simulee leve quand plus personne n ecoute.
+///
+/// Une erreur a elle, et non celle d un des deux serveurs qui passent par cette
+/// ecoute : ce que le double represente est un port ferme, pas un refus rendu
+/// par une application. Un test qui attend cette erreur la prouve donc bien
+/// qu il n y a plus personne, et non qu on lui a repondu non.
+enum RienNEcoute: Error, Equatable {
+    case portFerme
+}
+
 /// Ecoute qui n ouvre aucun port et transporte les requetes a la main.
 actor EcouteSimulee: PointDEcoute {
     /// Port annonce a l ouverture.
@@ -27,13 +37,13 @@ actor EcouteSimulee: PointDEcoute {
     private(set) var demarrages = 0
     private(set) var arrets = 0
 
-    private var traitement: (@Sendable (Data) async -> Data)?
+    private var traitement: (@Sendable (Data, AdresseDuPair) async -> Data)?
 
     init(portAnnonce: UInt16 = ServeurDeTransfertWifi.portParDefaut) {
         self.portAnnonce = portAnnonce
     }
 
-    func demarrer(_ traiter: @escaping @Sendable (Data) async -> Data) async throws -> UInt16 {
+    func demarrer(_ traiter: @escaping @Sendable (Data, AdresseDuPair) async -> Data) async throws -> UInt16 {
         enEcoute = true
         demarrages += 1
         traitement = traiter
@@ -47,17 +57,21 @@ actor EcouteSimulee: PointDEcoute {
         traitement = nil
     }
 
-    /// Porte une requete jusqu au serveur, comme le ferait une machine du
-    /// reseau.
+    /// Porte une requete jusqu au serveur, comme le ferait la machine dont
+    /// l adresse est donnee.
     ///
-    /// - Throws: `ErreurDeTransfert.receptionFermee` quand plus rien n ecoute,
-    ///   ce qui est la forme que prend un port ferme vu du reseau.
-    func envoyer(_ octets: Data) async throws -> ReponseDeTest {
+    /// L adresse par defaut est le bouclage, celle d une requete venue de cet
+    /// appareil : la reception Wi-Fi ne la regarde pas, et les tests du pont
+    /// qui veulent une machine du reseau la nomment.
+    ///
+    /// - Throws: `RienNEcoute.portFerme` quand plus rien n ecoute, ce qui est la
+    ///   forme que prend un port ferme vu du reseau.
+    func envoyer(_ octets: Data, depuis adresse: AdresseDuPair = .bouclageIPv4) async throws -> ReponseDeTest {
         guard enEcoute, let traitement else {
-            throw ErreurDeTransfert.receptionFermee
+            throw RienNEcoute.portFerme
         }
 
-        return try await ReponseDeTest.lire(traitement(octets))
+        return try await ReponseDeTest.lire(traitement(octets, adresse))
     }
 }
 

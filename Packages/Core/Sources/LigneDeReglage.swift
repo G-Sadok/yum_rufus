@@ -62,6 +62,7 @@ public enum IdentifiantDeReglage: String, Sendable, Codable, CaseIterable, Hasha
     case mettreAJourAuLancement = "bibliothequeComportement.mettreAJourAuLancement"
 
     // 10. Pont navigateur
+    case activerLePontNavigateur = "pontNavigateur.activerLePontNavigateur"
     case extensionSafari = "pontNavigateur.extensionSafari"
     case ouvrirLesLiensDansLApplication = "pontNavigateur.ouvrirLesLiensDansLApplication"
 

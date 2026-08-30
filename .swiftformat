@@ -23,3 +23,19 @@
 --extensionacl on-declarations
 --patternlet hoist
 --semicolons never
+
+# Deux regles par defaut de SwiftFormat contredisent .swiftlint.yml. Le
+# desaccord est insoluble depuis le code : corriger pour un outil fait echouer
+# l autre, indefiniment. Elles sont donc coupees ici, ou le conflit se regle une
+# fois, plutot que dans chaque fichier.
+#
+# preferKeyPath reecrit `allSatisfy { $0.estDossier }` en `allSatisfy(\.estDossier)`.
+# Sous cette forme, dans une macro #expect, le compilateur refuse : allSatisfy
+# est rethrows et le chemin de cle n y est pas vu comme non levant.
+#
+# wrapMultilineStatementBraces renvoie l accolade d un if multi lignes a la ligne
+# suivante, ce que la regle opening_brace de SwiftLint refuse.
+#
+# Aucun controle n est affaibli : ce sont deux preferences d ecriture, pas des
+# regles de correction, et SwiftLint continue de trancher sur les deux points.
+--disable preferKeyPath,wrapMultilineStatementBraces

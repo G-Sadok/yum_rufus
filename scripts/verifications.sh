@@ -13,6 +13,32 @@ cd "$RACINE"
 SCHEMA="${SCHEMA_XCODE:-Yum}"
 ECHECS=0
 
+# Secondes accordees a une campagne de tests avant de la declarer pendue.
+#
+# Sans cette borne, un seul test qui boucle fige tout, sans erreur ni trace :
+# la boucle attend un processus qui n avancera jamais, et rien ne distingue la
+# panne d une campagne lente. C est arrive avec l analyseur de chemin SVG de
+# F024, qui a tenu quatre heures avant qu on le remarque.
+DELAI_TESTS="${DELAI_TESTS:-1200}"
+
+# timeout vient des coreutils GNU, absent de macOS par defaut. Sans lui, les
+# tests tournent comme avant, sans borne, et on le dit.
+LANCEUR_BORNE=""
+if command -v timeout >/dev/null 2>&1; then
+  LANCEUR_BORNE="timeout"
+elif command -v gtimeout >/dev/null 2>&1; then
+  LANCEUR_BORNE="gtimeout"
+fi
+
+# Lance une commande sous la borne de temps quand elle est disponible.
+avec_borne() {
+  if [ -n "$LANCEUR_BORNE" ]; then
+    "$LANCEUR_BORNE" "$DELAI_TESTS" "$@"
+  else
+    "$@"
+  fi
+}
+
 # Le dossier App existe des l etape 0, mais son projet Xcode n arrive qu avec
 # la coquille de l application. Tester la seule presence du dossier ferait
 # echouer xcodebuild sur un schema inexistant, alors que rien n est casse.
@@ -120,8 +146,14 @@ TESTS_TENTES=0
 
 if command -v swift >/dev/null 2>&1 && [ -f "Packages/Package.swift" ]; then
   SORTIE="$(mktemp)"
-  if swift test --package-path Packages > "$SORTIE" 2>&1; then
+  avec_borne swift test --package-path Packages > "$SORTIE" 2>&1
+  CODE_TESTS=$?
+
+  if [ "$CODE_TESTS" -eq 0 ]; then
     vert "Tests des paquets passes"
+  elif [ "$CODE_TESTS" -eq 124 ]; then
+    echouer "Les tests de paquet ont depasse $DELAI_TESTS secondes, un test est pendu"
+    tail -20 "$SORTIE"
   else
     echouer "Des tests de paquet ont echoue"
     grep -E "(recorded an issue|failed|error:)" "$SORTIE" | head -20

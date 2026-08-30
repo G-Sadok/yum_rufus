@@ -487,14 +487,32 @@ traiter() {
 # Le backlog est suivi par git. Un reset --hard effacerait le statut qui vient
 # d etre ecrit, et la boucle reessaierait indefiniment la meme fonctionnalite.
 # On le met donc de cote pendant la remise a plat, puis on le publie.
+#
+# Le travail de la tentative en echec est remise, jamais detruit. Un reset seul
+# effacait sans retour les modifications des fichiers deja suivis, ce qui rendait
+# le reste du travail incoherent : les fichiers neufs survivaient et appelaient
+# une interface qui venait de disparaitre. Ces memes fichiers neufs salissaient
+# ensuite la branche principale et faisaient echouer l ouverture des trois
+# fonctionnalites suivantes, jusqu au disjoncteur.
 revenir_au_propre() {
-  local principale sauvegarde
+  local principale sauvegarde etiquette
   principale="$(bl '.meta.branche_principale')"
   sauvegarde="$(mktemp)"
   cp "$BACKLOG" "$sauvegarde"
 
+  if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+    etiquette="boucle: travail mis de cote le $(date '+%Y-%m-%d %H:%M:%S')"
+    if git stash push --include-untracked --quiet --message "$etiquette" 2>/dev/null; then
+      info "Travail non commite mis de cote, retrouve le avec git stash list"
+    fi
+  fi
+
   git checkout "$principale" --quiet 2>/dev/null
   git reset --hard "origin/$principale" --quiet 2>/dev/null
+
+  # Filet de securite si la remise a echoue. Sans -x, les fichiers ignores,
+  # dont l etat de la boucle et ses journaux, ne sont pas touches.
+  git clean -fdq 2>/dev/null
 
   cp "$sauvegarde" "$BACKLOG"
   rm -f "$sauvegarde"

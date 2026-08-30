@@ -107,6 +107,20 @@ git pull --ff-only origin "$BRANCHE_PRINCIPALE" --quiet || jaune "Impossible de 
 if git show-ref --verify --quiet "refs/heads/$BRANCHE"; then
   jaune "La branche $BRANCHE existe deja, on la reprend."
   git checkout "$BRANCHE" --quiet
+
+  # Une branche laissee par un incident precedent peut avoir des dizaines de
+  # commits de retard. Reprise telle quelle, la fonctionnalite se developpe sur
+  # une base ou les precedentes n existent pas, et le defaut ne se voit qu a la
+  # fusion, ou plus tard.
+  if [ -n "$(git log --oneline "$BRANCHE".."$BRANCHE_PRINCIPALE" 2>/dev/null)" ]; then
+    bleu "Elle est en retard sur $BRANCHE_PRINCIPALE, mise a jour"
+    if ! git merge --no-edit "$BRANCHE_PRINCIPALE" --quiet; then
+      git merge --abort 2>/dev/null
+      rouge "La mise a jour de $BRANCHE depuis $BRANCHE_PRINCIPALE est en conflit."
+      rouge "Resous le conflit, ou supprime la branche pour repartir a neuf."
+      exit 1
+    fi
+  fi
 else
   git checkout -b "$BRANCHE" --quiet
   vert "Branche creee : $BRANCHE"

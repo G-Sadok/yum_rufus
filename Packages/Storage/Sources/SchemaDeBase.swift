@@ -72,6 +72,15 @@ public enum SchemaDeBase {
     /// Purement additive, comme les precedentes.
     public static let repriseEtPrioriteDeTelechargement = "2026-08-27-01-reprise-et-priorite-de-telechargement"
 
+    /// Identifiant de la migration qui installe le journal de synchronisation.
+    ///
+    /// La section 2.2 impose un journal de changements explicite plutot que le
+    /// miroir automatique de CloudKit. Ce journal doit survivre a la fermeture
+    /// de l application, sans quoi une journee de lecture hors ligne
+    /// disparaitrait a la premiere extinction. Purement additive, comme les
+    /// precedentes.
+    public static let journalDeSynchronisation = "2026-08-30-01-journal-de-synchronisation"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -82,6 +91,7 @@ public enum SchemaDeBase {
         reglagesDeLApplication,
         decalageDeCouverture,
         repriseEtPrioriteDeTelechargement,
+        journalDeSynchronisation,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -125,6 +135,10 @@ public enum SchemaDeBase {
         migrateur.registerMigration(repriseEtPrioriteDeTelechargement) { base in
             try ajouterLaRepriseEtLaPriorite(base)
             try creerLIndexDeFileDeTelechargements(base)
+        }
+
+        migrateur.registerMigration(journalDeSynchronisation) { base in
+            try creerLesTablesDeSynchronisation(base)
         }
 
         return migrateur

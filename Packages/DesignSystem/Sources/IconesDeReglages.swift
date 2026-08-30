@@ -103,6 +103,7 @@ extension Jetons {
             .aide: Icone.aide,
             .signalerUnBug: Icone.signalerUnBug,
             .statistiquesDeLecture: "chart.bar",
+            .revoirLaPremiereOuverture: "hand.wave",
             .version: "info.circle",
             .nouveautes: "sparkles",
             .mentionsLegales: "doc.text",

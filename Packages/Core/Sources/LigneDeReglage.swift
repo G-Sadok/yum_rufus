@@ -96,6 +96,7 @@ public enum IdentifiantDeReglage: String, Sendable, Codable, CaseIterable, Hasha
     case aide = "assistance.aide"
     case signalerUnBug = "assistance.signalerUnBug"
     case statistiquesDeLecture = "assistance.statistiquesDeLecture"
+    case revoirLaPremiereOuverture = "assistance.revoirLaPremiereOuverture"
 
     // 17. A propos
     case version = "aPropos.version"

@@ -109,6 +109,10 @@ extension Jetons {
         public static let effacerLeChamp = "xmark.circle.fill"
 
         /// Retour depuis la liste complete d une source vers les rangees.
-        public static let retour = "chevron.left"
+        ///
+        /// La variante directionnelle et non `chevron.left` : elle se retourne
+        /// d elle meme dans une interface de droite a gauche, section 13 du
+        /// cahier de developpement.
+        public static let retour = "chevron.backward"
     }
 }

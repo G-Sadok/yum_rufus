@@ -115,7 +115,13 @@ extension Jetons {
         /// Bouton d options de la serie, trois points du wireframe 04.
         public static let options = "ellipsis"
         /// Retour vers la bibliotheque, chevron de la section 5.6.
-        public static let retour = "chevron.left"
+        ///
+        /// La variante directionnelle et non `chevron.left` : elle pointe a
+        /// gauche dans une interface de gauche a droite et se retourne d elle
+        /// meme dans une interface de droite a gauche. Un chevron fixe
+        /// designerait la sortie du mauvais cote le jour ou l arabe arrive,
+        /// section 13 du cahier de developpement.
+        public static let retour = "chevron.backward"
     }
 
     /// Ligne de chapitre, section 4.5.

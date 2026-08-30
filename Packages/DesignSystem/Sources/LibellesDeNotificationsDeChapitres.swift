@@ -24,7 +24,12 @@ public struct LibellesDeNotificationsDeChapitres: Sendable, Equatable {
     public let unChapitre: String
 
     /// Motif du corps quand plusieurs chapitres sont parus,
-    /// `%lld nouveaux chapitres, jusqu au chapitre %@`.
+    /// `%1$lld nouveaux chapitres, jusqu au chapitre %2$@`.
+    ///
+    /// Les deux valeurs sont numerotees parce que toutes les langues du
+    /// catalogue ne les placent pas dans le meme ordre : le japonais nomme le
+    /// dernier chapitre avant le nombre. Sans numero, `String(format:)` les
+    /// echangerait en silence.
     public let plusieursChapitres: String
 
     public init(unChapitre: String, plusieursChapitres: String) {

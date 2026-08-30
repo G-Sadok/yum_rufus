@@ -21,7 +21,12 @@ extension Jetons {
         public static let couronne = Icone.premium
 
         /// Chevron simple d une ligne de navigation.
-        public static let chevronDeNavigation = "chevron.right"
+        ///
+        /// La variante directionnelle et non `chevron.right` : elle pointe a
+        /// droite dans une interface de gauche a droite, comme le demande la
+        /// section 4.1, et se retourne d elle meme dans une interface de droite
+        /// a gauche. Section 13 du cahier de developpement.
+        public static let chevronDeNavigation = "chevron.forward"
 
         /// Chevron double d une ligne a menu.
         public static let chevronDeMenu = "chevron.up.chevron.down"

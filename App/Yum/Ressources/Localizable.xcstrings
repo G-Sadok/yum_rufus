@@ -1909,6 +1909,18 @@
         }
       }
     },
+    "reglages.ligne.pontNavigateur.activerLePontNavigateur" : {
+      "comment" : "CAHIER-DES-CHARGES-DEV.md, section 9, libelle de ligne",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer le pont navigateur"
+          }
+        }
+      }
+    },
     "reglages.ligne.pontNavigateur.extensionSafari" : {
       "comment" : "DESIGN-SPEC.md, section 5.5, libelle de ligne",
       "extractionState" : "manual",

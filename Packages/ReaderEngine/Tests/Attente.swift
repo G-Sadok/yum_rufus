@@ -13,8 +13,18 @@ import Foundation
 
 enum Attente {
     /// Attend que la condition soit vraie, et dit si elle l a ete a temps.
+    /// Le delai est une borne contre un test pendu, pas un budget de
+    /// performance. Il etait de dix secondes, ce qui suffisait quand la suite
+    /// etait plus petite : le processus de test fait tourner deux cent
+    /// cinquante suites de front, dont plusieurs saturent le processeur pendant
+    /// plusieurs secondes, et une cadence de vingt millisecondes peut alors
+    /// n avoir aucune occasion de tomber pendant tout ce temps. Une soixantaine
+    /// de secondes met la borne hors de portee de cette contention sans rien
+    /// relacher : une cadence reellement cassee ne verifie jamais la condition,
+    /// quel que soit le delai accorde, et une cadence saine sort des la
+    /// premiere echeance.
     static func jusqua(
-        delaiMax: Duration = .seconds(10),
+        delaiMax: Duration = .seconds(60),
         _ condition: @Sendable () async -> Bool
     ) async -> Bool {
         let echeance = ContinuousClock.now.advanced(by: delaiMax)

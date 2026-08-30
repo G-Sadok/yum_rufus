@@ -56,6 +56,18 @@ public struct RequeteDeTrousseau: Sendable, Hashable {
         (Bundle.main.bundleIdentifier ?? "Yum") + ".jetons-de-suivi"
     }
 
+    /// Service sous lequel le jeton du pont navigateur est range.
+    ///
+    /// Il est distinct des deux autres pour la meme raison qu ils le sont entre
+    /// eux, et la separation porte ici une promesse de plus : la revocation du
+    /// jeton du pont efface une ligne, dans un service qui n en contient
+    /// qu une. Elle ne peut donc emporter ni un mot de passe de serveur, ni une
+    /// connexion de suivi, et une purge de ces derniers ne peut pas laisser le
+    /// pont ouvert avec un jeton devenu invisible.
+    public static var serviceDuPont: String {
+        (Bundle.main.bundleIdentifier ?? "Yum") + ".jeton-du-pont"
+    }
+
     public init(service: String = RequeteDeTrousseau.serviceParDefaut) {
         self.service = service
     }

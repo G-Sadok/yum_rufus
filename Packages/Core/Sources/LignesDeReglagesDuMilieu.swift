@@ -73,7 +73,23 @@ extension CatalogueDeReglages {
     ]
 
     /// 10. Pont navigateur.
+    ///
+    /// La premiere ligne ne figure pas au tableau de la section 5.5 de
+    /// DESIGN-SPEC.md, qui resume la section. Elle vient de l inventaire de la
+    /// section 9 du cahier de developpement, `Activer le pont navigateur`,
+    /// interrupteur inactif par defaut, exactement comme les deux dernieres
+    /// lignes du comportement du lecteur plus haut.
+    ///
+    /// Elle est posee en tete et non en fin de section parce qu elle commande
+    /// les deux autres : sans pont actif, il n y a ni socket ouverte, ni jeton
+    /// tire, et l extension n a personne a qui parler. Les deux lignes du
+    /// tableau gardent leur ordre relatif.
+    ///
+    /// Inactif par defaut, et ce n est pas une preference : une socket qui
+    /// ecoute sur l appareil sans que l utilisateur l ait demandee est une
+    /// surface d attaque offerte a toute application locale.
     private static let pontNavigateur: [LigneDeReglage] = [
+        .interrupteur(.activerLePontNavigateur, .pontNavigateur, actifParDefaut: false),
         .navigation(.extensionSafari, .pontNavigateur),
         .interrupteur(.ouvrirLesLiensDansLApplication, .pontNavigateur, actifParDefaut: false),
     ]

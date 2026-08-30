@@ -4,8 +4,16 @@ import Foundation
 //
 // ReponseDeDepot
 //
-// Ce que la reception Wi-Fi renvoie au navigateur, et la facon dont elle
-// l ecrit sur le fil.
+// Ce que les deux serveurs locaux du projet renvoient au navigateur, et la
+// facon dont ils l ecrivent sur le fil. La reception Wi-Fi de la section 4.4
+// sert des pages, le pont navigateur de la section 9 sert du JSON, et les deux
+// passent par ici.
+//
+// Un seul ecrivain pour les deux, parce que ce qu il pose n est pas decoratif.
+// Les quatre entetes decrits plus bas sont des mesures de securite et de
+// correction du protocole, et deux ecrivains qui se ressemblent aujourd hui
+// divergeraient au premier correctif. Le jour ou un entete manque a l un des
+// deux, il manque au serveur le plus expose, jamais a l autre.
 //
 // Quatre entetes sont poses sur toutes les reponses, et aucun n est decoratif.
 //
@@ -28,7 +36,7 @@ import Foundation
 // texte comme du HTML, et l echappement ne protege alors plus de rien.
 //
 
-/// Une reponse HTTP servie par la reception Wi-Fi.
+/// Une reponse HTTP servie par un serveur local du projet.
 struct ReponseDeDepot: Sendable, Equatable {
     /// Code de statut.
     let code: Int
@@ -51,6 +59,18 @@ struct ReponseDeDepot: Sendable, Equatable {
         complets["Content-Type"] = "text/html; charset=utf-8"
 
         return ReponseDeDepot(code: code, entetes: complets, corps: Data(html.utf8))
+    }
+
+    /// Un objet JSON, servi par le pont navigateur.
+    ///
+    /// Le corps est deja encode par l appelant : l encodage peut echouer, et le
+    /// faire ici obligerait chaque fabrique de reponse a lever, y compris celles
+    /// des refus, qui doivent justement toujours aboutir.
+    static func json(_ corps: Data, code: Int = 200, entetes: [String: String] = [:]) -> ReponseDeDepot {
+        var complets = entetes
+        complets["Content-Type"] = "application/json; charset=utf-8"
+
+        return ReponseDeDepot(code: code, entetes: complets, corps: corps)
     }
 
     /// Une redirection qui fait recharger la page par une requete GET.
@@ -99,9 +119,11 @@ struct ReponseDeDepot: Sendable, Equatable {
     private static let raisons: [Int: String] = [
         200: "OK",
         201: "Created",
+        202: "Accepted",
         303: "See Other",
         400: "Bad Request",
         401: "Unauthorized",
+        403: "Forbidden",
         404: "Not Found",
         405: "Method Not Allowed",
         413: "Payload Too Large",

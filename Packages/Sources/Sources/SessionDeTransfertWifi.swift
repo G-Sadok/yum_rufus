@@ -101,7 +101,10 @@ public actor SessionDeTransfertWifi {
         }
 
         let serveur = serveur
-        let obtenu = try await ecoute.demarrer { octets in
+        // L adresse du pair est ignoree ici, et c est voulu : la reception
+        // Wi-Fi est faite pour etre jointe depuis une autre machine du reseau.
+        // Seul le pont navigateur la regarde.
+        let obtenu = try await ecoute.demarrer { octets, _ in
             await serveur.repondre(auxOctets: octets)
         }
 

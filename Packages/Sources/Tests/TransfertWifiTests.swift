@@ -60,7 +60,10 @@ struct TransfertWifiTests {
 
         await session.fermer()
 
-        await #expect(throws: ErreurDeTransfert.receptionFermee) {
+        // L erreur attendue est celle de l ecoute simulee et non un refus du
+        // serveur : ce qui est promis ici n est pas que la reception reponde
+        // non, c est qu il n y ait plus personne au bout du port.
+        await #expect(throws: RienNEcoute.portFerme) {
             _ = try await ecoute.envoyer(RequeteDeTest.obtenir(CheminsDeLaReception.racine))
         }
     }

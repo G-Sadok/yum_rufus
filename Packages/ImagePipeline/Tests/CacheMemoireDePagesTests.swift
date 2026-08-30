@@ -89,6 +89,16 @@ struct CacheMemoireDePagesTests {
         let zone = TailleEnPixels(largeur: 1600, hauteur: 2400)
         let cache = CacheMemoireDePages()
 
+        // L empreinte est relevee avant la boucle et comparee en variation, pas
+        // en valeur absolue. Le budget de 400 Mo de la section 12 porte sur ce
+        // que la lecture ajoute au processus, et c est bien cela qui est mesure
+        // ici. Le compter en absolu revenait a mesurer le processus de test
+        // entier, ou deux cent cinquante suites tournent de front : la valeur
+        // relevee dependait alors des suites voisines, et la moindre suite
+        // ajoutee ailleurs dans le depot faisait echouer ce test la, sans que
+        // rien du cache ait change.
+        let empreinteAvant = MesureDeMemoire.octets()
+
         for index in 0..<10 {
             let page = try decodeur.decoder(PageDeTest.standard, nom: "page-\(index).jpg", dans: zone)
             await cache.deposer(page, pour: cle(index))
@@ -101,7 +111,7 @@ struct CacheMemoireDePagesTests {
         // Dix pages retenues en pleine chaine peseraient plus de 500 Mo, six
         // pages bornees a 12 Mo en pesent moins de 72.
         #expect(await cache.octetsRetenus < 72_000_000)
-        #expect(MesureDeMemoire.octets() < 400_000_000)
+        #expect(MesureDeMemoire.octets() - empreinteAvant < 400_000_000)
     }
 
     // MARK: Ordre d eviction

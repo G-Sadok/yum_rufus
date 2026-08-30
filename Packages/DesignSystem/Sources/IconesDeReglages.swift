@@ -78,6 +78,7 @@ extension Jetons {
             .marquerLuALaDernierePage: "checkmark.circle",
             .supprimerApresLecture: "trash",
             .mettreAJourAuLancement: "arrow.triangle.2.circlepath",
+            .activerLePontNavigateur: "arrow.left.arrow.right",
             .extensionSafari: Icone.parcourir,
             .ouvrirLesLiensDansLApplication: "link",
             .servicesDeSuivi: "person.2",

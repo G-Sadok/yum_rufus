@@ -20,16 +20,30 @@ import Network
 // verifiable au bon endroit : ce qui doit s arreter avec la feuille, c est
 // l ecoute, et l ecoute est ce type la.
 //
+// Deux serveurs locaux passent par ici, et ils n attendent pas le meme public.
+// La reception Wi-Fi de la section 4.4 est faite pour etre jointe depuis une
+// autre machine du reseau. Le pont navigateur de la section 9 ne doit jamais
+// l etre : il n existe que pour l extension installee sur cet appareil. Le
+// choix se fait a la construction, par `bouclageSeulement`, et il porte a deux
+// etages plutot qu un. L ecoute se lie a l adresse de bouclage, ce qui fait
+// qu aucune machine du reseau ne peut ouvrir la connexion, et l adresse du pair
+// est verifiee avant qu un seul octet soit lu, ce qui tient meme si une regle
+// de routage locale venait a rendre l adresse de bouclage joignable.
+//
+// L adresse du pair est passee au traitement plutot que gardee ici, parce que
+// le refus final appartient au serveur : c est lui qui doit rendre une reponse
+// nommee, et une connexion coupee sans reponse ne dit rien a l extension.
+//
 
-/// Ce qui porte la reception Wi-Fi sur un port.
+/// Ce qui porte un serveur local sur un port.
 public protocol PointDEcoute: Sendable {
     /// Ouvre l ecoute et rend le port reellement obtenu.
     ///
-    /// Le traitement recoit les octets d une requete complete et rend les
-    /// octets de la reponse.
+    /// Le traitement recoit les octets d une requete complete et l adresse de
+    /// la machine qui l a envoyee, et rend les octets de la reponse.
     ///
     /// - Throws: `ErreurReseau` quand le port ne peut pas etre pris.
-    func demarrer(_ traiter: @escaping @Sendable (Data) async -> Data) async throws -> UInt16
+    func demarrer(_ traiter: @escaping @Sendable (Data, AdresseDuPair) async -> Data) async throws -> UInt16
 
     /// Ferme l ecoute et coupe les connexions en cours.
     func arreter() async
@@ -52,19 +66,24 @@ public actor EcouteHttpLocale: PointDEcoute {
 
     private let port: UInt16
     private let plafondDuCorps: Int
+    private let bouclageSeulement: Bool
 
     private var ecouteur: NWListener?
     private var connexions: [NWConnection] = []
 
     public init(
         port: UInt16 = ServeurDeTransfertWifi.portParDefaut,
-        plafondDuCorps: Int = ServeurDeTransfertWifi.plafondParDepot
+        plafondDuCorps: Int = ServeurDeTransfertWifi.plafondParDepot,
+        bouclageSeulement: Bool = false
     ) {
         self.port = port
         self.plafondDuCorps = plafondDuCorps
+        self.bouclageSeulement = bouclageSeulement
     }
 
-    public func demarrer(_ traiter: @escaping @Sendable (Data) async -> Data) async throws -> UInt16 {
+    public func demarrer(
+        _ traiter: @escaping @Sendable (Data, AdresseDuPair) async -> Data
+    ) async throws -> UInt16 {
         if let ecouteur, let obtenu = ecouteur.port {
             return obtenu.rawValue
         }
@@ -79,17 +98,30 @@ public actor EcouteHttpLocale: PointDEcoute {
         parametres.allowLocalEndpointReuse = true
         parametres.includePeerToPeer = false
 
+        if bouclageSeulement {
+            // Le port passe par la voie locale exigee et non par `on:` : les
+            // deux ensemble se contredisent, et c est l adresse qui compte ici.
+            parametres.requiredLocalEndpoint = NWEndpoint.hostPort(host: .ipv4(.loopback), port: portReseau)
+        }
+
         let ouvert: NWListener
 
         do {
-            ouvert = try NWListener(using: parametres, on: portReseau)
+            ouvert = bouclageSeulement
+                ? try NWListener(using: parametres)
+                : try NWListener(using: parametres, on: portReseau)
         } catch {
             throw Self.traduire(error)
         }
 
-        ouvert.newConnectionHandler = { [plafondDuCorps] connexion in
+        ouvert.newConnectionHandler = { [plafondDuCorps, bouclageSeulement] connexion in
             Task { [weak self] in
-                await self?.accueillir(connexion, plafondDuCorps: plafondDuCorps, traiter: traiter)
+                await self?.accueillir(
+                    connexion,
+                    plafondDuCorps: plafondDuCorps,
+                    bouclageSeulement: bouclageSeulement,
+                    traiter: traiter
+                )
             }
         }
 
@@ -118,10 +150,20 @@ public actor EcouteHttpLocale: PointDEcoute {
     private func accueillir(
         _ connexion: NWConnection,
         plafondDuCorps: Int,
-        traiter: @escaping @Sendable (Data) async -> Data
+        bouclageSeulement: Bool,
+        traiter: @escaping @Sendable (Data, AdresseDuPair) async -> Data
     ) async {
         guard ecouteur != nil else {
             // La feuille s est fermee entre l acceptation et ici.
+            return connexion.cancel()
+        }
+
+        let pair = Self.adresse(dePair: connexion.endpoint)
+
+        guard bouclageSeulement == false || pair.estLocale else {
+            // Coupee avant d etre lue : une machine du reseau qui atteindrait
+            // malgre tout ce port n obtient meme pas la place d envoyer sa
+            // requete, donc pas de tampon a son nom dans notre memoire.
             return connexion.cancel()
         }
 
@@ -131,7 +173,12 @@ public actor EcouteHttpLocale: PointDEcoute {
         do {
             try await withThrowingTaskGroup(of: Void.self) { groupe in
                 groupe.addTask {
-                    try await Self.servir(connexion, plafondDuCorps: plafondDuCorps, traiter: traiter)
+                    try await Self.servir(
+                        connexion,
+                        depuis: pair,
+                        plafondDuCorps: plafondDuCorps,
+                        traiter: traiter
+                    )
                 }
                 groupe.addTask {
                     try await Task.sleep(for: .seconds(Self.delaiParConnexion))
@@ -156,8 +203,9 @@ public actor EcouteHttpLocale: PointDEcoute {
     /// Lit une requete entiere, la fait traiter, et rend la reponse.
     private static func servir(
         _ connexion: NWConnection,
+        depuis pair: AdresseDuPair,
         plafondDuCorps: Int,
-        traiter: @escaping @Sendable (Data) async -> Data
+        traiter: @escaping @Sendable (Data, AdresseDuPair) async -> Data
     ) async throws {
         var cadrage = CadrageDeRequete(plafondDuCorps: plafondDuCorps)
 
@@ -174,13 +222,37 @@ public actor EcouteHttpLocale: PointDEcoute {
                 continue
             }
 
-            return try await envoyer(traiter(requete), sur: connexion)
+            return try await envoyer(traiter(requete, pair), sur: connexion)
         }
     }
 
     private func oublier(_ connexion: NWConnection) {
         connexion.cancel()
         connexions.removeAll { $0 === connexion }
+    }
+
+    /// L adresse de la machine au bout d une connexion.
+    ///
+    /// Une extremite qui n est pas une paire adresse et port, ou dont la forme
+    /// n est pas connue de cette version du systeme, rend une adresse vide, que
+    /// `AdresseDuPair` tient pour non locale. C est le bon defaut : ne pas
+    /// savoir d ou vient une connexion et la traiter comme locale serait la
+    /// seule facon de contourner la regle sans le vouloir.
+    private static func adresse(dePair point: NWEndpoint) -> AdresseDuPair {
+        guard case let .hostPort(hote, _) = point else {
+            return AdresseDuPair(hote: "")
+        }
+
+        switch hote {
+        case let .ipv4(brute):
+            return AdresseDuPair(hote: "\(brute)")
+        case let .ipv6(brute):
+            return AdresseDuPair(hote: "\(brute)")
+        case let .name(nom, _):
+            return AdresseDuPair(hote: nom)
+        @unknown default:
+            return AdresseDuPair(hote: "")
+        }
     }
 
     // MARK: Cadre Network

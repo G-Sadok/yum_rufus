@@ -170,7 +170,7 @@ public actor ServeurDeTransfertWifi {
             return false
         }
 
-        return Self.egalesATempsConstant(jeton, presente)
+        return ComparaisonSecrete.egales(jeton, presente)
     }
 
     // MARK: Depot
@@ -250,23 +250,5 @@ public actor ServeurDeTransfertWifi {
         let basses = UInt64.random(in: UInt64.min...UInt64.max, using: &generateur)
 
         return String(format: "%016lx%016lx", hautes, basses)
-    }
-
-    /// Compare deux jetons sans laisser mesurer ou ils different.
-    private static func egalesATempsConstant(_ gauche: String, _ droite: String) -> Bool {
-        let attendu = Array(gauche.utf8)
-        let presente = Array(droite.utf8)
-
-        guard attendu.count == presente.count else {
-            return false
-        }
-
-        var ecart: UInt8 = 0
-
-        for index in attendu.indices {
-            ecart |= attendu[index] ^ presente[index]
-        }
-
-        return ecart == 0
     }
 }

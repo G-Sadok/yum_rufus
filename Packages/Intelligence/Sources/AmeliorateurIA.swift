@@ -28,38 +28,15 @@ import ImagePipeline
 // ce temps, aucun autre traitement IA ne doit avancer. Le reste de
 // l application, lui, tourne sur d autres fils et sur l acteur principal.
 //
-// L annulation traverse quand meme. `SurelevationEnTuiles` verifie la tache
+// L annulation traverse quand meme. `TraitementParTuiles` verifie la tache
 // avant chaque tuile, donc un lecteur qui tourne la page arrete le travail en
 // cours a la tuile suivante, sans attendre la fin de la page.
 //
-
-/// Plafond memoire d une page amelioree.
-public struct BudgetDeSurelevation: Sendable, Hashable {
-    /// Nombre d octets que la page produite ne doit pas depasser.
-    public let octetsParPage: Int
-
-    /// Construit un budget, en refusant un plafond plus petit qu une tuile.
-    public init(octetsParPage: Int) {
-        self.octetsParPage = max(Self.plancher, octetsParPage)
-    }
-
-    /// Budget applique quand l appelant n en impose pas d autre.
-    ///
-    /// Quarante huit millions d octets, soit exactement quatre fois le plafond
-    /// de decodage de la section 6.1. Une surelevation par deux quadruple le
-    /// nombre de pixels : une page decodee sous son budget rentre donc toujours
-    /// sous celui ci, et une page qui n y rentre pas est une page que le
-    /// decodage n aurait pas du produire.
-    public static let parDefaut = BudgetDeSurelevation(octetsParPage: 48_000_000)
-
-    /// Plus petit plafond accepte, celui d une tuile de 256 surelevee par deux.
-    private static let plancher = 512 * 512 * MatriceDePixels.octetsParPixel
-
-    /// Vrai quand une page de cette taille tient sous le plafond.
-    public func accepte(_ taille: TailleEnPixels) -> Bool {
-        taille.estVide == false && taille.octetsUneFoisDecodee <= octetsParPage
-    }
-}
+// La colorisation a son propre acteur, `ColoriseurIA`, qui reprend la meme
+// mecanique. La raison pour laquelle deux acteurs distincts ne violent pas la
+// regle de la section 8 est expliquee la bas, avec la contrainte qu elle impose
+// a l appelant.
+//
 
 /// Acteur dedie aux ameliorations IA, file serialisee et resultat mis en cache.
 public actor AmeliorateurIA {
@@ -67,11 +44,11 @@ public actor AmeliorateurIA {
     public let plafond: PlafondDeCacheMemoire
 
     /// Plafond memoire d une page produite.
-    public let budget: BudgetDeSurelevation
+    public let budget: BudgetDeTraitementIA
 
     private let modele: any ModeleDeSurelevation
-    private let surelevation: SurelevationEnTuiles
-    private var cache: CacheDAmeliorations
+    private let traitement: TraitementParTuiles
+    private var cache: CacheDePagesIA
     private var traitements = 0
 
     /// Prepare l acteur autour d un modele installe.
@@ -83,15 +60,15 @@ public actor AmeliorateurIA {
     ///   - plafond: bornes du cache des pages ameliorees.
     public init(
         modele: any ModeleDeSurelevation,
-        tuilage: TuilageDeSurelevation = .parDefaut,
-        budget: BudgetDeSurelevation = .parDefaut,
+        tuilage: TuilageDeTraitement = .parDefaut,
+        budget: BudgetDeTraitementIA = .surelevation,
         plafond: PlafondDeCacheMemoire = .pagesAmeliorees
     ) {
         self.modele = modele
         self.budget = budget
         self.plafond = plafond
-        surelevation = SurelevationEnTuiles(tuilage: tuilage)
-        cache = CacheDAmeliorations(plafond: plafond)
+        traitement = TraitementParTuiles(tuilage: tuilage)
+        cache = CacheDePagesIA(plafond: plafond)
     }
 
     /// Cle sous laquelle le resultat d une page est retenu.
@@ -152,7 +129,7 @@ public actor AmeliorateurIA {
     ///   - reglages: interrupteur de la section 9.
     /// - Returns: la page amelioree, ou la page telle quelle quand
     ///   l interrupteur est inactif.
-    /// - Throws: `ErreurDAmelioration` quand le traitement ne peut pas aboutir,
+    /// - Throws: `ErreurDeTraitementIA` quand le traitement ne peut pas aboutir,
     ///   ou `CancellationError` quand la tache appelante est annulee.
     public func ameliorer(
         _ page: ImageDePage,
@@ -202,22 +179,22 @@ public actor AmeliorateurIA {
         let sortie = modele.tailleDeSortie(pour: entree)
 
         guard budget.accepte(sortie) else {
-            throw ErreurDAmelioration.pageTropLourde(
+            throw ErreurDeTraitementIA.pageTropLourde(
                 octets: sortie.octetsUneFoisDecodee,
                 plafond: budget.octetsParPage
             )
         }
 
         guard let matrice = MatriceDePixels(page.image) else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         traitements += 1
 
-        let produite = try surelevation.surelever(matrice, avec: modele)
+        let produite = try traitement.traiter(matrice, avec: modele)
 
         guard let image = produite.image else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         return ImageDePage(

@@ -1,10 +1,17 @@
 import Core
 
 //
-// SurelevationEnTuiles
+// TraitementParTuiles
 //
 // Le traitement lui meme : tuiler la page, passer chaque tuile au modele,
 // refondre les sorties en une page.
+//
+// Le moteur ne sait pas ce que le modele fait de la tuile. Il ne connait que
+// deux choses de lui, le cote qu il attend et le facteur par lequel il
+// multiplie ce cote, et c est assez pour la surelevation comme pour la
+// colorisation. La section 8 demande d ailleurs la meme architecture
+// d execution aux deux, ce qui se dit ici en une phrase : un seul moteur, deux
+// modeles.
 //
 // Le traitement est synchrone et sans point de suspension, du premier pixel lu
 // au dernier ecrit. Ce n est pas un oubli, c est ce qui rend la promesse de la
@@ -14,39 +21,40 @@ import Core
 // qu aucun test de resultat ne s en apercoive.
 //
 // L annulation est verifiee avant chaque tuile. Une page de trente tuiles sur un
-// reseau de surelevation se compte en secondes, et l utilisateur qui tourne la
-// page ne doit pas attendre la fin d un travail dont personne ne veut plus. Le
-// grain de l annulation est donc la tuile, pas la page.
+// reseau se compte en secondes, et l utilisateur qui tourne la page ne doit pas
+// attendre la fin d un travail dont personne ne veut plus. Le grain de
+// l annulation est donc la tuile, pas la page.
 //
 // La page est completee avant d etre tuilee et rognee apres avoir ete refondue.
 // Le remplissage ne sert qu a donner au modele l entree de taille fixe qu il
 // attend, il ne figure jamais dans le resultat.
 //
 
-/// Surelevation d une page par tuiles fondues les unes dans les autres.
-public struct SurelevationEnTuiles: Sendable {
+/// Traitement d une page par tuiles fondues les unes dans les autres.
+public struct TraitementParTuiles: Sendable {
     /// Decoupe appliquee a la page.
-    public let tuilage: TuilageDeSurelevation
+    public let tuilage: TuilageDeTraitement
 
-    public init(tuilage: TuilageDeSurelevation = .parDefaut) {
+    public init(tuilage: TuilageDeTraitement = .parDefaut) {
         self.tuilage = tuilage
     }
 
-    /// Surelevation de la page entiere, tuile par tuile.
+    /// Traitement de la page entiere, tuile par tuile.
     ///
     /// - Parameters:
-    ///   - page: pixels de la page a ameliorer.
-    ///   - modele: modele qui agrandit une tuile.
-    /// - Returns: la page agrandie du facteur du modele.
-    /// - Throws: `ErreurDAmelioration` quand une tuile est refusee, ou
+    ///   - page: pixels de la page a traiter.
+    ///   - modele: modele qui traite une tuile.
+    /// - Returns: la page traitee, chaque cote multiplie par le facteur du
+    ///   modele.
+    /// - Throws: `ErreurDeTraitementIA` quand une tuile est refusee, ou
     ///   `CancellationError` quand la tache appelante est annulee.
-    public func surelever(_ page: MatriceDePixels, avec modele: ModeleDeSurelevation) throws -> MatriceDePixels {
+    public func traiter(_ page: MatriceDePixels, avec modele: ModeleParTuiles) throws -> MatriceDePixels {
         let facteur = max(1, modele.facteur)
         let remplie = page.remplie(jusqua: tuilage.cote)
         let decoupes = tuilage.decoupes(de: remplie.taille)
 
         guard decoupes.isEmpty == false else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         var tampon = TamponDeRecomposition(
@@ -68,7 +76,7 @@ public struct SurelevationEnTuiles: Sendable {
         let voulue = TailleEnPixels(largeur: page.largeur * facteur, hauteur: page.hauteur * facteur)
 
         guard let entiere = tampon.terminer(), let rognee = entiere.rognee(a: voulue) else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         return rognee
@@ -76,9 +84,9 @@ public struct SurelevationEnTuiles: Sendable {
 
     /// Passe une tuile au modele et depose sa sortie dans le tampon.
     private func deposer(
-        _ decoupe: DecoupeDeSurelevation,
+        _ decoupe: DecoupeDeTraitement,
         de page: MatriceDePixels,
-        avec modele: ModeleDeSurelevation,
+        avec modele: ModeleParTuiles,
         dans tampon: inout TamponDeRecomposition
     ) throws {
         try Task.checkCancellation()
@@ -88,14 +96,14 @@ public struct SurelevationEnTuiles: Sendable {
             origineY: decoupe.origineY,
             taille: decoupe.taille
         ) else {
-            throw ErreurDAmelioration.tuileRefusee(index: decoupe.index)
+            throw ErreurDeTraitementIA.tuileRefusee(index: decoupe.index)
         }
 
-        let sortie = try modele.surelever(entree)
+        let sortie = try modele.traiter(entree)
         let attendue = modele.tailleDeSortie(pour: decoupe.taille)
 
         guard sortie.taille == attendue else {
-            throw ErreurDAmelioration.tailleInattendue(attendue: attendue, recue: sortie.taille)
+            throw ErreurDeTraitementIA.tailleInattendue(attendue: attendue, recue: sortie.taille)
         }
 
         let facteur = max(1, modele.facteur)

@@ -10,8 +10,8 @@ import Testing
 /// mesurent sur des dizaines de tailles de page. Le traitement, lui, doit
 /// reellement passer ces tuiles la au modele : le dernier cas lit ce que le
 /// modele a recu, et non ce que la geometrie promettait.
-struct TuilageDeSurelevationTests {
-    private let tuilage = TuilageDeSurelevation.parDefaut
+struct TuilageDeTraitementTests {
+    private let tuilage = TuilageDeTraitement.parDefaut
 
     /// Page de lecture ordinaire, decodee pour un ecran dense.
     private let pageOrdinaire = TailleEnPixels(largeur: 1200, hauteur: 1800)
@@ -20,8 +20,8 @@ struct TuilageDeSurelevationTests {
 
     @Test("Le tuilage par defaut est celui de la section 8, 256 et 16")
     func nombresDeLaSection8() {
-        #expect(TuilageDeSurelevation.coteDeTuile == 256)
-        #expect(TuilageDeSurelevation.recouvrementDeTuile == 16)
+        #expect(TuilageDeTraitement.coteDeTuile == 256)
+        #expect(TuilageDeTraitement.recouvrementDeTuile == 16)
         #expect(tuilage.cote == 256)
         #expect(tuilage.recouvrement == 16)
         #expect(tuilage.pas == 240)
@@ -29,7 +29,7 @@ struct TuilageDeSurelevationTests {
 
     @Test("Un recouvrement aussi large que la tuile est refuse")
     func recouvrementBorne() {
-        let absurde = TuilageDeSurelevation(cote: 256, recouvrement: 256)
+        let absurde = TuilageDeTraitement(cote: 256, recouvrement: 256)
 
         #expect(absurde.recouvrement == 255)
         #expect(absurde.pas >= 1)
@@ -119,7 +119,7 @@ struct TuilageDeSurelevationTests {
         let journal = JournalDeModele()
         let modele = ModeleSurveille(base: ModeleDeRecopie(), journal: journal)
 
-        _ = try SurelevationEnTuiles(tuilage: tuilage).surelever(page, avec: modele)
+        _ = try TraitementParTuiles(tuilage: tuilage).traiter(page, avec: modele)
 
         #expect(journal.taillesObservees == ["256x256"])
         #expect(journal.appels == tuilage.nombreDeTuiles(pour: page.taille))
@@ -149,7 +149,7 @@ struct TuilageDeSurelevationTests {
     /// La verification passe par deux axes separes et non par la surface : les
     /// tuiles forment une grille, un pixel est couvert si et seulement si son
     /// abscisse et son ordonnee le sont chacune.
-    private static func couvre(_ decoupes: [DecoupeDeSurelevation], taille: TailleEnPixels) -> Bool {
+    private static func couvre(_ decoupes: [DecoupeDeTraitement], taille: TailleEnPixels) -> Bool {
         var colonnes = [Bool](repeating: false, count: taille.largeur)
         var lignes = [Bool](repeating: false, count: taille.hauteur)
 

@@ -22,7 +22,7 @@ struct RecompositionSansRaccordTests {
     private let hauteurDePage = 256
 
     /// Tuilage temoin, tuiles posees bord a bord.
-    private let sansRecouvrement = TuilageDeSurelevation(cote: 256, recouvrement: 0)
+    private let sansRecouvrement = TuilageDeTraitement(cote: 256, recouvrement: 0)
 
     // MARK: La recomposition n ajoute rien d elle meme
 
@@ -31,7 +31,7 @@ struct RecompositionSansRaccordTests {
         let modele = ModeleDeRecopie()
         let page = try #require(PagesDeTest.damier(largeur: 700, hauteur: 300))
         let reference = try modele.surelever(page)
-        let tuilee = try SurelevationEnTuiles().surelever(page, avec: modele)
+        let tuilee = try TraitementParTuiles().traiter(page, avec: modele)
 
         #expect(tuilee.taille == reference.taille)
         #expect(EcartsDePixels.maximum(tuilee, reference) == 0)
@@ -42,7 +42,7 @@ struct RecompositionSansRaccordTests {
         let modele = ModeleDeRecopie()
         let page = try #require(PagesDeTest.rayures(largeur: 40, hauteur: 90))
         let reference = try modele.surelever(page)
-        let tuilee = try SurelevationEnTuiles().surelever(page, avec: modele)
+        let tuilee = try TraitementParTuiles().traiter(page, avec: modele)
 
         #expect(tuilee.taille == TailleEnPixels(largeur: 80, hauteur: 180))
         #expect(EcartsDePixels.maximum(tuilee, reference) == 0)
@@ -92,8 +92,8 @@ struct RecompositionSansRaccordTests {
         let modele = ModeleDeFlou()
         let page = try #require(PagesDeTest.rayures(largeur: largeurDePage, hauteur: hauteurDePage))
         let reference = try modele.surelever(page)
-        let avec = try SurelevationEnTuiles().surelever(page, avec: modele)
-        let sans = try SurelevationEnTuiles(tuilage: sansRecouvrement).surelever(page, avec: modele)
+        let avec = try TraitementParTuiles().traiter(page, avec: modele)
+        let sans = try TraitementParTuiles(tuilage: sansRecouvrement).traiter(page, avec: modele)
 
         let raccord = sansRecouvrement.cote * modele.facteur
         let colonnes = (raccord - 8)..<(raccord + 8)

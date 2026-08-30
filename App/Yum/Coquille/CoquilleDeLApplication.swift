@@ -27,6 +27,9 @@ struct CoquilleDeLApplication: View {
     /// Mode incognito et verrouillage de l app, section 11.
     let confidentialite: SessionDeConfidentialite
 
+    /// Parcours de premiere ouverture, section 5.10.
+    let premiereOuverture: SessionDePremiereOuverture
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -38,6 +41,15 @@ struct CoquilleDeLApplication: View {
             contenu: contenu(de:)
         )
         .banniereDIncognito(confidentialite.banniere, etiquette: Chaines.Incognito.etiquette)
+        // Le parcours d accueil se pose sous le mur premium et sous le verrou.
+        // Sa troisieme etape peut ouvrir le mur, et le verrou passe avant tout
+        // le reste, section 11.
+        .premiereOuverture(
+            premiereOuverture.parcours,
+            libelles: .duCatalogue,
+            libellesPremium: .duCatalogue,
+            commandes: premiereOuverture.commandes
+        )
         .murPremium(
             demande: premium.demande,
             etat: premium.mur,
@@ -56,6 +68,12 @@ struct CoquilleDeLApplication: View {
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
         .task { await premium.rafraichirLAbonnement() }
+        .task { ouvrirLeParcoursDAccueil() }
+        .onChange(of: premiereOuverture.essaiDemande) { _, demande in
+            if demande {
+                premium.demander(.premiereOuverture)
+            }
+        }
         .onChange(of: phaseDeScene) { _, nouvelle in
             suivreLaPhase(nouvelle)
         }
@@ -80,6 +98,15 @@ struct CoquilleDeLApplication: View {
 
     private func deverrouiller() {
         Task { await confidentialite.deverrouiller() }
+    }
+
+    /// Ouvre le parcours d accueil, au premier lancement et a lui seul.
+    ///
+    /// La demande d essai de la troisieme etape ouvre le mur premium par la
+    /// meme porte que le bloc de la barre laterale. Le parcours ne vend rien
+    /// lui meme, et la garde de `Core` reste seule a decider.
+    private func ouvrirLeParcoursDAccueil() {
+        premiereOuverture.ouvrirAuLancement()
     }
 
     /// Ouverture du mur depuis le bloc de la barre laterale, section 2.2.

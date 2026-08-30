@@ -17,6 +17,7 @@ struct YumApp: App {
     @State private var historique: EtatDHistorique
     @State private var premium = SessionPremium()
     @State private var confidentialite: SessionDeConfidentialite
+    @State private var premiereOuverture: SessionDePremiereOuverture
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -33,6 +34,9 @@ struct YumApp: App {
         _confidentialite = State(
             initialValue: SessionDeConfidentialite(registre: services.incognito)
         )
+        _premiereOuverture = State(
+            initialValue: SessionDePremiereOuverture(base: services.base)
+        )
     }
 
     var body: some Scene {
@@ -41,7 +45,8 @@ struct YumApp: App {
                 etat: etat,
                 historique: historique,
                 premium: premium,
-                confidentialite: confidentialite
+                confidentialite: confidentialite,
+                premiereOuverture: premiereOuverture
             )
         }
         #if os(macOS)

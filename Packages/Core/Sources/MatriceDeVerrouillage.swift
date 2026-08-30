@@ -351,12 +351,12 @@ public enum MatriceDeVerrouillage {
     /// ajoutee au catalogue et oubliee ici fait virer la suite au rouge, ce
     /// qu une soustraction aurait silencieusement absorbe.
     static let lignesSansFonction: Set<IdentifiantDeReglage> = [
-        .passerAPremium, .restaurerLesAchats, .verrouillageDeLApp, .langue,
-        .apparence, .theme, .notificationsDeNouveauxChapitres, .trierPar,
-        .ordreDeTri, .marquerLuALaDernierePage, .supprimerApresLecture,
-        .mettreAJourAuLancement, .activerLePontNavigateur, .extensionSafari, .ouvrirLesLiensDansLApplication,
-        .dernierEnvoi, .viderLeCacheDImages, .supprimerTousLesTelechargements,
-        .aide, .signalerUnBug, .version, .nouveautes, .mentionsLegales,
+        .passerAPremium, .restaurerLesAchats, .verrouillageDeLApp, .langue, .apparence,
+        .theme, .notificationsDeNouveauxChapitres, .trierPar, .ordreDeTri,
+        .marquerLuALaDernierePage, .supprimerApresLecture, .mettreAJourAuLancement,
+        .activerLePontNavigateur, .extensionSafari, .ouvrirLesLiensDansLApplication,
+        .dernierEnvoi, .viderLeCacheDImages, .supprimerTousLesTelechargements, .aide,
+        .signalerUnBug, .revoirLaPremiereOuverture, .version, .nouveautes, .mentionsLegales,
     ]
 
     /// Retourne la table plate a partir des groupes.

@@ -39,10 +39,21 @@ extension CatalogueDeReglages {
     ]
 
     /// 16. Assistance.
+    ///
+    /// La derniere ligne ne figure pas au tableau de la section 5.5 de
+    /// DESIGN-SPEC.md, qui resume la section. Elle vient de la section 5.10 :
+    /// le parcours de premiere ouverture doit pouvoir etre rejoue, et un
+    /// parcours qui ne se rejoue nulle part se perd des le premier lancement.
+    ///
+    /// Elle vit dans Assistance et non dans A propos parce qu elle apprend a se
+    /// servir du produit, comme les deux lignes qui la precedent. Elle est
+    /// posee en fin de section pour laisser intact l ordre des trois lignes du
+    /// tableau.
     private static let assistance: [LigneDeReglage] = [
         .navigation(.aide, .assistance),
         .navigation(.signalerUnBug, .assistance),
         .navigation(.statistiquesDeLecture, .assistance),
+        .navigation(.revoirLaPremiereOuverture, .assistance),
     ]
 
     /// 17. A propos.

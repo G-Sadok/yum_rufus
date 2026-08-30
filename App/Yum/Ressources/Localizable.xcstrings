@@ -1237,6 +1237,246 @@
         }
       }
     },
+    "premiereOuverture.adresseInjoignable" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, adresse injoignable",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adresse injoignable"
+          }
+        }
+      }
+    },
+    "premiereOuverture.apercuDuSens" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, etiquette de l apercu de deux pages",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apercu de deux pages numerotees"
+          }
+        }
+      }
+    },
+    "premiereOuverture.commande.commencerLEssai" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, parcours de premiere ouverture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer l essai"
+          }
+        }
+      }
+    },
+    "premiereOuverture.commande.continuer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, parcours de premiere ouverture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer"
+          }
+        }
+      }
+    },
+    "premiereOuverture.commande.passer" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, parcours de premiere ouverture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passer"
+          }
+        }
+      }
+    },
+    "premiereOuverture.commande.plusTard" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.5, parcours de premiere ouverture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus tard"
+          }
+        }
+      }
+    },
+    "premiereOuverture.connexionEnCours" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, etat de connexion d une source",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connexion en cours"
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.essaiPremium.phrase" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout ce que vous venez de configurer reste gratuit. L essai ouvre les fonctions avancees, et se termine seul."
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.essaiPremium.titre" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Essayez Premium pendant sept jours"
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.premiereSource.phrase" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indiquez ou Yum ira chercher vos chapitres. Vous pourrez en ajouter d autres a tout moment."
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.premiereSource.titre" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajoutez une premiere source"
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.sensDeLecture.phrase" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les mangas se lisent de droite a gauche, les manhwas et les comics de gauche a droite. Vous pourrez changer ce choix serie par serie."
+          }
+        }
+      }
+    },
+    "premiereOuverture.etape.sensDeLecture.titre" : {
+      "comment" : "Texte absent de la section 6, ecrit selon ses regles",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez votre sens de lecture"
+          }
+        }
+      }
+    },
+    "premiereOuverture.mention" : {
+      "comment" : "DESIGN-SPEC.md, tableau 6.8, etape 2 de la premiere ouverture",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yum ne heberge aucun contenu. Il lit les fichiers et les serveurs que vous lui indiquez."
+          }
+        }
+      }
+    },
+    "premiereOuverture.progression" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, etiquette des points de progression",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etape %1$lld sur %2$lld"
+          }
+        }
+      }
+    },
+    "premiereOuverture.seriesTrouvees" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, source connectee avec le nombre de series",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld series trouvees"
+          }
+        }
+      }
+    },
+    "premiereOuverture.source.fichiersLocaux" : {
+      "comment" : "DESIGN-SPEC.md, section 5.3, entree du menu d ajout",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parcourir un dossier local"
+          }
+        }
+      }
+    },
+    "premiereOuverture.source.komga" : {
+      "comment" : "DESIGN-SPEC.md, section 5.3, entree du menu d ajout",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un serveur Komga"
+          }
+        }
+      }
+    },
+    "premiereOuverture.source.opds" : {
+      "comment" : "DESIGN-SPEC.md, section 5.3, entree du menu d ajout",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un catalogue OPDS"
+          }
+        }
+      }
+    },
+    "premiereOuverture.voirToutesLesSources" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, lien vers la liste complete",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir les douze types de sources"
+          }
+        }
+      }
+    },
     "premium.sousTitre" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.1, bloc bas de barre laterale",
       "extractionState" : "manual",
@@ -1593,6 +1833,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aide"
+          }
+        }
+      }
+    },
+    "reglages.ligne.assistance.revoirLaPremiereOuverture" : {
+      "comment" : "DESIGN-SPEC.md, section 5.10, ligne de rejeu du parcours",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revoir la premiere ouverture"
           }
         }
       }

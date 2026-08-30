@@ -36,7 +36,7 @@ struct ModeleDeRecopie: ModeleDeSurelevation {
     init(
         identifiant: String = "recopie",
         facteur: Int = 2,
-        coteDeTuile: Int = TuilageDeSurelevation.coteDeTuile
+        coteDeTuile: Int = TuilageDeTraitement.coteDeTuile
     ) {
         self.identifiant = identifiant
         self.facteur = facteur
@@ -45,7 +45,7 @@ struct ModeleDeRecopie: ModeleDeSurelevation {
 
     func surelever(_ tuile: MatriceDePixels) throws -> MatriceDePixels {
         guard let agrandie = OperationsDeTest.agrandir(tuile, facteur: facteur) else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         return agrandie
@@ -56,7 +56,7 @@ struct ModeleDeRecopie: ModeleDeSurelevation {
 struct ModeleDeFlou: ModeleDeSurelevation {
     let identifiant = "flou"
     let facteur = 2
-    let coteDeTuile = TuilageDeSurelevation.coteDeTuile
+    let coteDeTuile = TuilageDeTraitement.coteDeTuile
 
     /// Nombre de pixels regardes de chaque cote.
     let rayon: Int
@@ -69,7 +69,7 @@ struct ModeleDeFlou: ModeleDeSurelevation {
         guard let agrandie = OperationsDeTest.agrandir(tuile, facteur: facteur),
               let floutee = OperationsDeTest.flouter(agrandie, rayon: rayon)
         else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         return floutee

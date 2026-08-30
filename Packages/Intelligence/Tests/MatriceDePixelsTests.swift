@@ -127,7 +127,7 @@ struct RampeDeFonduTests {
 
     @Test("Le fondu du projet fait deux fois le recouvrement en sortie")
     func fonduEnSortie() {
-        let tuilage = TuilageDeSurelevation.parDefaut
+        let tuilage = TuilageDeTraitement.parDefaut
         let facteur = 2
         let poids = RampeDeFondu.poids(
             longueur: tuilage.cote * facteur,

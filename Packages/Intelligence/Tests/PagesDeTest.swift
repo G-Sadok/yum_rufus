@@ -38,22 +38,67 @@ enum PagesDeTest {
         }
     }
 
+    /// Planche en noir et blanc, comme un scan de manga.
+    ///
+    /// Les trois canaux portent strictement la meme valeur, ce qui est la
+    /// definition operatoire du noir et blanc pour la colorisation : c est cette
+    /// egalite qui doit disparaitre apres le traitement. Le motif melange du
+    /// trait noir, des aplats gris et du blanc de page, les trois tons qu une
+    /// planche encree porte reellement.
+    static func noirEtBlanc(largeur: Int, hauteur: Int) -> MatriceDePixels? {
+        gris(largeur: largeur, hauteur: hauteur) { colonne, ligne in
+            if (colonne / 9 + ligne / 13) % 5 == 0 {
+                return 0
+            }
+
+            return (colonne / 31 + ligne / 29) % 3 == 0 ? 128 : 255
+        }
+    }
+
     /// Page decodee portant ce motif, telle que la chaine d images la rend.
     static func decodee(largeur: Int, hauteur: Int) -> ImageDePage? {
-        guard let matrice = damier(largeur: largeur, hauteur: hauteur),
-              let image = matrice.image
-        else {
-            return nil
-        }
+        page(damier(largeur: largeur, hauteur: hauteur))
+    }
 
-        let taille = TailleEnPixels(largeur: largeur, hauteur: hauteur)
+    /// Page decodee en noir et blanc, telle que la chaine d images la rend.
+    static func decodeeEnNoirEtBlanc(largeur: Int, hauteur: Int) -> ImageDePage? {
+        page(noirEtBlanc(largeur: largeur, hauteur: hauteur))
+    }
+
+    /// Page decodee portant cette matrice.
+    static func page(_ matrice: MatriceDePixels?) -> ImageDePage? {
+        guard let matrice, let image = matrice.image else { return nil }
 
         return ImageDePage(
             image: image,
-            tailleDOrigine: taille,
-            tailleDecodee: taille,
+            tailleDOrigine: matrice.taille,
+            tailleDecodee: matrice.taille,
             niveau: .affichage
         )
+    }
+
+    /// Matrice batie pixel par pixel, les trois canaux portant la meme valeur.
+    static func gris(
+        largeur: Int,
+        hauteur: Int,
+        valeur: (Int, Int) -> UInt8
+    ) -> MatriceDePixels? {
+        let parPixel = MatriceDePixels.octetsParPixel
+        var octets = [UInt8](repeating: 0, count: largeur * hauteur * parPixel)
+
+        for ligne in 0..<hauteur {
+            for colonne in 0..<largeur {
+                let depart = (ligne * largeur + colonne) * parPixel
+                let ton = valeur(colonne, ligne)
+
+                octets[depart] = ton
+                octets[depart + 1] = ton
+                octets[depart + 2] = ton
+                octets[depart + 3] = 255
+            }
+        }
+
+        return MatriceDePixels(largeur: largeur, hauteur: hauteur, octets: octets)
     }
 
     /// Matrice batie pixel par pixel, les trois canaux portant la meme valeur
@@ -89,6 +134,34 @@ enum PagesDeTest {
 //
 
 enum EcartsDePixels {
+    /// Vrai quand chaque pixel porte la meme valeur sur ses trois canaux.
+    ///
+    /// C est la definition operatoire du noir et blanc retenue par les tests de
+    /// colorisation. Elle sert des deux cotes : a prouver que la page d entree
+    /// est bien en noir et blanc, et a prouver que celle de sortie ne l est plus.
+    static func estEnNoirEtBlanc(_ matrice: MatriceDePixels) -> Bool {
+        partDePixelsColores(matrice) == 0
+    }
+
+    /// Part des pixels dont les trois canaux ne sont pas tous egaux.
+    static func partDePixelsColores(_ matrice: MatriceDePixels) -> Double {
+        var colores = 0
+
+        for ligne in 0..<matrice.hauteur {
+            for colonne in 0..<matrice.largeur {
+                let rouge = matrice.canal(0, colonne: colonne, ligne: ligne)
+                let vert = matrice.canal(1, colonne: colonne, ligne: ligne)
+                let bleu = matrice.canal(2, colonne: colonne, ligne: ligne)
+
+                if rouge != vert || vert != bleu {
+                    colores += 1
+                }
+            }
+        }
+
+        return Double(colores) / Double(max(1, matrice.largeur * matrice.hauteur))
+    }
+
     /// Plus grand ecart entre deux matrices, canal par canal.
     ///
     /// Rend nil quand les tailles different, ce qui est une erreur de test et

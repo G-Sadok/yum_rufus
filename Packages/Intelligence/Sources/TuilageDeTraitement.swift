@@ -1,14 +1,15 @@
 import Core
 
 //
-// TuilageDeSurelevation
+// TuilageDeTraitement
 //
 // Decoupe d une page en tuiles de 256 avec recouvrement de 16, exactement ce
-// que la section 8 impose au modele de surelevation.
+// que la section 8 impose au modele de surelevation, et que la colorisation
+// reprend telle quelle avec le cote de tuile de son propre modele.
 //
 // Deux raisons a ce decoupage, et elles ne se remplacent pas.
 //
-// La premiere est la memoire. Un reseau de surelevation tient en memoire ses
+// La premiere est la memoire. Un reseau de convolution tient en memoire ses
 // activations intermediaires, qui pesent plusieurs dizaines de fois l entree.
 // Lui donner une page entiere reviendrait a demander quelques gigaoctets sur un
 // appareil qui n en a pas, et le systeme terminerait l application. Une tuile de
@@ -39,8 +40,8 @@ import Core
 // qu une bande de sortie a la fois, au lieu de la page entiere en flottants.
 //
 
-/// Position d une tuile dans la page a surelever.
-public struct DecoupeDeSurelevation: Sendable, Hashable {
+/// Position d une tuile dans la page a traiter.
+public struct DecoupeDeTraitement: Sendable, Hashable {
     /// Rang de la tuile, ligne par ligne depuis le coin superieur gauche.
     public let index: Int
 
@@ -83,7 +84,7 @@ public struct DecoupeDeSurelevation: Sendable, Hashable {
 }
 
 /// Decoupe d une page en tuiles carrees qui se recouvrent.
-public struct TuilageDeSurelevation: Sendable, Hashable {
+public struct TuilageDeTraitement: Sendable, Hashable {
     /// Cote d une tuile, section 8 du cahier de developpement.
     public static let coteDeTuile = 256
 
@@ -101,8 +102,8 @@ public struct TuilageDeSurelevation: Sendable, Hashable {
     /// Le recouvrement est borne sous le cote : un recouvrement egal au cote
     /// donnerait un pas nul, donc une infinite de tuiles au meme endroit.
     public init(
-        cote: Int = TuilageDeSurelevation.coteDeTuile,
-        recouvrement: Int = TuilageDeSurelevation.recouvrementDeTuile
+        cote: Int = TuilageDeTraitement.coteDeTuile,
+        recouvrement: Int = TuilageDeTraitement.recouvrementDeTuile
     ) {
         let coteRetenu = max(2, cote)
 
@@ -111,7 +112,7 @@ public struct TuilageDeSurelevation: Sendable, Hashable {
     }
 
     /// Tuilage de la section 8 : tuiles de 256, recouvrement de 16.
-    public static let parDefaut = TuilageDeSurelevation()
+    public static let parDefaut = TuilageDeTraitement()
 
     /// Distance entre les origines de deux tuiles voisines.
     public var pas: Int {
@@ -165,7 +166,7 @@ public struct TuilageDeSurelevation: Sendable, Hashable {
     /// La page doit avoir ete completee au prealable, sans quoi une dimension
     /// plus petite que le cote donnerait des tuiles qui debordent. La taille
     /// nulle rend une liste vide plutot qu une tuile de remplissage.
-    public func decoupes(de taille: TailleEnPixels) -> [DecoupeDeSurelevation] {
+    public func decoupes(de taille: TailleEnPixels) -> [DecoupeDeTraitement] {
         guard taille.estVide == false else { return [] }
 
         let remplie = tailleRemplie(pour: taille)
@@ -173,12 +174,12 @@ public struct TuilageDeSurelevation: Sendable, Hashable {
         let ordonnees = origines(pour: remplie.hauteur)
         let tuile = TailleEnPixels(largeur: cote, hauteur: cote)
 
-        var decoupes: [DecoupeDeSurelevation] = []
+        var decoupes: [DecoupeDeTraitement] = []
         decoupes.reserveCapacity(abscisses.count * ordonnees.count)
 
         for (rangDeLigne, origineY) in ordonnees.enumerated() {
             for (rangDeColonne, origineX) in abscisses.enumerated() {
-                decoupes.append(DecoupeDeSurelevation(
+                decoupes.append(DecoupeDeTraitement(
                     index: decoupes.count,
                     colonne: rangDeColonne,
                     ligne: rangDeLigne,

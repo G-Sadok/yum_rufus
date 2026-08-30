@@ -187,11 +187,11 @@ struct AmeliorateurIATests {
 
     @Test("Une page qui depasserait le plafond memoire n est pas traitee")
     func pageTropLourdeRefusee() async throws {
-        let budget = BudgetDeSurelevation(octetsParPage: 512 * 512 * 4)
+        let budget = BudgetDeTraitementIA(octetsParPage: 512 * 512 * 4)
         let ameliorateur = AmeliorateurIA(modele: ModeleDeRecopie(), budget: budget)
         let page = try #require(PagesDeTest.decodee(largeur: 512, hauteur: 512))
 
-        await #expect(throws: ErreurDAmelioration.self) {
+        await #expect(throws: ErreurDeTraitementIA.self) {
             _ = try await ameliorateur.ameliorer(page, pour: cle(0))
         }
 

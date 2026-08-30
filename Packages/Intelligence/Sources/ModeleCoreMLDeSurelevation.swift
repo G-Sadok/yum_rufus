@@ -13,6 +13,11 @@ import Foundation
 // sa licence se verifie avant integration comme le rappelle la section 8 pour le
 // detecteur de cases. Ce type ne fait donc que le charger et le questionner.
 //
+// La licence est verifiee avant le fichier, et non apres. Un modele absent du
+// catalogue du depot, ou livre sans son avis de licence, ne se charge pas :
+// voir `CatalogueDesModelesIA`. L ordre compte, il evite qu un reseau non
+// documente soit charge en memoire le temps qu on s en apercoive.
+//
 // La geometrie n est pas supposee, elle est lue. Le modele annonce lui meme la
 // taille de son entree et de sa sortie, et le facteur en est deduit par
 // division. Un modele qui quadruplerait au lieu de doubler serait donc utilise
@@ -44,18 +49,25 @@ public struct ModeleCoreMLDeSurelevation: ModeleDeSurelevation, @unchecked Senda
     ///     que le fichier change, sans quoi une mise a jour du reseau ferait
     ///     ressortir du cache des pages produites par l ancien.
     ///   - calcul: unites de calcul autorisees.
-    /// - Throws: `ErreurDAmelioration` quand le fichier est illisible ou que le
-    ///   modele n a pas la forme attendue.
+    /// - Throws: `ErreurDeTraitementIA` quand la licence n est pas documentee,
+    ///   quand le fichier est illisible, ou quand le modele n a pas la forme
+    ///   attendue.
     public init(
         contenuDe url: URL,
         identifiant: String,
         calcul: MLComputeUnits = .all
     ) throws {
+        try CatalogueDesModelesIA.verifierLaLicence(
+            identifiant: identifiant,
+            traitement: .amelioration,
+            modele: url
+        )
+
         let configuration = MLModelConfiguration()
         configuration.computeUnits = calcul
 
         guard let charge = try? MLModel(contentsOf: url, configuration: configuration) else {
-            throw ErreurDAmelioration.modeleIllisible(chemin: url.path)
+            throw ErreurDeTraitementIA.modeleIllisible(chemin: url.path)
         }
 
         let description = charge.modelDescription
@@ -67,7 +79,7 @@ public struct ModeleCoreMLDeSurelevation: ModeleDeSurelevation, @unchecked Senda
               contrainteDEntree.pixelsWide > 0,
               contrainteDEntree.pixelsWide == contrainteDEntree.pixelsHigh
         else {
-            throw ErreurDAmelioration.modeleSansImage(identifiant: identifiant)
+            throw ErreurDeTraitementIA.modeleSansImage(identifiant: identifiant)
         }
 
         let facteur = contrainteDeSortie.pixelsWide / contrainteDEntree.pixelsWide
@@ -76,7 +88,7 @@ public struct ModeleCoreMLDeSurelevation: ModeleDeSurelevation, @unchecked Senda
               contrainteDeSortie.pixelsWide == contrainteDEntree.pixelsWide * facteur,
               contrainteDeSortie.pixelsHigh == contrainteDEntree.pixelsHigh * facteur
         else {
-            throw ErreurDAmelioration.facteurInattendu(identifiant: identifiant, facteur: facteur)
+            throw ErreurDeTraitementIA.facteurInattendu(identifiant: identifiant, facteur: facteur)
         }
 
         self.identifiant = identifiant
@@ -90,7 +102,7 @@ public struct ModeleCoreMLDeSurelevation: ModeleDeSurelevation, @unchecked Senda
     /// Agrandit une tuile en la faisant passer par le reseau.
     public func surelever(_ tuile: MatriceDePixels) throws -> MatriceDePixels {
         guard let entree = TamponDePixels.creer(tuile) else {
-            throw ErreurDAmelioration.pageIllisible
+            throw ErreurDeTraitementIA.pageIllisible
         }
 
         let valeurs = [nomDeLEntree: MLFeatureValue(pixelBuffer: entree)]
@@ -100,7 +112,7 @@ public struct ModeleCoreMLDeSurelevation: ModeleDeSurelevation, @unchecked Senda
               let produit = resultat.featureValue(for: nomDeLaSortie)?.imageBufferValue,
               let matrice = TamponDePixels.matrice(de: produit)
         else {
-            throw ErreurDAmelioration.modeleEnEchec(identifiant: identifiant)
+            throw ErreurDeTraitementIA.modeleEnEchec(identifiant: identifiant)
         }
 
         return matrice

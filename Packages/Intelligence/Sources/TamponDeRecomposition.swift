@@ -1,10 +1,10 @@
 //
 // TamponDeRecomposition
 //
-// Fond les tuiles surelevees les unes dans les autres et rend la page.
+// Fond les tuiles traitees les unes dans les autres et rend la page.
 //
 // Poser les tuiles cote a cote laisserait une ligne visible a chaque raccord,
-// pour la raison exposee dans TuilageDeSurelevation : au bord de son entree, le
+// pour la raison exposee dans TuilageDeTraitement : au bord de son entree, le
 // modele extrapole, et deux tuiles voisines extrapolent differemment. Le
 // recouvrement n existe que pour donner de quoi fondre.
 //
@@ -35,7 +35,7 @@
 // troisieme erreur du cahier.
 //
 
-/// Accumulateur pondere des tuiles surelevees, sur une bande glissante.
+/// Accumulateur pondere des tuiles traitees, sur une bande glissante.
 struct TamponDeRecomposition {
     /// Largeur de la page produite.
     let largeur: Int

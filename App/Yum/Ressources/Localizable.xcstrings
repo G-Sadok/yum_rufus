@@ -2102,13 +2102,13 @@
       }
     },
     "reglages.note" : {
-      "comment" : "DESIGN-SPEC.md, section 5.5, note en caption sous la carte A propos. La section 9 du cahier de developpement y attend la provenance et la licence du jeu de donnees du detecteur de cases. Aucun modele n est livre a ce stade, la note dit donc ce qui est vrai aujourd hui",
+      "comment" : "DESIGN-SPEC.md, section 5.5, note en caption sous la carte A propos. La section 9 du cahier de developpement y attend la provenance et la licence du jeu de donnees du detecteur de cases. La valeur reprend mot pour mot CatalogueDesModelesIA.mentionDuDetecteurDeCases, et un test compare les deux",
       "extractionState" : "manual",
       "localizations" : {
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun jeu de donnees tiers n est embarque a ce jour. La provenance et la licence du modele de detection de cases apparaitront ici des sa livraison."
+            "value" : "Detection de cases : detecteur du projet, entraine sur des planches du domaine public du Digital Comic Museum, annotations du projet publiees sous licence CC0 1.0."
           }
         }
       }

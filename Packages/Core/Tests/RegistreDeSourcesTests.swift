@@ -152,7 +152,17 @@ struct RegistreDeSourcesTests {
         #expect(recolte[1].valeur?.elements.count == 2)
         // La source muette dort une heure. Si l attente commune avait suivi la
         // plus lente, ce test ne se terminerait pas de la journee.
-        #expect(duree < .seconds(5))
+        //
+        // Le seuil se compare a cette heure, et non a un nombre de secondes
+        // choisi a la main. La mesure est une duree d horloge murale prise
+        // pendant que la suite entiere tourne en parallele, et elle porte donc
+        // aussi le temps ou cette tache attend son tour d etre planifiee. Un
+        // seuil de quelques secondes ne mesurait plus l attente commune mais la
+        // charge de la machine, et il virait au rouge des que la suite
+        // grossissait. Un soixantieme de l heure laisse la propriete intacte,
+        // puisque la recolte attendue dure quatre vingts millisecondes, et
+        // aucune charge ne franchit cet ecart.
+        #expect(duree < SourceDeTest.attenteSansFin / 60)
     }
 
     @Test("La verification de connexion ne se fige pas sur une source muette")

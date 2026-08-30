@@ -37,6 +37,42 @@ import Foundation
 // indisponible et la page reste lisible telle quelle.
 //
 
+/// Jeu de donnees sur lequel un modele embarque a ete entraine.
+///
+/// La section 8 le demande nommement pour le detecteur de cases : verifier la
+/// licence du jeu de donnees avant integration, la documenter dans le depot, et
+/// porter la provenance dans la section A propos. La fiche est donc lue par
+/// trois endroits qui ne doivent pas diverger, le chargeur, le document
+/// `docs/LICENCES-MODELES.md` et la note de la section A propos.
+///
+/// La licence du jeu de donnees n est pas celle des poids, et c est tout le
+/// sujet. Les jeux de donnees annotes de planches de manga sont pour la plupart
+/// reserves a la recherche ou interdits d usage commercial, et un modele
+/// entraine sur l un d eux ne peut pas etre distribue par une application
+/// vendue. Le drapeau `redistributionDesPoids` porte cette distinction, et le
+/// chargeur refuse le modele quand il est faux.
+public struct FicheDeJeuDeDonnees: Sendable, Hashable {
+    /// Nom du jeu de donnees, tel que le document du depot le nomme.
+    public let nom: String
+
+    /// Adresse ou le jeu de donnees est publie.
+    public let provenance: String
+
+    /// Identifiant SPDX de sa licence.
+    public let licence: String
+
+    /// Vrai quand cette licence permet de distribuer les poids entraines sur ce
+    /// jeu de donnees dans une application vendue.
+    public let redistributionDesPoids: Bool
+
+    public init(nom: String, provenance: String, licence: String, redistributionDesPoids: Bool) {
+        self.nom = nom
+        self.provenance = provenance
+        self.licence = licence
+        self.redistributionDesPoids = redistributionDesPoids
+    }
+}
+
 /// Licence d un modele embarque, telle que le depot la documente.
 public struct FicheDeModeleIA: Sendable, Hashable {
     /// Identifiant du modele, cle du catalogue et des cles de cache.
@@ -57,13 +93,22 @@ public struct FicheDeModeleIA: Sendable, Hashable {
     /// Mention a porter dans la section A propos.
     public let mentionAPropos: String
 
+    /// Jeu de donnees d entrainement, nul quand le depot ne le documente pas.
+    ///
+    /// Nul pour les deux reseaux repris d un projet amont : leurs conditions
+    /// d entrainement relevent de ce projet et le depot ne peut rien en dire
+    /// qu il aurait verifie. La section 8 ne l exige que du detecteur de cases,
+    /// et `TraitementIA.exigeUnJeuDeDonnees` porte cette exigence.
+    public let jeuDeDonnees: FicheDeJeuDeDonnees?
+
     public init(
         identifiant: String,
         traitement: TraitementIA,
         provenance: String,
         licence: String,
         marqueurDeLicence: String,
-        mentionAPropos: String
+        mentionAPropos: String,
+        jeuDeDonnees: FicheDeJeuDeDonnees? = nil
     ) {
         self.identifiant = identifiant
         self.traitement = traitement
@@ -71,6 +116,7 @@ public struct FicheDeModeleIA: Sendable, Hashable {
         self.licence = licence
         self.marqueurDeLicence = marqueurDeLicence
         self.mentionAPropos = mentionAPropos
+        self.jeuDeDonnees = jeuDeDonnees
     }
 
     /// Vrai quand ce texte de licence est celui que la fiche attend.
@@ -109,6 +155,24 @@ public enum CatalogueDesModelesIA {
             marqueurDeLicence: "Permission is hereby granted, free of charge",
             mentionAPropos: "Colorisation IA : manga colorization v2, licence MIT."
         ),
+        FicheDeModeleIA(
+            identifiant: "detecteur-de-cases-domaine-public-v1",
+            traitement: .detectionDeCases,
+            provenance: "https://github.com/G-Sadok/yum_rufus",
+            licence: "CC0-1.0",
+            marqueurDeLicence: "CC0 1.0 Universal",
+            mentionAPropos: """
+            Detection de cases : detecteur du projet, entraine sur des planches du domaine \
+            public du Digital Comic Museum, annotations du projet publiees sous licence \
+            CC0 1.0.
+            """,
+            jeuDeDonnees: FicheDeJeuDeDonnees(
+                nom: "Planches du domaine public du Digital Comic Museum",
+                provenance: "https://digitalcomicmuseum.com",
+                licence: "CC0-1.0",
+                redistributionDesPoids: true
+            )
+        ),
     ]
 
     /// Fiche de ce modele, nil quand le depot n en documente aucune.
@@ -121,6 +185,17 @@ public enum CatalogueDesModelesIA {
         fiches.map(\.mentionAPropos)
     }
 
+    /// Mention de provenance du detecteur de cases.
+    ///
+    /// C est celle que la section 8 impose nommement, et que la section 9 place
+    /// en note de fin de la section A propos. Elle est rendue a part parce que
+    /// c est la seule que le document exige : les deux autres mentions
+    /// documentent la licence des poids, celle ci documente la provenance des
+    /// donnees d entrainement.
+    public static var mentionDuDetecteurDeCases: String? {
+        fiches.first { $0.traitement == .detectionDeCases }?.mentionAPropos
+    }
+
     /// Verifie qu un modele installe est couvert par une fiche et que la licence
     /// livree a cote de lui est celle que cette fiche annonce.
     ///
@@ -130,7 +205,9 @@ public enum CatalogueDesModelesIA {
     ///   - url: dossier du modele compile.
     /// - Returns: la fiche qui couvre ce modele.
     /// - Throws: `ErreurDeTraitementIA.licenceNonDocumentee` des que l une des
-    ///   trois conditions manque.
+    ///   trois conditions manque, ou
+    ///   `ErreurDeTraitementIA.jeuDeDonneesNonAutorise` quand le jeu de donnees
+    ///   d entrainement manque ou ne permet pas de distribuer les poids.
     @discardableResult
     public static func verifierLaLicence(
         identifiant: String,
@@ -141,11 +218,35 @@ public enum CatalogueDesModelesIA {
             throw ErreurDeTraitementIA.licenceNonDocumentee(identifiant: identifiant)
         }
 
+        try verifierLeJeuDeDonnees(de: fiche)
+
         guard let texte = texteDeLicence(pres: url), fiche.reconnait(texte) else {
             throw ErreurDeTraitementIA.licenceNonDocumentee(identifiant: identifiant)
         }
 
         return fiche
+    }
+
+    /// Verifie que le jeu de donnees d entrainement est documente quand la
+    /// section 8 l exige, et qu il autorise la distribution des poids.
+    ///
+    /// La verification vaut pour toutes les fiches et non pour le seul
+    /// detecteur. Un jeu de donnees reserve a la recherche interdit de
+    /// distribuer un modele entraine sur lui, quel que soit le traitement
+    /// concerne, et le refus doit tomber au chargement plutot qu au premier
+    /// courrier d avocat.
+    static func verifierLeJeuDeDonnees(de fiche: FicheDeModeleIA) throws {
+        if let jeu = fiche.jeuDeDonnees {
+            guard jeu.redistributionDesPoids else {
+                throw ErreurDeTraitementIA.jeuDeDonneesNonAutorise(identifiant: fiche.identifiant)
+            }
+
+            return
+        }
+
+        guard fiche.traitement.exigeUnJeuDeDonnees == false else {
+            throw ErreurDeTraitementIA.jeuDeDonneesNonAutorise(identifiant: fiche.identifiant)
+        }
     }
 
     /// Texte du fichier de licence pose dans le dossier du modele.

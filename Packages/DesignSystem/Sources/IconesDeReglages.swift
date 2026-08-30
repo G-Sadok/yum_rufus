@@ -58,6 +58,7 @@ extension Jetons {
 
         private static let traductionEtLecteur: [IdentifiantDeReglage: String] = [
             .traduireLesBulles: "character.bubble",
+            .moteurDeTraduction: "cpu",
             .langueCible: "text.bubble",
             .policeDeRemplacement: "textformat",
             .sensDeLecture: Icone.sensDeLecture,

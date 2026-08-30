@@ -51,6 +51,15 @@ public struct BudgetDeTraitementIA: Sendable, Hashable {
     /// pour un zoom.
     public static let detectionDeCases = BudgetDeTraitementIA(octetsParPage: 12_000_000)
 
+    /// Budget de la traduction des bulles.
+    ///
+    /// Le meme plafond que la detection de cases, et pour la meme raison : la
+    /// traduction ne produit pas de page, elle produit une poignee de
+    /// rectangles et de phrases. Le budget porte donc sur son entree, la planche
+    /// recopiee en matrice pour etre lue, et il vaut le plafond de decodage de
+    /// la section 6.1.
+    public static let traduction = BudgetDeTraitementIA(octetsParPage: 12_000_000)
+
     /// Plus petit plafond accepte, celui d une tuile de 256 surelevee par deux.
     private static let plancher = 512 * 512 * MatriceDePixels.octetsParPixel
 

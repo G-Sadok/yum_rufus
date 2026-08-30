@@ -33,6 +33,7 @@ public enum IdentifiantDeReglage: String, Sendable, Codable, CaseIterable, Hasha
 
     // 5. Traduction
     case traduireLesBulles = "traduction.traduireLesBulles"
+    case moteurDeTraduction = "traduction.moteur"
     case langueCible = "traduction.langueCible"
     case policeDeRemplacement = "traduction.policeDeRemplacement"
 

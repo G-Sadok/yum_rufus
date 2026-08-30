@@ -163,6 +163,7 @@ struct VerrouillageDesLignesDeReglagesTests {
     static let lignesPremium: [IdentifiantDeReglage] = [
         .incognito,
         .traduireLesBulles,
+        .moteurDeTraduction,
         .langueCible,
         .policeDeRemplacement,
         .servicesDeSuivi,

@@ -204,8 +204,12 @@ public struct VueDEnTeteDeSerie<Couverture: View>: View {
         }
     }
 
-    /// Couverture floutee, voile, et rien d autre. C est le seul flou du
-    /// produit, et il ne porte aucune couleur.
+    /// Couverture floutee, voile, et rien d autre. Le flou ne porte aucune
+    /// couleur.
+    ///
+    /// C est le seul flou des ecrans de navigation. Le lecteur en a un second,
+    /// beaucoup plus petit, sous la surimpression de traduction de la section 8,
+    /// qui reprend le meme principe, image floutee puis voile.
     private var banniere: some View {
         ZStack {
             couverture

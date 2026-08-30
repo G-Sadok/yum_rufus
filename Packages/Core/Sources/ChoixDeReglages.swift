@@ -62,6 +62,52 @@ public enum ChoixDeLangue: String, ChoixDeReglage, Codable {
     }
 }
 
+/// Moteur qui traduit les bulles, section 9 du cahier de developpement.
+///
+/// Le tableau des reglages livre `Sur l appareil` et reserve le second choix a
+/// l abonnement. Les deux valeurs ne different pas seulement par la qualite du
+/// resultat : la premiere ne fait sortir aucune image de l appareil, la seconde
+/// si. C est pourquoi le passage de l une a l autre demande un consentement
+/// explicite, porte par `ReglagesDeTraduction` et non par ce simple choix de
+/// menu.
+public enum ChoixDeMoteurDeTraduction: String, ChoixDeReglage, Codable {
+    /// Detection par Vision puis traduction locale, sans reseau.
+    case surLAppareil
+
+    /// Moteur distant, plus precis, qui envoie le texte hors de l appareil.
+    case dansLeNuage
+
+    public static let parDefaut = ChoixDeMoteurDeTraduction.surLAppareil
+
+    public var valeurDuDocument: String {
+        switch self {
+        case .surLAppareil: "Sur l appareil"
+        case .dansLeNuage: "IA dans le nuage"
+        }
+    }
+
+    /// Vrai quand le moteur travaille hors de l appareil.
+    public var estDansLeNuage: Bool {
+        self == .dansLeNuage
+    }
+
+    /// Vrai quand le moteur ne peut pas travailler sans reseau.
+    public var exigeLeReseau: Bool {
+        estDansLeNuage
+    }
+
+    /// Vrai quand le choix ne prend effet qu apres un accord explicite.
+    ///
+    /// La section 8 pose la regle qui gouverne toute cette famille de fonctions,
+    /// aucune image ne quitte l appareil sauf si l utilisateur choisit
+    /// explicitement le moteur dans le nuage. Choisir dans un menu ne suffit
+    /// pas a rendre ce choix explicite : le menu se touche par erreur, et la
+    /// consequence de l erreur serait une sortie de donnees.
+    public var exigeUnConsentement: Bool {
+        estDansLeNuage
+    }
+}
+
 /// Apparence choisie, distincte de l apparence resolue.
 ///
 /// `systeme` n est pas une apparence : c est l absence de choix. La coquille la

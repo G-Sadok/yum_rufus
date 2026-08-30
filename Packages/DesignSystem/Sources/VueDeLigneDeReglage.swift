@@ -210,8 +210,10 @@ public struct VueDeLigneDeReglage: View {
         if let bornes = ligne.bornes {
             CompteurDeReglage(
                 valeur: presentation.reglages.compteur(ligne.id),
+                texte: String(presentation.reglages.compteur(ligne.id)),
                 bornes: bornes,
-                libelles: libelles,
+                etiquetteDAugmentation: libelles.augmenter,
+                etiquetteDeDiminution: libelles.diminuer,
                 changer: { commandes.compter(ligne.id, $0) }
             )
             .focused($focalisee)

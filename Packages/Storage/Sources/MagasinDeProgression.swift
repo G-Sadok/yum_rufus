@@ -22,10 +22,18 @@ import GRDB
 //
 // C est aussi pourquoi le mode incognito de la section 11 se garde ici et non
 // ailleurs. Ce magasin est le point de passage unique de la position, du
-// marquage automatique, du rang de la serie dans la grille et de l historique :
-// quatre des six traces de lecture que `EcritureDeSession` enumere. Une garde
-// posee plus haut, dans un decorateur ou dans une vue, laisserait ouverts tous
-// les chemins qui ne passent pas par elle.
+// marquage automatique, du rang de la serie dans la grille, de l historique et
+// du comptage des statistiques : cinq des six traces de lecture que
+// `EcritureDeSession` enumere. Une garde posee plus haut, dans un decorateur ou
+// dans une vue, laisserait ouverts tous les chemins qui ne passent pas par elle.
+//
+// Le comptage des statistiques de F059 part d ici et de nulle part ailleurs,
+// pour la meme raison que l historique : c est le seul endroit du produit qui
+// sait qu une page vient d etre tournee et qu un chapitre vient de passer a
+// l etat lu. Il porte sa propre garde, `statistiquesDeLecture`, plutot que de
+// se reposer sur celle de la position : les deux ecritures sont deux cas
+// distincts de `EcritureDeSession`, et rien ne garantit qu elles resteront
+// toujours suspendues ensemble.
 //
 
 /// Erreurs que la sauvegarde de position peut remonter.
@@ -99,7 +107,13 @@ public struct MagasinDeProgression: Sendable {
         }
 
         try base.ecrivain.write { connexion in
-            try Self.appliquer(position, le: date, calendrier: calendrier, dans: connexion)
+            try Self.appliquer(
+                position,
+                le: date,
+                calendrier: calendrier,
+                incognito: incognito,
+                dans: connexion
+            )
         }
     }
 
@@ -113,6 +127,7 @@ public struct MagasinDeProgression: Sendable {
         _ position: PositionDeLecture,
         le date: Date,
         calendrier: Calendar,
+        incognito: RegistreDIncognito,
         dans connexion: Database
     ) throws {
         guard var chapitre = try Chapitre.fetchOne(connexion, key: position.chapitreId) else {
@@ -120,6 +135,8 @@ public struct MagasinDeProgression: Sendable {
         }
 
         let bornee = position.normalisee(nombreDePages: chapitre.nombrePages)
+        let pageAvant = chapitre.pageAtteinte
+        let etaitDejaLu = chapitre.estLu
 
         chapitre.pageAtteinte = bornee.pageIndex
         chapitre.decalageDeDefilement = bornee.decalageDeDefilement
@@ -133,6 +150,21 @@ public struct MagasinDeProgression: Sendable {
         }
 
         try chapitre.update(connexion)
+
+        if incognito.autorise(.statistiquesDeLecture) {
+            let apport = ApportDeLecture(
+                pagesFranchies: bornee.pageIndex - pageAvant,
+                chapitreTermine: etaitDejaLu == false && chapitre.estLu
+            )
+
+            try MagasinDeStatistiques.consigner(
+                chapitresLus: apport.chapitresLus,
+                pagesLues: apport.pagesFranchies,
+                le: date,
+                calendrier: calendrier,
+                dans: connexion
+            )
+        }
 
         // La grille trie les series par derniere lecture, section 4.2 de
         // DESIGN-SPEC.md. Sans cette ligne, une serie lue pendant une heure
@@ -152,6 +184,35 @@ public struct MagasinDeProgression: Sendable {
     }
 }
 
+/// Ce qu un passage de lecture ajoute aux statistiques de F059.
+///
+/// Le type existe pour que le comptage voyage en un seul morceau. Ses deux
+/// champs se calculent au meme endroit, au moment ou le chapitre vient d etre
+/// ecrit, et se lisent ensemble : les separer en deux arguments les ferait
+/// circuler cote a cote dans toutes les signatures du chemin.
+struct ApportDeLecture {
+    /// Pages franchies vers l avant pendant le passage.
+    ///
+    /// Revenir en arriere dans un chapitre puis reavancer ne recompte pas les
+    /// memes pages : le compteur dirait alors deux fois plus que ce qui a ete
+    /// lu, et une relecture ferait monter le total sans fin.
+    let pagesFranchies: Int
+
+    /// Vrai quand ce passage a fait passer le chapitre a l etat lu.
+    let chapitreTermine: Bool
+
+    /// Apport d un passage, pages en arriere ramenees a zero.
+    init(pagesFranchies: Int, chapitreTermine: Bool) {
+        self.pagesFranchies = max(pagesFranchies, 0)
+        self.chapitreTermine = chapitreTermine
+    }
+
+    /// Chapitres a ajouter a la journee.
+    var chapitresLus: Int {
+        chapitreTermine ? 1 : 0
+    }
+}
+
 /// Le magasin est l enregistreur que le moteur de lecture pilote.
 ///
 /// `ReaderEngine` ne connait que ce protocole, defini par Core. La cadence de
@@ -167,9 +228,16 @@ extension MagasinDeProgression: EnregistreurDePosition {
 
         let date = Date()
         let calendrier = Calendar.autoupdatingCurrent
+        let registre = incognito
 
         try await base.ecrivain.write { connexion in
-            try Self.appliquer(position, le: date, calendrier: calendrier, dans: connexion)
+            try Self.appliquer(
+                position,
+                le: date,
+                calendrier: calendrier,
+                incognito: registre,
+                dans: connexion
+            )
         }
     }
 }

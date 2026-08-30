@@ -81,6 +81,17 @@ public enum SchemaDeBase {
     /// precedentes.
     public static let journalDeSynchronisation = "2026-08-30-01-journal-de-synchronisation"
 
+    /// Identifiant de la migration qui installe les statistiques de lecture et
+    /// l objectif quotidien.
+    ///
+    /// Le comptage par journee est denormalise, comme le compteur de non lus de
+    /// la section 3.2 : l ecran de statistiques et la serie de jours consecutifs
+    /// se lisent d un coup, sans agreger l historique a chaque affichage. Il ne
+    /// derive pas de l historique non plus, qui s efface a la demande depuis la
+    /// section 5.2 et emporterait alors des annees de comptage.
+    /// Purement additive, comme les precedentes.
+    public static let statistiquesDeLecture = "2026-08-30-02-statistiques-de-lecture"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -92,6 +103,7 @@ public enum SchemaDeBase {
         decalageDeCouverture,
         repriseEtPrioriteDeTelechargement,
         journalDeSynchronisation,
+        statistiquesDeLecture,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -139,6 +151,10 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(journalDeSynchronisation) { base in
             try creerLesTablesDeSynchronisation(base)
+        }
+
+        migrateur.registerMigration(statistiquesDeLecture) { base in
+            try creerLesTablesDeStatistiques(base)
         }
 
         return migrateur

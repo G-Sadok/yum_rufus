@@ -153,25 +153,32 @@ struct ValeurEnLectureSeule: View {
 /// 44 imposee au doigt par la section 7, aussi la ligne entiere expose une
 /// action ajustable a VoiceOver : le reglage se change alors sans viser les
 /// chevrons, qui restent la pour le pointeur.
+///
+/// La valeur affichee est un texte et non le nombre lui meme. Un compteur du
+/// tableau 5.5 montre son entier, celui de l objectif quotidien montre
+/// `Desactive` a son cran le plus bas : le controle ne decide pas comment se lit
+/// ce qu il compte, son appelant le lui dit.
 struct CompteurDeReglage: View {
     @Environment(\.palette) private var palette
     @Environment(\.isEnabled) private var actif
 
     let valeur: Int
+    let texte: String
     let bornes: BornesDeReglage
-    let libelles: LibellesDeReglages
+    let etiquetteDAugmentation: String
+    let etiquetteDeDiminution: String
     let changer: (Int) -> Void
 
     var body: some View {
         HStack(spacing: Jetons.CompteurDeReglage.ecartApresLaValeur) {
-            Text(String(valeur))
+            Text(texte)
                 .style(Jetons.LigneDeReglage.valeur, chiffresTabulaires: true)
                 .foregroundStyle(actif ? palette.textes.secondary.couleur : palette.textes.disabled.couleur)
 
             conteneurDesChevrons
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityValue(String(valeur))
+        .accessibilityValue(texte)
         .accessibilityAdjustableAction { direction in
             switch direction {
             case .increment: augmenter()
@@ -183,8 +190,16 @@ struct CompteurDeReglage: View {
 
     private var conteneurDesChevrons: some View {
         VStack(spacing: 0) {
-            chevron(Jetons.IconeDeReglage.chevronDAugmentation, libelle: libelles.augmenter, action: augmenter)
-            chevron(Jetons.IconeDeReglage.chevronDeDiminution, libelle: libelles.diminuer, action: diminuer)
+            chevron(
+                Jetons.IconeDeReglage.chevronDAugmentation,
+                libelle: etiquetteDAugmentation,
+                action: augmenter
+            )
+            chevron(
+                Jetons.IconeDeReglage.chevronDeDiminution,
+                libelle: etiquetteDeDiminution,
+                action: diminuer
+            )
         }
         .frame(
             width: Jetons.CompteurDeReglage.largeur,

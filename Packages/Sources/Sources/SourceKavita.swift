@@ -19,8 +19,10 @@ import Foundation
 // publient une progression au meme instant s en partagent les entrees au lieu
 // de redemander deux fois au serveur les identifiants du meme chapitre.
 //
-// Les capacites declarees sont la recherche, la pagination, le telechargement
-// et la progression distante. Les filtres n y sont pas, et c est une decision,
+// Les capacites declarees sont la recherche, la pagination, le telechargement,
+// la progression distante et la veille de nouveautes, la liste des chapitres
+// d une serie se relisant a la demande.
+// Les filtres n y sont pas, et c est une decision,
 // pas un oubli. La grammaire de filtre de Kavita designe ses champs et ses
 // comparaisons par des ordinaux, et une source qui les inventerait rendrait des
 // resultats qui ne correspondent pas a ce qui est demande. La section 4.1 dit
@@ -37,6 +39,7 @@ public actor SourceKavita: SourceProvider {
         .pagination,
         .telechargement,
         .progressionDistante,
+        .veilleDeNouveautes,
     ]
 
     /// Nombre de series demandees par page de catalogue, par defaut.

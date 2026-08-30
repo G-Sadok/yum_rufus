@@ -1213,6 +1213,30 @@
         }
       }
     },
+    "notifications.chapitres.plusieurs" : {
+      "comment" : "F060, corps d une notification regroupee par serie. Le nombre vient en tete, le dernier chapitre paru ferme la phrase. Ne cite jamais ce qui a ete lu",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld nouveaux chapitres, jusqu au chapitre %@"
+          }
+        }
+      }
+    },
+    "notifications.chapitres.un" : {
+      "comment" : "F060, corps d une notification quand un seul chapitre est paru. Motif du numero identique a celui du tableau 4.5",
+      "extractionState" : "manual",
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chapitre %@ est paru"
+          }
+        }
+      }
+    },
     "premium.sousTitre" : {
       "comment" : "DESIGN-SPEC.md, tableau 6.1, bloc bas de barre laterale",
       "extractionState" : "manual",

@@ -222,6 +222,7 @@ struct SourceKomgaTests {
             .pagination,
             .telechargement,
             .progressionDistante,
+            .veilleDeNouveautes,
         ])
         #expect(source.declare(.plusieursLangues) == false)
         #expect(source.offre(.publierLaProgression))

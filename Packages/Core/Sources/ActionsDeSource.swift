@@ -9,7 +9,7 @@
 // Ce tableau vit dans Core et non dans la couche vue, pour deux raisons. La
 // vue en aurait fait une suite de conditions dispersees dans plusieurs ecrans,
 // donc plusieurs endroits ou oublier une capacite. Et un tableau declaratif se
-// teste sur les soixante quatre combinaisons possibles, ce qu une suite de
+// teste sur les cent vingt huit combinaisons possibles, ce qu une suite de
 // conditions dans une vue ne permet pas.
 //
 
@@ -49,6 +49,10 @@ public enum ActionDeSource: String, Sendable, Codable, CaseIterable, Hashable {
     /// Proposer le choix de la langue.
     case choisirLaLangue
 
+    /// Proposer la veille des nouveaux chapitres sur les series de cette
+    /// source.
+    case surveillerLesNouveautes
+
     /// Capacite sans laquelle l action ne doit pas etre offerte.
     ///
     /// Nul veut dire que l action est offerte par toute source. Ces quatre
@@ -64,6 +68,7 @@ public enum ActionDeSource: String, Sendable, Codable, CaseIterable, Hashable {
         case .telecharger: .telechargement
         case .publierLaProgression: .progressionDistante
         case .choisirLaLangue: .plusieursLangues
+        case .surveillerLesNouveautes: .veilleDeNouveautes
         }
     }
 
@@ -79,7 +84,8 @@ public enum ActionDeSource: String, Sendable, Codable, CaseIterable, Hashable {
         switch self {
         case .telecharger, .publierLaProgression: true
         case .parcourir, .ouvrirUneSerie, .listerLesChapitres, .lireUnChapitre,
-             .rechercher, .filtrer, .chargerLaSuite, .choisirLaLangue: false
+             .rechercher, .filtrer, .chargerLaSuite, .choisirLaLangue,
+             .surveillerLesNouveautes: false
         }
     }
 

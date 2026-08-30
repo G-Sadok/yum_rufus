@@ -92,6 +92,16 @@ public enum SchemaDeBase {
     /// Purement additive, comme les precedentes.
     public static let statistiquesDeLecture = "2026-08-30-02-statistiques-de-lecture"
 
+    /// Identifiant de la migration qui installe la veille de nouveaux
+    /// chapitres.
+    ///
+    /// La veille de la section 9 a besoin de deux choses que le schema ne porte
+    /// pas : la date a laquelle chaque serie a ete relue chez sa source, qui
+    /// fait tourner la file des series, et l etat de ses quotas, qui doit
+    /// survivre a la fermeture sans quoi le plafond quotidien repartirait de
+    /// zero a chaque lancement. Purement additive, comme les precedentes.
+    public static let veilleDeChapitres = "2026-08-30-03-veille-de-chapitres"
+
     /// Identifiants de toutes les migrations, dans leur ordre d application.
     public static let migrationsAttendues = [
         creationDuSchema,
@@ -104,6 +114,7 @@ public enum SchemaDeBase {
         repriseEtPrioriteDeTelechargement,
         journalDeSynchronisation,
         statistiquesDeLecture,
+        veilleDeChapitres,
     ]
 
     /// Migrateur pret a appliquer, de la base vide a la version courante.
@@ -155,6 +166,10 @@ public enum SchemaDeBase {
 
         migrateur.registerMigration(statistiquesDeLecture) { base in
             try creerLesTablesDeStatistiques(base)
+        }
+
+        migrateur.registerMigration(veilleDeChapitres) { base in
+            try creerLesTablesDeVeille(base)
         }
 
         return migrateur

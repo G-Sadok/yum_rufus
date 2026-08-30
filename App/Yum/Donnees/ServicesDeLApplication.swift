@@ -2,6 +2,7 @@ import Core
 import Foundation
 import Observation
 import Storage
+import Sync
 
 //
 // Ouverture de la base de donnees de l application.
@@ -33,9 +34,21 @@ final class ServicesDeLApplication {
     /// d effet que sur la banniere.
     let incognito = RegistreDIncognito()
 
+    /// Les sources configurees, partagees par les ecrans qui les interrogent.
+    ///
+    /// Il vit ici pour la meme raison que le registre d incognito : c est le
+    /// seul endroit construit une fois, au lancement. Une veille qui inscrirait
+    /// ses propres sources interrogerait un autre jeu que celui des ecrans.
+    let sources = RegistreDeSources()
+
+    /// Tache qui reveille la veille de nouveaux chapitres.
+    private var tacheDeVeille: Task<Void, Never>?
+
     /// Ouvre la base et retient l echec plutot que de le laisser remonter.
     init() {
         base = try? Self.ouvrir()
+
+        demarrerLaVeille()
     }
 
     /// Construit les services autour d une base deja ouverte.
@@ -63,6 +76,70 @@ final class ServicesDeLApplication {
     /// traces de lecture, et non selon un etat qui lui serait propre.
     var statistiques: MagasinDeStatistiques? {
         base.map { MagasinDeStatistiques(base: $0, incognito: incognito) }
+    }
+
+    /// Magasin de la veille de nouveaux chapitres, nul tant que la base n est
+    /// pas ouverte.
+    var veille: MagasinDeVeilleDeChapitres? {
+        base.map { MagasinDeVeilleDeChapitres(base: $0) }
+    }
+
+    /// Cadence des reveils de la veille.
+    ///
+    /// Ce n est pas l intervalle entre deux verifications, qui appartient a
+    /// `QuotaDeVeille` et vaut quatre heures. C est la frequence a laquelle la
+    /// question est posee : le moteur repond presque toujours non, et le quart
+    /// d heure existe pour qu une echeance atteinte pendant que l application
+    /// tourne ne soit pas manquee de trois heures.
+    private static let cadenceDesReveils: Duration = .seconds(15 * 60)
+
+    /// Arme la veille de nouveaux chapitres, F060.
+    ///
+    /// La boucle ne decide de rien : elle repose la question, et c est
+    /// `VeilleDeChapitres.decision` qui refuse ou accepte selon l interrupteur,
+    /// l autorisation, la session incognito et les quotas. Un reveil de plus ne
+    /// produit donc jamais une verification de plus.
+    func demarrerLaVeille() {
+        guard tacheDeVeille == nil, let base else {
+            return
+        }
+
+        let moteur = moteurDeVeille(base: base)
+
+        tacheDeVeille = Task {
+            while Task.isCancelled == false {
+                await moteur.tic()
+
+                try? await Task.sleep(for: Self.cadenceDesReveils)
+            }
+        }
+    }
+
+    /// Coupe la veille.
+    func arreterLaVeille() {
+        tacheDeVeille?.cancel()
+        tacheDeVeille = nil
+    }
+
+    /// Construit le moteur de veille autour des services de l application.
+    private func moteurDeVeille(base: BaseDeDonnees) -> MoteurDeVeilleDeChapitres {
+        let reglages = MagasinDeReglages(base: base)
+        let incognito = incognito
+
+        return MoteurDeVeilleDeChapitres(
+            registre: sources,
+            magasin: MagasinDeVeilleDeChapitres(base: base),
+            centre: CentreDeNotificationsDuSysteme(),
+            contexte: {
+                // Les reglages sont relus a chaque decision. Une valeur figee a
+                // la construction ferait continuer la veille apres l arret de
+                // l interrupteur, jusqu au prochain lancement.
+                ContexteDeVeille(
+                    reglages: (try? reglages.reglages()) ?? .parDefaut,
+                    session: incognito.sessionCourante
+                )
+            }
+        )
     }
 
     private static func ouvrir() throws -> BaseDeDonnees {

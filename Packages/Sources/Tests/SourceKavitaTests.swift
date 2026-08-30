@@ -305,6 +305,7 @@ struct SourceKavitaTests {
             .pagination,
             .telechargement,
             .progressionDistante,
+            .veilleDeNouveautes,
         ])
         #expect(source.declare(.filtres) == false)
         #expect(source.declare(.plusieursLangues) == false)

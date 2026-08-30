@@ -87,6 +87,7 @@ public enum NomDeCapacite: String, Sendable, Codable, CaseIterable, Hashable {
     case telechargement
     case progressionDistante
     case plusieursLangues
+    case veilleDeNouveautes
 
     /// La capacite du protocole que ce nom designe.
     public var capacite: SourceCapacites {
@@ -97,6 +98,7 @@ public enum NomDeCapacite: String, Sendable, Codable, CaseIterable, Hashable {
         case .telechargement: .telechargement
         case .progressionDistante: .progressionDistante
         case .plusieursLangues: .plusieursLangues
+        case .veilleDeNouveautes: .veilleDeNouveautes
         }
     }
 }

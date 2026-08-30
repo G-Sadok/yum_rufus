@@ -21,8 +21,9 @@ import Foundation
 // retenues, et une page jamais visitee s atteint en suivant les liens depuis la
 // derniere connue. C est le deuxieme critere de la fonctionnalite.
 //
-// Les capacites declarees sont la pagination et le telechargement, et rien de
-// plus. Chacune des quatre absences a une raison.
+// Les capacites declarees sont la pagination, le telechargement et la veille de
+// nouveautes, un flux se relisant a la demande. Chacune des quatre absences a
+// une raison.
 //
 // La recherche n est pas declaree, et c est le point le plus discutable de
 // cette source. OPDS la definit, mais par un document OpenSearch publie a part,
@@ -45,6 +46,7 @@ public actor SourceOpds: SourceProvider {
     public static let capacitesOffertes: SourceCapacites = [
         .pagination,
         .telechargement,
+        .veilleDeNouveautes,
     ]
 
     /// Nombre maximal de flux enchaines pour lister les chapitres d une serie.

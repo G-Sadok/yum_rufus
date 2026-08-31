@@ -33,7 +33,7 @@ struct LigneDeBarreLaterale: View {
         }
         .buttonStyle(.plain)
         .focusEffectDisabled()
-        .overlay(contourDeFocus)
+        .contourDeFocus(estFocalisee, rayonDeLElement: Jetons.BarreLaterale.rayonDeLigne)
         .keyboardShortcut(
             Jetons.RaccourciDeNavigation.touche(pour: entree.destination),
             modifiers: Jetons.RaccourciDeNavigation.modificateur
@@ -59,6 +59,8 @@ struct LigneDeBarreLaterale: View {
         }
     }
 
+    /// Le bouton porte l etiquette de l entree, y compris barre repliee, ou
+    /// l icone reste seule a l ecran. Elle est donc masquee a VoiceOver.
     private var icone: some View {
         Image(systemName: entree.symbole)
             .imageScale(.medium)
@@ -67,6 +69,7 @@ struct LigneDeBarreLaterale: View {
                 height: Jetons.BarreLaterale.tailleDIcone
             )
             .foregroundStyle(couleurDIcone)
+            .accessibilityHidden(true)
     }
 
     private var libelle: some View {
@@ -81,18 +84,10 @@ struct LigneDeBarreLaterale: View {
             .fill(couleurDeFond)
     }
 
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if estFocalisee {
-            RoundedRectangle(
-                cornerRadius: Jetons.BarreLaterale.rayonDeLigne + Jetons.Focus.decalage,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
-        }
-    }
-
+    /// contraste-ok : la ligne active pose `surface.selected`, mais elle porte
+    /// alors `text.primary` sur le libelle comme sur l icone, tableau 2.2, qui
+    /// mesure 10.1:1 en variante sombre et 11.7:1 en variante claire. Les
+    /// jetons plus pales ne paraissent que sur les etats sans fond.
     private var couleurDeFond: Color {
         if estActive {
             palette.surfaces.selected.couleur

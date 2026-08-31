@@ -121,7 +121,7 @@ public struct VueDeBarreDeSelection: View {
             Button(libelles.fermer, action: fermer)
                 .buttonStyle(.plain)
                 .style(Jetons.FicheDeSerie.actionDeListe)
-                .foregroundStyle(palette.textes.tertiary.couleur)
+                .foregroundStyle(palette.lisible(palette.textes.tertiary, sur: [fondDeLaBarre]).couleur)
         }
         .padding(.horizontal, Jetons.BarreDeSelection.margeLaterale)
         .frame(height: Jetons.BarreDeSelection.hauteur)
@@ -137,13 +137,24 @@ public struct VueDeBarreDeSelection: View {
 
     private var fond: some View {
         RoundedRectangle(cornerRadius: Jetons.BarreDeSelection.rayon, style: .continuous)
-            .fill(palette.surfaces.menu.couleur)
+            .fill(fondDeLaBarre.couleur)
+    }
+
+    /// La barre repose sur `surface.menu`, tableau 4.5.
+    private var fondDeLaBarre: CouleurHexadecimale {
+        palette.surfaces.menu
     }
 
     /// Supprimer est la seule action en `danger`, tableau 4.5.
+    ///
+    /// Sur `surface.menu`, `danger` mesure 4.1:1 et `accent.text` 3.8:1 en
+    /// variante sombre, tous deux sous le seuil de la section 7. Les deux sont
+    /// derives, voir `Lisibilite`.
     private func couleur(de action: ActionDeSelectionDeChapitres) -> Color {
-        action.estDestructive
-            ? palette.semantiques.danger.couleur
-            : palette.semantiques.accentText.couleur
+        let jeton = action.estDestructive
+            ? palette.semantiques.danger
+            : palette.semantiques.accentText
+
+        return palette.lisible(jeton, sur: [fondDeLaBarre]).couleur
     }
 }

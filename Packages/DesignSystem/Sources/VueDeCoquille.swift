@@ -68,6 +68,13 @@ public struct VueDeCoquille<Contenu: View, Actions: View>: View {
                 .onChange(of: contexte) { _, nouveau in etat.sAdapter(a: nouveau) }
         }
         .background(palette.surfaces.window.couleur)
+        // Section 7 : le texte dynamique est pris en charge jusqu a la taille
+        // accessibilite extra extra large. La coquille borne l environnement a
+        // cette taille pour toute l application. Au dela, le systeme continue
+        // d agrandir alors que les gabarits chiffres des sections 2 et 4 ne
+        // tiennent plus, et des libelles seraient tronques sans que rien ne le
+        // signale.
+        .dynamicTypeSize(...Jetons.TexteDynamique.tailleMaximale)
     }
 
     @ViewBuilder

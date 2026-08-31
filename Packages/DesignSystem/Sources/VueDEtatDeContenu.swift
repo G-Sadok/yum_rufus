@@ -121,6 +121,8 @@ public struct VueDEtatDeContenu: View {
         @ViewBuilder action: () -> some View
     ) -> some View {
         VStack(spacing: 0) {
+            // Le glyphe illustre le titre pose sous lui, il n ajoute aucune
+            // information. Masque a VoiceOver, qui lit le titre et la phrase.
             Image(systemName: symbole)
                 .font(
                     .system(
@@ -130,6 +132,7 @@ public struct VueDEtatDeContenu: View {
                 )
                 .foregroundStyle(couleurDuGlyphe)
                 .padding(.bottom, Jetons.EtatDeContenu.ecartApresLeGlyphe)
+                .accessibilityHidden(true)
 
             Text(titre)
                 .style(Jetons.Typo.title1)

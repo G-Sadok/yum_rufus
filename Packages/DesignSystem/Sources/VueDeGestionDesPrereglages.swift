@@ -249,7 +249,7 @@ struct LigneDePrereglage: View {
         }
         .padding(.horizontal, Jetons.Prereglages.margeLaterale)
         .frame(minHeight: Jetons.Prereglages.hauteurDeLigne)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
     }
 
     /// Bouton qui applique le prereglage, toute la largeur du texte.
@@ -294,9 +294,11 @@ struct LigneDePrereglage: View {
                 commandes.supprimer(prereglage.id)
             }
         } label: {
+            // Le menu porte deja son etiquette, le symbole ne la double pas.
             Image(systemName: Jetons.Prereglages.symboleDOptions)
                 .font(.system(size: Jetons.Prereglages.tailleDuSymboleDOptions))
                 .foregroundStyle(palette.textes.secondary.couleur)
+                .accessibilityHidden(true)
                 .frame(
                     width: Jetons.Prereglages.coteDuBoutonDOptions,
                     height: Jetons.Prereglages.coteDuBoutonDOptions
@@ -322,14 +324,5 @@ struct LigneDePrereglage: View {
     /// Etiquette lue par VoiceOver, qui porte le nom et le resume.
     private var etiquette: String {
         TexteDeChapitre.joindre([prereglage.nom, resume ?? ""])
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }

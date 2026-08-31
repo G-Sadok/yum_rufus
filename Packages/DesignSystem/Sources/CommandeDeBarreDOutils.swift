@@ -32,8 +32,11 @@ public struct CommandeDeBarreDOutils: View {
     public var body: some View {
         Button(action: action) {
             HStack(spacing: Jetons.BarreDOutils.ecartDansUneCommande) {
+                // Le symbole double le libelle pose a cote de lui. Masque a
+                // VoiceOver, qui lit deja le texte du bouton.
                 Image(systemName: symbole)
                     .font(policeDuSymbole)
+                    .accessibilityHidden(true)
 
                 Text(libelle)
                     .style(Jetons.BarreDOutils.libelleDeCommande)
@@ -47,7 +50,7 @@ public struct CommandeDeBarreDOutils: View {
         .buttonStyle(.plain)
         .focusEffectDisabled()
         .focused($focalisee)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: Jetons.BarreDOutils.rayonDeBouton)
     }
 
     /// La taille de rendu d un symbole est une geometrie de composant, pas un
@@ -58,6 +61,9 @@ public struct CommandeDeBarreDOutils: View {
 
     private var fond: some View {
         RoundedRectangle(cornerRadius: Jetons.BarreDOutils.rayonDeBouton, style: .continuous)
+            // contraste-ok : la commande pose `text.primary` sur ce fond,
+            // 12.5:1 en variante sombre et 13.7:1 en variante claire. Aucun
+            // jeton plus pale n apparait dans ce composant.
             .fill(palette.surfaces.menu.couleur)
             .overlay {
                 RoundedRectangle(cornerRadius: Jetons.BarreDOutils.rayonDeBouton, style: .continuous)
@@ -66,17 +72,5 @@ public struct CommandeDeBarreDOutils: View {
                         lineWidth: Jetons.Fenetre.epaisseurDuFilet
                     )
             }
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(
-                cornerRadius: Jetons.BarreDOutils.rayonDeBouton + Jetons.Focus.decalage,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
-        }
     }
 }

@@ -156,20 +156,8 @@ struct EnTeteDeRangeeDeRecherche: View {
             .buttonStyle(BoutonDiscret(style: Jetons.Recherche.lienToutVoir))
             .focused($lienFocalise)
             .focusEffectDisabled()
-            .overlay(contourDeFocus)
+            .contourDeFocus(lienFocalise, rayonDeLElement: Jetons.Rayon.ongletActif)
             .accessibilityLabel("\(libelles.toutVoir) \(groupe.nom)")
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if lienFocalise {
-            RoundedRectangle(cornerRadius: Jetons.Rayon.ongletActif, style: .continuous)
-                .strokeBorder(
-                    palette.semantiques.focusRing.couleur,
-                    lineWidth: Jetons.Focus.epaisseur
-                )
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }
 
@@ -307,20 +295,8 @@ public struct VueDeLigneDErreurDeSource: View {
             .buttonStyle(BoutonDiscret(style: Jetons.Recherche.lienToutVoir))
             .focused($lienFocalise)
             .focusEffectDisabled()
-            .overlay(contourDeFocus)
+            .contourDeFocus(lienFocalise, rayonDeLElement: Jetons.Rayon.ongletActif)
             .accessibilityLabel("\(libelleDeReprise) \(texte)")
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if lienFocalise {
-            RoundedRectangle(cornerRadius: Jetons.Rayon.ongletActif, style: .continuous)
-                .strokeBorder(
-                    palette.semantiques.focusRing.couleur,
-                    lineWidth: Jetons.Focus.epaisseur
-                )
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 
     private var fond: some View {

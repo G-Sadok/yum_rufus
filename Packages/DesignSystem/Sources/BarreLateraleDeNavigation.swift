@@ -108,7 +108,10 @@ private struct BlocPremium: View {
                     .buttonStyle(.plain)
                     .focusEffectDisabled()
                     .focused($focalise)
-                    .overlay(contourDeFocus)
+                    .contourDeFocus(
+                        focalise,
+                        rayonDeLElement: Jetons.BarreLaterale.rayonDuBlocPremium
+                    )
                     .accessibilityAddTraits(.isButton)
             } else {
                 bloc
@@ -128,18 +131,6 @@ private struct BlocPremium: View {
     }
 
     @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalise {
-            RoundedRectangle(
-                cornerRadius: Jetons.BarreLaterale.rayonDuBlocPremium,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
-        }
-    }
-
-    @ViewBuilder
     private var contenu: some View {
         if estRepliee {
             couronne
@@ -149,10 +140,10 @@ private struct BlocPremium: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(appel.titre)
                         .style(Jetons.BarreLaterale.libelleActif)
-                        .foregroundStyle(palette.semantiques.accentText.couleur)
+                        .foregroundStyle(couleurDuTitre)
                     Text(appel.sousTitre)
                         .style(Jetons.Typo.footnote)
-                        .foregroundStyle(palette.textes.tertiary.couleur)
+                        .foregroundStyle(couleurDuSousTitre)
                 }
                 Spacer(minLength: 0)
             }
@@ -160,14 +151,37 @@ private struct BlocPremium: View {
         }
     }
 
+    /// `accent` mesure 4.1:1 sur `surface.premium` en variante sombre, sous le
+    /// seuil de la section 7. Le titre est donc derive, voir `Lisibilite`.
+    private var couleurDuTitre: Color {
+        palette.lisible(palette.semantiques.accentText, sur: [palette.surfaces.premium]).couleur
+    }
+
+    private var couleurDuSousTitre: Color {
+        palette.lisible(palette.textes.tertiary, sur: [palette.surfaces.premium]).couleur
+    }
+
+    /// La couronne double le titre `Passer a Premium` pose a cote d elle. Elle
+    /// est masquee a VoiceOver pour ne pas faire lire deux fois la meme chose.
+    ///
+    /// Elle mesure 20, elle releve du seuil des elements de 18 et plus.
     private var couronne: some View {
         Image(systemName: Jetons.Icone.premium)
             .imageScale(.medium)
+            .foregroundStyle(couleurDeLaCouronne)
+            .accessibilityHidden(true)
             .frame(
                 width: Jetons.BarreLaterale.tailleDIcone,
                 height: Jetons.BarreLaterale.tailleDIcone
             )
-            .foregroundStyle(palette.semantiques.accent.couleur)
+    }
+
+    private var couleurDeLaCouronne: Color {
+        palette.lisible(
+            palette.semantiques.accent,
+            sur: [palette.surfaces.premium],
+            seuil: Jetons.Contraste.grandTexte
+        ).couleur
     }
 
     private var fond: some View {

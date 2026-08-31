@@ -135,7 +135,7 @@ public struct VueDeListeDeChapitres: View {
                 }
                 .buttonStyle(.plain)
                 .style(Jetons.FicheDeSerie.basculeDuResume)
-                .foregroundStyle(palette.semantiques.accentText.couleur)
+                .foregroundStyle(couleurDAction)
             }
         }
     }
@@ -169,7 +169,15 @@ public struct VueDeListeDeChapitres: View {
         Button(libelle, action: action)
             .buttonStyle(.plain)
             .style(Jetons.FicheDeSerie.actionDeListe)
-            .foregroundStyle(palette.semantiques.accentText.couleur)
+            .foregroundStyle(couleurDAction)
+    }
+
+    /// Le corps de la fiche est en gabarit colonne sur `surface.canvas`,
+    /// section 5.6. `accent.text` y tient le seuil dans les quatre themes, la
+    /// derivation le laisse donc inchange, mais elle garantit qu il en ira de
+    /// meme si la surface change.
+    private var couleurDAction: Color {
+        palette.lisible(palette.semantiques.accentText, sur: [palette.surfaces.canvas]).couleur
     }
 
     /// Nombre annonce par l en tete.

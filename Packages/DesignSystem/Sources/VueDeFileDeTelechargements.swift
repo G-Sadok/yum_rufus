@@ -272,9 +272,11 @@ struct LigneDeTelechargement: View {
                 Button(libelles.annuler, role: .destructive) { commandes.annuler(tache.id) }
             }
         } label: {
+            // Le menu porte deja son etiquette, le symbole ne la double pas.
             Image(systemName: Jetons.IconeDeTelechargement.options)
                 .font(.system(size: Jetons.Telechargements.tailleDuSymbole))
                 .foregroundStyle(palette.textes.secondary.couleur)
+                .accessibilityHidden(true)
                 .frame(
                     width: Jetons.Telechargements.coteDeLaCommande,
                     height: Jetons.Telechargements.coteDeLaCommande

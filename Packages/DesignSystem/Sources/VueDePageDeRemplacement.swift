@@ -38,10 +38,13 @@ public struct VueDePageDeRemplacement: View {
 
     public var body: some View {
         VStack(spacing: 0) {
+            // Le glyphe illustre le titre pose sous lui. Masque a VoiceOver,
+            // qui lit le titre puis la phrase.
             Image(systemName: Jetons.Icone.erreurDeContenu)
                 .font(.system(size: Jetons.EtatDeContenu.tailleDuGlyphe, weight: .light))
                 .foregroundStyle(palette.semantiques.warning.couleur)
                 .padding(.bottom, Jetons.EtatDeContenu.ecartApresLeGlyphe)
+                .accessibilityHidden(true)
 
             Text(TexteDePageDeRemplacement.titre(de: page, libelles: libelles))
                 .style(Jetons.Typo.title1)

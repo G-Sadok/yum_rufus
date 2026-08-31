@@ -43,7 +43,7 @@ struct LigneDePosteDeStockage: View {
         .padding(.horizontal, Jetons.Stockage.margeLaterale)
         .frame(minHeight: Jetons.Stockage.hauteurDePoste)
         .background(survolee ? palette.surfaces.cardHover.couleur : Color.clear)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
         .onHover { survolee = $0 }
     }
 
@@ -53,13 +53,19 @@ struct LigneDePosteDeStockage: View {
     /// Une case et non un clic maintenu seul : l ecran vit aussi au clavier, et
     /// un geste de souris n a pas d equivalent au clavier tant qu il n a pas de
     /// cible focalisable.
+    /// La coche est un element graphique, elle releve du seuil de 3:1.
+    private var couleurDeLaCoche: Color {
+        retenu ? palette.semantiques.accent.couleur : palette.textes.tertiary.couleur
+    }
+
     private var caseDeSelection: some View {
         Button(action: basculer) {
+            // La coche porte l etat de la case, que le trait `isSelected` du
+            // bouton redit. Masquee pour ne pas la lire deux fois.
             Image(systemName: retenu ? Jetons.Stockage.symboleCoche : Jetons.Stockage.symboleNonCoche)
                 .font(.system(size: Jetons.Stockage.tailleDuSymboleDeSelection))
-                .foregroundStyle(
-                    retenu ? palette.semantiques.accent.couleur : palette.textes.tertiary.couleur
-                )
+                .foregroundStyle(couleurDeLaCoche)
+                .accessibilityHidden(true)
                 .frame(
                     width: Jetons.Stockage.coteDeLaSelection,
                     height: Jetons.Stockage.coteDeLaSelection
@@ -97,19 +103,19 @@ struct LigneDePosteDeStockage: View {
     }
 
     /// Suppression d un poste seul, sans passer par la selection.
+    ///
+    /// `danger` mesure 4.4:1 sur `surface.cardHover` en variante sombre, sous
+    /// le seuil de la section 7. Le libelle est derive sur les deux fonds que
+    /// la ligne peut montrer, voir `Lisibilite`.
     private var commande: some View {
         Button(libelles.supprimer, action: supprimer)
             .buttonStyle(.plain)
             .style(Jetons.FicheDeSerie.actionDeListe)
-            .foregroundStyle(palette.semantiques.danger.couleur)
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
+            .foregroundStyle(
+                palette.lisible(
+                    palette.semantiques.danger,
+                    sur: [palette.surfaces.card, palette.surfaces.cardHover]
+                ).couleur
+            )
     }
 }

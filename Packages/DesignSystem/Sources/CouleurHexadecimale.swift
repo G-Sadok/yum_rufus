@@ -29,6 +29,22 @@ public struct CouleurHexadecimale: Sendable, Equatable, Hashable {
         self.opacite = opacite
     }
 
+    /// Construit une couleur a partir de ses trois composantes.
+    ///
+    /// Reservee aux derivations calculees, comme celle de la lisibilite. Un
+    /// jeton du document passe toujours par la forme hexadecimale, qui se
+    /// compare caractere par caractere au tableau dont il sort.
+    ///
+    /// Les composantes hors bornes sont ramenees dans l intervalle plutot que
+    /// de casser : une derivation qui deborde doit donner du blanc ou du noir,
+    /// pas une couleur repliee de l autre cote de l echelle.
+    public init(rouge: Int, vert: Int, bleu: Int, opacite: Double = 1) {
+        self.rouge = min(max(rouge, 0), 255)
+        self.vert = min(max(vert, 0), 255)
+        self.bleu = min(max(bleu, 0), 255)
+        self.opacite = opacite
+    }
+
     /// Notation telle qu elle apparait dans DESIGN-SPEC.md.
     ///
     /// `#0E0E10` pour une couleur opaque, `rgba(0,0,0,0.45)` sinon.

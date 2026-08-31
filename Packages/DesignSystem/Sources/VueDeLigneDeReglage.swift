@@ -54,7 +54,7 @@ public struct VueDeLigneDeReglage: View {
             .frame(minHeight: hauteur)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(fond)
-            .overlay(contourDeFocus)
+            .contourDeFocus(focalisee, rayonDeLElement: 0)
             .onHover { survolee = $0 }
             .animation(animation, value: survolee)
     }
@@ -252,25 +252,37 @@ public struct VueDeLigneDeReglage: View {
         return survolee ? palette.surfaces.cardHover.couleur : .clear
     }
 
-    private var couleurDuLibelle: Color {
-        estPremium ? palette.semantiques.accentText.couleur : palette.textes.primary.couleur
+    /// Fonds que la ligne peut montrer sous son texte, repos et survol.
+    ///
+    /// Le contraste se mesure sur la pire des deux, sinon le libelle changerait
+    /// de teinte au passage de la souris.
+    private var fondsPossibles: [CouleurHexadecimale] {
+        estPremium
+            ? [palette.surfaces.premium]
+            : [palette.surfaces.card, palette.surfaces.cardHover]
     }
 
+    /// Le libelle d une ligne premium est en `accent`, tableau 4.1. Sur
+    /// `surface.premium` ce jeton mesure 4.1:1 en variante sombre, sous le
+    /// seuil de la section 7. Il est donc derive, voir `Lisibilite`.
+    private var couleurDuLibelle: Color {
+        guard estPremium else { return palette.textes.primary.couleur }
+
+        return palette.lisible(palette.semantiques.accentText, sur: fondsPossibles).couleur
+    }
+
+    /// L icone mesure 22, elle releve du seuil des elements de 18 et plus.
     private var couleurDeLIcone: Color {
-        palette.semantiques.accent.couleur
+        palette.lisible(
+            palette.semantiques.accent,
+            sur: fondsPossibles,
+            seuil: Jetons.Contraste.grandTexte
+        ).couleur
     }
 
     private var couleurDuChevron: Color {
-        estPremium ? palette.semantiques.accent.couleur : palette.textes.tertiary.couleur
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
+        let jeton = estPremium ? palette.semantiques.accent : palette.textes.tertiary
+        return palette.lisible(jeton, sur: fondsPossibles, seuil: Jetons.Contraste.grandTexte).couleur
     }
 
     // MARK: Mesures
@@ -281,7 +293,7 @@ public struct VueDeLigneDeReglage: View {
 
     /// Vrai au dela de la taille de texte dynamique `large`, section 4.1.
     private var enPile: Bool {
-        tailleDeTexte > .large && ligne.variante != .curseur
+        Jetons.TexteDynamique.passeEnPile(tailleDeTexte) && ligne.variante != .curseur
     }
 
     private var hauteur: Double {

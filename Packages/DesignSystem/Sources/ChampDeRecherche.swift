@@ -81,6 +81,9 @@ public struct ChampDeRecherche: View {
         .style(Jetons.Typo.body)
         .foregroundStyle(palette.textes.primary.couleur)
         .focused($focalise)
+        // focus-ok : le contour de 2 en accent de l etat actif, tableau 4.9,
+        // tient lieu de contour de focus. Poser en plus l anneau decale de 2
+        // doublerait le meme signal autour du meme element.
         .focusEffectDisabled()
         .labelsHidden()
         .accessibilityLabel(etiquette)

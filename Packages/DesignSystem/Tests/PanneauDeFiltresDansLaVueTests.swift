@@ -11,6 +11,10 @@ import Testing
 // code fait alors virer la suite au rouge, ce qui est le but.
 //
 
+/// La suite construit des vues, qui sont isolees au fil principal. Le
+/// compilateur local le deduisait seul, celui de l integration continue exige
+/// que ce soit ecrit, comme NavigationDeCoquilleTests le fait deja.
+@MainActor
 struct PanneauDeFiltresDansLaVueTests {
     /// Phrase du document qui decrit le panneau en entier.
     private func phraseDuPanneau() throws -> String {

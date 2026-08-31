@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	Types de documents que Yum sait ouvrir.
+
+	Ce fichier sert de base a l Info.plist genere : les cles reglees dans le
+	projet s y ajoutent, elles ne sont donc pas repetees ici.
+
+	CBZ et CBR n ont pas de type declare par le systeme. Yum les declare donc
+	lui meme, comme conformes a l archive dont ils derivent, ce qui laisse le
+	systeme continuer a les traiter comme des archives pour tout le reste.
+
+	Le role est Viewer et non Editor : Yum lit ce qu il ouvre, il ne le
+	reecrit jamais.
+	-->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Archive de bande dessinee</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.yum.cbz</string>
+				<string>com.yum.cbr</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Document PDF</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.pdf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Archive</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.zip-archive</string>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Dossier de pages</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.folder</string>
+			</array>
+		</dict>
+	</array>
+
+	<!--
+	Les deux types que Yum declare pour le compte du systeme, qui ne les
+	connait pas. La conformite a l archive d origine compte : sans elle, un
+	CBZ cesserait d etre vu comme un ZIP par les autres applications.
+	-->
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.yum.cbz</string>
+			<key>UTTypeDescription</key>
+			<string>Archive de bande dessinee ZIP</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.zip-archive</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.yum.cbr</string>
+			<key>UTTypeDescription</key>
+			<string>Archive de bande dessinee RAR</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.rarlab.rar-archive</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cbr</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

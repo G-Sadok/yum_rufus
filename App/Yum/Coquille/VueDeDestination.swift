@@ -1,6 +1,7 @@
 import Core
 import DesignSystem
 import SwiftUI
+import UniformTypeIdentifiers
 
 //
 // Contenu affiche pour chaque destination.
@@ -23,6 +24,9 @@ struct VueDeDestination: View {
     /// Etat de l ecran Historique, partage avec la barre d outils qui porte sa
     /// commande d effacement.
     let historique: EtatDHistorique
+
+    /// Ecran Parcourir, section 5.3.
+    @Bindable var parcourir: SessionDeParcourir
 
     /// Colonne de reglages, section 5.5.
     ///
@@ -65,18 +69,20 @@ struct VueDeDestination: View {
             )
 
         case .parcourir:
-            // Le tableau 6.3 propose Ajouter une source. Le menu d ajout arrive
-            // avec l ecran Parcourir. Un bouton sans destination vaut moins
-            // qu un etat vide sans bouton, la section 4.10 rend l action
-            // facultative.
-            VueDEtatDeContenu(
-                .vide(
-                    symbole: Jetons.icone(de: destination),
-                    titre: Chaines.EtatVide.parcourirTitre,
-                    phrase: Chaines.EtatVide.parcourirPhrase,
-                    action: nil
-                )
+            VueDeParcourir(
+                etat: parcourir.etat,
+                libelles: .duCatalogue,
+                commandes: parcourir.commandes
             )
+            .task { parcourir.recharger() }
+            .fileImporter(
+                isPresented: $parcourir.choisitUnDossier,
+                allowedContentTypes: [.folder]
+            ) { resultat in
+                if case let .success(url) = resultat {
+                    parcourir.ajouterLeDossier(url)
+                }
+            }
 
         case .rechercher:
             VueDEtatDeContenu(

@@ -59,6 +59,11 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Magasin de sources, nul tant que la base n est pas ouverte.
+    var sourcesInstallees: MagasinDeSources? {
+        base.map { MagasinDeSources(base: $0) }
+    }
+
     /// Magasin de prereglages, nul tant que la base n est pas ouverte.
     var prereglages: MagasinDePrereglages? {
         base.map { MagasinDePrereglages(base: $0) }

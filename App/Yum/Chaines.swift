@@ -312,6 +312,12 @@ enum Chaines {
     }
 
     /// Etats d erreur, tableau 6.4.
+    /// Ecran Parcourir, section 5.3.
+    enum Parcourir {
+        static let ajouter = String(localized: "parcourir.ajouter")
+        static let compteur = String(localized: "parcourir.compteur")
+    }
+
     /// Lecteur pagine, section 5.7.
     enum Lecteur {
         static let fermer = String(localized: "lecteur.fermer")

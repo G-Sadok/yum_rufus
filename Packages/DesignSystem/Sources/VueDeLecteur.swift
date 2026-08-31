@@ -18,7 +18,10 @@ import SwiftUI
 //
 
 /// Ce que le lecteur affiche.
-public enum EtatDeLecteur: Sendable {
+///
+/// Non `Sendable`, comme `EtatDeContenu` qu il porte : ces etats vivent sur le
+/// fil principal, la ou les vues les lisent, et rien ne les fait voyager.
+public enum EtatDeLecteur {
     /// Les pages ne sont pas encore lues.
     case chargement
 

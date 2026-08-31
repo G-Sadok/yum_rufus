@@ -38,6 +38,9 @@ struct CoquilleDeLApplication: View {
     /// Lecteur, pose par dessus la coquille quand un fichier est ouvert.
     let lecture: SessionDeLecture
 
+    /// Ecran Parcourir, section 5.3.
+    let parcourir: SessionDeParcourir
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -117,7 +120,8 @@ struct CoquilleDeLApplication: View {
             reglages: reglages,
             statistiques: statistiques,
             stockage: stockage,
-            prereglages: prereglages
+            prereglages: prereglages,
+            parcourir: parcourir
         ) { cible in
             etat.selectionner(cible)
         }

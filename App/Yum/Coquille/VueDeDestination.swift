@@ -25,7 +25,16 @@ struct VueDeDestination: View {
     let historique: EtatDHistorique
 
     /// Colonne de reglages, section 5.5.
-    let reglages: SessionDeReglages
+    ///
+    /// Liee et non simplement passee : la feuille posee par dessus la colonne
+    /// se referme en ecrivant dans la session, et une valeur non liee ne
+    /// laisserait aucun moyen de la refermer.
+    @Bindable var reglages: SessionDeReglages
+
+    /// Ecrans ouverts depuis les lignes de navigation des reglages.
+    let statistiques: SessionDeStatistiques
+    let stockage: SessionDeStockage
+    let prereglages: SessionDePrereglages
 
     /// Ouvre une autre destination, pour les actions des etats vides.
     let ouvrir: (DestinationPrincipale) -> Void
@@ -86,6 +95,39 @@ struct VueDeDestination: View {
                 libelles: .duCatalogue,
                 commandes: reglages.commandes
             )
+            .sheet(item: $reglages.ecranOuvert) { ecran in
+                ecranDeReglages(ecran)
+            }
+        }
+    }
+
+    /// Ecran pose par dessus la colonne de reglages.
+    @ViewBuilder
+    private func ecranDeReglages(_ ecran: EcranDeReglages) -> some View {
+        switch ecran {
+        case .statistiques:
+            VueDeStatistiques(
+                etat: statistiques.etat,
+                libelles: .duCatalogue,
+                commandes: statistiques.commandes { ouvrir(.bibliotheque) }
+            )
+            .task { statistiques.recharger() }
+
+        case .stockage:
+            VueDeGestionDuStockage(
+                etat: stockage.etat,
+                libelles: .duCatalogue,
+                commandes: stockage.commandes { _ in }
+            )
+            .task { await stockage.recharger() }
+
+        case .prereglages:
+            VueDeGestionDesPrereglages(
+                etat: prereglages.etat,
+                libelles: .duCatalogue,
+                commandes: prereglages.commandes
+            )
+            .task { prereglages.recharger() }
         }
     }
 }

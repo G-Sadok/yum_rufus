@@ -28,6 +28,9 @@ final class SessionDeReglages {
     /// Derniere erreur d ecriture, posee en banniere au dessus de la colonne.
     private(set) var banniere: BanniereDErreurDeReglages?
 
+    /// Ecran ouvert par dessus la colonne, nul quand elle est seule.
+    var ecranOuvert: EcranDeReglages?
+
     private let magasin: MagasinDeReglages?
 
     init(magasin: MagasinDeReglages?) {
@@ -61,10 +64,11 @@ final class SessionDeReglages {
             compter: { [weak self] identifiant, nombre in
                 self?.ecrire(.compteur(nombre), pour: identifiant)
             },
-            ouvrir: { _ in
-                // Les lignes de navigation ouvrent des ecrans qui ne sont pas
-                // encore poses dans la coquille. Elles restent inertes plutot
-                // que d ouvrir une feuille vide.
+            ouvrir: { [weak self] identifiant in
+                // Seules les lignes dont l ecran existe ouvrent quelque chose.
+                // Les autres restent inertes : une feuille vide couterait plus
+                // cher a l utilisateur qu un clic sans effet.
+                self?.ecranOuvert = EcranDeReglages(ligne: identifiant)
             }
         )
     }
@@ -100,5 +104,27 @@ final class SessionDeReglages {
         )
 
         NSLog("Reglages : %@", String(describing: erreur))
+    }
+}
+
+/// Ecran pose par dessus la colonne de reglages.
+///
+/// Les trois que la coquille sait presenter aujourd hui. Une ligne de
+/// navigation dont l ecran n existe pas encore ne rend rien, et la colonne
+/// reste ou elle est.
+enum EcranDeReglages: String, Identifiable {
+    case statistiques
+    case stockage
+    case prereglages
+
+    var id: String { rawValue }
+
+    init?(ligne: IdentifiantDeReglage) {
+        switch ligne {
+        case .statistiquesDeLecture: self = .statistiques
+        case .detailDuStockage: self = .stockage
+        case .prereglages: self = .prereglages
+        default: return nil
+        }
     }
 }

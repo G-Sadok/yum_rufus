@@ -58,6 +58,28 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Magasin de prereglages, nul tant que la base n est pas ouverte.
+    var prereglages: MagasinDePrereglages? {
+        base.map { MagasinDePrereglages(base: $0) }
+    }
+
+    /// Emplacements peses par l ecran de gestion du stockage.
+    ///
+    /// Les trois racines vivent a cote de la base, dans le dossier de support
+    /// de l application. Les caches y sont aussi, plutot que dans le dossier de
+    /// caches du systeme : le systeme les y viderait sans prevenir, et un
+    /// chapitre telecharge qui disparait entre deux lancements serait pris pour
+    /// une perte de donnees.
+    var emplacementsDuStockage: EmplacementsDuStockage {
+        let racine = Self.dossierDeSupport()
+
+        return EmplacementsDuStockage(
+            telechargements: racine.appendingPathComponent("Telechargements", isDirectory: true),
+            cacheDeChapitres: racine.appendingPathComponent("CacheDeChapitres", isDirectory: true),
+            cacheDImages: racine.appendingPathComponent("CacheDImages", isDirectory: true)
+        )
+    }
+
     /// Magasin de reglages, nul tant que la base n est pas ouverte.
     var reglages: MagasinDeReglages? {
         base.map { MagasinDeReglages(base: $0) }
@@ -148,16 +170,23 @@ final class ServicesDeLApplication {
     }
 
     private static func ouvrir() throws -> BaseDeDonnees {
-        let support = try FileManager.default.url(
+        try BaseDeDonnees.surDisque(a: dossierDeSupport().appendingPathComponent(nomDuFichier))
+    }
+
+    /// Dossier de support de l application, ou vivent la base et les caches.
+    ///
+    /// Rend le dossier temporaire quand le systeme refuse le sien, ce qui n
+    /// arrive qu en bac a sable mal configure. Mieux vaut une session qui ne
+    /// garde rien qu une application qui ne demarre pas.
+    static func dossierDeSupport() -> URL {
+        let support = try? FileManager.default.url(
             for: .applicationSupportDirectory,
             in: .userDomainMask,
             appropriateFor: nil,
             create: true
         )
 
-        let dossier = support
+        return (support ?? FileManager.default.temporaryDirectory)
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "Yum", isDirectory: true)
-
-        return try BaseDeDonnees.surDisque(a: dossier.appendingPathComponent(nomDuFichier))
     }
 }

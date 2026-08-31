@@ -30,6 +30,11 @@ struct CoquilleDeLApplication: View {
     /// Colonne de reglages, section 5.5.
     let reglages: SessionDeReglages
 
+    /// Ecrans ouverts depuis les lignes de navigation des reglages.
+    let statistiques: SessionDeStatistiques
+    let stockage: SessionDeStockage
+    let prereglages: SessionDePrereglages
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -94,7 +99,10 @@ struct CoquilleDeLApplication: View {
         VueDeDestination(
             destination: destination,
             historique: historique,
-            reglages: reglages
+            reglages: reglages,
+            statistiques: statistiques,
+            stockage: stockage,
+            prereglages: prereglages
         ) { cible in
             etat.selectionner(cible)
         }

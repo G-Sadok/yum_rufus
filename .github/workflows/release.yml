@@ -27,14 +27,32 @@ jobs:
 
       - name: Determiner la version
         id: version
+        env:
+          # La version demandee passe par l environnement et non par une
+          # interpolation dans le corps du script. Une valeur choisie par
+          # l appelant qui atterrit telle quelle dans un shell est une injection
+          # de commande, meme quand l appelant a le droit d ecrire dans le depot.
+          VERSION_DEMANDEE: ${{ github.event.inputs.version }}
+          EVENEMENT: ${{ github.event_name }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            VERSION="${{ github.event.inputs.version }}"
+          if [ "$EVENEMENT" = "workflow_dispatch" ]; then
+            VERSION="$VERSION_DEMANDEE"
           else
             VERSION="${GITHUB_REF_NAME#v}"
           fi
+
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Version $VERSION non conforme au versionnage semantique."
+            exit 1
+          fi
+
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Version a publier : $VERSION"
+
+      - name: Verifier la chaine d empaquetage
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/build-dmg.sh --tests
 
       - name: Selectionner Xcode
         run: sudo xcode-select -switch /Applications/Xcode_16.app

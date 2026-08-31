@@ -112,6 +112,31 @@ jobs:
           path: TestResults.xcresult
           retention-days: 7
 
+  # La chaine d empaquetage. Elle tourne sur toutes les branches, sans
+  # certificat ni identifiants Apple, parce que la moitie verifiable de cette
+  # chaine l est sans eux : le contenu du DMG, l ordre des douze etapes, le
+  # refus des constructions non publiables et la somme de controle.
+  #
+  # Le verdict reel de Gatekeeper, lui, demande un certificat Developer ID et
+  # un aller retour chez Apple. Il vit dans la chaine de publication, declenchee
+  # par une etiquette de version, et nulle part ailleurs.
+  empaquetage:
+    name: Chaine d empaquetage
+    runs-on: macos-15
+    timeout-minutes: 20
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+
+      - name: Selectionner Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_16.app
+
+      - name: Verifier la chaine d empaquetage
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/build-dmg.sh --tests
+
   # Les sept budgets de la section 12. Ce travail est bloquant, sur toutes les
   # branches, et sans repli silencieux : une etape qui sortirait en zero parce
   # qu un outil manque rendrait la chaine verte sans avoir rien mesure, ce qui

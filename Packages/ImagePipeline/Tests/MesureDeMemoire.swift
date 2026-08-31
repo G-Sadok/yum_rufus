@@ -1,6 +1,13 @@
 import Darwin
 import Foundation
 
+/// Port de la tache courante, lu une seule fois.
+///
+/// Meme raison que dans `EmpreinteMemoire` : lire `mach_task_self_` a chaque
+/// appel passe ici et echoue sur le compilateur de l integration continue, qui
+/// applique la concurrence stricte de Swift 6 a la lettre.
+private let tacheCourante: task_t = mach_task_self_
+
 //
 // MesureDeMemoire
 //
@@ -23,7 +30,7 @@ enum MesureDeMemoire {
 
         let resultat = withUnsafeMutablePointer(to: &informations) { pointeur in
             pointeur.withMemoryRebound(to: integer_t.self, capacity: Int(nombreDeChamps)) { champs in
-                task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), champs, &nombreDeChamps)
+                task_info(tacheCourante, task_flavor_t(TASK_VM_INFO), champs, &nombreDeChamps)
             }
         }
 

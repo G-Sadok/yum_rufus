@@ -47,10 +47,25 @@ actor CentreDeNotificationsDuSysteme: CentreDeNotifications {
     /// notifications arriver discretement, ce qui est exactement l usage de
     /// cette fonction.
     func autorisationAccordee() async -> Bool {
-        switch await centre.notificationSettings().authorizationStatus {
+        switch await statutDAutorisation() {
         case .authorized, .provisional, .ephemeral: true
         case .notDetermined, .denied: false
         @unknown default: false
+        }
+    }
+
+    /// Statut d autorisation seul, sans faire traverser les reglages.
+    ///
+    /// `notificationSettings()` rend un `UNNotificationSettings`, qui n est pas
+    /// `Sendable` et ne peut donc pas franchir la frontiere de cet acteur. Les
+    /// compilateurs recents laissent passer, celui de l integration continue
+    /// refuse. Le statut, lui, est une enumeration : il est extrait dans le
+    /// contexte d appel et c est lui seul qui revient.
+    private func statutDAutorisation() async -> UNAuthorizationStatus {
+        await withCheckedContinuation { suite in
+            centre.getNotificationSettings { reglages in
+                suite.resume(returning: reglages.authorizationStatus)
+            }
         }
     }
 

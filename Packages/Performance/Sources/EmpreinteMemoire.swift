@@ -1,6 +1,16 @@
 import Darwin
 import Foundation
 
+/// Port de la tache courante, lu une seule fois.
+///
+/// `mach_task_self_` est une variable globale du noyau. La lire a chaque appel
+/// est refuse par les compilateurs qui appliquent la concurrence stricte de
+/// Swift 6 a la lettre, dont celui de l integration continue, alors que le
+/// notre l accepte : le depot ne compilait donc que sur la machine de
+/// developpement. La valeur ne change jamais de la vie du processus, elle est
+/// donc lue une fois ici.
+private let tacheCourante: task_t = mach_task_self_
+
 //
 // EmpreinteMemoire
 //
@@ -42,7 +52,7 @@ public enum EmpreinteMemoire {
 
         let code = withUnsafeMutablePointer(to: &info) { pointeur in
             pointeur.withMemoryRebound(to: integer_t.self, capacity: Int(nombre)) { reinterprete in
-                task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), reinterprete, &nombre)
+                task_info(tacheCourante, task_flavor_t(TASK_VM_INFO), reinterprete, &nombre)
             }
         }
 

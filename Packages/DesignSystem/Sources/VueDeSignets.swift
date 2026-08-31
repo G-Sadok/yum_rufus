@@ -229,7 +229,7 @@ struct LigneDeSignet<Vignette: View>: View {
         }
         .padding(.horizontal, Jetons.Signets.margeLaterale)
         .frame(minHeight: Jetons.Signets.hauteurDeLigne)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
     }
 
     /// Bouton qui ouvre la page marquee, toute la largeur de la ligne.
@@ -308,9 +308,11 @@ struct LigneDeSignet<Vignette: View>: View {
                 commandes.supprimer(signet.id)
             }
         } label: {
+            // Le menu porte deja son etiquette, le symbole ne la double pas.
             Image(systemName: Jetons.Signets.symboleDOptions)
                 .font(.system(size: Jetons.Signets.tailleDuSymboleDOptions))
                 .foregroundStyle(palette.textes.secondary.couleur)
+                .accessibilityHidden(true)
                 .frame(
                     width: Jetons.Signets.coteDuBoutonDOptions,
                     height: Jetons.Signets.coteDuBoutonDOptions
@@ -321,14 +323,5 @@ struct LigneDeSignet<Vignette: View>: View {
         .menuIndicator(.hidden)
         .fixedSize()
         .accessibilityLabel(libelles.options)
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }

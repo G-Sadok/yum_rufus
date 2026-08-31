@@ -143,7 +143,7 @@ struct LigneDeFiltre: View {
         }
         .padding(.horizontal, Jetons.PanneauDeFiltres.margeLaterale)
         .frame(minHeight: Jetons.PanneauDeFiltres.hauteurDeCurseur)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
     }
 
     private var enTete: some View {
@@ -170,15 +170,6 @@ struct LigneDeFiltre: View {
         .focused($focalisee)
         .accessibilityLabel(libelle)
     }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
-    }
 }
 
 /// Une ligne a interrupteur du panneau, variante 1 de la section 4.1.
@@ -198,7 +189,7 @@ struct LigneDeTraitement: View {
         HStack(spacing: Jetons.Espace.x4) {
             Text(libelle)
                 .style(Jetons.PanneauDeFiltres.libelle)
-                .foregroundStyle(verrouille ? palette.semantiques.accentText.couleur : palette.textes.primary.couleur)
+                .foregroundStyle(couleurDuLibelle)
 
             Spacer(minLength: Jetons.Espace.x2)
 
@@ -206,7 +197,17 @@ struct LigneDeTraitement: View {
         }
         .padding(.horizontal, Jetons.PanneauDeFiltres.margeLaterale)
         .frame(minHeight: Jetons.PanneauDeFiltres.hauteurDInterrupteur)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
+    }
+
+    /// Le libelle d une ligne verrouillee est en `accent`, tableau 4.1. Le
+    /// panneau repose sur `surface.menu`, ou ce jeton mesure 3.8:1 en variante
+    /// sombre, sous le seuil de la section 7. Il est donc derive, voir
+    /// `Lisibilite`.
+    private var couleurDuLibelle: Color {
+        guard verrouille else { return palette.textes.primary.couleur }
+
+        return palette.lisible(palette.semantiques.accentText, sur: [palette.surfaces.menu]).couleur
     }
 
     @ViewBuilder
@@ -225,25 +226,27 @@ struct LigneDeTraitement: View {
             .focused($focalisee)
     }
 
+    /// La couronne mesure 18, elle releve du seuil des elements de 18 et plus.
+    private var couleurDeLaCouronne: Color {
+        palette.lisible(
+            palette.semantiques.accent,
+            sur: [palette.surfaces.menu],
+            seuil: Jetons.Contraste.grandTexte
+        ).couleur
+    }
+
     private var couronne: some View {
         Button(action: ouvrirLeMurPremium) {
+            // Le bouton porte deja son etiquette, la couronne ne la double pas.
             Image(systemName: Jetons.Icone.premium)
                 .font(.system(size: Jetons.PanneauDeFiltres.tailleDeLaCouronne))
-                .foregroundStyle(palette.semantiques.accent.couleur)
+                .foregroundStyle(couleurDeLaCouronne)
+                .accessibilityHidden(true)
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .focusEffectDisabled()
         .focused($focalisee)
         .accessibilityLabel(etiquetteDeLaCouronne)
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }

@@ -173,11 +173,11 @@ struct LigneDeSourceInitiale: View {
 
     /// L echec se dit en couleur et en toutes lettres, jamais en couleur seule.
     private var couleurDeLaSousLigne: Color {
-        if case .injoignable = etat, etat.type == type {
-            return palette.semantiques.danger.couleur
+        guard case .injoignable = etat, etat.type == type else {
+            return palette.textes.tertiary.couleur
         }
 
-        return palette.textes.tertiary.couleur
+        return palette.lisible(palette.semantiques.danger, sur: [palette.surfaces.card]).couleur
     }
 
     private var fond: some View {

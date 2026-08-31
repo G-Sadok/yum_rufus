@@ -62,7 +62,7 @@ public struct VueDeLigneDeChapitre: View {
         }
         .buttonStyle(.plain)
         .focusEffectDisabled()
-        .overlay(contourDeFocus)
+        .contourDeFocus(estFocalisee, rayonDeLElement: Jetons.LigneDeChapitre.rayon)
         .onHover { survolee = $0 }
         .animation(animation, value: survolee)
         .accessibilityElement(children: .combine)
@@ -164,18 +164,6 @@ public struct VueDeLigneDeChapitre: View {
                     palette.semantiques.accent.couleur,
                     lineWidth: Jetons.LigneDeChapitre.epaisseurDuContourDeSelection
                 )
-        }
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if estFocalisee {
-            RoundedRectangle(
-                cornerRadius: Jetons.LigneDeChapitre.rayon + Jetons.Focus.decalage,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
         }
     }
 

@@ -95,22 +95,34 @@ struct MenuDeReglage: View {
                 .style(Jetons.LigneDeReglage.valeur)
                 .foregroundStyle(couleurDeLaValeur)
 
+            // Le chevron dit qu un menu s ouvre, ce que le trait de bouton du
+            // menu porte deja. Masque a VoiceOver.
             Image(systemName: Jetons.IconeDeReglage.chevronDeMenu)
                 .font(.system(size: Jetons.LigneDeReglage.tailleDuChevron))
                 .foregroundStyle(palette.textes.tertiary.couleur)
+                .accessibilityHidden(true)
         }
     }
 
     /// La valeur passe en accent quand elle designe un choix herite du systeme,
     /// comme la section 5.5 le montre sur Langue.
+    ///
+    /// La ligne pose sa valeur sur `surface.card` au repos et sur
+    /// `surface.cardHover` au survol. `accent.text` tombe a 4.1:1 sur la
+    /// seconde en variante sombre, il est donc derive, voir `Lisibilite`.
     private var couleurDeLaValeur: Color {
         guard actif else {
             return palette.textes.disabled.couleur
         }
 
-        return ValeurHeriteeDuSysteme.concerne(valeurRetenue)
-            ? palette.semantiques.accentText.couleur
-            : palette.textes.secondary.couleur
+        guard ValeurHeriteeDuSysteme.concerne(valeurRetenue) else {
+            return palette.textes.secondary.couleur
+        }
+
+        return palette.lisible(
+            palette.semantiques.accentText,
+            sur: [palette.surfaces.card, palette.surfaces.cardHover]
+        ).couleur
     }
 }
 

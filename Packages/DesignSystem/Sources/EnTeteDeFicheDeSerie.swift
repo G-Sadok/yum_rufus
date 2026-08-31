@@ -249,8 +249,11 @@ private struct BoutonDeBanniere: View {
     @ViewBuilder
     private var etiquette: some View {
         if let symbole {
+            // Le bouton porte deja son etiquette d accessibilite, le symbole
+            // ne doit pas la doubler.
             Image(systemName: symbole)
                 .foregroundStyle(Jetons.FicheDeSerie.couleurDuTitre.couleur)
+                .accessibilityHidden(true)
         } else {
             Text(libelle)
                 .style(Jetons.LigneDeChapitre.titre)

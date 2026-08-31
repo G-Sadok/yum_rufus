@@ -150,7 +150,9 @@ public struct VueDeDetailDeStockage: View {
             }
             .buttonStyle(.plain)
             .style(Jetons.FicheDeSerie.actionDeListe)
-            .foregroundStyle(palette.semantiques.danger.couleur)
+            .foregroundStyle(
+                palette.lisible(palette.semantiques.danger, sur: [palette.surfaces.canvas]).couleur
+            )
         }
         .padding(.bottom, Jetons.CarteDeReglages.ecartApresLEnTete)
     }
@@ -222,14 +224,14 @@ public struct VueDeDetailDeStockage: View {
                 }
                 .buttonStyle(.plain)
                 .style(Jetons.FicheDeSerie.actionDeListe)
-                .foregroundStyle(palette.semantiques.danger.couleur)
+                .foregroundStyle(couleurSurLaBarre(palette.semantiques.danger))
 
                 Button(libelles.fermerLaSelection) {
                     selection.vider()
                 }
                 .buttonStyle(.plain)
                 .style(Jetons.FicheDeSerie.actionDeListe)
-                .foregroundStyle(palette.textes.tertiary.couleur)
+                .foregroundStyle(couleurSurLaBarre(palette.textes.tertiary))
             }
             .padding(.horizontal, Jetons.BarreDeSelection.margeLaterale)
             .frame(height: Jetons.BarreDeSelection.hauteur)
@@ -246,6 +248,13 @@ public struct VueDeDetailDeStockage: View {
             .padding(.top, Jetons.Stockage.ecartAvantLaBarre)
             .accessibilityElement(children: .contain)
         }
+    }
+
+    /// La barre de selection repose sur `surface.menu`, ou `danger` mesure
+    /// 4.1:1 et `text.tertiary` 4.3:1 en variante sombre, tous deux sous le
+    /// seuil de la section 7. Les deux sont derives, voir `Lisibilite`.
+    private func couleurSurLaBarre(_ jeton: CouleurHexadecimale) -> Color {
+        palette.lisible(jeton, sur: [palette.surfaces.menu]).couleur
     }
 
     // MARK: Confirmation

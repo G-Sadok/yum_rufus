@@ -97,7 +97,7 @@ struct LigneDObjectif: View {
         .padding(.horizontal, Jetons.Statistiques.margeLaterale)
         .frame(minHeight: Jetons.Statistiques.hauteurDeLigne)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(ContourDeFocusDeStatistiques(visible: focalisee))
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
     }
 }
 
@@ -136,7 +136,7 @@ struct LigneDeRappel: View {
         .padding(.horizontal, Jetons.Statistiques.margeLaterale)
         .frame(minHeight: Jetons.Statistiques.hauteurDeLigne)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(ContourDeFocusDeStatistiques(visible: focalisee))
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
         .disabled(objectif.estActif == false)
     }
 
@@ -220,6 +220,10 @@ struct BarreDeProgressionDeLecture: View {
     var body: some View {
         GeometryReader { cadre in
             ZStack(alignment: .leading) {
+                // contraste-ok : `surface.selected` ne sert ici que de piste a
+                // la barre, aucun texte ne se pose dessus. Le rapport qui
+                // compte est celui du remplissage `accent` sur la piste, qui
+                // releve du seuil des elements graphiques.
                 Capsule()
                     .fill(palette.surfaces.selected.couleur)
 
@@ -246,23 +250,5 @@ struct IconeDeLigneDeStatistiques: View {
             .foregroundStyle(palette.semantiques.accent.couleur)
             .frame(width: Jetons.Statistiques.tailleDIcone)
             .accessibilityHidden(true)
-    }
-}
-
-/// Contour de focus clavier, section 7. Jamais supprime.
-struct ContourDeFocusDeStatistiques: View {
-    @Environment(\.palette) private var palette
-
-    let visible: Bool
-
-    var body: some View {
-        if visible {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(
-                    palette.semantiques.focusRing.couleur,
-                    lineWidth: Jetons.Focus.epaisseur
-                )
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }

@@ -136,7 +136,10 @@ private struct OngletDeCategorieVue: View {
         }
         .buttonStyle(.plain)
         .focusEffectDisabled()
-        .overlay(contourDeFocus)
+        .contourDeFocus(
+            estFocalise,
+            rayonDeLElement: Jetons.BarreDeCategories.rayonDeLOngletActif
+        )
         .onHover { survole = $0 }
         .animation(animation, value: survole)
         .help(onglet.libelle)
@@ -156,7 +159,7 @@ private struct OngletDeCategorieVue: View {
             // entre ou sort de la categorie, section 1.5.
             Text(compteur)
                 .style(Jetons.BarreDeCategories.libelle, chiffresTabulaires: true)
-                .foregroundStyle(palette.textes.tertiary.couleur)
+                .foregroundStyle(couleurDuCompteur)
         }
         .lineLimit(1)
     }
@@ -173,18 +176,6 @@ private struct OngletDeCategorieVue: View {
         .fill(couleurDeFond)
     }
 
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if estFocalise {
-            RoundedRectangle(
-                cornerRadius: Jetons.BarreDeCategories.rayonDeLOngletActif + Jetons.Focus.decalage,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
-        }
-    }
-
     private var couleurDeFond: Color {
         if estActif {
             palette.surfaces.menu.couleur
@@ -197,6 +188,17 @@ private struct OngletDeCategorieVue: View {
 
     private var couleurDeLibelle: Color {
         estActif ? palette.textes.primary.couleur : palette.textes.secondary.couleur
+    }
+
+    /// Le compteur est en `text.tertiary`, section 5.1. L onglet actif pose ce
+    /// jeton sur `surface.menu`, ou il mesure 4.3:1 en variante sombre, sous le
+    /// seuil de la section 7. La derivation prend les trois fonds que l onglet
+    /// peut montrer, pour que tous les onglets gardent la meme teinte.
+    private var couleurDuCompteur: Color {
+        palette.lisible(
+            palette.textes.tertiary,
+            sur: [palette.surfaces.menu, palette.surfaces.card, palette.surfaces.canvas]
+        ).couleur
     }
 
     private var animation: Animation? {

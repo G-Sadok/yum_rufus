@@ -118,10 +118,18 @@ public struct BoutonDiscret: ButtonStyle {
 
     /// `accent.text` et non `accent` : le libelle est sous 18 px, et seule la
     /// derivation tient le seuil de 4.5:1 en apparence claire, section 1.3.
+    ///
+    /// Le bouton discret n a pas de fond propre. Il se pose sur une carte ou
+    /// sur la zone de contenu, et `accent.text` tombe sous le seuil sur la
+    /// carte survolee des themes Slate et Paper. La derivation ferme l ecart.
     private func couleur(pressee: Bool) -> Color {
-        pressee
-            ? palette.semantiques.accentPressed.couleur
-            : palette.semantiques.accentText.couleur
+        let jeton = pressee ? palette.semantiques.accentPressed : palette.semantiques.accentText
+        return palette.lisible(jeton, sur: fondsPossibles).couleur
+    }
+
+    /// Fonds sous lesquels un bouton discret peut se trouver.
+    private var fondsPossibles: [CouleurHexadecimale] {
+        [palette.surfaces.canvas, palette.surfaces.card, palette.surfaces.cardHover]
     }
 }
 
@@ -146,11 +154,30 @@ public struct BoutonDestructif: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .style(Jetons.Typo.body)
-            .foregroundStyle(palette.semantiques.danger.couleur)
+            .foregroundStyle(couleurDuTexte)
             .padding(.horizontal, Jetons.Bouton.remplissageHorizontal)
             .frame(minHeight: hauteur)
             .background(fond(pressee: configuration.isPressed))
             .contentShape(Rectangle())
+    }
+
+    /// `danger` mesure 4.4:1 sur `surface.cardHover` en variante sombre, sous
+    /// le seuil de la section 7. Le libelle est derive sur les deux fonds que
+    /// le bouton peut montrer, voir `Lisibilite`.
+    private var couleurDuTexte: Color {
+        palette.lisible(
+            palette.semantiques.danger,
+            sur: [palette.surfaces.card, palette.surfaces.cardHover]
+        ).couleur
+    }
+
+    /// Le contour est un element graphique, il releve du seuil de 3:1.
+    private var couleurDuContour: Color {
+        palette.lisible(
+            palette.semantiques.danger,
+            sur: [palette.surfaces.card, palette.surfaces.cardHover],
+            seuil: Jetons.Contraste.grandTexte
+        ).couleur
     }
 
     /// Le tableau 4.6 ne donne aucun fond a cette variante au repos. L etat
@@ -161,7 +188,7 @@ public struct BoutonDestructif: ButtonStyle {
             .overlay {
                 RoundedRectangle(cornerRadius: rayon, style: .continuous)
                     .strokeBorder(
-                        palette.semantiques.danger.couleur,
+                        couleurDuContour,
                         lineWidth: Jetons.Fenetre.epaisseurDuFilet
                     )
             }

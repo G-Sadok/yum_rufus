@@ -79,11 +79,12 @@ struct BarreDOutilsDeCoquille<Actions: View>: View {
                     height: Jetons.BarreDOutils.hauteurDeBouton
                 )
                 .contentShape(Rectangle())
+                .accessibilityHidden(true)
         }
         .buttonStyle(.plain)
         .focusEffectDisabled()
         .focused($basculeFocalisee)
-        .overlay(contourDeFocus)
+        .contourDeFocus(basculeFocalisee, rayonDeLElement: Jetons.BarreDOutils.rayonDeBouton)
         .keyboardShortcut(
             Jetons.RaccourciDeNavigation.toucheDeRepli,
             modifiers: Jetons.RaccourciDeNavigation.modificateurDeRepli
@@ -91,17 +92,5 @@ struct BarreDOutilsDeCoquille<Actions: View>: View {
         .help(bascule.libelle)
         .accessibilityLabel(bascule.libelle)
         .accessibilityAddTraits(bascule.estRepliee ? .isSelected : [])
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if basculeFocalisee {
-            RoundedRectangle(
-                cornerRadius: Jetons.BarreDOutils.rayonDeBouton + Jetons.Focus.decalage,
-                style: .continuous
-            )
-            .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-            .padding(-Jetons.Focus.decalage)
-        }
     }
 }

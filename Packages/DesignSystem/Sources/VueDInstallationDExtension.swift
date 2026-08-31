@@ -172,9 +172,11 @@ public struct VueDInstallationDExtension: View {
 
     private func mention(_ texte: String, couleur: Color) -> some View {
         HStack(alignment: .top, spacing: Jetons.InstallationDExtension.ecartApresLeGlyphe) {
+            // Le glyphe redit ce que la mention ecrit. Masque a VoiceOver.
             Image(systemName: Jetons.IconeDExtension.avertissement)
                 .font(.system(size: Jetons.InstallationDExtension.tailleDuGlyphe))
                 .foregroundStyle(couleur)
+                .accessibilityHidden(true)
 
             Text(texte)
                 .style(Jetons.InstallationDExtension.avertissement)
@@ -188,10 +190,14 @@ public struct VueDInstallationDExtension: View {
             listeLue.toggle()
         } label: {
             HStack(spacing: Jetons.InstallationDExtension.ecartApresLeGlyphe) {
+                // La coche porte l etat de la case. Elle est masquee a
+                // VoiceOver, qui recoit le meme etat par le trait `isSelected`
+                // pose sur le bouton, plus lisible qu un nom de symbole.
                 Image(systemName: listeLue
                     ? Jetons.IconeDExtension.listeLue
                     : Jetons.IconeDExtension.listeNonLue)
                     .font(.system(size: Jetons.InstallationDExtension.tailleDuGlyphe))
+                    .accessibilityHidden(true)
 
                 Text(contenu.libelles.confirmationDeLecture)
                     .style(Jetons.InstallationDExtension.domaine)

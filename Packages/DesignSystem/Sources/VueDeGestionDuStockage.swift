@@ -189,7 +189,7 @@ struct LigneDeCategorieDeStockage: View {
         .focusEffectDisabled()
         .focused($focalisee)
         .background(survolee ? palette.surfaces.cardHover.couleur : Color.clear)
-        .overlay(contourDeFocus)
+        .contourDeFocus(focalisee, rayonDeLElement: 0)
         .onHover { survolee = $0 }
         .accessibilityLabel(etiquette)
     }
@@ -241,9 +241,12 @@ struct LigneDeCategorieDeStockage: View {
                 .style(Jetons.Stockage.taille, chiffresTabulaires: true)
                 .foregroundStyle(palette.textes.secondary.couleur)
 
+            // Le chevron annonce une navigation, ce que le trait de bouton
+            // porte deja. Masque a VoiceOver.
             Image(systemName: Jetons.IconeDeReglage.chevronDeNavigation)
                 .font(.system(size: Jetons.Stockage.tailleDuChevron))
                 .foregroundStyle(palette.textes.tertiary.couleur)
+                .accessibilityHidden(true)
         }
     }
 
@@ -253,14 +256,5 @@ struct LigneDeCategorieDeStockage: View {
             libelles.libelle(de: categorie),
             TexteDeStockage.taille(octets, libelles: libelles),
         ])
-    }
-
-    @ViewBuilder
-    private var contourDeFocus: some View {
-        if focalisee {
-            RoundedRectangle(cornerRadius: Jetons.Focus.decalage, style: .continuous)
-                .strokeBorder(palette.semantiques.focusRing.couleur, lineWidth: Jetons.Focus.epaisseur)
-                .padding(-Jetons.Focus.decalage)
-        }
     }
 }

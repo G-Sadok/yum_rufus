@@ -28,8 +28,6 @@ public struct LibellesDeReglages: Sendable, Equatable {
     public let noteDeFin: String
 
     /// Etiquette d accessibilite de la couronne d une fonction verrouillee.
-    public let etiquetteDeLaCouronne: String
-
     /// Etiquette du chevron d augmentation d un compteur.
     public let augmenter: String
 
@@ -42,7 +40,6 @@ public struct LibellesDeReglages: Sendable, Equatable {
         descriptionsDeSection: [SectionDeReglages: String],
         valeursDeMenu: [String: String],
         noteDeFin: String,
-        etiquetteDeLaCouronne: String,
         augmenter: String,
         diminuer: String
     ) {
@@ -51,7 +48,6 @@ public struct LibellesDeReglages: Sendable, Equatable {
         self.descriptionsDeSection = descriptionsDeSection
         self.valeursDeMenu = valeursDeMenu
         self.noteDeFin = noteDeFin
-        self.etiquetteDeLaCouronne = etiquetteDeLaCouronne
         self.augmenter = augmenter
         self.diminuer = diminuer
     }

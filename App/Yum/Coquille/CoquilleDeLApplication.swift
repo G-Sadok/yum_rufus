@@ -27,6 +27,9 @@ struct CoquilleDeLApplication: View {
     /// Parcours de premiere ouverture, section 5.10.
     let premiereOuverture: SessionDePremiereOuverture
 
+    /// Colonne de reglages, section 5.5.
+    let reglages: SessionDeReglages
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -55,6 +58,7 @@ struct CoquilleDeLApplication: View {
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
         .task { ouvrirLeParcoursDAccueil() }
+        .task { reglages.recharger() }
         .onChange(of: phaseDeScene) { _, nouvelle in
             suivreLaPhase(nouvelle)
         }
@@ -87,7 +91,11 @@ struct CoquilleDeLApplication: View {
     }
 
     private func contenu(de destination: DestinationPrincipale) -> some View {
-        VueDeDestination(destination: destination, historique: historique) { cible in
+        VueDeDestination(
+            destination: destination,
+            historique: historique,
+            reglages: reglages
+        ) { cible in
             etat.selectionner(cible)
         }
     }

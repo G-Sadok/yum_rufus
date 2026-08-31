@@ -116,7 +116,6 @@ struct NoteDAProposTests {
             descriptionsDeSection: [.aPropos: catalogue["reglages.description.aPropos"] ?? ""],
             valeursDeMenu: [:],
             noteDeFin: catalogue["reglages.note"] ?? "",
-            etiquetteDeLaCouronne: "",
             augmenter: "",
             diminuer: ""
         )

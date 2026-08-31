@@ -58,6 +58,11 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Magasin de reglages, nul tant que la base n est pas ouverte.
+    var reglages: MagasinDeReglages? {
+        base.map { MagasinDeReglages(base: $0) }
+    }
+
     /// Magasin d historique, nul tant que la base n est pas ouverte.
     var historique: MagasinDHistorique? {
         base.map { MagasinDHistorique(base: $0, incognito: incognito) }

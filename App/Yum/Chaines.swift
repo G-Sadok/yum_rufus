@@ -314,6 +314,11 @@ enum Chaines {
     /// Etats d erreur, tableau 6.4.
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")
+        static let reglagesTitre = String(localized: "erreur.reglages.titre")
+        static let reglagesPhrase = String(localized: "erreur.reglages.phrase")
+        static let ouvrirLesReglagesDuSysteme = String(
+            localized: "erreur.reglages.ouvrirLesReglagesDuSysteme"
+        )
         static let ficheDeSerieTitre = String(localized: "erreur.ficheDeSerie.titre")
         static let ficheDeSeriePhrase = String(localized: "erreur.ficheDeSerie.phrase")
         static let historiqueTitre = String(localized: "erreur.historique.titre")

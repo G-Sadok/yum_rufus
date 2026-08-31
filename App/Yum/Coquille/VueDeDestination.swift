@@ -11,8 +11,8 @@ import SwiftUI
 //
 // Reglages fait exception. La section 5.5 dit que sa colonne est toujours
 // complete, meme sur une installation neuve, ou seules les valeurs disent
-// l absence. Cet ecran n a donc pas d etat vide a montrer, et sa zone reste
-// nue tant que l ecran Reglages n est pas livre.
+// l absence. Cet ecran n a donc pas d etat vide : il montre ses lignes, et des
+// squelettes tant que la base n a rien rendu.
 //
 
 /// Zone de contenu d une destination.
@@ -23,6 +23,9 @@ struct VueDeDestination: View {
     /// Etat de l ecran Historique, partage avec la barre d outils qui porte sa
     /// commande d effacement.
     let historique: EtatDHistorique
+
+    /// Colonne de reglages, section 5.5.
+    let reglages: SessionDeReglages
 
     /// Ouvre une autre destination, pour les actions des etats vides.
     let ouvrir: (DestinationPrincipale) -> Void
@@ -77,7 +80,12 @@ struct VueDeDestination: View {
             )
 
         case .reglages:
-            EmptyView()
+            VueDeReglages(
+                etat: reglages.etat,
+                banniere: reglages.banniere,
+                libelles: .duCatalogue,
+                commandes: reglages.commandes
+            )
         }
     }
 }

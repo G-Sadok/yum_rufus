@@ -47,12 +47,27 @@ public enum SensDeLecture: String, Sendable, Codable, CaseIterable, Hashable {
 
     /// Sens proposes par le menu Sens de lecture de la section 5.5.
     ///
-    /// Le tableau 6.7 n en propose que deux. Le sens vertical existe bien dans
-    /// le modele, mais il n est pas choisi ici : il vient de la mise en page
-    /// `continuVertical`. Offrir les trois au meme menu laisserait l utilisateur
-    /// composer un sens vertical avec une mise en page en double page, qui ne
-    /// veut rien dire.
-    public static let choixDuMenuDeReglages: [SensDeLecture] = [.droiteGauche, .gaucheDroite]
+    /// Les trois sens sont proposes, vertical compris. La combinaison qui
+    /// inquietait auparavant, un sens vertical pose sur une mise en page en
+    /// double page, ne peut plus se produire : `miseEnPageImposee` la resout
+    /// avant qu elle n atteigne le moteur, comme `MiseEnPage.sensImpose` resout
+    /// deja la combinaison symetrique.
+    public static let choixDuMenuDeReglages: [SensDeLecture] = [
+        .droiteGauche,
+        .gaucheDroite,
+        .hautBas,
+    ]
+
+    /// Mise en page imposee par ce sens, nulle quand il n en impose aucune.
+    ///
+    /// C est la reciproque de `MiseEnPage.sensImpose`. Le sens vertical n a de
+    /// sens qu en defilement continu : une lecture de haut en bas paginee en
+    /// double page n existe pas. Choisir le sens vertical au menu bascule donc
+    /// la mise en page, plutot que de laisser au moteur une combinaison qu il
+    /// devrait interpreter.
+    public var miseEnPageImposee: MiseEnPage? {
+        self == .hautBas ? .continuVertical : nil
+    }
 
     /// Sens tel que le tableau 6.7 l ecrit, jamais affiche.
     ///

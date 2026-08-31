@@ -23,10 +23,10 @@ struct PremiereOuvertureDansLaVueTests {
         )
     }
 
-    /// Ligne de la premiere etape, celle qui chiffre les deux cartes.
+    /// Ligne de la premiere etape, celle qui chiffre les cartes de sens.
     private func ligneDesCartes() throws -> String {
         try #require(
-            try SpecificationDeDesign.ligne(contenant: "deux cartes de 300")
+            try SpecificationDeDesign.ligne(contenant: "trois cartes de 300")
         )
     }
 
@@ -77,11 +77,12 @@ struct PremiereOuvertureDansLaVueTests {
 
     // MARK: Mesures des etapes
 
-    @Test("Les deux cartes de sens de lecture portent les mesures du document")
+    @Test("Les cartes de sens de lecture portent les mesures du document")
     func cartesDeSens() throws {
         let ligne = try ligneDesCartes()
 
-        #expect(ligne.contains("deux cartes de 300"))
+        #expect(ligne.contains("trois cartes de 300"))
+        #expect(ligne.contains("Vertical"))
         #expect(ligne.contains("rayon 16"))
         #expect(ligne.contains("contour de 3"))
 
@@ -102,7 +103,12 @@ struct PremiereOuvertureDansLaVueTests {
     func apercuDuSens() {
         #expect(SensDeLecture.droiteGauche.commenceParLaDroite)
         #expect(SensDeLecture.gaucheDroite.commenceParLaDroite == false)
-        #expect(TexteDePremiereOuverture.sensProposes == [.droiteGauche, .gaucheDroite])
+
+        // Le sens vertical ne commence par aucun cote : ses pages s empilent.
+        #expect(SensDeLecture.hautBas.commenceParLaDroite == false)
+        #expect(SensDeLecture.hautBas.estVertical)
+
+        #expect(TexteDePremiereOuverture.sensProposes == [.droiteGauche, .gaucheDroite, .hautBas])
     }
 
     // MARK: Poids des deux boutons de la troisieme etape

@@ -3,6 +3,7 @@ import Core
 import DesignSystem
 import Foundation
 import ImagePipeline
+import ReaderEngine
 
 //
 // SessionDeLecture

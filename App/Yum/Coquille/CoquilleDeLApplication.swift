@@ -120,12 +120,12 @@ struct CoquilleDeLApplication: View {
         VueDeDestination(
             destination: destination,
             historique: historique,
+            parcourir: parcourir,
+            bibliotheque: bibliotheque,
             reglages: reglages,
             statistiques: statistiques,
             stockage: stockage,
-            prereglages: prereglages,
-            parcourir: parcourir,
-            bibliotheque: bibliotheque
+            prereglages: prereglages
         ) { cible in
             etat.selectionner(cible)
         }

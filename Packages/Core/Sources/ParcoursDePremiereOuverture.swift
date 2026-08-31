@@ -25,14 +25,11 @@ public enum EtapeDePremiereOuverture: String, Sendable, Codable, CaseIterable, H
     /// Premiere source, les trois choix les plus courants.
     case premiereSource
 
-    /// Essai premium, avec Plus tard aussi visible que le bouton d essai.
-    case essaiPremium
-
     public var id: String {
         rawValue
     }
 
-    /// Rang de l etape, de 1 a 3, tel que la section 5.10 les numerote.
+    /// Rang de l etape, tel que la section 5.10 les numerote.
     public var rang: Int {
         (Self.allCases.firstIndex(of: self) ?? 0) + 1
     }
@@ -45,7 +42,6 @@ public enum EtapeDePremiereOuverture: String, Sendable, Codable, CaseIterable, H
         switch self {
         case .sensDeLecture: "Sens de lecture"
         case .premiereSource: "Premiere source"
-        case .essaiPremium: "Essai premium"
         }
     }
 
@@ -59,7 +55,6 @@ public enum EtapeDePremiereOuverture: String, Sendable, Codable, CaseIterable, H
         switch self {
         case .sensDeLecture: .sensParDefaut
         case .premiereSource: .premiereSource
-        case .essaiPremium: .essaiPremium
         }
     }
 }
@@ -71,9 +66,6 @@ public enum DecisionDePremiereOuverture: String, Sendable, CaseIterable, Hashabl
 
     /// Ou l application ira chercher les chapitres.
     case premiereSource
-
-    /// Prendre l essai premium, ou continuer sans lui.
-    case essaiPremium
 }
 
 /// Une commande offerte par une etape, tableau 6.5.
@@ -87,12 +79,6 @@ public enum CommandeDePremiereOuverture: String, Sendable, CaseIterable, Hashabl
 
     /// Passe a l etape suivante sans rien choisir.
     case passer
-
-    /// Ouvre l essai premium de sept jours.
-    case commencerLEssai
-
-    /// Ferme le parcours sans prendre l essai.
-    case plusTard
 
     public var id: String {
         rawValue
@@ -166,9 +152,6 @@ public struct ParcoursDePremiereOuverture: Sendable, Equatable {
     /// Etat de la source de la deuxieme etape.
     public private(set) var source: EtatDeLaSourceInitiale
 
-    /// Vrai quand l utilisateur a demande l essai premium a la troisieme etape.
-    public private(set) var essaiDemande: Bool
-
     /// - Parameter dejaFait: drapeau relu depuis la base. Vrai empeche le
     ///   parcours de s ouvrir au lancement, sans empecher son rejeu.
     public init(dejaFait: Bool = false) {
@@ -176,7 +159,6 @@ public struct ParcoursDePremiereOuverture: Sendable, Equatable {
         etape = nil
         sens = .parDefaut
         source = .rien
-        essaiDemande = false
     }
 
     /// Vrai quand le parcours occupe l ecran.
@@ -239,7 +221,6 @@ public struct ParcoursDePremiereOuverture: Sendable, Equatable {
         switch etape {
         case .sensDeLecture: [.continuer]
         case .premiereSource: source.estConnectee ? [.continuer] : [.passer]
-        case .essaiPremium: [.commencerLEssai, .plusTard]
         }
     }
 
@@ -253,10 +234,6 @@ public struct ParcoursDePremiereOuverture: Sendable, Equatable {
     @discardableResult
     public mutating func executer(_ commande: CommandeDePremiereOuverture) -> Bool {
         guard let etape, commandes.contains(commande) else { return false }
-
-        if commande == .commencerLEssai {
-            essaiDemande = true
-        }
 
         avancerDepuis(etape)
 

@@ -19,7 +19,7 @@ struct PremiereOuvertureDansLaVueTests {
     /// Phrase d ouverture de la section 5.10.
     private func phraseDuParcours() throws -> String {
         try #require(
-            try SpecificationDeDesign.ligne(contenant: "Trois etapes maximum")
+            try SpecificationDeDesign.ligne(contenant: "Deux etapes maximum")
         )
     }
 
@@ -54,14 +54,14 @@ struct PremiereOuvertureDansLaVueTests {
 
     // MARK: Trois etapes
 
-    @Test("Le document borne le parcours a trois etapes, et le code en compte trois")
+    @Test("Le document borne le parcours a deux etapes, et le code en compte deux")
     func troisEtapes() throws {
         let phrase = try phraseDuParcours()
 
-        #expect(phrase.contains("Trois etapes maximum"))
+        #expect(phrase.contains("Deux etapes maximum"))
         #expect(phrase.contains("une seule decision par etape"))
 
-        #expect(EtapeDePremiereOuverture.allCases.count == 3)
+        #expect(EtapeDePremiereOuverture.allCases.count == 2)
         #expect(ParcoursDePremiereOuverture.nombreMaximalDEtapes == 3)
     }
 
@@ -113,61 +113,7 @@ struct PremiereOuvertureDansLaVueTests {
 
     // MARK: Poids des deux boutons de la troisieme etape
 
-    @Test("Plus tard pese exactement le meme poids que le bouton d essai")
-    func plusTardPeseLeMemePoidsQueLEssai() throws {
-        let ligne = try ligneDeLEssai()
-
-        #expect(ligne.contains("Plus tard aussi visible que le bouton d essai"))
-        #expect(ligne.contains("meme hauteur"))
-        #expect(ligne.contains("meme rayon"))
-
-        let essai = Jetons.PremiereOuverture.gabarit(de: .commencerLEssai)
-        let plusTard = Jetons.PremiereOuverture.gabarit(de: .plusTard)
-
-        #expect(essai == plusTard)
-        #expect(essai.hauteur == plusTard.hauteur)
-        #expect(essai.rayon == plusTard.rayon)
-        #expect(essai.largeur == plusTard.largeur)
-    }
-
-    @Test("Les deux boutons se partagent la largeur a parts egales")
-    func largeursEgales() {
-        let gabarit = Jetons.PremiereOuverture.gabarit(de: .plusTard)
-        let paire = gabarit.largeur * 2 + Jetons.PremiereOuverture.ecartEntreLesBoutons
-
-        #expect(paire == Jetons.MurPremium.largeurDuBouton)
-    }
-
-    @Test("La troisieme etape offre les deux commandes, et elles seules")
-    func commandesDeLaTroisiemeEtape() {
-        #expect(
-            ParcoursDePremiereOuverture.commandes(de: .essaiPremium)
-                == [.commencerLEssai, .plusTard]
-        )
-    }
-
-    @Test("Le fond de Plus tard est celui du bouton secondaire de la section 5.10")
-    func fondDePlusTard() throws {
-        let ligne = try ligneDeLEssai()
-
-        // La section 5.10 impose `surface.menu` avec contour, ce qui est
-        // exactement la variante secondaire du tableau 4.6. La difference entre
-        // les deux boutons est donc le seul aplat, jamais la taille.
-        #expect(ligne.contains("surface.menu"))
-        #expect(ligne.contains("contour"))
-
-        for theme in ThemeDeSurface.allCases {
-            for apparence in Apparence.allCases {
-                let palette = Palette.pour(theme: theme, apparence: apparence)
-
-                #expect(palette.surfaces.menu.notation.isEmpty == false)
-            }
-        }
-    }
-
-    // MARK: Libelles
-
-    @Test("Les quatre commandes portent les libelles exacts du tableau 6.5")
+    @Test("Les commandes portent les libelles exacts du tableau 6.5")
     func libellesDuTableau() throws {
         let catalogue = try CatalogueDeChaines.charger()
         let ligne = try #require(
@@ -178,7 +124,7 @@ struct PremiereOuvertureDansLaVueTests {
             .components(separatedBy: "/")
             .map { $0.trimmingCharacters(in: .whitespaces) }
 
-        #expect(libelles == ["Continuer", "Passer", "Commencer l essai", "Plus tard"])
+        #expect(libelles == ["Continuer", "Passer"])
 
         let duCatalogue = CommandeDePremiereOuverture.allCases.map { commande in
             catalogue["premiereOuverture.commande.\(commande.rawValue)"] ?? ""
@@ -326,7 +272,7 @@ struct PremiereOuvertureDansLaVueTests {
 
         #expect(
             TexteDePremiereOuverture.etiquetteDeProgression(de: .premiereSource, libelles: libelles)
-                == "Etape 2 sur 3"
+                == "Etape 2 sur 2"
         )
     }
 

@@ -106,8 +106,7 @@ struct RenouvellementDuJetonTests {
                 chapitreLu: 12,
                 aupresDe: .aniList,
                 selon: ConditionsDEnvoi(
-                    reglages: SynchronisationAutomatiqueTests.envoiActif,
-                    premium: .definitif
+                    reglages: SynchronisationAutomatiqueTests.envoiActif
                 )
             )
         }

@@ -29,7 +29,7 @@ struct SynchronisationAutomatiqueTests {
 
     /// Conditions d une installation abonnee, envoi actif.
     static var conditions: ConditionsDEnvoi {
-        ConditionsDEnvoi(reglages: envoiActif, premium: .definitif)
+        ConditionsDEnvoi(reglages: envoiActif)
     }
 
     /// Liaison arretee au chapitre 10 sur le service donne.
@@ -164,27 +164,10 @@ struct SynchronisationAutomatiqueTests {
             Self.liaison(pour: .aniList, identifiant: "11"),
             chapitreLu: 12,
             aupresDe: .aniList,
-            selon: ConditionsDEnvoi(reglages: .parDefaut, premium: .definitif)
+            selon: ConditionsDEnvoi(reglages: .parDefaut)
         )
 
         #expect(resultat.decision == .desactiveeParReglage)
-        #expect(await atelier.transport.journal.count == avant)
-    }
-
-    @Test("Un abonnement absent n envoie rien")
-    func sansAbonnement() async throws {
-        let atelier = try await AtelierDeSuivi(service: .aniList).avecPublication()
-        try await atelier.connecter()
-
-        let avant = await atelier.transport.journal.count
-        let resultat = try await atelier.registre.synchroniser(
-            Self.liaison(pour: .aniList, identifiant: "11"),
-            chapitreLu: 12,
-            aupresDe: .aniList,
-            selon: ConditionsDEnvoi(reglages: Self.envoiActif, premium: .gratuit)
-        )
-
-        #expect(resultat.decision == .verrouilleeParPremium)
         #expect(await atelier.transport.journal.count == avant)
     }
 
@@ -289,7 +272,7 @@ struct SynchronisationAutomatiqueTests {
             Self.liaison(pour: .aniList, identifiant: "11"),
             chapitreLu: 12,
             aupresDe: .aniList,
-            selon: ConditionsDEnvoi(reglages: reglages, premium: .definitif)
+            selon: ConditionsDEnvoi(reglages: reglages)
         )
 
         #expect(refuse.decision == .confirmationRequise)
@@ -299,7 +282,7 @@ struct SynchronisationAutomatiqueTests {
             Self.liaison(pour: .aniList, identifiant: "11"),
             chapitreLu: 12,
             aupresDe: .aniList,
-            selon: ConditionsDEnvoi(reglages: reglages, premium: .definitif, confirmationAccordee: true)
+            selon: ConditionsDEnvoi(reglages: reglages, confirmationAccordee: true)
         )
 
         #expect(accorde.decision == .envoyer)

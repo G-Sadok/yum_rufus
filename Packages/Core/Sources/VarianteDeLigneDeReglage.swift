@@ -45,25 +45,6 @@ public enum VarianteDeLigneDeReglage: String, Sendable, Codable, CaseIterable, H
     }
 }
 
-/// Forme premium posee sur une ligne de reglage, section 4.1.
-///
-/// Les deux formes partagent le fond `surface.premium` et le libelle en accent.
-/// Elles different par ce qu elles portent a droite et par ce que le clic
-/// declenche.
-public enum FormeDeLignePremium: String, Sendable, Codable, CaseIterable, Hashable {
-    /// Appel a l abonnement : couronne a gauche, chevron simple a droite.
-    case appelALAbonnement
-
-    /// Fonction verrouillee : icone de la fonction a gauche, couronne a droite,
-    /// aucun controle. Le clic ouvre le mur premium, pas le reglage.
-    case fonctionVerrouillee
-
-    /// Vrai quand la ligne remplace son controle par une couronne.
-    public var remplaceLeControle: Bool {
-        self == .fonctionVerrouillee
-    }
-}
-
 /// Bornes d un reglage numerique, curseur ou compteur.
 public struct BornesDeReglage: Sendable, Codable, Equatable, Hashable {
     /// Valeur la plus basse acceptee.

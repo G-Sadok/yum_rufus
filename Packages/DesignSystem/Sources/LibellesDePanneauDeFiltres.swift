@@ -23,19 +23,14 @@ public struct LibellesDePanneauDeFiltres: Sendable, Equatable {
     /// Libelle de chacun des trois interrupteurs, section 5.7.
     public let libellesDeTraitement: [TraitementDImage: String]
 
-    /// Etiquette d accessibilite de la couronne d un traitement verrouille.
-    public let etiquetteDeLaCouronne: String
-
     public init(
         titre: String,
         libellesDeFiltre: [FiltreDImage: String],
-        libellesDeTraitement: [TraitementDImage: String],
-        etiquetteDeLaCouronne: String
+        libellesDeTraitement: [TraitementDImage: String]
     ) {
         self.titre = titre
         self.libellesDeFiltre = libellesDeFiltre
         self.libellesDeTraitement = libellesDeTraitement
-        self.etiquetteDeLaCouronne = etiquetteDeLaCouronne
     }
 
     /// Libelle d un curseur.
@@ -64,17 +59,12 @@ public struct CommandesDePanneauDeFiltres {
     /// Arme ou desarme un interrupteur.
     public let basculer: (TraitementDImage, Bool) -> Void
 
-    /// Ouvre le mur premium, depuis la couronne d un traitement verrouille.
-    public let ouvrirLeMurPremium: () -> Void
-
     public init(
         regler: @escaping (FiltreDImage, Double) -> Void,
-        basculer: @escaping (TraitementDImage, Bool) -> Void,
-        ouvrirLeMurPremium: @escaping () -> Void
+        basculer: @escaping (TraitementDImage, Bool) -> Void
     ) {
         self.regler = regler
         self.basculer = basculer
-        self.ouvrirLeMurPremium = ouvrirLeMurPremium
     }
 
     /// Commandes inertes, pour un apercu ou un panneau en lecture seule.
@@ -84,8 +74,7 @@ public struct CommandesDePanneauDeFiltres {
     public static var inertes: CommandesDePanneauDeFiltres {
         CommandesDePanneauDeFiltres(
             regler: { _, _ in },
-            basculer: { _, _ in },
-            ouvrirLeMurPremium: {}
+            basculer: { _, _ in }
         )
     }
 }

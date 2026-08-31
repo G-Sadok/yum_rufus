@@ -127,16 +127,12 @@ public struct VueDeLigneDeReglage: View {
 
     @ViewBuilder
     private var controle: some View {
-        if let forme = presentation.formePremium(de: ligne), forme.remplaceLeControle {
-            couronne
-        } else {
-            switch ligne.variante {
-            case .interrupteur: interrupteur
-            case .valeurEtMenu: valeur
-            case .navigation: chevronDeNavigation
-            case .curseur: curseur
-            case .compteur: compteur
-            }
+        switch ligne.variante {
+        case .interrupteur: interrupteur
+        case .valeurEtMenu: valeur
+        case .navigation: chevronDeNavigation
+        case .curseur: curseur
+        case .compteur: compteur
         }
     }
 
@@ -221,22 +217,6 @@ public struct VueDeLigneDeReglage: View {
         }
     }
 
-    /// Couronne d une fonction verrouillee, a droite, a la place du controle.
-    private var couronne: some View {
-        Button {
-            commandes.ouvrir(ligne.id)
-        } label: {
-            Image(systemName: Jetons.IconeDeReglage.couronne)
-                .font(.system(size: Jetons.LigneDeReglage.tailleDeLaCouronne))
-                .foregroundStyle(palette.semantiques.accent.couleur)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .focusEffectDisabled()
-        .focused($focalisee)
-        .accessibilityLabel(libelles.etiquetteDeLaCouronne)
-    }
-
     // MARK: Etats
 
     private var fond: some View {
@@ -288,7 +268,7 @@ public struct VueDeLigneDeReglage: View {
     // MARK: Mesures
 
     private var estPremium: Bool {
-        presentation.formePremium(de: ligne) != nil
+        false
     }
 
     /// Vrai au dela de la taille de texte dynamique `large`, section 4.1.

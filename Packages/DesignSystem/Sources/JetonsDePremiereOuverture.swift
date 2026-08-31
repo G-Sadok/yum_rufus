@@ -114,28 +114,22 @@ extension Jetons {
         /// Largeur maximale du contenu, deux cartes et leur ecart.
         public static let largeurDuContenu = largeurDeCarte * 2 + ecartEntreLesCartes
 
-        /// Hauteur des deux boutons de la troisieme etape.
+        /// Hauteur d une commande du parcours.
         ///
-        /// Celle du bouton du mur premium, section 4.6, parce que l etape porte
-        /// exactement la meme offre que la feuille de la section 5.9.
-        public static let hauteurDuBouton = MurPremium.hauteurDuBouton
+        /// Les trois mesures qui suivent venaient du bouton du mur premium,
+        /// section 4.6, quand le parcours portait une troisieme etape d essai.
+        /// Le mur a disparu avec l abonnement, les valeurs restent : elles
+        /// mesuraient les commandes du parcours, pas l offre.
+        public static let hauteurDuBouton: Double = 42
 
-        /// Rayon des deux boutons de la troisieme etape.
-        public static let rayonDuBouton = MurPremium.rayonDuBouton
+        /// Rayon d une commande du parcours.
+        public static let rayonDuBouton = Rayon.carte
 
-        /// Ecart entre les deux boutons de la troisieme etape.
+        /// Ecart entre deux commandes posees cote a cote.
         public static let ecartEntreLesBoutons = Espace.x4
 
-        /// Largeur de chacun des deux boutons de la troisieme etape.
-        ///
-        /// Les deux se partagent la largeur du bouton du mur premium, a parts
-        /// egales. La section 5.10 demande un Plus tard aussi visible que le
-        /// bouton d essai : une largeur plus courte le rendrait secondaire sans
-        /// qu aucune ligne du document ne le demande.
-        public static let largeurDuBouton = (MurPremium.largeurDuBouton - ecartEntreLesBoutons) / 2
-
         /// Largeur d une commande posee seule, comme Continuer ou Passer.
-        public static let largeurDeCommandeSeule = MurPremium.largeurDuBouton
+        public static let largeurDeCommandeSeule: Double = 296
 
         /// Symbole pose a gauche d une ligne de source.
         ///
@@ -156,18 +150,9 @@ extension Jetons {
 
         /// Gabarit d une commande du parcours.
         ///
-        /// Les commandes de la troisieme etape rendent le meme gabarit, mesure
-        /// pour mesure. C est la forme verifiable du critere de la section 5.10,
-        /// et la suite de tests la compare a la phrase du document.
+        /// Les deux commandes rendent le meme gabarit, mesure pour mesure.
         public static func gabarit(de commande: CommandeDePremiereOuverture) -> GabaritDeCommande {
             switch commande {
-            case .commencerLEssai, .plusTard:
-                GabaritDeCommande(
-                    hauteur: hauteurDuBouton,
-                    rayon: rayonDuBouton,
-                    largeur: largeurDuBouton
-                )
-
             case .continuer, .passer:
                 GabaritDeCommande(
                     hauteur: hauteurDuBouton,

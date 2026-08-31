@@ -38,8 +38,6 @@ extension LibellesDePremiereOuverture {
                 Chaines.PremiereOuverture.sensDeLectureTitre,
             EtapeDePremiereOuverture.premiereSource.rawValue:
                 Chaines.PremiereOuverture.premiereSourceTitre,
-            EtapeDePremiereOuverture.essaiPremium.rawValue:
-                Chaines.PremiereOuverture.essaiPremiumTitre,
         ]
     }
 
@@ -49,8 +47,6 @@ extension LibellesDePremiereOuverture {
                 Chaines.PremiereOuverture.sensDeLecturePhrase,
             EtapeDePremiereOuverture.premiereSource.rawValue:
                 Chaines.PremiereOuverture.premiereSourcePhrase,
-            EtapeDePremiereOuverture.essaiPremium.rawValue:
-                Chaines.PremiereOuverture.essaiPremiumPhrase,
         ]
     }
 
@@ -59,9 +55,6 @@ extension LibellesDePremiereOuverture {
         [
             CommandeDePremiereOuverture.continuer.rawValue: Chaines.PremiereOuverture.continuer,
             CommandeDePremiereOuverture.passer.rawValue: Chaines.PremiereOuverture.passer,
-            CommandeDePremiereOuverture.commencerLEssai.rawValue:
-                Chaines.PremiereOuverture.commencerLEssai,
-            CommandeDePremiereOuverture.plusTard.rawValue: Chaines.PremiereOuverture.plusTard,
         ]
     }
 

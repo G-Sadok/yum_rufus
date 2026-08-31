@@ -212,12 +212,7 @@ struct RangeeDeCommandes: View {
         let gabarit = Jetons.PremiereOuverture.gabarit(de: commande)
         let action = { executer(commande) }
 
-        if commande == .plusTard {
-            Button(libelles.libelle(de: commande), action: action)
-                .buttonStyle(BoutonSecondaire(hauteur: gabarit.hauteur, rayon: gabarit.rayon))
-                .frame(width: gabarit.largeur)
-                .keyboardShortcut(.cancelAction)
-        } else {
+        do {
             Button(libelles.libelle(de: commande), action: action)
                 .buttonStyle(BoutonPrincipal(hauteur: gabarit.hauteur, rayon: gabarit.rayon))
                 .frame(width: gabarit.largeur)

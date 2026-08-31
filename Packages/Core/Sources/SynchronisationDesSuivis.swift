@@ -33,9 +33,6 @@ public enum DecisionDeSynchronisation: Sendable, Equatable, Hashable {
     /// Une session incognito court, section 11.
     case suspendueParIncognito
 
-    /// Les suivis demandent un abonnement que l utilisateur n a pas.
-    case verrouilleeParPremium
-
     /// L interrupteur d envoi de la progression est inactif.
     case desactiveeParReglage
 
@@ -72,9 +69,6 @@ public struct ContexteDeSynchronisation: Sendable, Equatable {
     /// Suivis.
     public let reglages: ReglagesDeLApplication
 
-    /// Etat de l abonnement.
-    public let premium: EtatDePremium
-
     /// Session incognito au moment de la question.
     public let session: SessionIncognito
 
@@ -86,13 +80,11 @@ public struct ContexteDeSynchronisation: Sendable, Equatable {
     public init(
         etat: EtatDeConnexionDeSuivi,
         reglages: ReglagesDeLApplication,
-        premium: EtatDePremium,
         session: SessionIncognito,
         confirmationAccordee: Bool = false
     ) {
         self.etat = etat
         self.reglages = reglages
-        self.premium = premium
         self.session = session
         self.confirmationAccordee = confirmationAccordee
     }
@@ -103,7 +95,6 @@ public struct ContexteDeSynchronisation: Sendable, Equatable {
         self.init(
             etat: etat,
             reglages: conditions.reglages,
-            premium: conditions.premium,
             session: session,
             confirmationAccordee: conditions.confirmationAccordee
         )
@@ -121,19 +112,14 @@ public struct ConditionsDEnvoi: Sendable, Equatable {
     /// Reglages de l application.
     public let reglages: ReglagesDeLApplication
 
-    /// Etat de l abonnement.
-    public let premium: EtatDePremium
-
     /// Vrai quand l utilisateur vient d accepter cet envoi la.
     public let confirmationAccordee: Bool
 
     public init(
         reglages: ReglagesDeLApplication,
-        premium: EtatDePremium,
         confirmationAccordee: Bool = false
     ) {
         self.reglages = reglages
-        self.premium = premium
         self.confirmationAccordee = confirmationAccordee
     }
 }
@@ -143,17 +129,14 @@ public enum SynchronisationDesSuivis {
     /// Ecriture de session que cette regle commande, section 11.
     public static let ecritureConcernee = EcritureDeSession.synchronisationVersLesSuivis
 
-    /// Fonction de la matrice premium dont l envoi depend, section 10.
-    public static let fonctionConcernee = FonctionDeLApplication.suivis
-
     /// Decide si une progression part vers ce service.
     ///
     /// - Parameters:
     ///   - liaison: liaison de la serie avec le service, nulle quand la serie
     ///     n est liee a rien.
     ///   - chapitreLu: dernier chapitre lu localement.
-    ///   - contexte: etat de connexion, reglages, abonnement et session au
-    ///     moment de la question.
+    ///   - contexte: etat de connexion, reglages et session au moment de la
+    ///     question.
     public static func decision(
         liaison: LiaisonSuivi?,
         chapitreLu: Double,
@@ -162,10 +145,6 @@ public enum SynchronisationDesSuivis {
         // Premiere question, et elle passe avant toutes les autres.
         guard contexte.session.autorise(ecritureConcernee) else {
             return .suspendueParIncognito
-        }
-
-        guard MatriceDeVerrouillage.acces(a: fonctionConcernee, selon: contexte.premium).estOuvert else {
-            return .verrouilleeParPremium
         }
 
         guard contexte.reglages.booleen(.envoyerLaProgression) else {

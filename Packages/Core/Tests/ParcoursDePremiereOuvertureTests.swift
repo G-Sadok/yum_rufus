@@ -16,9 +16,9 @@ import Testing
 struct ParcoursDePremiereOuvertureTests {
     // MARK: Trois etapes au maximum
 
-    @Test("Le parcours compte exactement trois etapes")
+    @Test("Le parcours compte exactement deux etapes")
     func troisEtapes() {
-        #expect(EtapeDePremiereOuverture.allCases.count == 3)
+        #expect(EtapeDePremiereOuverture.allCases.count == 2)
         #expect(
             EtapeDePremiereOuverture.allCases.count
                 <= ParcoursDePremiereOuverture.nombreMaximalDEtapes
@@ -29,9 +29,9 @@ struct ParcoursDePremiereOuvertureTests {
     func ordreDesEtapes() {
         #expect(
             EtapeDePremiereOuverture.allCases.map(\.nomDuDocument)
-                == ["Sens de lecture", "Premiere source", "Essai premium"]
+                == ["Sens de lecture", "Premiere source"]
         )
-        #expect(EtapeDePremiereOuverture.allCases.map(\.rang) == [1, 2, 3])
+        #expect(EtapeDePremiereOuverture.allCases.map(\.rang) == [1, 2])
     }
 
     @Test("Un parcours mene de bout en bout ne traverse jamais plus de trois etapes")
@@ -66,7 +66,7 @@ struct ParcoursDePremiereOuvertureTests {
         #expect(Set(decisions) == Set(DecisionDePremiereOuverture.allCases))
     }
 
-    @Test("Aucune etape n offre deux facons d avancer, sauf la reponse a l essai")
+    @Test("Aucune etape n offre deux facons d avancer")
     func commandesParEtape() {
         #expect(ParcoursDePremiereOuverture.commandes(de: .sensDeLecture) == [.continuer])
         #expect(ParcoursDePremiereOuverture.commandes(de: .premiereSource) == [.passer])
@@ -76,15 +76,9 @@ struct ParcoursDePremiereOuvertureTests {
                 source: .connectee(.komga, series: 12)
             ) == [.continuer]
         )
-        // Les deux boutons de la troisieme etape sont les deux reponses a une
-        // seule question, pas deux decisions.
-        #expect(
-            ParcoursDePremiereOuverture.commandes(de: .essaiPremium)
-                == [.commencerLEssai, .plusTard]
-        )
     }
 
-    @Test("Les quatre commandes du tableau 6.5 sont toutes atteignables, et il n en existe pas d autre")
+    @Test("Les commandes du tableau 6.5 sont toutes atteignables, et il n en existe pas d autre")
     func quatreCommandes() {
         let offertes = EtapeDePremiereOuverture.allCases.flatMap { etape in
             ParcoursDePremiereOuverture.commandes(de: etape)
@@ -95,7 +89,7 @@ struct ParcoursDePremiereOuvertureTests {
         }
 
         #expect(Set(offertes) == Set(CommandeDePremiereOuverture.allCases))
-        #expect(CommandeDePremiereOuverture.allCases.count == 4)
+        #expect(CommandeDePremiereOuverture.allCases.count == 2)
     }
 
     @Test("Une commande que l etape n offre pas est refusee")
@@ -103,11 +97,12 @@ struct ParcoursDePremiereOuvertureTests {
         var parcours = ParcoursDePremiereOuverture()
         parcours.ouvrirAuLancement()
 
-        let appliquee = parcours.executer(.commencerLEssai)
+        // La premiere etape n offre que Continuer, Passer appartient a la
+        // seconde.
+        let appliquee = parcours.executer(.passer)
 
         #expect(appliquee == false)
         #expect(parcours.etape == .sensDeLecture)
-        #expect(parcours.essaiDemande == false)
     }
 
     // MARK: Decisions
@@ -160,29 +155,6 @@ struct ParcoursDePremiereOuvertureTests {
         #expect(MenuDAjoutDeSource.entrees.count == 12)
     }
 
-    @Test("Prendre l essai le note, le refuser ne le note pas")
-    func reponseALEssai() {
-        var accepte = ParcoursDePremiereOuverture()
-        accepte.ouvrirAuLancement()
-        accepte.executer(.continuer)
-        accepte.executer(.passer)
-        accepte.executer(.commencerLEssai)
-
-        #expect(accepte.essaiDemande)
-        #expect(accepte.dejaFait)
-
-        var refuse = ParcoursDePremiereOuverture()
-        refuse.ouvrirAuLancement()
-        refuse.executer(.continuer)
-        refuse.executer(.passer)
-        refuse.executer(.plusTard)
-
-        #expect(refuse.essaiDemande == false)
-        #expect(refuse.dejaFait)
-    }
-
-    // MARK: Ouverture et rejeu
-
     @Test("Le parcours ne s ouvre qu une fois au lancement")
     func ouvertureUnique() {
         var neuf = ParcoursDePremiereOuverture()
@@ -212,16 +184,11 @@ struct ParcoursDePremiereOuvertureTests {
         #expect(parcours.sens == .gaucheDroite)
     }
 
-    @Test("La ligne de rejeu existe dans le catalogue des reglages, sans couronne")
+    @Test("La ligne de rejeu existe dans le catalogue des reglages")
     func ligneDeRejeuDansLesReglages() throws {
         let ligne = try #require(CatalogueDeReglages.ligne(.revoirLaPremiereOuverture))
 
         #expect(ligne.section == .assistance)
         #expect(ligne.variante == .navigation)
-        #expect(ligne.ouvreLeMurPremium == false)
-        #expect(
-            MatriceDeVerrouillage.estVerrouillee(.revoirLaPremiereOuverture, selon: .gratuit)
-                == false
-        )
     }
 }

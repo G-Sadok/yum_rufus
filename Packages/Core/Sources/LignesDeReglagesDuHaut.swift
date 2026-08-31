@@ -9,26 +9,11 @@ extension CatalogueDeReglages {
     /// Sections Abonnement, Confidentialite, General, Bibliotheque, Traduction
     /// et Lecteur.
     static let lignesDesSectionsUnASix: [LigneDeReglage] =
-        abonnement + confidentialite + general + bibliothequeTri + traduction + lecteur
+        confidentialite + general + bibliothequeTri + traduction + lecteur
 
-    /// 1. Abonnement.
-    ///
-    /// `Passer a Premium` est la seule ligne du produit en forme d appel a
-    /// l abonnement : couronne a gauche, chevron a droite, aucun controle.
-    private static let abonnement: [LigneDeReglage] = [
-        .navigation(.passerAPremium, .abonnement, premium: .appelALAbonnement),
-        .navigation(.restaurerLesAchats, .abonnement),
-    ]
-
-    /// 2. Confidentialite.
-    ///
-    /// Incognito est une fonction premium. Le tableau de la section 5.5 la type
-    /// `premium, couronne`, et le wireframe 05 la dessine sans interrupteur :
-    /// la couronne prend la place du controle tant que l abonnement n est pas
-    /// pris. La variante reste l interrupteur, parce que c est bien un reglage
-    /// a deux etats une fois debloque.
+    /// 1. Confidentialite.
     private static let confidentialite: [LigneDeReglage] = [
-        .interrupteur(.incognito, .confidentialite, actifParDefaut: false, premium: .fonctionVerrouillee),
+        .interrupteur(.incognito, .confidentialite, actifParDefaut: false),
         .interrupteur(.verrouillageDeLApp, .confidentialite, actifParDefaut: false),
     ]
 
@@ -78,7 +63,7 @@ extension CatalogueDeReglages {
     /// police dit avec quoi l ecrire. Les trois lignes du document gardent leur
     /// ordre relatif.
     private static let traduction: [LigneDeReglage] = [
-        .interrupteur(.traduireLesBulles, .traduction, actifParDefaut: false, premium: .fonctionVerrouillee),
+        .interrupteur(.traduireLesBulles, .traduction, actifParDefaut: false),
         .menu(.moteurDeTraduction, .traduction, ChoixDeMoteurDeTraduction.self),
         .menu(.langueCible, .traduction, ChoixDeLangue.self),
         .navigation(.policeDeRemplacement, .traduction),

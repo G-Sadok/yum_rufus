@@ -62,19 +62,13 @@ final class SessionDeConfidentialite {
 
     /// Allume ou eteint le mode incognito.
     ///
-    /// La matrice de la section 10 tranche avant tout le reste. Le mode
-    /// incognito est une fonction premium, et un interrupteur qui l allumerait
-    /// sans abonnement ouvrirait une fonction payante par la porte de derriere.
-    ///
     /// - Parameters:
     ///   - actif: etat demande par la ligne de reglages.
-    ///   - abonnement: etat de l abonnement au moment du geste.
     ///   - date: instant du geste.
     /// - Returns: vrai quand le mode a effectivement change d etat.
     @discardableResult
     func definirLIncognito(
         _ actif: Bool,
-        selon abonnement: EtatDePremium,
         le date: Date = Date()
     ) -> Bool {
         guard actif else {
@@ -82,10 +76,6 @@ final class SessionDeConfidentialite {
             session = registre.sessionCourante
 
             return true
-        }
-
-        guard MatriceDeVerrouillage.acces(a: .incognito, selon: abonnement).estOuvert else {
-            return false
         }
 
         registre.demarrer(le: date)

@@ -15,7 +15,6 @@
 
 /// Une section de l ecran Reglages, section 5.5.
 public enum SectionDeReglages: String, Sendable, Codable, CaseIterable, Hashable {
-    case abonnement
     case confidentialite
     case general
     case bibliothequeTri
@@ -45,7 +44,6 @@ public enum SectionDeReglages: String, Sendable, Codable, CaseIterable, Hashable
     /// le recopier.
     public var nomDuDocument: String {
         switch self {
-        case .abonnement: "Abonnement"
         case .confidentialite: "Confidentialite"
         case .general: "General"
         case .bibliothequeTri: "Bibliotheque"

@@ -63,7 +63,6 @@ public struct VueDePremiereOuverture: View {
     private let etape: EtapeDePremiereOuverture
     private let parcours: ParcoursDePremiereOuverture
     private let libelles: LibellesDePremiereOuverture
-    private let libellesPremium: LibellesDuMurPremium
     private let commandes: CommandesDePremiereOuverture
 
     /// Construit l ecran.
@@ -72,20 +71,17 @@ public struct VueDePremiereOuverture: View {
     ///   - etape: etape affichee.
     ///   - parcours: etat du parcours, qui porte les decisions deja prises.
     ///   - libelles: textes pris dans le catalogue de chaines.
-    ///   - libellesPremium: textes du mur premium, pour la liste des avantages
     ///     de la troisieme etape. C est la meme offre, donc les memes mots.
     ///   - commandes: ce que les boutons declenchent.
     public init(
         etape: EtapeDePremiereOuverture,
         parcours: ParcoursDePremiereOuverture,
         libelles: LibellesDePremiereOuverture,
-        libellesPremium: LibellesDuMurPremium,
         commandes: CommandesDePremiereOuverture
     ) {
         self.etape = etape
         self.parcours = parcours
         self.libelles = libelles
-        self.libellesPremium = libellesPremium
         self.commandes = commandes
     }
 
@@ -147,9 +143,6 @@ public struct VueDePremiereOuverture: View {
 
         case .premiereSource:
             sources
-
-        case .essaiPremium:
-            avantages
         }
     }
 
@@ -192,19 +185,5 @@ public struct VueDePremiereOuverture: View {
         }
     }
 
-    /// Troisieme etape, la liste des avantages de la section 5.9.
-    ///
-    /// Les cinq avantages ne sont pas reecrits pour cet ecran. C est la meme
-    /// offre que la feuille du mur premium, et une seconde formulation
-    /// donnerait deux promesses a comparer au lieu d une a comprendre.
-    private var avantages: some View {
-        VStack(
-            alignment: .leading,
-            spacing: Jetons.MurPremium.interligneDesAvantages
-        ) {
-            ForEach(AvantagePremium.allCases) { avantage in
-                LigneDAvantagePremium(avantage: avantage, libelles: libellesPremium)
-            }
-        }
-    }
+    // Troisieme etape, la liste des avantages de la section 5.9.
 }

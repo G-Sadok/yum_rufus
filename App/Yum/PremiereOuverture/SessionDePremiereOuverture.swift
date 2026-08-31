@@ -94,13 +94,9 @@ final class SessionDePremiereOuverture {
         try? sensDeLecture?.definirLeSensGlobal(sens)
     }
 
-    /// Troisieme etape, et sortie du parcours.
+    /// Applique une commande, et sort du parcours quand il est fait.
     private func executer(_ commande: CommandeDePremiereOuverture) {
         guard parcours.executer(commande) else { return }
-
-        if parcours.essaiDemande {
-            essaiDemande = true
-        }
 
         if parcours.dejaFait {
             try? magasin?.marquerFait()

@@ -28,8 +28,7 @@ extension LibellesDePanneauDeFiltres {
                 .reductionDuBruit: Chaines.Filtres.reductionDuBruit,
                 .ameliorationIA: Chaines.Filtres.ameliorationIA,
                 .colorisationIA: Chaines.Filtres.colorisationIA,
-            ],
-            etiquetteDeLaCouronne: Chaines.Filtres.couronne
+            ]
         )
     }
 }

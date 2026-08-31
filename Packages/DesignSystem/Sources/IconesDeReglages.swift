@@ -17,9 +17,6 @@ extension Jetons {
             parIdentifiant[identifiant] ?? Icone.reglages
         }
 
-        /// Couronne posee a droite d une fonction verrouillee.
-        public static let couronne = Icone.premium
-
         /// Chevron simple d une ligne de navigation.
         ///
         /// La variante directionnelle et non `chevron.right` : elle pointe a
@@ -38,15 +35,13 @@ extension Jetons {
         public static let chevronDeDiminution = "chevron.down"
 
         private static let parIdentifiant: [IdentifiantDeReglage: String] =
-            abonnementEtConfidentialite
+            confidentialite
                 .merging(generalEtBibliotheque) { premier, _ in premier }
                 .merging(traductionEtLecteur) { premier, _ in premier }
                 .merging(comportementEtSuivis) { premier, _ in premier }
                 .merging(servicesEtAPropos) { premier, _ in premier }
 
-        private static let abonnementEtConfidentialite: [IdentifiantDeReglage: String] = [
-            .passerAPremium: Icone.premium,
-            .restaurerLesAchats: "arrow.clockwise",
+        private static let confidentialite: [IdentifiantDeReglage: String] = [
             .incognito: Icone.incognito,
             .verrouillageDeLApp: Icone.verrouillage,
         ]

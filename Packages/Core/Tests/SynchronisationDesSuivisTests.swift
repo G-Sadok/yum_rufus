@@ -38,13 +38,11 @@ struct SynchronisationDesSuivisTests {
     static func contexteFavorable(
         session: SessionIncognito = .inactive,
         reglages: ReglagesDeLApplication? = nil,
-        premium: EtatDePremium = .definitif,
         confirmationAccordee: Bool = false
     ) -> ContexteDeSynchronisation {
         ContexteDeSynchronisation(
             etat: .connecte(compte),
             reglages: reglages ?? envoiActif,
-            premium: premium,
             session: session,
             confirmationAccordee: confirmationAccordee
         )
@@ -78,18 +76,6 @@ struct SynchronisationDesSuivisTests {
     func ecritureCommandee() {
         #expect(SynchronisationDesSuivis.ecritureConcernee == .synchronisationVersLesSuivis)
         #expect(SynchronisationDesSuivis.ecritureConcernee.laisseUneTraceDeLecture)
-        #expect(SynchronisationDesSuivis.fonctionConcernee == .suivis)
-    }
-
-    @Test("Un abonnement absent verrouille l envoi")
-    func premiumVerrouille() {
-        let decision = SynchronisationDesSuivis.decision(
-            liaison: Self.liaison,
-            chapitreLu: 11,
-            contexte: Self.contexteFavorable(premium: .gratuit)
-        )
-
-        #expect(decision == .verrouilleeParPremium)
     }
 
     @Test("L interrupteur inactif arrete l envoi")
@@ -109,7 +95,6 @@ struct SynchronisationDesSuivisTests {
             let contexte = ContexteDeSynchronisation(
                 etat: etat,
                 reglages: Self.envoiActif,
-                premium: .definitif,
                 session: .inactive
             )
 
@@ -174,12 +159,11 @@ struct SynchronisationDesSuivisTests {
         let combinaisons = [
             Self.contexteFavorable(session: session),
             Self.contexteFavorable(session: session, reglages: .parDefaut),
-            Self.contexteFavorable(session: session, premium: .gratuit),
+            Self.contexteFavorable(session: session),
             Self.contexteFavorable(session: session, reglages: avecConfirmation, confirmationAccordee: true),
             ContexteDeSynchronisation(
                 etat: .deconnecte,
                 reglages: Self.envoiActif,
-                premium: .definitif,
                 session: session
             ),
         ]

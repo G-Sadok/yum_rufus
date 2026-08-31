@@ -15,7 +15,6 @@ extension Jetons {
         public static let parcourir = "safari"
         public static let rechercher = "magnifyingglass"
         public static let reglages = "gearshape"
-        public static let premium = "crown"
         public static let incognito = "eye.slash"
         public static let verrouillage = "lock"
         public static let sensDeLecture = "text.book.closed"
@@ -48,7 +47,6 @@ extension Jetons {
             "Parcourir": parcourir,
             "Rechercher": rechercher,
             "Reglages": reglages,
-            "Premium": premium,
             "Incognito": incognito,
             "Verrouillage": verrouillage,
             "Sens de lecture": sensDeLecture,

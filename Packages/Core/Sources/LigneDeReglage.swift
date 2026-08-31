@@ -13,8 +13,6 @@
 /// Identifiant stable d une ligne de reglage.
 public enum IdentifiantDeReglage: String, Sendable, Codable, CaseIterable, Hashable {
     // 1. Abonnement
-    case passerAPremium = "abonnement.passerAPremium"
-    case restaurerLesAchats = "abonnement.restaurerLesAchats"
 
     // 2. Confidentialite
     case incognito = "confidentialite.incognito"
@@ -115,9 +113,6 @@ public struct LigneDeReglage: Sendable, Equatable, Hashable, Identifiable {
     /// Variante de la section 4.1.
     public let variante: VarianteDeLigneDeReglage
 
-    /// Forme premium, nulle pour une ligne ordinaire.
-    public let premium: FormeDeLignePremium?
-
     /// Valeur appliquee tant que l utilisateur n a rien choisi.
     ///
     /// Elle donne aussi le type attendu a la relecture depuis la base.
@@ -138,7 +133,6 @@ public struct LigneDeReglage: Sendable, Equatable, Hashable, Identifiable {
         id: IdentifiantDeReglage,
         section: SectionDeReglages,
         variante: VarianteDeLigneDeReglage,
-        premium: FormeDeLignePremium? = nil,
         valeurParDefaut: ValeurDeReglage = .aucune,
         choix: [String] = [],
         bornes: BornesDeReglage? = nil
@@ -146,7 +140,6 @@ public struct LigneDeReglage: Sendable, Equatable, Hashable, Identifiable {
         self.id = id
         self.section = section
         self.variante = variante
-        self.premium = premium
         self.valeurParDefaut = valeurParDefaut
         self.choix = choix
         self.bornes = bornes
@@ -160,10 +153,5 @@ public struct LigneDeReglage: Sendable, Equatable, Hashable, Identifiable {
     /// Vrai quand la ligne montre une valeur sans permettre de la changer.
     public var estEnLectureSeule: Bool {
         variante == .valeurEtMenu && choix.isEmpty
-    }
-
-    /// Vrai quand le clic ouvre le mur premium au lieu du reglage.
-    public var ouvreLeMurPremium: Bool {
-        premium != nil
     }
 }

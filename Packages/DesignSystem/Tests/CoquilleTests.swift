@@ -99,18 +99,6 @@ struct CoquilleTests {
         )
     }
 
-    @Test("Le bloc d appel premium reprend les valeurs de la section 2.2")
-    func blocPremium() throws {
-        let ligne = try #require(
-            try SpecificationDeDesign.ligne(contenant: "Le bloc d appel premium se cale en bas"),
-            "La section 2.2 doit decrire le bloc premium"
-        )
-
-        let valeurs = LectureDeTableaux.nombres(dans: ligne)
-        #expect(valeurs.first == Jetons.BarreLaterale.hauteurDuBlocPremium, "Hauteur 52")
-        #expect(valeurs.dropFirst().first == Jetons.BarreLaterale.rayonDuBlocPremium, "Rayon 12")
-    }
-
     @Test("La fenetre reprend les dimensions de la section 2.1")
     func dimensionsDeLaFenetre() throws {
         let valeurs = try valeursDuTableau(signe: "Taille minimale")

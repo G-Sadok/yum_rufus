@@ -20,12 +20,8 @@ import SwiftUI
 // hors des controles eux memes, et aucune icone decorative a gauche des
 // libelles, voir `Jetons.PanneauDeFiltres`.
 //
-// Un traitement reserve a l abonnement porte une couronne a la place de son
-// interrupteur, comme la variante premium de la section 4.1. La section 5.7 ne
-// le dit que de la colorisation, mais la matrice de la section 10 du cahier de
-// developpement place aussi l amelioration par IA derriere l abonnement. Les
-// deux portent donc la couronne : afficher un interrupteur qui ne peut pas
-// s armer serait mentir sur ce que l utilisateur peut faire.
+// Les trois traitements sont ouverts a tous. Chacun porte donc son
+// interrupteur, sans condition.
 //
 
 /// Panneau de filtres du lecteur, section 5.7.
@@ -33,7 +29,6 @@ public struct VueDePanneauDeFiltres: View {
     @Environment(\.palette) private var palette
 
     private let reglages: ReglagesDeFiltres
-    private let abonnement: EtatDePremium
     private let libelles: LibellesDePanneauDeFiltres
     private let commandes: CommandesDePanneauDeFiltres
 
@@ -42,18 +37,14 @@ public struct VueDePanneauDeFiltres: View {
     /// - Parameters:
     ///   - reglages: valeurs courantes des cinq curseurs et des trois
     ///     interrupteurs.
-    ///   - abonnement: etat de l abonnement. Il ouvre les traitements par IA,
-    ///     la couronne tombe alors et l interrupteur revient.
     ///   - libelles: textes pris dans le catalogue de chaines.
     ///   - commandes: ce que les lignes declenchent.
     public init(
         reglages: ReglagesDeFiltres,
-        abonnement: EtatDePremium = .gratuit,
         libelles: LibellesDePanneauDeFiltres,
         commandes: CommandesDePanneauDeFiltres
     ) {
         self.reglages = reglages
-        self.abonnement = abonnement
         self.libelles = libelles
         self.commandes = commandes
     }
@@ -97,11 +88,8 @@ public struct VueDePanneauDeFiltres: View {
                 LigneDeTraitement(
                     traitement: traitement,
                     actif: reglages.estActif(traitement),
-                    verrouille: estVerrouille(traitement),
                     libelle: libelles.libelle(de: traitement),
-                    etiquetteDeLaCouronne: libelles.etiquetteDeLaCouronne,
-                    basculer: { commandes.basculer(traitement, $0) },
-                    ouvrirLeMurPremium: commandes.ouvrirLeMurPremium
+                    basculer: { commandes.basculer(traitement, $0) }
                 )
             }
         }
@@ -114,15 +102,6 @@ public struct VueDePanneauDeFiltres: View {
             .frame(height: Jetons.PanneauDeFiltres.epaisseurDuSeparateur)
             .padding(.vertical, Jetons.PanneauDeFiltres.margeVerticale)
             .accessibilityHidden(true)
-    }
-
-    /// Vrai quand ce traitement demande un abonnement que l utilisateur n a pas.
-    ///
-    /// La reponse vient de la matrice de la section 10 et non d une condition
-    /// ecrite ici. Le panneau n a pas a savoir lesquels des trois traitements
-    /// sont payants, il a a savoir lesquels sont ouverts maintenant.
-    func estVerrouille(_ traitement: TraitementDImage) -> Bool {
-        MatriceDeVerrouillage.acces(a: traitement, selon: abonnement) == .verrouille
     }
 }
 
@@ -179,11 +158,8 @@ struct LigneDeTraitement: View {
 
     let traitement: TraitementDImage
     let actif: Bool
-    let verrouille: Bool
     let libelle: String
-    let etiquetteDeLaCouronne: String
     let basculer: (Bool) -> Void
-    let ouvrirLeMurPremium: () -> Void
 
     var body: some View {
         HStack(spacing: Jetons.Espace.x4) {
@@ -200,23 +176,15 @@ struct LigneDeTraitement: View {
         .contourDeFocus(focalisee, rayonDeLElement: 0)
     }
 
-    /// Le libelle d une ligne verrouillee est en `accent`, tableau 4.1. Le
-    /// panneau repose sur `surface.menu`, ou ce jeton mesure 3.8:1 en variante
-    /// sombre, sous le seuil de la section 7. Il est donc derive, voir
-    /// `Lisibilite`.
+    /// Le libelle est en `text.primary` sur `surface.menu`, couple que la
+    /// section 7 garantit et que `ContrasteDesJetonsTests` mesure deja. Aucune
+    /// derivation n est donc necessaire ici, contraste-ok.
     private var couleurDuLibelle: Color {
-        guard verrouille else { return palette.textes.primary.couleur }
-
-        return palette.lisible(palette.semantiques.accentText, sur: [palette.surfaces.menu]).couleur
+        palette.textes.primary.couleur
     }
 
-    @ViewBuilder
     private var controle: some View {
-        if verrouille {
-            couronne
-        } else {
-            interrupteur
-        }
+        interrupteur
     }
 
     private var interrupteur: some View {
@@ -224,29 +192,5 @@ struct LigneDeTraitement: View {
             .labelsHidden()
             .toggleStyle(StyleDInterrupteur())
             .focused($focalisee)
-    }
-
-    /// La couronne mesure 18, elle releve du seuil des elements de 18 et plus.
-    private var couleurDeLaCouronne: Color {
-        palette.lisible(
-            palette.semantiques.accent,
-            sur: [palette.surfaces.menu],
-            seuil: Jetons.Contraste.grandTexte
-        ).couleur
-    }
-
-    private var couronne: some View {
-        Button(action: ouvrirLeMurPremium) {
-            // Le bouton porte deja son etiquette, la couronne ne la double pas.
-            Image(systemName: Jetons.Icone.premium)
-                .font(.system(size: Jetons.PanneauDeFiltres.tailleDeLaCouronne))
-                .foregroundStyle(couleurDeLaCouronne)
-                .accessibilityHidden(true)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .focusEffectDisabled()
-        .focused($focalisee)
-        .accessibilityLabel(etiquetteDeLaCouronne)
     }
 }

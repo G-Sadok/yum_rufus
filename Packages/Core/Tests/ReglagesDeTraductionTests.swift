@@ -149,7 +149,6 @@ struct ReglagesDeTraductionTests {
         #expect(ligne.section == .traduction)
         #expect(ligne.variante == .valeurEtMenu)
         #expect(ligne.choix == ChoixDeMoteurDeTraduction.valeursPersistees)
-        #expect(MatriceDeVerrouillage.fonction(de: .moteurDeTraduction) == .traduction)
     }
 
     @Test("Les trois lignes du document gardent leur ordre relatif")

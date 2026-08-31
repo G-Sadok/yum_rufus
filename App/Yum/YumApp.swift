@@ -15,7 +15,6 @@ struct YumApp: App {
     @State private var etat = EtatDeCoquille()
     @State private var services: ServicesDeLApplication
     @State private var historique: EtatDHistorique
-    @State private var premium = SessionPremium()
     @State private var confidentialite: SessionDeConfidentialite
     @State private var premiereOuverture: SessionDePremiereOuverture
 
@@ -44,7 +43,6 @@ struct YumApp: App {
             CoquilleDeLApplication(
                 etat: etat,
                 historique: historique,
-                premium: premium,
                 confidentialite: confidentialite,
                 premiereOuverture: premiereOuverture
             )

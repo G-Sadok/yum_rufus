@@ -25,7 +25,7 @@ struct DecisionDeSynchronisationICloudTests {
     }
 
     static var contexteNominal: ContexteICloud {
-        ContexteICloud(reglages: toutActif, premium: .definitif)
+        ContexteICloud(reglages: toutActif)
     }
 
     @Test("Une progression part quand tout est en place")
@@ -42,7 +42,6 @@ struct DecisionDeSynchronisationICloudTests {
     func incognitoBloque() {
         let contexte = ContexteICloud(
             reglages: Self.toutActif,
-            premium: .definitif,
             session: .demarree(le: Date(timeIntervalSince1970: 1_700_000_000))
         )
 
@@ -52,25 +51,10 @@ struct DecisionDeSynchronisationICloudTests {
         #expect(decision.entreAuJournal == false)
     }
 
-    @Test("Le mode incognito gagne meme sur une installation sans abonnement")
-    func incognitoAvantPremium() {
-        let contexte = ContexteICloud(
-            reglages: Self.toutActif,
-            premium: .gratuit,
-            session: .demarree(le: Date(timeIntervalSince1970: 1_700_000_000))
-        )
-
-        #expect(
-            SynchronisationICloud.decision(pour: .progressionDeChapitre, selon: contexte)
-                == .suspendueParIncognito
-        )
-    }
-
     @Test("La bibliotheque continue de partir pendant une session incognito")
     func bibliothequePendantIncognito() {
         let contexte = ContexteICloud(
             reglages: Self.toutActif,
-            premium: .definitif,
             session: .demarree(le: Date(timeIntervalSince1970: 1_700_000_000))
         )
 
@@ -80,24 +64,13 @@ struct DecisionDeSynchronisationICloudTests {
         #expect(SynchronisationICloud.decision(pour: .serieDeBibliotheque, selon: contexte) == .envoyer)
     }
 
-    @Test("Sans abonnement, rien ne part")
-    func premiumExige() {
-        let contexte = ContexteICloud(reglages: Self.toutActif, premium: .gratuit)
-
-        for entite in EntiteSynchronisee.allCases {
-            #expect(SynchronisationICloud.decision(pour: entite, selon: contexte) == .verrouilleeParPremium)
-        }
-
-        #expect(SynchronisationICloud.estActive(selon: contexte) == false)
-    }
-
     @Test("Chaque interrupteur ne gouverne que son entite")
     func interrupteursIndependants() {
         var reglages = ReglagesDeLApplication.parDefaut
         reglages.definir(.booleen(true), pour: .synchroniserLaProgression)
         reglages.definir(.booleen(false), pour: .synchroniserLaBibliotheque)
 
-        let contexte = ContexteICloud(reglages: reglages, premium: .definitif)
+        let contexte = ContexteICloud(reglages: reglages)
 
         #expect(SynchronisationICloud.decision(pour: .progressionDeChapitre, selon: contexte) == .envoyer)
         #expect(
@@ -108,7 +81,7 @@ struct DecisionDeSynchronisationICloudTests {
 
     @Test("Une installation neuve ne synchronise rien")
     func installationNeuve() {
-        let contexte = ContexteICloud(reglages: .parDefaut, premium: .definitif)
+        let contexte = ContexteICloud(reglages: .parDefaut)
 
         #expect(
             SynchronisationICloud.decision(pour: .progressionDeChapitre, selon: contexte)
@@ -129,7 +102,6 @@ struct DecisionDeSynchronisationICloudTests {
     func compteAbsent() {
         let contexte = ContexteICloud(
             reglages: Self.toutActif,
-            premium: .definitif,
             compteOuvert: false
         )
 

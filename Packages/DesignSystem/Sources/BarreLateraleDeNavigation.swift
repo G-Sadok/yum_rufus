@@ -16,8 +16,6 @@ struct BarreLateraleDeNavigation: View {
 
     let etat: EtatDeCoquille
     let entrees: [EntreeDeNavigation]
-    let appelPremium: AppelPremium?
-    let ouvrirLeMurPremium: (@MainActor () -> Void)?
 
     var body: some View {
         VStack(spacing: Jetons.BarreLaterale.espaceEntreLignes) {
@@ -35,14 +33,6 @@ struct BarreLateraleDeNavigation: View {
             }
 
             Spacer(minLength: Jetons.Espace.x1)
-
-            if let appelPremium {
-                BlocPremium(
-                    appel: appelPremium,
-                    estRepliee: etat.barreLateraleRepliee,
-                    ouvrir: ouvrirLeMurPremium
-                )
-            }
         }
         .padding(.vertical, Jetons.BarreLaterale.margeVerticale)
         .padding(.horizontal, Jetons.BarreLaterale.margeLateraleDeLigne)
@@ -83,109 +73,5 @@ private struct NavigationAuClavier: ViewModifier {
         #else
             content
         #endif
-    }
-}
-
-/// Bloc d appel a l abonnement, cale en bas de la barre laterale.
-private struct BlocPremium: View {
-    @Environment(\.palette) private var palette
-
-    @FocusState private var focalise: Bool
-
-    let appel: AppelPremium
-    let estRepliee: Bool
-
-    /// Ouvre le mur premium, nul tant qu aucun ecran ne sait le presenter.
-    ///
-    /// Un bloc sans action reste un bloc, pas un bouton : une cible qui ne
-    /// repond pas au clic coute plus cher qu une cible absente.
-    let ouvrir: (@MainActor () -> Void)?
-
-    var body: some View {
-        Group {
-            if let ouvrir {
-                Button(action: ouvrir) { bloc }
-                    .buttonStyle(.plain)
-                    .focusEffectDisabled()
-                    .focused($focalise)
-                    .contourDeFocus(
-                        focalise,
-                        rayonDeLElement: Jetons.BarreLaterale.rayonDuBlocPremium
-                    )
-                    .accessibilityAddTraits(.isButton)
-            } else {
-                bloc
-            }
-        }
-        .help(appel.titre)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(appel.titre)
-        .accessibilityValue(appel.sousTitre)
-    }
-
-    private var bloc: some View {
-        contenu
-            .frame(maxWidth: .infinity, minHeight: Jetons.BarreLaterale.hauteurDuBlocPremium)
-            .background(fond)
-            .contentShape(Rectangle())
-    }
-
-    @ViewBuilder
-    private var contenu: some View {
-        if estRepliee {
-            couronne
-        } else {
-            HStack(spacing: Jetons.Espace.x3) {
-                couronne
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(appel.titre)
-                        .style(Jetons.BarreLaterale.libelleActif)
-                        .foregroundStyle(couleurDuTitre)
-                    Text(appel.sousTitre)
-                        .style(Jetons.Typo.footnote)
-                        .foregroundStyle(couleurDuSousTitre)
-                }
-                Spacer(minLength: 0)
-            }
-            .padding(.horizontal, Jetons.BarreLaterale.decalageDIcone)
-        }
-    }
-
-    /// `accent` mesure 4.1:1 sur `surface.premium` en variante sombre, sous le
-    /// seuil de la section 7. Le titre est donc derive, voir `Lisibilite`.
-    private var couleurDuTitre: Color {
-        palette.lisible(palette.semantiques.accentText, sur: [palette.surfaces.premium]).couleur
-    }
-
-    private var couleurDuSousTitre: Color {
-        palette.lisible(palette.textes.tertiary, sur: [palette.surfaces.premium]).couleur
-    }
-
-    /// La couronne double le titre `Passer a Premium` pose a cote d elle. Elle
-    /// est masquee a VoiceOver pour ne pas faire lire deux fois la meme chose.
-    ///
-    /// Elle mesure 20, elle releve du seuil des elements de 18 et plus.
-    private var couronne: some View {
-        Image(systemName: Jetons.Icone.premium)
-            .imageScale(.medium)
-            .foregroundStyle(couleurDeLaCouronne)
-            .accessibilityHidden(true)
-            .frame(
-                width: Jetons.BarreLaterale.tailleDIcone,
-                height: Jetons.BarreLaterale.tailleDIcone
-            )
-    }
-
-    private var couleurDeLaCouronne: Color {
-        palette.lisible(
-            palette.semantiques.accent,
-            sur: [palette.surfaces.premium],
-            seuil: Jetons.Contraste.grandTexte
-        ).couleur
-    }
-
-    private var fond: some View {
-        RoundedRectangle(cornerRadius: Jetons.BarreLaterale.rayonDuBlocPremium, style: .continuous)
-            .fill(palette.surfaces.premium.couleur)
     }
 }

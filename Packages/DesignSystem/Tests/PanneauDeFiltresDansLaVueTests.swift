@@ -36,8 +36,7 @@ struct PanneauDeFiltresDansLaVueTests {
                 uniqueKeysWithValues: TraitementDImage.allCases.map {
                     ($0, catalogue["filtres.\($0.rawValue)"] ?? "")
                 }
-            ),
-            etiquetteDeLaCouronne: catalogue["reglages.couronne"] ?? ""
+            )
         )
     }
 
@@ -96,38 +95,18 @@ struct PanneauDeFiltresDansLaVueTests {
         #expect(ordreDuPanneau != ordreDuPanneau.dansLOrdreDeLaChaine)
     }
 
-    // MARK: Verrouillage premium
+    // MARK: Traitements
 
-    @Test("Les deux traitements par IA portent une couronne sans abonnement")
-    func couronneSansAbonnement() throws {
+    @Test("Les trois traitements sont ouverts, aucun ne demande de condition")
+    func lesTroisTraitementsSontOuverts() throws {
         let phrase = try phraseDuPanneau()
 
-        #expect(phrase.contains("Colorisation IA est verrouillee premium"))
-        #expect(phrase.contains("couronne"))
+        // Le document ne reserve plus aucun traitement : la ligne du panneau ne
+        // nomme ni couronne ni verrouillage.
+        #expect(phrase.contains("couronne") == false)
+        #expect(phrase.contains("verrouillee") == false)
 
-        let sansAbonnement = panneau(abonnement: .gratuit)
-
-        #expect(sansAbonnement.estVerrouille(.colorisationIA))
-        #expect(sansAbonnement.estVerrouille(.ameliorationIA))
-        #expect(sansAbonnement.estVerrouille(.reductionDuBruit) == false)
-    }
-
-    @Test("L abonnement rend l interrupteur des traitements par IA")
-    func couronneAvecAbonnement() {
-        let avecAbonnement = panneau(abonnement: .definitif)
-
-        for traitement in TraitementDImage.allCases {
-            #expect(avecAbonnement.estVerrouille(traitement) == false, "\(traitement.rawValue)")
-        }
-    }
-
-    @Test("Un abonnement expire reverrouille les traitements par IA")
-    func couronneApresExpiration() {
-        let expire = panneau(abonnement: .expire(le: .distantPast))
-
-        #expect(expire.estVerrouille(.colorisationIA))
-        #expect(expire.estVerrouille(.ameliorationIA))
-        #expect(expire.estVerrouille(.reductionDuBruit) == false)
+        #expect(TraitementDImage.ordreDuPanneau.count == TraitementDImage.allCases.count)
     }
 
     // MARK: Libelles
@@ -145,7 +124,6 @@ struct PanneauDeFiltresDansLaVueTests {
         #expect(libelles.libelle(de: .reductionDuBruit) == "Reduction du bruit")
         #expect(libelles.libelle(de: .ameliorationIA) == "Amelioration IA")
         #expect(libelles.libelle(de: .colorisationIA) == "Colorisation IA")
-        #expect(libelles.etiquetteDeLaCouronne.isEmpty == false)
     }
 
     @Test("Le titre du panneau est le libelle de l action qui l ouvre")
@@ -167,7 +145,7 @@ struct PanneauDeFiltresDansLaVueTests {
         // au controle 4.
         let tiretCadratin = String(UnicodeScalar(0x2014) ?? " ")
 
-        let textes = [libelles.titre, libelles.etiquetteDeLaCouronne]
+        let textes = [libelles.titre]
             + FiltreDImage.allCases.map { libelles.libelle(de: $0) }
             + TraitementDImage.allCases.map { libelles.libelle(de: $0) }
 
@@ -180,15 +158,13 @@ struct PanneauDeFiltresDansLaVueTests {
 
     // MARK: Materiel
 
-    private func panneau(abonnement: EtatDePremium) -> VueDePanneauDeFiltres {
+    private func panneau() -> VueDePanneauDeFiltres {
         VueDePanneauDeFiltres(
             reglages: .parDefaut,
-            abonnement: abonnement,
             libelles: LibellesDePanneauDeFiltres(
                 titre: "Filtres",
                 libellesDeFiltre: [:],
-                libellesDeTraitement: [:],
-                etiquetteDeLaCouronne: "Fonction premium"
+                libellesDeTraitement: [:]
             ),
             commandes: .inertes
         )

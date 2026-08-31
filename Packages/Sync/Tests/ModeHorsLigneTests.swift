@@ -231,7 +231,6 @@ struct ModeHorsLigneTests {
         let session = SessionIncognito.demarree(le: AtelierDeSynchronisationICloud.depart)
         let conditions = ConditionsDeTest(ContexteICloud(
             reglages: AtelierDeSynchronisationICloud.reglagesActifs,
-            premium: .definitif,
             session: session
         ))
         let appareil = AppareilDeTest(nom: "appareil-a", entrepot: entrepot, conditions: conditions)

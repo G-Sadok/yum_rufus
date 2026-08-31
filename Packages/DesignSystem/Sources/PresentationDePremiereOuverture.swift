@@ -26,19 +26,16 @@ extension View {
     /// - Parameters:
     ///   - parcours: etat du parcours. Une etape nulle ne pose rien.
     ///   - libelles: textes pris dans le catalogue de chaines.
-    ///   - libellesPremium: textes du mur premium, pour la troisieme etape.
     ///   - commandes: ce que les boutons declenchent.
     public func premiereOuverture(
         _ parcours: ParcoursDePremiereOuverture,
         libelles: LibellesDePremiereOuverture,
-        libellesPremium: LibellesDuMurPremium,
         commandes: CommandesDePremiereOuverture
     ) -> some View {
         modifier(
             PremiereOuverturePresentee(
                 parcours: parcours,
                 libelles: libelles,
-                libellesPremium: libellesPremium,
                 commandes: commandes
             )
         )
@@ -51,7 +48,6 @@ private struct PremiereOuverturePresentee: ViewModifier {
 
     let parcours: ParcoursDePremiereOuverture
     let libelles: LibellesDePremiereOuverture
-    let libellesPremium: LibellesDuMurPremium
     let commandes: CommandesDePremiereOuverture
 
     func body(content: Content) -> some View {
@@ -67,7 +63,6 @@ private struct PremiereOuverturePresentee: ViewModifier {
                 etape: etape,
                 parcours: parcours,
                 libelles: libelles,
-                libellesPremium: libellesPremium,
                 commandes: commandes
             )
             .ignoresSafeArea()

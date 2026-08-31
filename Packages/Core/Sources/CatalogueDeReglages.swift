@@ -71,14 +71,12 @@ extension LigneDeReglage {
     static func interrupteur(
         _ identifiant: IdentifiantDeReglage,
         _ section: SectionDeReglages,
-        actifParDefaut: Bool,
-        premium: FormeDeLignePremium? = nil
+        actifParDefaut: Bool
     ) -> LigneDeReglage {
         LigneDeReglage(
             id: identifiant,
             section: section,
             variante: .interrupteur,
-            premium: premium,
             valeurParDefaut: .booleen(actifParDefaut)
         )
     }
@@ -87,14 +85,12 @@ extension LigneDeReglage {
     static func menu<Choix: ChoixDeReglage>(
         _ identifiant: IdentifiantDeReglage,
         _ section: SectionDeReglages,
-        _ choix: Choix.Type,
-        premium: FormeDeLignePremium? = nil
+        _ choix: Choix.Type
     ) -> LigneDeReglage {
         LigneDeReglage(
             id: identifiant,
             section: section,
             variante: .valeurEtMenu,
-            premium: premium,
             valeurParDefaut: .choix(Choix.parDefaut.rawValue),
             choix: Choix.valeursPersistees
         )
@@ -120,10 +116,9 @@ extension LigneDeReglage {
     /// Ligne de navigation, variante 3 de la section 4.1.
     static func navigation(
         _ identifiant: IdentifiantDeReglage,
-        _ section: SectionDeReglages,
-        premium: FormeDeLignePremium? = nil
+        _ section: SectionDeReglages
     ) -> LigneDeReglage {
-        LigneDeReglage(id: identifiant, section: section, variante: .navigation, premium: premium)
+        LigneDeReglage(id: identifiant, section: section, variante: .navigation)
     }
 
     /// Ligne a curseur, variante 4 de la section 4.1.

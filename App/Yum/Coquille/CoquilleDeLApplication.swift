@@ -21,9 +21,6 @@ struct CoquilleDeLApplication: View {
     /// commande d effacement de la barre d outils.
     let historique: EtatDHistorique
 
-    /// Abonnement et mur premium.
-    let premium: SessionPremium
-
     /// Mode incognito et verrouillage de l app, section 11.
     let confidentialite: SessionDeConfidentialite
 
@@ -34,31 +31,21 @@ struct CoquilleDeLApplication: View {
         VueDeCoquille(
             etat: etat,
             entrees: entrees,
-            appelPremium: appelPremium,
-            ouvrirLeMurPremium: ouvrirLeMurPremium,
             libelleDuRepli: Chaines.Navigation.repli,
             actions: commandes(de:),
             contenu: contenu(de:)
         )
         .banniereDIncognito(confidentialite.banniere, etiquette: Chaines.Incognito.etiquette)
-        // Le parcours d accueil se pose sous le mur premium et sous le verrou.
-        // Sa troisieme etape peut ouvrir le mur, et le verrou passe avant tout
-        // le reste, section 11.
+        // Le parcours d accueil se pose sous le verrou, qui passe avant tout le
+        // reste, section 11.
         .premiereOuverture(
             premiereOuverture.parcours,
             libelles: .duCatalogue,
-            libellesPremium: .duCatalogue,
             commandes: premiereOuverture.commandes
         )
-        .murPremium(
-            demande: premium.demande,
-            etat: premium.mur,
-            libelles: .duCatalogue,
-            commandes: premium.commandes
-        )
         // L ecran de verrouillage est pose en dernier, donc au dessus de tout le
-        // reste, mur premium compris. Une feuille qui resterait lisible par
-        // dessus le verrou annulerait le verrou.
+        // reste. Une feuille qui resterait lisible par dessus le verrou
+        // annulerait le verrou.
         .verrouillageDeLApp(
             confidentialite.verrou.etat,
             ecran: confidentialite.ecranDeVerrouillage,
@@ -67,13 +54,7 @@ struct CoquilleDeLApplication: View {
         )
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
-        .task { await premium.rafraichirLAbonnement() }
         .task { ouvrirLeParcoursDAccueil() }
-        .onChange(of: premiereOuverture.essaiDemande) { _, demande in
-            if demande {
-                premium.demander(.premiereOuverture)
-            }
-        }
         .onChange(of: phaseDeScene) { _, nouvelle in
             suivreLaPhase(nouvelle)
         }
@@ -101,21 +82,8 @@ struct CoquilleDeLApplication: View {
     }
 
     /// Ouvre le parcours d accueil, au premier lancement et a lui seul.
-    ///
-    /// La demande d essai de la troisieme etape ouvre le mur premium par la
-    /// meme porte que le bloc de la barre laterale. Le parcours ne vend rien
-    /// lui meme, et la garde de `Core` reste seule a decider.
     private func ouvrirLeParcoursDAccueil() {
         premiereOuverture.ouvrirAuLancement()
-    }
-
-    /// Ouverture du mur depuis le bloc de la barre laterale, section 2.2.
-    ///
-    /// C est aujourd hui le seul point d entree du produit vers l achat. La
-    /// section Abonnement de l ecran Reglages en ouvrira un second quand cet
-    /// ecran sera livre, et passera par la meme demande.
-    private func ouvrirLeMurPremium() {
-        premium.demander(.appelDeLaBarreLaterale)
     }
 
     private func contenu(de destination: DestinationPrincipale) -> some View {
@@ -146,10 +114,6 @@ struct CoquilleDeLApplication: View {
         DestinationPrincipale.allCases.map { destination in
             EntreeDeNavigation(destination: destination, libelle: Chaines.navigation(destination))
         }
-    }
-
-    private var appelPremium: AppelPremium {
-        AppelPremium(titre: Chaines.Premium.titre, sousTitre: Chaines.Premium.sousTitre)
     }
 }
 

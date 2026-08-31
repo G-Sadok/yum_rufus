@@ -38,10 +38,9 @@ Conflits releves, et arbitrage retenu. Chacun est reversible sur demande.
 | Titre d etat vide | `title1` 22 (4.10) | 15 gras (09) | **22**, le wireframe illustre le motif a echelle reduite |
 | Glyphe d erreur | non precise | cercle avec barre et point, `warning` (09) | **cercle**, `exclamationmark.circle` |
 | Bouton Reessayer | non precise | secondaire (09) | **secondaire** |
-| Duree de l essai premium | non precisee | 7 jours (09) | **7 jours** |
 | Rayon de la couverture de la fiche | 10 pour les cartes (4.3) | 12 (04) | **12** pour la seule couverture heros |
 
-**Marques tierces ecartees.** Les wireframes citent MangaDex comme nom de source et AniList, MyAnimeList, Kitsu comme services de suivi. La regle 3 interdit ces reprises. Remplacements retenus : `Catalogue OPDS` pour la source, `Suivis sur vos services de suivi` pour l avantage premium. Komga, Kavita, Jellyfin, OPDS, SMB, NFS, WebDAV et iCloud Drive restent, parce que le cahier des charges les impose nommement dans le menu de la section 5.3.
+**Marques tierces ecartees.** Les wireframes citent MangaDex comme nom de source et AniList, MyAnimeList, Kitsu comme services de suivi. La regle 3 interdit ces reprises. Remplacements retenus : `Catalogue OPDS` pour la source, `Suivis sur vos services de suivi` pour la ligne de suivis. Komga, Kavita, Jellyfin, OPDS, SMB, NFS, WebDAV et iCloud Drive restent, parce que le cahier des charges les impose nommement dans le menu de la section 5.3.
 
 ---
 
@@ -161,9 +160,9 @@ Graisses autorisees : 400, 600, 700. La graisse 600 est reservee a cinq cas : li
 | 8 | onglet de categorie actif, bouton de barre d outils |
 | 9 | champ de saisie, bouton d etat vide |
 | 10 | bouton, conteneur d icone, couverture de carte, ligne de chapitre |
-| 12 | carte, bouton principal du mur premium |
+| 12 | carte |
 | 14 | barre laterale, menu contextuel, carte d etat de contenu |
-| 16 | feuille de configuration, mur premium |
+| 16 | feuille de configuration |
 | 18 | fenetre |
 | 20 | modale courte |
 | capsule | boutons de modale et de feuille (rayon 17 sur une hauteur de 34), pastille de non lus |
@@ -178,7 +177,7 @@ Echelle de 4. Valeurs autorisees : **4, 8, 12, 16, 20, 24, 32, 40, 56, 72**. Auc
 |---|---|---|---|
 | 0 | aucune | aucun | contenu, cartes de reglages, cartes de serie |
 | 1 | `0 8px 24px rgba(0,0,0,0.44)` | contour `border` | menu contextuel, popover, barre d actions de selection |
-| 2 | `0 24px 64px rgba(0,0,0,0.60)` | voile `scrim` | modale, feuille de configuration, mur premium |
+| 2 | `0 24px 64px rgba(0,0,0,0.60)` | voile `scrim` | modale, feuille de configuration |
 
 Aucune ombre sur les cartes. La hierarchie passe par la valeur de surface.
 
@@ -214,7 +213,6 @@ Tailles de rendu : 22 dans les lignes de reglages, 20 dans la barre laterale, 18
 | Parcourir | `safari` |
 | Rechercher | `magnifyingglass` |
 | Reglages | `gearshape` |
-| Premium | `crown` |
 | Incognito | `eye.slash` |
 | Verrouillage | `lock` |
 | Sens de lecture | `text.book.closed` |
@@ -270,7 +268,6 @@ Cinq entrees dans cet ordre strict : Bibliotheque, Historique, Parcourir, Recher
 | Repos | aucun | `text.secondary` | `text.tertiary` |
 | Survol | `surface.card` | `text.secondary` | `text.tertiary` |
 
-Le bloc d appel premium se cale en bas de la barre laterale : hauteur 52, rayon 12, fond `surface.premium`, couronne et titre `Passer a Premium` en `accent`, sous titre `7 jours offerts` en `text.tertiary`.
 
 ### 2.3 Zone de contenu, deux gabarits
 
@@ -356,11 +353,6 @@ Cinq variantes :
 4. **Curseur** : libelle sur la premiere ligne, valeur numerique alignee a droite en `footnote`, curseur sur la seconde ligne occupant la largeur utile a partir de 58.
 5. **Compteur** : valeur puis deux chevrons empiles dans un conteneur de 30 par 28, rayon 8, fond `surface.menu`.
 
-**Variante premium**, deux formes :
-
-- **Appel a l abonnement** : fond `surface.premium`, couronne en `accent` comme icone de gauche, libelle en `accent` graisse 600, chevron simple en `accent` a droite.
-- **Fonction verrouillee** : fond `surface.premium`, icone propre a la fonction en `accent`, libelle en `accent`, couronne en `accent` a droite, aucun controle. Le clic ouvre le mur premium, pas le reglage.
-
 Etats :
 
 | Etat | Fond | Libelle | Icone | Complement |
@@ -370,7 +362,6 @@ Etats :
 | Presse | `surface.cardHover` | `text.primary` | `accent` | controle en `accent.pressed` |
 | Focus clavier | inchange | inchange | inchange | contour 2 en `accent`, decalage 2 |
 | Desactive | inchange | `text.disabled` | `text.disabled` | controle en `surface.cardHover` |
-| Verrouille premium | `surface.premium` | `accent` | `accent` | couronne a droite |
 
 Au dela de la taille de texte dynamique `large`, la ligne passe en disposition verticale : libelle sur la premiere ligne, controle sur la seconde, aligne a gauche a 58.
 
@@ -466,7 +457,6 @@ Selection multiple par clic maintenu ou Cmd clic.
 | Modale et feuille | 34 | 17, capsule |
 | Barre d outils | 28 | 8 |
 | Etat vide et etat d erreur | 32 | 9 |
-| Mur premium | 42 | 12 |
 | iPhone, action principale | 44 | 10 |
 
 Etats : survol eclaircit le fond d un cran, presse utilise `accent.pressed` ou le fond de survol assombri, focus clavier ajoute le contour de 2 en `accent` avec un decalage de 2, desactive passe le texte en `text.disabled` et le fond a une version desaturee du fond de repos. Un bouton de confirmation desactive dans une modale prend le fond `surface.selected` et le texte `text.primary` a opacite reduite.
@@ -646,28 +636,26 @@ Colonne de 580 centree. Dix sept sections dans cet ordre exact. Les quatre premi
 
 | Ordre | Section | Lignes | Type |
 |---|---|---|---|
-| 1 | Abonnement | Passer a Premium | premium, chevron |
-| | | Restaurer les achats | navigation |
-| 2 | Confidentialite | Incognito | premium, couronne |
+| 1 | Confidentialite | Incognito | interrupteur |
 | | | Verrouillage de l app | interrupteur |
-| 3 | General | Langue | valeur `Systeme` en `accent` |
+| 2 | General | Langue | valeur `Systeme` en `accent` |
 | | | Apparence | valeur |
 | | | Theme | valeur |
 | | | Notifications de nouveaux chapitres | interrupteur |
-| 4 | Bibliotheque | Trier par, Ordre, Grouper par categorie | valeur, valeur, interrupteur |
-| 5 | Traduction | Traduire les bulles, Langue cible, Police de remplacement | premium, valeur, navigation |
-| 6 | Lecteur | Sens de lecture, Mise en page, Fond du lecteur, Rogner les bords | valeur, valeur, valeur, interrupteur |
-| 7 | Prereglages de lecture | N prereglages, Appliquer au chapitre suivant | navigation, interrupteur |
-| 8 | Comportement du lecteur | Tourne de page animee, Garder l ecran allume, Tourner avec les touches de volume, Pages gardees en memoire, Luminosite du lecteur | interrupteur, interrupteur, interrupteur, compteur, curseur |
-| 9 | Bibliotheque | Marquer lu a la derniere page, Supprimer apres lecture, Mettre a jour au lancement | interrupteur, valeur, interrupteur |
-| 10 | Pont navigateur | Extension Safari, Ouvrir les liens dans Yum | navigation, interrupteur |
-| 11 | Suivis | N service connecte, Envoyer la progression, Confirmer avant d envoyer | navigation, interrupteur, interrupteur |
-| 12 | Telechargements | Qualite, En Wi-Fi seulement, Chapitres a l avance, Emplacement | valeur, interrupteur, compteur, navigation |
-| 13 | Sauvegarde et restauration | Sauvegarder maintenant, Sauvegarde automatique, Restaurer depuis un fichier | navigation, valeur, navigation |
-| 14 | iCloud | Synchroniser la progression, Synchroniser la bibliotheque, Dernier envoi | interrupteur, interrupteur, valeur |
-| 15 | Stockage | Detail du stockage, Vider le cache d images, Supprimer tous les telechargements | navigation, navigation, navigation |
-| 16 | Assistance | Aide, Signaler un bug, Statistiques de lecture | navigation, navigation, navigation |
-| 17 | A propos | Version, Nouveautes, Mentions legales | valeur, navigation, navigation |
+| 3 | Bibliotheque | Trier par, Ordre, Grouper par categorie | valeur, valeur, interrupteur |
+| 4 | Traduction | Traduire les bulles, Langue cible, Police de remplacement | interrupteur, valeur, navigation |
+| 5 | Lecteur | Sens de lecture, Mise en page, Fond du lecteur, Rogner les bords | valeur, valeur, valeur, interrupteur |
+| 6 | Prereglages de lecture | N prereglages, Appliquer au chapitre suivant | navigation, interrupteur |
+| 7 | Comportement du lecteur | Tourne de page animee, Garder l ecran allume, Tourner avec les touches de volume, Pages gardees en memoire, Luminosite du lecteur | interrupteur, interrupteur, interrupteur, compteur, curseur |
+| 8 | Bibliotheque | Marquer lu a la derniere page, Supprimer apres lecture, Mettre a jour au lancement | interrupteur, valeur, interrupteur |
+| 9 | Pont navigateur | Extension Safari, Ouvrir les liens dans Yum | navigation, interrupteur |
+| 10 | Suivis | N service connecte, Envoyer la progression, Confirmer avant d envoyer | navigation, interrupteur, interrupteur |
+| 11 | Telechargements | Qualite, En Wi-Fi seulement, Chapitres a l avance, Emplacement | valeur, interrupteur, compteur, navigation |
+| 12 | Sauvegarde et restauration | Sauvegarder maintenant, Sauvegarde automatique, Restaurer depuis un fichier | navigation, valeur, navigation |
+| 13 | iCloud | Synchroniser la progression, Synchroniser la bibliotheque, Dernier envoi | interrupteur, interrupteur, valeur |
+| 14 | Stockage | Detail du stockage, Vider le cache d images, Supprimer tous les telechargements | navigation, navigation, navigation |
+| 15 | Assistance | Aide, Signaler un bug, Statistiques de lecture | navigation, navigation, navigation |
+| 16 | A propos | Version, Nouveautes, Mentions legales | valeur, navigation, navigation |
 
 Les sections 4 et 9 portent le meme nom, Bibliotheque. La 4 regle le tri, la 9 regle le comportement. Leurs descriptions les distinguent.
 
@@ -754,7 +742,7 @@ Les zones ne sont jamais visibles, sauf pendant le tutoriel de premiere ouvertur
 
 **Double page** : deux pages cote a cote, sans separateur, sans ombre, gouttiere de 4. En mode droite a gauche, la premiere page de la paire est a droite. Sur iPad paysage 556 par 834 par page. En portrait et sur iPhone, page unique.
 
-**Panneau de filtres** : popover ancre au bouton Filtres, largeur 300, rayon 14, elevation 1. Curseurs Luminosite, Chaleur, Nettete, Contraste, Gamma. Separateur. Interrupteurs Reduction du bruit, Amelioration IA, Colorisation IA. Colorisation IA est verrouillee premium et porte une couronne au lieu d un interrupteur. Chaque modification s applique en direct sur la page visible.
+**Panneau de filtres** : popover ancre au bouton Filtres, largeur 300, rayon 14, elevation 1. Curseurs Luminosite, Chaleur, Nettete, Contraste, Gamma. Separateur. Interrupteurs Reduction du bruit, Amelioration IA, Colorisation IA. Chaque modification s applique en direct sur la page visible.
 
 **Etats** : vide `Ce chapitre ne contient aucune page`, chargement deux squelettes aux dimensions exactes des pages, charge, erreur `La page N est illisible`.
 
@@ -776,42 +764,12 @@ Defilement vertical continu, aucune animation de transition.
 
 La barre inferieure du webtoon n a pas de pastille de curseur : la progression est une barre de lecture seule, parce que le defilement continu n a pas de position discrete a saisir.
 
-### 5.9 Mur premium
-
-| Propriete | Valeur |
-|---|---|
-| Largeur | 360 |
-| Hauteur, cas de reference | 420 |
-| Rayon | 16 |
-| Fond | `#141A28` |
-| Contour | 1 px `#24344F` |
-| Elevation | 2 sur voile `scrim` |
-| Couronne | 56 par 40 en `accent`, centree |
-| Titre | `Premium`, 20 graisse 700, centre |
-| Sous titre | `Debloquez toutes les fonctions avancees`, `footnote` `text.tertiary`, centre |
-| Avantages | cinq lignes, `callout` `text.secondary`, coche `accent` de 14, gouttiere 12, interligne 14 |
-| Bouton | 296 par 42, rayon 12, principal |
-| Mention de prix | `caption` `text.quaternary`, centree |
-
-Liste des avantages, dans cet ordre :
-
-1. Traduction et colorisation par IA
-2. Serveurs Komga, Kavita, Jellyfin, OPDS
-3. Suivis sur vos services de suivi
-4. Telechargements hors ligne
-5. Sauvegarde et synchronisation iCloud
-
-Aucun compte a rebours, aucune formulation qui presse l utilisateur.
-
-**Etats** : vide et chargement montrent la meme feuille en squelettes, erreur montre `La boutique ne repond pas` avec deux capsules Plus tard et Reessayer.
-
 ### 5.10 Premiere ouverture
 
-Trois etapes maximum, une seule decision par etape. Points de progression en haut a droite, 7 de diametre, actif en `accent`.
+Deux etapes maximum, une seule decision par etape. Points de progression en haut a droite, 7 de diametre, actif en `accent`.
 
 1. **Sens de lecture** : trois cartes de 300, rayon 16, apercu visuel de deux pages numerotees, contour de 3 en `accent` sur le choix actif. Droite a gauche a gauche de l ecran, Gauche a droite au centre, Vertical a droite. La carte Vertical montre deux pages empilees plutot que cote a cote.
 2. **Premiere source** : les trois choix les plus courants en lignes de source de 72, Parcourir un dossier local, Ajouter un serveur Komga, Ajouter un catalogue OPDS, puis le lien `Voir les douze types de sources`. Les quatre etats de cette etape sont ceux d une source : rien, connexion en cours, connectee avec le nombre de series, adresse injoignable.
-3. **Essai premium** : liste des avantages, bouton Commencer l essai, et **Plus tard aussi visible que le bouton d essai**, meme hauteur, meme rayon, fond `surface.menu` avec contour.
 
 ---
 
@@ -828,7 +786,6 @@ Regles d ecriture : voix active, le bouton dit ce qui se passe. Le meme mot pour
 | Barre laterale 3 | Parcourir |
 | Barre laterale 4 | Rechercher |
 | Barre laterale 5 | Reglages |
-| Bloc bas de barre laterale | Passer a Premium / 7 jours offerts |
 | Retour depuis la fiche | Bibliotheque |
 
 ### 6.2 Espaces reserves de champ
@@ -869,7 +826,6 @@ Regles d ecriture : voix active, le bouton dit ce qui se passe. Le meme mot pour
 | Lecteur pagine | La page 14 est illisible | Le fichier contient une image que Yum ne sait pas ouvrir. Vous pouvez sauter cette page, ou signaler le fichier pour qu il soit pris en charge. | Sauter la page / Signaler le fichier |
 | Lecteur webtoon | Le defilement s est arrete a 38 pour cent | Les images suivantes ne se telechargent plus. Votre position est gardee, vous reprendrez ici. | Reessayer / Revenir a la fiche |
 | Feuille de configuration | Le serveur ne repond pas | Verifiez l adresse et la connexion. | Reessayer |
-| Mur premium | La boutique ne repond pas | Yum n a pas pu lire les tarifs. Votre abonnement actuel, s il existe, reste actif. Reessayez dans un moment. | Plus tard / Reessayer |
 
 Le nombre et le nom cites dans une erreur sont toujours les valeurs reelles. Une erreur qui ne peut pas nommer sa cause nomme au moins l heure de la derniere tentative.
 
@@ -889,8 +845,7 @@ Le nombre et le nom cites dans une erreur sont toujours les valeurs reelles. Une
 | Historique | Effacer l historique |
 | Modale d ajout par adresse | Annuler / Ajouter |
 | Feuille de configuration | Tester la connexion / Annuler / Enregistrer |
-| Mur premium | Essayer 7 jours gratuitement / Plus tard |
-| Premiere ouverture | Continuer / Passer / Commencer l essai / Plus tard |
+| Premiere ouverture | Continuer / Passer |
 | Recherche, par source | Tout voir |
 | Reglages, banniere iCloud | Reessayer / Ouvrir les reglages du systeme |
 
@@ -932,7 +887,6 @@ Le nombre et le nom cites dans une erreur sont toujours les valeurs reelles. Une
 | Sous la carte A propos | Yum ne heberge aucun contenu. L application lit les fichiers et les serveurs que vous lui indiquez. Vous restez responsable de la legalite de vos sources. |
 | Feuille de configuration | Les identifiants sont stockes dans le trousseau du systeme. |
 | Retour de test reussi | 4 bibliotheques trouvees |
-| Sous le bouton du mur premium | Puis 3,99 euros par mois. Resiliable a tout moment. |
 | Etape 2 de la premiere ouverture | Yum ne heberge aucun contenu. Il lit les fichiers et les serveurs que vous lui indiquez. |
 | Liste des sources | Reordonnancement par glisser deposer lorsque le tri est en mode Personnalise. |
 

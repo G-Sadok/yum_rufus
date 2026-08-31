@@ -28,10 +28,6 @@ public enum DecisionDeSynchronisationICloud: Sendable, Equatable, Hashable {
     /// Une session incognito court, section 11.
     case suspendueParIncognito
 
-    /// La synchronisation iCloud demande un abonnement que l utilisateur n a
-    /// pas, section 10.
-    case verrouilleeParPremium
-
     /// L interrupteur de la section iCloud qui gouverne cette entite est
     /// inactif.
     case desactiveeParReglage
@@ -57,7 +53,7 @@ public enum DecisionDeSynchronisationICloud: Sendable, Equatable, Hashable {
     public var entreAuJournal: Bool {
         switch self {
         case .envoyer, .differeeHorsLigne: true
-        case .suspendueParIncognito, .verrouilleeParPremium, .desactiveeParReglage, .compteAbsent: false
+        case .suspendueParIncognito, .desactiveeParReglage, .compteAbsent: false
         }
     }
 }
@@ -67,9 +63,6 @@ public struct ContexteICloud: Sendable, Equatable {
     /// Reglages de l application, pour les deux interrupteurs de la section
     /// iCloud.
     public let reglages: ReglagesDeLApplication
-
-    /// Etat de l abonnement.
-    public let premium: EtatDePremium
 
     /// Session incognito au moment de la question.
     public let session: SessionIncognito
@@ -82,13 +75,11 @@ public struct ContexteICloud: Sendable, Equatable {
 
     public init(
         reglages: ReglagesDeLApplication,
-        premium: EtatDePremium,
         session: SessionIncognito = .inactive,
         compteOuvert: Bool = true,
         enLigne: Bool = true
     ) {
         self.reglages = reglages
-        self.premium = premium
         self.session = session
         self.compteOuvert = compteOuvert
         self.enLigne = enLigne
@@ -98,7 +89,6 @@ public struct ContexteICloud: Sendable, Equatable {
     public func avecReseau(_ joignable: Bool) -> ContexteICloud {
         ContexteICloud(
             reglages: reglages,
-            premium: premium,
             session: session,
             compteOuvert: compteOuvert,
             enLigne: joignable
@@ -212,10 +202,6 @@ public enum EtatDeSynchronisationICloud: Sendable, Equatable, Hashable {
 
 /// Regle d envoi vers iCloud.
 public enum SynchronisationICloud {
-    /// Fonction de la matrice premium dont la synchronisation depend,
-    /// section 10.
-    public static let fonctionConcernee = FonctionDeLApplication.synchronisationICloud
-
     /// Decide du sort d un changement de cette entite.
     public static func decision(
         pour entite: EntiteSynchronisee,
@@ -224,10 +210,6 @@ public enum SynchronisationICloud {
         // Premiere question, et elle passe avant toutes les autres.
         guard contexte.session.autorise(entite.ecritureConcernee) else {
             return .suspendueParIncognito
-        }
-
-        guard MatriceDeVerrouillage.acces(a: fonctionConcernee, selon: contexte.premium).estOuvert else {
-            return .verrouilleeParPremium
         }
 
         guard contexte.reglages.booleen(entite.reglageConcerne) else {

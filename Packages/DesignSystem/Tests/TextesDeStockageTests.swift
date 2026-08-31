@@ -224,7 +224,7 @@ struct TexteDeStockageTests {
     @Test("Le titre est celui de la ligne de reglages qui mene ici")
     func leTitreEstCeluiDeLaLigneDeReglages() throws {
         let libelles = try libelles()
-        let ligne = try #require(try SpecificationDeDesign.ligne(contenant: "| 15 | Stockage |"))
+        let ligne = try #require(try SpecificationDeDesign.ligne(contenant: "| 14 | Stockage |"))
 
         #expect(ligne.contains("Detail du stockage"))
         #expect(libelles.titre == "Detail du stockage")

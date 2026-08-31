@@ -282,7 +282,7 @@ enum AtelierDeSynchronisationICloud {
 
     /// Installation abonnee, en ligne, sans session incognito.
     static var contexteNominal: ContexteICloud {
-        ContexteICloud(reglages: reglagesActifs, premium: .definitif)
+        ContexteICloud(reglages: reglagesActifs)
     }
 
     /// Progression d un chapitre a un instant donne.

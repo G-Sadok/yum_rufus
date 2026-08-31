@@ -1,0 +1,142 @@
+name: DMG personnel
+
+# Construit un DMG utilisable tout de suite, sans certificat ni notarisation.
+#
+# C est le complement de release.yml, pas son remplacant. La publication
+# officielle signe et notarise, parce qu un DMG distribue a des tiers doit
+# passer Gatekeeper sans que personne n ait a le contourner. Ce workflow la
+# sert au cas ou l on veut simplement installer l application sur ses propres
+# machines, sans compte de developpeur Apple.
+#
+# Le DMG produit n est pas signe. macOS le mettra en quarantaine au
+# telechargement, et les notes de la release disent comment la lever.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version a construire, par exemple 1.0.0"
+        required: true
+        default: "1.0.0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dmg-personnel
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    name: Construire le DMG sans signature
+    runs-on: macos-15
+    timeout-minutes: 90
+
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determiner la version
+        id: version
+        env:
+          # La version passe par l environnement et non par une interpolation
+          # dans le corps du script, pour la meme raison que dans release.yml.
+          VERSION_DEMANDEE: ${{ github.event.inputs.version }}
+        run: |
+          VERSION="$VERSION_DEMANDEE"
+
+          if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Version $VERSION non conforme au versionnage semantique."
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "etiquette=v$VERSION-personnel" >> "$GITHUB_OUTPUT"
+
+      - name: Selectionner Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Construire le DMG
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          SANS_SIGNATURE: "1"
+          SANS_NOTARISATION: "1"
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/build-dmg.sh "$VERSION"
+
+      - name: Retrouver le DMG et sa somme de controle
+        id: paquet
+        run: |
+          CHEMIN=$(find build -name "*.dmg" -maxdepth 2 -print -quit)
+
+          if [ -z "$CHEMIN" ]; then
+            echo "Aucun DMG produit."
+            exit 1
+          fi
+
+          echo "chemin=$CHEMIN" >> "$GITHUB_OUTPUT"
+          echo "somme=$(shasum -a 256 "$CHEMIN" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "DMG : $CHEMIN"
+
+      - name: Rediger les notes
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          SOMME: ${{ steps.paquet.outputs.somme }}
+          NOM: ${{ github.event.repository.name }}
+        run: |
+          cat > notes.md <<NOTES
+          Construction personnelle de la version $VERSION, **sans signature ni notarisation**.
+
+          ## Installer
+
+          Ouvrir le DMG, glisser Yum dans Applications, puis lever la
+          quarantaine que macOS pose sur tout binaire telecharge et non signe :
+
+          \`\`\`bash
+          xattr -dr com.apple.quarantine /Applications/Yum.app
+          \`\`\`
+
+          Sans cette commande, macOS refuse de lancer l application et affiche
+          qu elle est endommagee. Elle ne l est pas : elle n est simplement pas
+          signee par un certificat que le systeme reconnait.
+
+          ## Somme de controle
+
+          \`\`\`
+          $SOMME
+          \`\`\`
+
+          ## Ce que cette construction n est pas
+
+          Ce DMG ne convient pas a une distribution a des tiers. Pour cela,
+          poser une etiquette \`v$VERSION\` declenche \`release.yml\`, qui signe
+          et notarise, a condition que les secrets Apple soient configures.
+          NOTES
+
+          cat notes.md
+
+      - name: Publier la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ETIQUETTE: ${{ steps.version.outputs.etiquette }}
+          VERSION: ${{ steps.version.outputs.version }}
+          DMG: ${{ steps.paquet.outputs.chemin }}
+        run: |
+          gh release delete "$ETIQUETTE" --yes --cleanup-tag 2>/dev/null || true
+
+          gh release create "$ETIQUETTE" \
+            --title "Yum $VERSION, construction personnelle" \
+            --notes-file notes.md \
+            --latest=false \
+            "$DMG"
+
+      - name: Conserver le DMG en artefact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yum-dmg-personnel
+          path: build/*.dmg
+          retention-days: 14

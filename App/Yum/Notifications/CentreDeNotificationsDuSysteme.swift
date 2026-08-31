@@ -1,7 +1,16 @@
 import Core
 import DesignSystem
 import Foundation
-import UserNotifications
+
+// Import en mode pre concurrence. `UNNotificationSettings` et
+// `UNNotificationRequest` ne sont pas `Sendable`, et la concurrence stricte de
+// Swift 6 refuse donc de les voir franchir la frontiere de cet acteur. Le
+// compilateur local laisse passer, celui de l integration continue non, et ce
+// fichier ne compilait que sur la machine de developpement.
+//
+// Le franchissement est sur ici : l acteur est le seul detenteur du centre du
+// systeme, et aucune de ces valeurs n est partagee avec un autre contexte.
+@preconcurrency import UserNotifications
 
 //
 // CentreDeNotificationsDuSysteme
@@ -47,25 +56,10 @@ actor CentreDeNotificationsDuSysteme: CentreDeNotifications {
     /// notifications arriver discretement, ce qui est exactement l usage de
     /// cette fonction.
     func autorisationAccordee() async -> Bool {
-        switch await statutDAutorisation() {
+        switch await centre.notificationSettings().authorizationStatus {
         case .authorized, .provisional, .ephemeral: true
         case .notDetermined, .denied: false
         @unknown default: false
-        }
-    }
-
-    /// Statut d autorisation seul, sans faire traverser les reglages.
-    ///
-    /// `notificationSettings()` rend un `UNNotificationSettings`, qui n est pas
-    /// `Sendable` et ne peut donc pas franchir la frontiere de cet acteur. Les
-    /// compilateurs recents laissent passer, celui de l integration continue
-    /// refuse. Le statut, lui, est une enumeration : il est extrait dans le
-    /// contexte d appel et c est lui seul qui revient.
-    private func statutDAutorisation() async -> UNAuthorizationStatus {
-        await withCheckedContinuation { suite in
-            centre.getNotificationSettings { reglages in
-                suite.resume(returning: reglages.authorizationStatus)
-            }
         }
     }
 

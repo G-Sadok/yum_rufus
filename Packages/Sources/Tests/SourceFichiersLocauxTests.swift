@@ -99,9 +99,19 @@ struct SourceFichiersLocauxTests {
         let environnement = try EnvironnementDeSource(arbre: arbre)
         let source = try environnement.sourcePremierLancement()
 
-        let erreur = await #expect(throws: ErreurDeDocument.self) {
+        // L erreur est capturee a la main plutot que par la valeur rendue par
+        // `#expect(throws:)`. Cette valeur n existe pas dans toutes les versions
+        // de swift-testing : celle de l integration continue rend un tuple vide,
+        // et le test ne compilait que sur la machine de developpement.
+        var levee: (any Error)?
+
+        do {
             _ = try await source.pages(pour: "Serie E/Chapitre 2.pdf")
+        } catch {
+            levee = error
         }
+
+        let erreur = levee as? ErreurDeDocument
 
         // Le cas est compare, pas le chemin en entier : la source travaille sur
         // le dossier tel que le systeme le lui a rendu, prefixe /private compris,

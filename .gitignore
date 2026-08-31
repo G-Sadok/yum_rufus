@@ -31,4 +31,8 @@ loop/boucle.pid
 .DS_Store
 
 # Jeux de test volumineux
+# Le corpus de 5000 series et 200000 chapitres de la section 12 se reconstruit
+# a l identique depuis la graine de Tests/JeuDeDonnees/manifeste.json, qui est
+# suivi. Le suivre lui aussi ajouterait une quarantaine de mega octets binaires
+# a chaque clone, pour une donnee que scripts/generer-jeu-de-test.sh regenere.
 Tests/JeuDeDonnees/genere/

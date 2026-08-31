@@ -30,6 +30,17 @@ struct MemoireDeDecodageTests {
     private let decodeur = DecodeurDePage()
     private let zoneDeLecture = TailleEnPixels(largeur: 1600, hauteur: 2400)
 
+    /// Part du budget de la section 12 qui revient a la lecture elle meme.
+    ///
+    /// C est la difference entre les deux budgets memoire du tableau : 400 Mo
+    /// en lecture, moins 200 Mo au repos avec une bibliotheque de 5000 series.
+    /// Ce qui reste est ce qu un chapitre ouvert, son cache et un geste de zoom
+    /// ont le droit d ajouter.
+    ///
+    /// La borne est derivee du cahier et non choisie ici. Un seuil invente pour
+    /// qu une mesure passe serait un budget elargi sous un autre nom.
+    private let partDeLecture = 200_000_000
+
     @Test("La mesure d empreinte repond vraiment")
     func mesureDisponible() {
         // Un noyau qui refuserait task_info rendrait zero, et tous les plafonds
@@ -78,13 +89,15 @@ struct MemoireDeDecodageTests {
         #expect(await reserve.octetsRetenus == 0)
     }
 
-    @Test("Douze pages simultanees restent sous le budget de lecture")
+    @Test("Douze pages simultanees restent sous la part de lecture du budget")
     func douzePagesSimultanees() throws {
         let donnees = try chauffer()
-
         var gardees: [ImageDePage] = []
-        for index in 0..<12 {
-            try gardees.append(decodeur.decoder(donnees, nom: "page-\(index).jpg", dans: zoneDeLecture))
+
+        let variation = try MesureDeMemoire.variation {
+            for index in 0..<12 {
+                try gardees.append(decodeur.decoder(donnees, nom: "page-\(index).jpg", dans: zoneDeLecture))
+            }
         }
 
         #expect(gardees.count == 12)
@@ -94,10 +107,27 @@ struct MemoireDeDecodageTests {
         let cumul = gardees.reduce(0) { $0 + $1.octetsEnMemoire }
         #expect(cumul < 12 * 12_000_000)
 
-        // Les memes douze pages en pleine resolution peseraient 648 Mo. Le
-        // cumul echouerait ci dessus, et l empreinte du processus ici, sur le
-        // budget de lecture de la section 12.
-        #expect(MesureDeMemoire.octets() < 400_000_000)
+        // Ce qui est plafonne ici est la memoire imputable a la lecture, et non
+        // l empreinte absolue du processus.
+        //
+        // La version precedente comparait `MesureDeMemoire.octets()` aux 400 Mo
+        // de la section 12. Cette mesure la est l empreinte du processus de
+        // test entier, qui a execute deux mille cinq cents autres tests avant
+        // d arriver ici et dont l allocateur ne rend pas au systeme les regions
+        // liberees. Elle passait a 399 Mo et echouait a 429 des qu une suite
+        // s ajoutait ailleurs dans le paquet, sans que la chaine d images ait
+        // bouge d un octet. Un plafond qui depend de ce que les autres suites
+        // ont fait avant ne mesure pas la chaine d images.
+        //
+        // La borne retenue est `partDeLecture`, derivee des deux budgets
+        // memoire du cahier. Les memes douze pages en pleine resolution
+        // peseraient 648 Mo et feraient echouer les deux verifications.
+        //
+        // Le plafond absolu des 400 Mo n a pas disparu, il a change d endroit :
+        // `mesurer-budgets` le mesure sur le corpus complet, dans un processus
+        // qui ne fait que lire un chapitre, et l integration continue echoue
+        // s il est franchi.
+        #expect(variation < partDeLecture)
     }
 
     @Test("Decoder quarante pages a la suite ne fait pas gonfler le processus")
@@ -117,17 +147,25 @@ struct MemoireDeDecodageTests {
         #expect(variation < 60_000_000)
     }
 
-    @Test("L empreinte du processus reste loin du budget de lecture pendant un zoom")
+    @Test("Un zoom coute une page entiere et rien de plus")
     func empreintePendantLeZoom() async throws {
         let donnees = try chauffer()
         let reserve = ReserveDeZoom()
 
+        let avant = MesureDeMemoire.octets()
         try await reserve.commencer(sur: donnees, nom: "zoom.jpg")
-        let pendantLeGeste = MesureDeMemoire.octets()
+        let pendantLeGeste = MesureDeMemoire.octets() - avant
         await reserve.terminer()
 
-        // Budget memoire en lecture de la section 12.
-        #expect(pendantLeGeste < 400_000_000)
+        // Comme pour les douze pages, ce qui est plafonne est la memoire que le
+        // geste ajoute, pas l empreinte absolue d un processus de test qui a
+        // deja tout fait avant.
+        //
+        // Que la reserve ne retienne qu une seule page entiere est verifie
+        // ailleurs, a l octet pres, par `coutCompareDuZoom`. Ce plafond ci est
+        // un garde fou de second rideau : il attrape ce que la matrice ne voit
+        // pas, un tampon intermediaire d Image I/O qui resterait alloue.
+        #expect(pendantLeGeste < partDeLecture)
     }
 
     /// Fabrique la page, decode une fois, et rend les octets.

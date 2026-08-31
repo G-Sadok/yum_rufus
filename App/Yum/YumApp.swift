@@ -21,6 +21,7 @@ struct YumApp: App {
     @State private var statistiques: SessionDeStatistiques
     @State private var stockage: SessionDeStockage
     @State private var prereglages: SessionDePrereglages
+    @State private var lecture = SessionDeLecture()
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -62,8 +63,14 @@ struct YumApp: App {
                 reglages: reglages,
                 statistiques: statistiques,
                 stockage: stockage,
-                prereglages: prereglages
+                prereglages: prereglages,
+                lecture: lecture
             )
+            // Ce que le systeme envoie quand on ouvre un fichier avec Yum,
+            // depuis le clic droit ou par glisser sur l icone.
+            .onOpenURL { url in
+                lecture.ouvrir(url)
+            }
         }
         #if os(macOS)
         .defaultSize(

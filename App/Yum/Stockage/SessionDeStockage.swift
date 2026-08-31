@@ -21,10 +21,10 @@ import Storage
 final class SessionDeStockage {
     private(set) var etat: EtatDeGestionDuStockage = .chargement
 
-    private let inspecteur: InspecteurDeStockage
+    private let inspecteur: InspecteurDeStockageSurDisque
 
     init(emplacements: EmplacementsDuStockage) {
-        inspecteur = InspecteurDeStockage(emplacements: emplacements)
+        inspecteur = InspecteurDeStockageSurDisque(emplacements: emplacements)
     }
 
     func recharger() async {

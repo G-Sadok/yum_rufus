@@ -312,6 +312,15 @@ enum Chaines {
     }
 
     /// Etats d erreur, tableau 6.4.
+    /// Lecteur pagine, section 5.7.
+    enum Lecteur {
+        static let fermer = String(localized: "lecteur.fermer")
+        static let pagePrecedente = String(localized: "lecteur.pagePrecedente")
+        static let pageSuivante = String(localized: "lecteur.pageSuivante")
+        static let erreurTitre = String(localized: "lecteur.erreur.titre")
+        static let erreurPhrase = String(localized: "lecteur.erreur.phrase")
+    }
+
     enum Erreur {
         static let reessayer = String(localized: "erreur.reessayer")
         static let reglagesTitre = String(localized: "erreur.reglages.titre")

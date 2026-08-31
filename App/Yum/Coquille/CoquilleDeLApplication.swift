@@ -35,6 +35,9 @@ struct CoquilleDeLApplication: View {
     let stockage: SessionDeStockage
     let prereglages: SessionDePrereglages
 
+    /// Lecteur, pose par dessus la coquille quand un fichier est ouvert.
+    let lecture: SessionDeLecture
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -60,6 +63,18 @@ struct CoquilleDeLApplication: View {
             libelles: .duCatalogue,
             deverrouiller: deverrouiller
         )
+        // Le lecteur couvre la coquille entiere : la these de la section 5.7
+        // veut que rien d autre ne reste visible pendant la lecture.
+        .overlay {
+            if lecture.estOuvert {
+                VueDeLecteur(
+                    etat: lecture.etat,
+                    libelles: lecture.libelles,
+                    commandes: lecture.commandes
+                )
+                .transition(.opacity)
+            }
+        }
         .palette(theme: .defaut, apparence: .defaut)
         .modifier(TailleMinimaleDeFenetre())
         .task { ouvrirLeParcoursDAccueil() }

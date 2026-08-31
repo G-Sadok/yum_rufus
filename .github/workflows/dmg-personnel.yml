@@ -58,28 +58,61 @@ jobs:
       - name: Selectionner Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
 
-      - name: Construire le DMG
+      # La chaine est ecrite ici plutot que reprise de build-dmg.sh, qui appelle
+      # xcodebuild depuis la racine du depot sans lui passer le projet. Or le
+      # projet vit dans App/, et la racine n en contient aucun : le script
+      # echoue avec "does not contain an Xcode project". C est le meme defaut
+      # que verifications.sh a deja corrige de son cote.
+      #
+      # Sans signature, il n y a de toute facon ni archive a exporter ni ticket
+      # a agrafer : compiler puis empaqueter suffit.
+      - name: Construire l application
         env:
           VERSION: ${{ steps.version.outputs.version }}
-          SANS_SIGNATURE: "1"
-          SANS_NOTARISATION: "1"
         run: |
-          chmod +x scripts/*.sh
-          ./scripts/build-dmg.sh "$VERSION"
+          xcodebuild build \
+            -project App/Yum.xcodeproj \
+            -scheme Yum \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build/DerivedData \
+            MARKETING_VERSION="$VERSION" \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            -quiet
 
-      - name: Retrouver le DMG et sa somme de controle
+      - name: Empaqueter le DMG
         id: paquet
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          CHEMIN=$(find build -name "*.dmg" -maxdepth 2 -print -quit)
+          APP=$(find build/DerivedData/Build/Products -name "Yum.app" -maxdepth 3 -print -quit)
 
-          if [ -z "$CHEMIN" ]; then
-            echo "Aucun DMG produit."
+          if [ -z "$APP" ]; then
+            echo "Aucune application produite."
             exit 1
           fi
 
+          # Le lien vers Applications est ce qui rend le DMG installable par
+          # glisser deposer. Sans lui, l utilisateur lance l application depuis
+          # le volume monte, ou elle se comporte parfois differemment.
+          mkdir -p build/staging
+          cp -R "$APP" build/staging/
+          ln -s /Applications build/staging/Applications
+
+          CHEMIN="build/Yum-$VERSION.dmg"
+
+          hdiutil create \
+            -volname "Yum $VERSION" \
+            -srcfolder build/staging \
+            -ov \
+            -format UDZO \
+            "$CHEMIN"
+
           echo "chemin=$CHEMIN" >> "$GITHUB_OUTPUT"
           echo "somme=$(shasum -a 256 "$CHEMIN" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
-          echo "DMG : $CHEMIN"
+          ls -lh "$CHEMIN"
 
       - name: Rediger les notes
         env:

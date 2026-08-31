@@ -112,11 +112,19 @@ jobs:
           path: TestResults.xcresult
           retention-days: 7
 
+  # Les sept budgets de la section 12. Ce travail est bloquant, sur toutes les
+  # branches, et sans repli silencieux : une etape qui sortirait en zero parce
+  # qu un outil manque rendrait la chaine verte sans avoir rien mesure, ce qui
+  # est exactement ce que la section 14 interdit.
+  #
+  # Il est separe des verifications pour que la generation du corpus de 200000
+  # chapitres ne rallonge pas le retour du travail principal, et il tourne sur
+  # sa propre machine pour que rien d autre ne perturbe les deux budgets
+  # memoire.
   performance:
     name: Budgets de performance
     runs-on: macos-15
     timeout-minutes: 60
-    if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/dev')
 
     steps:
       - name: Recuperer le depot
@@ -125,33 +133,17 @@ jobs:
       - name: Selectionner Xcode
         run: sudo xcode-select -switch /Applications/Xcode_16.app
 
-      - name: Generer le jeu de test volumineux
-        run: |
-          if [ -f scripts/generer-jeu-de-test.sh ]; then
-            chmod +x scripts/generer-jeu-de-test.sh
-            ./scripts/generer-jeu-de-test.sh 5000 200000
-          else
-            echo "Generateur de jeu de test absent, etape ignoree."
-            exit 0
-          fi
+      - name: Mettre en cache les dependances Swift
+        uses: actions/cache@v4
+        with:
+          path: Packages/.build
+          key: budgets-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: budgets-${{ runner.os }}-
 
-      - name: Detecter le projet Xcode
-        id: detection
+      - name: Generer le corpus de 5000 series et 200000 chapitres
         run: |
-          PROJET=$(find App -maxdepth 2 \
-            \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)
-          if [ -n "$PROJET" ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "Pas encore de projet Xcode, aucun budget a mesurer."
-          fi
+          chmod +x scripts/*.sh
+          ./scripts/generer-jeu-de-test.sh
 
-      - name: Mesurer les budgets
-        if: steps.detection.outputs.present == 'true'
-        run: |
-          xcodebuild test \
-            -scheme Yum \
-            -destination 'platform=macOS' \
-            -only-testing:YumPerformanceTests \
-            | xcpretty && exit ${PIPESTATUS[0]}
+      - name: Mesurer les sept budgets de la section 12
+        run: ./scripts/budgets-performance.sh

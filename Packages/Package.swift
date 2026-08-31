@@ -29,6 +29,14 @@ let package = Package(
         .library(name: "Intelligence", targets: ["Intelligence"]),
         .library(name: "Sync", targets: ["Sync"]),
         .library(name: "DesignSystem", targets: ["DesignSystem"]),
+
+        // Campagne de mesure des sept budgets de la section 12. C est un
+        // executable et non une suite de tests parce que deux des sept budgets
+        // sont des budgets memoire : les mesurer dans le processus de `swift
+        // test`, ou deux cent cinquante suites vivent de front, reviendrait a
+        // mesurer l empreinte des autres suites. Chaque budget est donc mesure
+        // dans un processus qui ne fait que cela.
+        .executable(name: "mesurer-budgets", targets: ["MesureDesBudgets"]),
     ],
     dependencies: [
         .package(url: "https://github.com/groue/GRDB.swift.git", from: "7.0.0"),
@@ -76,6 +84,22 @@ let package = Package(
 
         // Seul paquet autorise a importer SwiftUI.
         .target(name: "DesignSystem", dependencies: ["Core"], path: "DesignSystem/Sources"),
+
+        // Budgets de la section 12, generateur du jeu de test volumineux et
+        // campagne de mesure. Cette cible n est volontairement exposee par
+        // aucun produit de bibliotheque : rien de ce qu elle contient n a de
+        // raison d entrer dans l application livree, et un jour ou l autre
+        // quelqu un importerait le generateur depuis une vue.
+        .target(
+            name: "BudgetsDePerformance",
+            dependencies: ["Core", "Storage", "Archive", "ImagePipeline", "ReaderEngine"],
+            path: "Performance/Sources"
+        ),
+        .executableTarget(
+            name: "MesureDesBudgets",
+            dependencies: ["BudgetsDePerformance"],
+            path: "Performance/Mesure"
+        ),
 
         // Le dossier Fichiers porte le jeu de ComicInfo.xml et de commentaires
         // ComicBookInfo reels de la section 5.3, dont deux ne sont pas en
@@ -139,6 +163,15 @@ let package = Package(
             name: "SyncTests",
             dependencies: ["Sync", "Core", "Sources"],
             path: "Sync/Tests"
+        ),
+        // Cette suite ne mesure aucun budget, elle verifie l outil qui les
+        // mesure : que les sept valeurs de la section 12 sont bien celles du
+        // cahier, que l arbitre vire au rouge quand une mesure deborde, et que
+        // le generateur du jeu de test rend deux fois le meme corpus.
+        .testTarget(
+            name: "BudgetsDePerformanceTests",
+            dependencies: ["BudgetsDePerformance", "Core", "Storage", "Archive", "ImagePipeline"],
+            path: "Performance/Tests"
         ),
     ]
 )

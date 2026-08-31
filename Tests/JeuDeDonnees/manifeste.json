@@ -1,0 +1,9 @@
+{
+  "series": 5000,
+  "chapitres": 200000,
+  "graine": 1234567890123456789,
+  "chapitresSurDisque": 2,
+  "pagesParChapitreSurDisque": 30,
+  "largeurDePage": 2400,
+  "hauteurDePage": 3600
+}

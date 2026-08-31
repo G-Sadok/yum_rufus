@@ -23,6 +23,7 @@ struct YumApp: App {
     @State private var prereglages: SessionDePrereglages
     @State private var lecture = SessionDeLecture()
     @State private var parcourir: SessionDeParcourir
+    @State private var bibliotheque: SessionDeBibliotheque
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -55,6 +56,9 @@ struct YumApp: App {
         _parcourir = State(
             initialValue: SessionDeParcourir(magasin: services.sourcesInstallees)
         )
+        _bibliotheque = State(
+            initialValue: SessionDeBibliotheque(magasin: services.categories)
+        )
     }
 
     var body: some Scene {
@@ -69,7 +73,8 @@ struct YumApp: App {
                 stockage: stockage,
                 prereglages: prereglages,
                 lecture: lecture,
-                parcourir: parcourir
+                parcourir: parcourir,
+                bibliotheque: bibliotheque
             )
             // Ce que le systeme envoie quand on ouvre un fichier avec Yum,
             // depuis le clic droit ou par glisser sur l icone.

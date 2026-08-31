@@ -28,6 +28,9 @@ struct VueDeDestination: View {
     /// Ecran Parcourir, section 5.3.
     @Bindable var parcourir: SessionDeParcourir
 
+    /// Ecran Bibliotheque, section 5.1.
+    let bibliotheque: SessionDeBibliotheque
+
     /// Colonne de reglages, section 5.5.
     ///
     /// Liee et non simplement passee : la feuille posee par dessus la colonne
@@ -46,16 +49,12 @@ struct VueDeDestination: View {
     var body: some View {
         switch destination {
         case .bibliotheque:
-            VueDEtatDeContenu(
-                .vide(
-                    symbole: Jetons.icone(de: destination),
-                    titre: Chaines.EtatVide.bibliothequeTitre,
-                    phrase: Chaines.EtatVide.bibliothequePhrase,
-                    action: ActionDEtat(libelle: Chaines.EtatVide.bibliothequeAction) {
-                        ouvrir(.parcourir)
-                    }
-                )
+            VueDeBibliotheque(
+                etat: bibliotheque.etat,
+                libelles: .duCatalogue,
+                commandes: bibliotheque.commandes { ouvrir(.parcourir) }
             )
+            .task { bibliotheque.recharger() }
 
         case .historique:
             // La navigation vers le lecteur n existe pas encore dans la

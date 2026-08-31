@@ -59,6 +59,11 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Magasin de categories, nul tant que la base n est pas ouverte.
+    var categories: MagasinDeCategories? {
+        base.map { MagasinDeCategories(base: $0) }
+    }
+
     /// Magasin de sources, nul tant que la base n est pas ouverte.
     var sourcesInstallees: MagasinDeSources? {
         base.map { MagasinDeSources(base: $0) }

@@ -41,6 +41,9 @@ struct CoquilleDeLApplication: View {
     /// Ecran Parcourir, section 5.3.
     let parcourir: SessionDeParcourir
 
+    /// Ecran Bibliotheque, section 5.1.
+    let bibliotheque: SessionDeBibliotheque
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -121,7 +124,8 @@ struct CoquilleDeLApplication: View {
             statistiques: statistiques,
             stockage: stockage,
             prereglages: prereglages,
-            parcourir: parcourir
+            parcourir: parcourir,
+            bibliotheque: bibliotheque
         ) { cible in
             etat.selectionner(cible)
         }

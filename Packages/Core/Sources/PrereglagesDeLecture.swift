@@ -89,11 +89,25 @@ public struct ContenuDePrereglage: Sendable, Codable, Equatable, Hashable {
 
     /// Sens reellement applique, mise en page comprise.
     ///
-    /// Le menu de la section 6 ne propose que les deux sens horizontaux, le
-    /// sens vertical vient de la mise en page `continuVertical`. La regle est
-    /// celle de `MiseEnPage.sensImpose`, elle n est pas reinventee ici.
+    /// La mise en page verticale impose son sens, quel que soit le sens choisi.
+    /// La regle est celle de `MiseEnPage.sensImpose`, elle n est pas reinventee
+    /// ici.
     public var sensApplique: SensDeLecture {
         miseEnPage.sensImpose ?? sens
+    }
+
+    /// Mise en page reellement appliquee, sens de lecture compris.
+    ///
+    /// Reciproque de `sensApplique`. Le menu propose les trois sens, dont le
+    /// vertical, et celui ci n a de sens qu en defilement continu. Un lecteur
+    /// qui passe en lecture verticale depuis une double page obtient donc le
+    /// defilement continu, pas une double page parcourue de haut en bas.
+    ///
+    /// Les deux resolutions ne peuvent pas se contredire : la seule mise en
+    /// page qui impose un sens est celle que le seul sens imposant une mise en
+    /// page reclame.
+    public var miseEnPageAppliquee: MiseEnPage {
+        sens.miseEnPageImposee ?? miseEnPage
     }
 
     /// Reglages obtenus en posant ce prereglage sur ceux qui sont en place.

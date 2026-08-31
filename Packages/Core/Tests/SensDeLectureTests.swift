@@ -169,4 +169,60 @@ struct SensDeLectureTests {
         // moderne, alors qu un manga japonais se lit de droite a gauche.
         #expect(DirectionDInterface.pourLangue("ja") == .gaucheDroite)
     }
+
+    // MARK: Le sens vertical au menu
+
+    @Test("Le menu propose les trois sens, vertical compris")
+    func leMenuProposeLesTroisSens() {
+        #expect(SensDeLecture.choixDuMenuDeReglages == [.droiteGauche, .gaucheDroite, .hautBas])
+        #expect(SensDeLecture.choixDuMenuDeReglages.count == SensDeLecture.allCases.count)
+    }
+
+    @Test("Le sens vertical impose le defilement continu, les sens horizontaux n imposent rien")
+    func leSensVerticalImposeSaMiseEnPage() {
+        #expect(SensDeLecture.hautBas.miseEnPageImposee == .continuVertical)
+        #expect(SensDeLecture.droiteGauche.miseEnPageImposee == nil)
+        #expect(SensDeLecture.gaucheDroite.miseEnPageImposee == nil)
+    }
+
+    @Test(
+        "Choisir le sens vertical sur une mise en page paginee bascule la mise en page",
+        arguments: [MiseEnPage.pageUnique, .doublePage, .continuVertical]
+    )
+    func leSensVerticalEmporteLaMiseEnPage(depuis miseEnPage: MiseEnPage) {
+        // La combinaison qui interdisait autrefois d ouvrir le vertical au
+        // menu : un sens de haut en bas pose sur une double page. Elle se
+        // resout avant d atteindre le moteur.
+        let prereglage = ContenuDePrereglage(sens: .hautBas, miseEnPage: miseEnPage)
+
+        #expect(prereglage.miseEnPageAppliquee == .continuVertical)
+        #expect(prereglage.sensApplique == .hautBas)
+    }
+
+    @Test(
+        "Un sens horizontal laisse la mise en page telle qu elle est",
+        arguments: [MiseEnPage.pageUnique, .doublePage]
+    )
+    func unSensHorizontalNeTouchePasALaMiseEnPage(miseEnPage: MiseEnPage) {
+        let prereglage = ContenuDePrereglage(sens: .droiteGauche, miseEnPage: miseEnPage)
+
+        #expect(prereglage.miseEnPageAppliquee == miseEnPage)
+        #expect(prereglage.sensApplique == .droiteGauche)
+    }
+
+    @Test("Les deux resolutions ne peuvent pas se contredire")
+    func lesDeuxResolutionsSAccordent() {
+        // La seule mise en page qui impose un sens est celle que le seul sens
+        // imposant une mise en page reclame. Le point fixe est donc atteint des
+        // le premier tour, quelle que soit la combinaison de depart.
+        for sens in SensDeLecture.allCases {
+            for miseEnPage in MiseEnPage.allCases {
+                let pageRetenue = sens.miseEnPageImposee ?? miseEnPage
+                let sensRetenu = pageRetenue.sensImpose ?? sens
+
+                #expect(sensRetenu.miseEnPageImposee ?? pageRetenue == pageRetenue)
+                #expect(pageRetenue.sensImpose ?? sensRetenu == sensRetenu)
+            }
+        }
+    }
 }

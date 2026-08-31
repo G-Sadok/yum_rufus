@@ -809,7 +809,7 @@ Aucun compte a rebours, aucune formulation qui presse l utilisateur.
 
 Trois etapes maximum, une seule decision par etape. Points de progression en haut a droite, 7 de diametre, actif en `accent`.
 
-1. **Sens de lecture** : deux cartes de 300, rayon 16, apercu visuel de deux pages numerotees, contour de 3 en `accent` sur le choix actif. Droite a gauche a gauche de l ecran, Gauche a droite a droite.
+1. **Sens de lecture** : trois cartes de 300, rayon 16, apercu visuel de deux pages numerotees, contour de 3 en `accent` sur le choix actif. Droite a gauche a gauche de l ecran, Gauche a droite au centre, Vertical a droite. La carte Vertical montre deux pages empilees plutot que cote a cote.
 2. **Premiere source** : les trois choix les plus courants en lignes de source de 72, Parcourir un dossier local, Ajouter un serveur Komga, Ajouter un catalogue OPDS, puis le lien `Voir les douze types de sources`. Les quatre etats de cette etape sont ceux d une source : rien, connexion en cours, connectee avec le nombre de series, adresse injoignable.
 3. **Essai premium** : liste des avantages, bouton Commencer l essai, et **Plus tard aussi visible que le bouton d essai**, meme hauteur, meme rayon, fond `surface.menu` avec contour.
 
@@ -909,7 +909,7 @@ Le nombre et le nom cites dans une erreur sont toujours les valeurs reelles. Une
 | Langue | Systeme, Francais, English, Espanol, Deutsch, Japonais |
 | Apparence | Systeme, Clair, Sombre |
 | Theme | Midnight, Obsidian, Slate, Paper |
-| Sens de lecture | Droite a gauche, Gauche a droite |
+| Sens de lecture | Droite a gauche, Gauche a droite, Vertical |
 | Mise en page | Page unique, Double page, Continu vertical |
 | Fond du lecteur | Noir OLED, Gris sombre, Blanc, Sepia |
 | Supprimer apres lecture | Jamais, Apres 1 jour, Apres 7 jours, Immediatement |

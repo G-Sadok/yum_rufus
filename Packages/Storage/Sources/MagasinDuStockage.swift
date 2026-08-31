@@ -157,7 +157,21 @@ extension MagasinDuStockage: JournalDuStockage {
             return []
         }
 
-        let lignes = try base.ecrivain.read { connexion in
+        return try lignesDesChapitresLus(parmi: chapitres).map { ligne in
+            TelechargementLu(chapitreId: ligne["id"], dateLecture: ligne["dateLecture"])
+        }
+    }
+
+    /// Lignes brutes des chapitres lus, lues dans une fonction synchrone.
+    ///
+    /// La lecture est sortie de la fonction asynchrone a dessein. GRDB expose
+    /// `read` en version synchrone et en version asynchrone, et dans un
+    /// contexte asynchrone le choix depend de la version du compilateur : le
+    /// notre retient la synchrone, celui de l integration continue exige
+    /// l attente, et le fichier ne compilait que d un cote. Ici la question ne
+    /// se pose plus, comme pour `chapitres` et `sources` plus haut.
+    private func lignesDesChapitresLus(parmi chapitres: [UUID]) throws -> [Row] {
+        try base.ecrivain.read { connexion in
             try Row.fetchAll(
                 connexion,
                 sql: """
@@ -167,10 +181,6 @@ extension MagasinDuStockage: JournalDuStockage {
                 """,
                 arguments: StatementArguments(chapitres.map(\.databaseValue))
             )
-        }
-
-        return lignes.map { ligne in
-            TelechargementLu(chapitreId: ligne["id"], dateLecture: ligne["dateLecture"])
         }
     }
 

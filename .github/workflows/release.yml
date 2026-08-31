@@ -13,6 +13,12 @@ on:
 permissions:
   contents: write
 
+# Deux publications simultanees de la meme etiquette se disputeraient le meme
+# nom de release et le meme trousseau de signature. La seconde attend.
+concurrency:
+  group: publication-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   publier:
     name: Construire et publier le DMG
@@ -23,6 +29,9 @@ jobs:
       - name: Recuperer le depot
         uses: actions/checkout@v4
         with:
+          # L historique complet est indispensable : les notes de version se
+          # redigent depuis les commits accumules depuis l etiquette
+          # precedente, et un clone superficiel n en voit aucun.
           fetch-depth: 0
 
       - name: Determiner la version
@@ -47,11 +56,15 @@ jobs:
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "etiquette=v$VERSION" >> "$GITHUB_OUTPUT"
           echo "Version a publier : $VERSION"
 
-      - name: Verifier la chaine d empaquetage
+      # Les tests d abord. Notariser puis decouvrir que la redaction des notes
+      # casse, c est une heure perdue et une etiquette a reposer.
+      - name: Verifier les chaines d empaquetage et de publication
         run: |
           chmod +x scripts/*.sh
+          ./scripts/tests-publication.sh
           ./scripts/build-dmg.sh --tests
 
       - name: Selectionner Xcode
@@ -96,85 +109,38 @@ jobs:
             --team-id "$EQUIPE_APPLE" \
             --password "$MOT_DE_PASSE_APPLICATION"
 
+      # build-dmg.sh impose MARKETING_VERSION a l archivage depuis la version
+      # recue. Le numero affiche par l application correspond donc a
+      # l etiquette par construction, sans controle a rajouter.
       - name: Construire le DMG
         env:
           IDENTITE_SIGNATURE: ${{ secrets.IDENTITE_SIGNATURE }}
           EQUIPE_APPLE: ${{ secrets.EQUIPE_APPLE }}
           PROFIL_NOTARISATION: notarisation-ci
-        run: |
-          chmod +x scripts/build-dmg.sh
-          ./scripts/build-dmg.sh "${{ steps.version.outputs.version }}"
+          VERSION: ${{ steps.version.outputs.version }}
+        run: ./scripts/build-dmg.sh "$VERSION"
 
+      # La redaction vit dans scripts/notes-de-version.sh, couvert par
+      # scripts/tests-publication.sh. Ecrite ici, elle ne s executerait pour la
+      # premiere fois qu au moment de publier, ce qui est le pire moment pour
+      # decouvrir qu elle est fausse.
       - name: Rediger les notes de version
-        id: notes
+        env:
+          ETIQUETTE: ${{ steps.version.outputs.etiquette }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          PRECEDENTE="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo '')"
-
-          {
-            echo "## Version $VERSION"
-            echo ""
-
-            if [ -n "$PRECEDENTE" ]; then
-              echo "### Nouveautes"
-              echo ""
-              git log "$PRECEDENTE"..HEAD --pretty=format:'%s' \
-                | grep '^feat' \
-                | sed -E 's/^feat\(([A-Z0-9]+)\): /- /' \
-                || echo "- Aucune nouvelle fonctionnalite"
-              echo ""
-              echo ""
-              echo "### Corrections"
-              echo ""
-              git log "$PRECEDENTE"..HEAD --pretty=format:'%s' \
-                | grep '^fix' \
-                | sed -E 's/^fix(\([^)]*\))?: /- /' \
-                || echo "- Aucune correction"
-              echo ""
-            else
-              echo "Premiere version publiee."
-            fi
-
-            echo ""
-            echo "### Installation"
-            echo ""
-            echo "Telecharge le DMG, ouvre le, glisse l application dans le dossier Applications."
-            echo ""
-            echo "L application est signee et notarisee par Apple. Aucun avertissement de securite ne doit apparaitre."
-            echo ""
-            echo "### Verification de l integrite"
-            echo ""
-            echo '```'
-            echo "shasum -a 256 -c Yum-$VERSION.dmg.sha256"
-            echo '```'
-            echo ""
-            echo "Somme attendue :"
-            echo '```'
-            cat "build/Yum-$VERSION.dmg.sha256"
-            echo '```'
-            echo ""
-            echo "### Configuration requise"
-            echo ""
-            echo "macOS 14 Sonoma ou plus recent."
-          } > notes-de-version.md
-
+          ./scripts/notes-de-version.sh \
+            "$ETIQUETTE" \
+            "build/Yum-$VERSION.dmg.sha256" > notes-de-version.md
           cat notes-de-version.md
-
-      - name: Verifier l absence de tiret cadratin dans les notes
-        run: |
-          # Motif construit en octal, voir la meme correction dans ci.yml.
-          TIRET_CADRATIN=$(printf '\342\200\224')
-          if grep -q -e "$TIRET_CADRATIN" notes-de-version.md; then
-            echo "Tiret cadratin trouve dans les notes de version."
-            exit 1
-          fi
 
       - name: Creer la release en brouillon
         env:
           GH_TOKEN: ${{ github.token }}
+          ETIQUETTE: ${{ steps.version.outputs.etiquette }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          gh release create "v$VERSION" \
+          gh release create "$ETIQUETTE" \
             --title "Version $VERSION" \
             --notes-file notes-de-version.md \
             --draft \

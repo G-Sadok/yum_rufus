@@ -137,6 +137,12 @@ jobs:
           chmod +x scripts/*.sh
           ./scripts/build-dmg.sh --tests
 
+      # La chaine de publication se verifie sur toutes les branches, elle
+      # aussi. Attendre l etiquette pour decouvrir qu elle est cassee coute une
+      # etiquette a reposer et une release a supprimer.
+      - name: Verifier la chaine de publication
+        run: ./scripts/build-dmg.sh --tests-publication
+
   # Les sept budgets de la section 12. Ce travail est bloquant, sur toutes les
   # branches, et sans repli silencieux : une etape qui sortirait en zero parce
   # qu un outil manque rendrait la chaine verte sans avoir rien mesure, ce qui

@@ -1400,9 +1400,9 @@
       "depend_de": [
         "F020"
       ],
-      "statut": "bloque",
+      "statut": "termine",
       "modifie_le": "2026-08-30T23:15:17Z",
-      "derniere_erreur": "tentatives epuisees, verifications toujours en echec"
+      "termine_le": "2026-08-31T02:05:00Z"
     },
     {
       "id": "F064",

@@ -10,6 +10,8 @@
 #   SANS_NOTARISATION=1 ./scripts/build-dmg.sh   iteration rapide, signe sans notariser
 #   SANS_SIGNATURE=1 ./scripts/build-dmg.sh      construction de travail, non publiable
 #   ./scripts/build-dmg.sh --tests               tests d empaquetage, sans Xcode ni certificat
+#   ./scripts/build-dmg.sh --tests-publication   tests de la chaine de publication, sans reseau
+#   ./scripts/build-dmg.sh --notes v1.0.0        relit les notes avant de poser l etiquette
 #   ./scripts/build-dmg.sh --fond                refabrique le fond depuis les jetons
 #
 # Variables d environnement attendues pour la chaine complete :
@@ -41,6 +43,18 @@ cd "$RACINE"
 
 if [ "${1:-}" = "--tests" ]; then
   exec bash "$RACINE/scripts/tests-empaquetage.sh"
+fi
+
+if [ "${1:-}" = "--tests-publication" ]; then
+  exec bash "$RACINE/scripts/tests-publication.sh"
+fi
+
+# Relire les notes avant de poser l etiquette est un point de la liste de
+# controle de la competence release-dmg. Les decouvrir sur la page de la release
+# est trop tard : l etiquette est posee et la chaine a deja tourne.
+if [ "${1:-}" = "--notes" ]; then
+  shift
+  exec bash "$RACINE/scripts/notes-de-version.sh" "$@"
 fi
 
 if [ "${1:-}" = "--fond" ]; then

@@ -271,12 +271,17 @@ final class SessionDeParcourir {
         motDePasse: String
     ) async {
         do {
+            // Le test construit une source jetable. Ses identifiants vont dans
+            // un magasin en memoire : les ecrire dans le trousseau y laisserait
+            // une ligne par essai, sous un identifiant que plus rien ne
+            // designe et que rien ne viendrait nettoyer.
             let construite = try await FabriqueDeSource.construire(
                 type: type,
                 adresse: adresse,
                 compte: compte,
                 motDePasse: motDePasse,
-                identifiant: UUID()
+                identifiant: UUID(),
+                trousseau: MagasinDIdentifiantsEnMemoire()
             )
 
             let etat = await construite.source.verifierConnexion()

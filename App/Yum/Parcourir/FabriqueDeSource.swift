@@ -35,12 +35,18 @@ enum FabriqueDeSource {
     ///   - compte: compte saisi, vide quand la source n en demande pas.
     ///   - motDePasse: mot de passe saisi.
     ///   - identifiant: identifiant que la source portera en base.
+    ///   - trousseau: ou ranger les identifiants. Le trousseau du systeme pour
+    ///     une source qui va vivre, un magasin en memoire pour un simple test
+    ///     de connexion : celui ci part sous un identifiant jetable, et
+    ///     l ecrire dans le trousseau y laisserait une ligne par essai, que
+    ///     rien ne viendrait jamais nettoyer.
     static func construire(
         type: TypeDeSource,
         adresse: String,
         compte: String,
         motDePasse: String,
-        identifiant: UUID
+        identifiant: UUID,
+        trousseau: any MagasinDIdentifiants = TrousseauDuSysteme()
     ) async throws -> (source: any SourceProvider, configuration: ConfigurationDeSource) {
         guard let url = URL(string: adresse.trimmingCharacters(in: .whitespaces)),
               url.host() != nil
@@ -48,11 +54,10 @@ enum FabriqueDeSource {
             throw Erreur.adresseIllisible
         }
 
-        let trousseau = TrousseauDuSysteme()
         let source = SourceID(identifiant)
 
         if compte.isEmpty == false {
-            try trousseau.enregistrer(
+            try await trousseau.enregistrer(
                 .basique(compte: compte, motDePasse: motDePasse),
                 pour: source
             )
@@ -121,7 +126,7 @@ enum FabriqueDeSource {
         type: TypeDeSource,
         source: SourceID,
         configuration: ConfigurationDeSource,
-        trousseau: TrousseauDuSysteme,
+        trousseau: any MagasinDIdentifiants,
         compte: String,
         motDePasse: String,
         nom: String? = nil

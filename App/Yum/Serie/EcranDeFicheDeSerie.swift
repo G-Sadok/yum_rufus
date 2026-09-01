@@ -140,8 +140,8 @@ struct EcranDeFicheDeSerie: View {
     /// Ouvre un chapitre dans le lecteur.
     let ouvrirLeChapitre: (UUID) -> Void
 
-    /// Revient a la bibliotheque.
-    let revenir: () -> Void
+    /// Revient a l ecran d ou la fiche a ete ouverte.
+    let revenir: @MainActor () -> Void
 
     var body: some View {
         VueDeFicheDeSerie(
@@ -152,7 +152,8 @@ struct EcranDeFicheDeSerie: View {
             libelles: .duCatalogue,
             actions: actions,
             selection: etat.selection,
-            commandes: commandes
+            commandes: commandes,
+            revenir: revenir
         ) {
             CouvertureDeSerie()
         }

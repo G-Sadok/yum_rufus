@@ -32,10 +32,15 @@ final class SessionDeLecture {
     /// Nom du fichier ouvert, montre dans la barre superieure.
     private(set) var titre = ""
 
-    /// Vrai quand un document est ouvert, ce qui pose le lecteur par dessus.
+    /// Vrai quand le lecteur doit couvrir la coquille, des le debut de
+    /// l ouverture : resoudre le fichier et decoder sa premiere page prend un
+    /// temps visible, pendant lequel un chapitre touche ne montrait rien.
     var estOuvert: Bool {
-        document != nil
+        document != nil || ouvertureEnCours
     }
+
+    /// Vrai entre la demande d ouverture et son aboutissement.
+    private var ouvertureEnCours = false
 
     private var document: (any DocumentLocal)?
     private var pagination = PaginationEnPageSimple(nombreDePages: 0, sens: .parDefaut)
@@ -102,6 +107,34 @@ final class SessionDeLecture {
 
     /// Taille de decodage d une page, celle d une planche a l ecran.
     private static let zoneDeDecodage = TailleEnPixels(largeur: 2000, hauteur: 2600)
+
+    /// Annonce qu un chapitre va s ouvrir, avant de savoir ou il vit. Le
+    /// lecteur se pose sur son indicateur, ce qui distingue une ouverture qui
+    /// travaille d un geste qui n a rien declenche.
+    func annoncerLOuverture() {
+        fermer()
+
+        ouvertureEnCours = true
+        etat = .chargement
+    }
+
+    /// Abandonne une ouverture annoncee en disant pourquoi, plutot que de
+    /// laisser le lecteur tourner sans fin : une attente sans terme est le
+    /// pire des messages.
+    func abandonnerLOuverture(_ phrase: String) {
+        guard ouvertureEnCours else { return }
+
+        etat = .erreur(
+            .vide(
+                symbole: Jetons.Icone.erreurDeContenu,
+                titre: Chaines.Lecteur.erreurTitre,
+                phrase: phrase,
+                action: ActionDEtat(libelle: Chaines.Lecteur.fermer) { [weak self] in
+                    self?.fermer()
+                }
+            )
+        )
+    }
 
     /// Ouvre un fichier, archive ou dossier de pages.
     ///
@@ -173,6 +206,7 @@ final class SessionDeLecture {
         document = nil
         titre = ""
         chapitre = nil
+        ouvertureEnCours = false
         estEnDefilement = false
         sensCourant = .parDefaut
         cache.vider()
@@ -188,31 +222,7 @@ final class SessionDeLecture {
         }
     }
 
-    var commandes: CommandesDeLecteur {
-        CommandesDeLecteur(
-            pageSuivante: { [weak self] in
-                self?.deplacer(.pageSuivante)
-            },
-            pagePrecedente: { [weak self] in
-                self?.deplacer(.pagePrecedente)
-            },
-            fermer: { [weak self] in
-                self?.fermer()
-            },
-            appuyer: { [weak self] abscisse, ordonnee in
-                self?.appuyer(abscisse: abscisse, ordonnee: ordonnee) ?? false
-            }
-        )
-    }
-
-    // MARK: Zones de toucher
-
-    /// Traite un appui, et dit s il a tourne une page.
-    ///
-    /// Rend faux en defilement continu : le doigt y sert a faire glisser le
-    /// ruban, et tourner une page sous un doigt qui defile serait un saut que
-    /// personne n a demande.
-    private func appuyer(abscisse: Double, ordonnee: Double) -> Bool {
+    func appuyer(abscisse: Double, ordonnee: Double) -> Bool {
         guard estEnDefilement == false, pagination.estVide == false else { return false }
 
         let intention = zones.intention(
@@ -228,21 +238,12 @@ final class SessionDeLecture {
         return true
     }
 
-    var libelles: LibellesDeLecteur {
-        LibellesDeLecteur(
-            titre: titre,
-            sousTitre: sousTitre,
-            fermer: Chaines.Lecteur.fermer,
-            pagePrecedente: Chaines.Lecteur.pagePrecedente,
-            pageSuivante: Chaines.Lecteur.pageSuivante
-        )
-    }
-
-    private var sousTitre: String {
+    /// Compteur affiche sous le titre, lu par les libelles de la vue.
+    var sousTitre: String {
         pagination.estVide ? "" : positionCourante.compteur
     }
 
-    private func deplacer(_ intention: IntentionDeNavigation) {
+    func deplacer(_ intention: IntentionDeNavigation) {
         guard pagination.appliquer(intention) else {
             // La pagination refuse de sortir du chapitre. Une page suivante
             // demandee sur la derniere ouvre donc le chapitre d apres, ce qui

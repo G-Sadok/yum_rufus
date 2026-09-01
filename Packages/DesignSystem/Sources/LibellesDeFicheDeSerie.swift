@@ -32,6 +32,9 @@ public struct LibellesDeFicheDeSerie: Sendable, Equatable {
     /// Etiquette d accessibilite du bouton d options.
     public let options: String
 
+    /// Libelle du retour vers l ecran d ou la fiche a ete ouverte.
+    public let retour: String
+
     /// Bascule du resume, resume replie.
     public let afficherPlus: String
 
@@ -64,6 +67,7 @@ public struct LibellesDeFicheDeSerie: Sendable, Equatable {
         dansMaListe: String,
         suivre: String,
         options: String,
+        retour: String,
         afficherPlus: String,
         afficherMoins: String,
         compteurDeChapitres: String,
@@ -80,6 +84,7 @@ public struct LibellesDeFicheDeSerie: Sendable, Equatable {
         self.dansMaListe = dansMaListe
         self.suivre = suivre
         self.options = options
+        self.retour = retour
         self.afficherPlus = afficherPlus
         self.afficherMoins = afficherMoins
         self.compteurDeChapitres = compteurDeChapitres

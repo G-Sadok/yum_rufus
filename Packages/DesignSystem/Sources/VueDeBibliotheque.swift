@@ -142,10 +142,27 @@ public struct VueDeBibliotheque: View {
 
         case let .chargee(series):
             grille(series)
+                .overlay(alignment: .top) {
+                    if analyseEnCours {
+                        indicateurDAnalyse
+                    }
+                }
 
         case let .erreur(contenu):
             VueDEtatDeContenu(contenu)
         }
+    }
+
+    /// Bandeau discret pendant qu une source est relue.
+    ///
+    /// Pose par dessus la grille et non a sa place : les series deja rangees
+    /// restent lisibles et ouvrables pendant que les nouvelles arrivent.
+    private var indicateurDAnalyse: some View {
+        ProgressView()
+            .controlSize(.small)
+            .padding(Jetons.Espace.x3)
+            .background(.regularMaterial, in: Capsule())
+            .padding(.top, Jetons.Espace.x3)
     }
 
     private func grille(_ series: [SerieDeGrille]) -> some View {

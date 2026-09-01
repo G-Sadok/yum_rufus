@@ -11218,6 +11218,66 @@
           }
         }
       }
+    },
+    "lecteur.erreur.chapitreIntrouvable": {
+      "comment": "Ouverture d un chapitre que la base ne connait plus, section 5.7",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This chapter cannot be found. Refresh its source from Browse."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se encuentra este capitulo. Actualiza su fuente desde Explorar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce chapitre est introuvable. Actualisez sa source depuis Parcourir."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この章が見つかりません。「見つける」からソースを更新してください。"
+          }
+        }
+      }
+    },
+    "lecteur.erreur.pasDeFichierLocal": {
+      "comment": "Ouverture d un chapitre servi par un serveur, que le lecteur ne sait pas encore lire page par page",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This chapter is served by a server. Only files from your folders can be read for now."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este capitulo lo sirve un servidor. Por ahora solo se leen los archivos de tus carpetas."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce chapitre est servi par un serveur. Seuls les fichiers de vos dossiers se lisent pour l instant."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この章はサーバーから配信されています。現在はフォルダ内のファイルのみ読めます。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

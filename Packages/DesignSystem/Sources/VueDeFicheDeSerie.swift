@@ -24,6 +24,7 @@ public struct VueDeFicheDeSerie<Couverture: View>: View {
     private let actions: ActionsDeFicheDeSerie
     private let selection: SelectionDeChapitres
     private let commandes: CommandesDeListeDeChapitres
+    private let revenir: @MainActor () -> Void
     private let couverture: Couverture
 
     /// Construit la fiche.
@@ -47,6 +48,7 @@ public struct VueDeFicheDeSerie<Couverture: View>: View {
         actions: ActionsDeFicheDeSerie,
         selection: SelectionDeChapitres,
         commandes: CommandesDeListeDeChapitres,
+        revenir: @escaping @MainActor () -> Void,
         @ViewBuilder couverture: () -> Couverture
     ) {
         self.entete = entete
@@ -57,10 +59,39 @@ public struct VueDeFicheDeSerie<Couverture: View>: View {
         self.actions = actions
         self.selection = selection
         self.commandes = commandes
+        self.revenir = revenir
         self.couverture = couverture()
     }
 
     public var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            barreDeRetour
+
+            corps
+        }
+        .background(palette.surfaces.canvas.couleur)
+    }
+
+    /// Le retour vers l ecran d ou la fiche a ete ouverte.
+    ///
+    /// La fiche se pose par dessus la coquille et couvre sa barre laterale.
+    /// Sans ce bouton, une serie ouverte n a aucune sortie : elle porte son
+    /// propre retour parce qu elle a masque celui de la coquille.
+    private var barreDeRetour: some View {
+        HStack(spacing: 0) {
+            Button(action: revenir) {
+                Label(libelles.retour, systemImage: Jetons.IconeDeRecherche.retour)
+                    .labelStyle(.titleAndIcon)
+            }
+            .buttonStyle(BoutonDiscret(style: Jetons.FicheDeSerie.lienDeRetour))
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, Jetons.Contenu.margeLaterale)
+        .frame(height: Jetons.BarreDOutils.hauteur)
+    }
+
+    private var corps: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 VueDEnTeteDeSerie(
@@ -84,7 +115,6 @@ public struct VueDeFicheDeSerie<Couverture: View>: View {
                 .padding(.top, Jetons.FicheDeSerie.ecartDansLeCorps)
             }
         }
-        .background(palette.surfaces.canvas.couleur)
     }
 
     /// Cas du bouton principal.

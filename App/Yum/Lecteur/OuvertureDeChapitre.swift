@@ -68,13 +68,21 @@ final class OuvertureDeChapitre {
     /// Ouvre un chapitre, et dit ce qui l en a empeche.
     @discardableResult
     func ouvrir(_ chapitre: UUID) async -> Refus? {
+        // Le lecteur se pose avant meme la resolution : elle lit la base,
+        // resout un signet et ouvre un fichier, ce qui prend un temps visible.
+        lecture.annoncerLOuverture()
+
         guard let resolution,
               let adresse = try? resolution.adresse(deChapitre: chapitre)
         else {
+            lecture.abandonnerLOuverture(Chaines.Lecteur.chapitreIntrouvable)
+
             return .chapitreInconnu
         }
 
         guard let fichier = await sources.fichier(de: adresse) else {
+            lecture.abandonnerLOuverture(Chaines.Lecteur.pasDeFichierLocal)
+
             return .pasDeFichierLocal
         }
 

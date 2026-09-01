@@ -11,6 +11,13 @@
 extension Jetons {
     /// En tete de la fiche de serie, section 5.6.
     public enum FicheDeSerie {
+        /// Lien de retour pose au dessus de la fiche.
+        ///
+        /// La fiche couvre la barre laterale de la coquille : elle porte donc
+        /// son propre retour, au meme role de texte que les autres liens du
+        /// produit.
+        public static let lienDeRetour = Typo.callout
+
         /// Hauteur de la banniere sur macOS et iPad paysage.
         public static let hauteurDeBanniere: Double = 300
         /// Hauteur de la banniere sur iPad portrait.

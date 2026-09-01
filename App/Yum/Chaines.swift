@@ -341,6 +341,10 @@ enum Chaines {
         static let pageSuivante = String(localized: "lecteur.pageSuivante")
         static let erreurTitre = String(localized: "lecteur.erreur.titre")
         static let erreurPhrase = String(localized: "lecteur.erreur.phrase")
+        static let chapitreIntrouvable = String(
+            localized: "lecteur.erreur.chapitreIntrouvable"
+        )
+        static let pasDeFichierLocal = String(localized: "lecteur.erreur.pasDeFichierLocal")
     }
 
     enum Erreur {

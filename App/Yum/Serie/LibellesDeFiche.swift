@@ -21,6 +21,7 @@ extension LibellesDeFicheDeSerie {
             dansMaListe: Chaines.Fiche.dansMaListe,
             suivre: Chaines.Fiche.suivre,
             options: Chaines.Fiche.options,
+            retour: Chaines.Fiche.retour,
             afficherPlus: Chaines.Fiche.afficherPlus,
             afficherMoins: Chaines.Fiche.afficherMoins,
             compteurDeChapitres: Chaines.Liste.compteurDeChapitres,

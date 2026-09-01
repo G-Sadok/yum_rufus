@@ -33,7 +33,7 @@ final class SessionDeTelechargements {
         }
 
         do {
-            etat = .chargee(try magasin.taches())
+            etat = try .chargee(magasin.taches())
         } catch {
             etat = .erreur(erreurDeLecture())
 

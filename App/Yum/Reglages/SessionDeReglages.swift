@@ -42,7 +42,7 @@ final class SessionDeReglages {
         guard let magasin else { return }
 
         do {
-            etat = .chargee(PresentationDeReglages(reglages: try magasin.reglages()))
+            etat = try .chargee(PresentationDeReglages(reglages: magasin.reglages()))
             banniere = nil
         } catch {
             signaler(error)
@@ -117,7 +117,9 @@ enum EcranDeReglages: String, Identifiable {
     case stockage
     case prereglages
 
-    var id: String { rawValue }
+    var id: String {
+        rawValue
+    }
 
     init?(ligne: IdentifiantDeReglage) {
         switch ligne {

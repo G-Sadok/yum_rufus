@@ -33,7 +33,7 @@ final class SessionDeSignets {
         }
 
         do {
-            etat = .chargee(try magasin.signets())
+            etat = try .chargee(magasin.signets())
         } catch {
             etat = .erreur(erreurDeLecture())
 

@@ -117,12 +117,10 @@ enum FabriqueDeSource {
         // chercher elles memes ce dont elles ont besoin sous la cle de leur
         // identifiant ; les partages reseau, non, et c est pour eux que ces
         // deux chaines sont extraites.
-        let saisie: SaisieDeSource
-
-        if case let .basique(compte: compte, motDePasse: motDePasse) = ranges {
-            saisie = SaisieDeSource(adresse: "", compte: compte, motDePasse: motDePasse)
+        let saisie = if case let .basique(compte: compte, motDePasse: motDePasse) = ranges {
+            SaisieDeSource(adresse: "", compte: compte, motDePasse: motDePasse)
         } else {
-            saisie = SaisieDeSource(adresse: "")
+            SaisieDeSource(adresse: "")
         }
 
         return try await provider(

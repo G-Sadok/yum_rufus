@@ -33,7 +33,7 @@ final class SessionDeStatistiques {
         }
 
         do {
-            etat = .chargees(try magasin.statistiques(), try magasin.rappel())
+            etat = try .chargees(magasin.statistiques(), magasin.rappel())
         } catch {
             etat = .erreur(erreurDeLecture())
 

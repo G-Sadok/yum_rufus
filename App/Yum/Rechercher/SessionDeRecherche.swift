@@ -111,7 +111,7 @@ final class SessionDeRecherche {
         guard let importateur, let fournisseur = registre.source(source.brut) else { return }
 
         Task { [weak self] in
-            let chapitres = (try? await fournisseur.chapitres(pour: serie.identifiant)) ?? []
+            let chapitres = await (try? fournisseur.chapitres(pour: serie.identifiant)) ?? []
 
             guard let self else { return }
 

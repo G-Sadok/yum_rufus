@@ -92,10 +92,10 @@ final class RegistreDesSourcesVivantes {
         let identifiant = SourceID(ligne.id)
 
         if ligne.type == .fichiersLocaux {
-            return SourceFichiersLocaux.depuisLeSignet(
+            return try SourceFichiersLocaux.depuisLeSignet(
                 id: identifiant,
                 nom: ligne.nom,
-                magasin: try MagasinDeSignetsFichier.parDefaut(nomApplication: Self.nomDuDossier)
+                magasin: MagasinDeSignetsFichier.parDefaut(nomApplication: Self.nomDuDossier)
             )
         }
 
@@ -106,7 +106,7 @@ final class RegistreDesSourcesVivantes {
         return try await FabriqueDeSource.reconstruire(
             type: ligne.type,
             nom: ligne.nom,
-            configuration: try ConfigurationDeSource(donnees: donnees),
+            configuration: ConfigurationDeSource(donnees: donnees),
             identifiant: identifiant
         )
     }

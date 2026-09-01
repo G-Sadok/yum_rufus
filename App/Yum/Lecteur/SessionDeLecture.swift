@@ -35,7 +35,9 @@ final class SessionDeLecture {
     private(set) var titre = ""
 
     /// Vrai quand un document est ouvert, ce qui pose le lecteur par dessus.
-    var estOuvert: Bool { document != nil }
+    var estOuvert: Bool {
+        document != nil
+    }
 
     private var document: (any DocumentLocal)?
     private var pagination = PaginationEnPageSimple(nombreDePages: 0, sens: .parDefaut)
@@ -220,7 +222,6 @@ final class SessionDeLecture {
 
         return true
     }
-
 
     var libelles: LibellesDeLecteur {
         LibellesDeLecteur(

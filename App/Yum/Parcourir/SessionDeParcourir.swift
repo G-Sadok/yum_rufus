@@ -76,8 +76,8 @@ final class SessionDeParcourir {
         }
 
         do {
-            etat = .chargee(
-                try magasin.sources().map {
+            etat = try .chargee(
+                magasin.sources().map {
                     SourceAffichee(id: $0.id, nom: $0.nom, type: $0.type)
                 }
             )
@@ -338,7 +338,7 @@ final class SessionDeParcourir {
                     id: identifiant,
                     type: type,
                     nom: type.rawValue,
-                    configurationChiffree: try construite.configuration.donnees()
+                    configurationChiffree: construite.configuration.donnees()
                 )
             )
 

@@ -198,8 +198,12 @@ public struct VueDeLecteur: View {
         .focusable()
         .onKeyPress(.rightArrow) { avancerVersLaDroite() }
         .onKeyPress(.leftArrow) { avancerVersLaGauche() }
-        .onKeyPress(.space) { commandes.pageSuivante(); return .handled }
-        .onKeyPress(.escape) { commandes.fermer(); return .handled }
+        .onKeyPress(.space) { commandes.pageSuivante()
+            return .handled
+        }
+        .onKeyPress(.escape) { commandes.fermer()
+            return .handled
+        }
     }
 
     /// Traite un appui : une page tournee, ou les barres qui apparaissent.
@@ -228,7 +232,7 @@ public struct VueDeLecteur: View {
         case let .page(page, _):
             Image(decorative: page.image, scale: 1)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .scaledToFit()
                 // La page n est jamais agrandie au dela de sa definition : une
                 // planche etiree est floue, et c est le premier defaut qu un
                 // lecteur de manga se voit reprocher.
@@ -268,10 +272,7 @@ public struct VueDeLecteur: View {
         if let page = pageAuRang(rang) {
             Image(decorative: page.image, scale: 1)
                 .resizable()
-                .aspectRatio(
-                    CGFloat(page.largeur) / CGFloat(max(1, page.hauteur)),
-                    contentMode: .fit
-                )
+                .aspectRatio(CGFloat(page.largeur) / CGFloat(max(1, page.hauteur)), contentMode: .fit)
                 .frame(maxWidth: CGFloat(page.largeur))
         } else {
             // La place est reservee avant que la page arrive. Sans elle, le
@@ -284,7 +285,6 @@ public struct VueDeLecteur: View {
 
     // MARK: Barres
 
-    @ViewBuilder
     private var barres: some View {
         VStack(spacing: 0) {
             barreSuperieure

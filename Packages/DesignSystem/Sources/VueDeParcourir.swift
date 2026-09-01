@@ -168,6 +168,7 @@ public struct VueDeParcourir: View {
                         } label: {
                             Image(systemName: "trash")
                         }
+                        .accessibilityLabel(libelles.supprimer)
                     }
                 }
             }

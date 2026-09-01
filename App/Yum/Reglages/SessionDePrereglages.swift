@@ -37,8 +37,8 @@ final class SessionDePrereglages {
         }
 
         do {
-            etat = .chargee(
-                try magasin.prereglages().map {
+            etat = try .chargee(
+                magasin.prereglages().map {
                     PrereglageAffiche(
                         id: $0.id,
                         nom: $0.nom,

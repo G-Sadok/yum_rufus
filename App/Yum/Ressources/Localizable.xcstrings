@@ -10896,25 +10896,25 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ did not respond within %lld seconds."
+            "value": "%1$@ did not respond within %2$lld seconds."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ no respondio en %lld segundos."
+            "value": "%1$@ no respondio en %2$lld segundos."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ n a pas repondu en %lld secondes."
+            "value": "%1$@ n a pas repondu en %2$lld secondes."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@は%lld秒以内に応答しませんでした。"
+            "value": "%1$@は%2$lld秒以内に応答しませんでした。"
           }
         }
       }

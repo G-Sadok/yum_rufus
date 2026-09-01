@@ -85,7 +85,10 @@ struct MontageDeLApplication {
             resolution: services.resolutionDeChapitre,
             sources: sourcesVivantes
         )
-        let rafraichir = {
+        // Le type est ecrit : sans lui la fermeture est deduite sans isolement,
+        // et la passer la ou un @MainActor est attendu devient une conversion
+        // que la concurrence stricte refuse.
+        let rafraichir: @MainActor () -> Void = {
             bibliotheque.recharger()
             couvertures.vider()
         }

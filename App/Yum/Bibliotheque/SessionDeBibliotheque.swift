@@ -33,8 +33,8 @@ final class SessionDeBibliotheque {
         }
 
         do {
-            etat = .chargee(
-                try magasin.series(dans: .tout).map {
+            etat = try .chargee(
+                magasin.series(dans: .tout).map {
                     SerieDeGrille(id: $0.id, titre: $0.titre, chapitresNonLus: $0.chapitresNonLus)
                 }
             )

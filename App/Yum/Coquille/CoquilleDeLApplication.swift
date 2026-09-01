@@ -44,6 +44,9 @@ struct CoquilleDeLApplication: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Couvertures des series, decodees a la demande.
+    let couvertures: ChargeurDeCouvertures
+
     /// Ecran Rechercher, section 5.4.
     let recherche: SessionDeRecherche
 
@@ -143,6 +146,7 @@ struct CoquilleDeLApplication: View {
             historique: historique,
             parcourir: parcourir,
             bibliotheque: bibliotheque,
+            couvertures: couvertures,
             recherche: recherche,
             ouverture: ouverture,
             serie: serie,

@@ -31,6 +31,9 @@ struct VueDeDestination: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Couvertures des series, decodees a la demande.
+    let couvertures: ChargeurDeCouvertures
+
     /// Ecran Rechercher, section 5.4.
     ///
     /// Liee et non simplement passee : le champ de la barre d outils ecrit
@@ -67,7 +70,8 @@ struct VueDeDestination: View {
                 commandes: bibliotheque.commandes(
                     ouvrirLaSerie: { serie.ouvrir($0) },
                     ajouterUneSource: { ouvrir(.parcourir) }
-                )
+                ),
+                couverture: { couvertures.couverture($0) }
             )
             .task { bibliotheque.recharger() }
 

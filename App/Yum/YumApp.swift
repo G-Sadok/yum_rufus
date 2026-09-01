@@ -28,6 +28,7 @@ struct YumApp: App {
     @State private var sourcesVivantes: RegistreDesSourcesVivantes
     @State private var recherche: SessionDeRecherche
     @State private var ouverture: OuvertureDeChapitre
+    @State private var couvertures: ChargeurDeCouvertures
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -63,14 +64,23 @@ struct YumApp: App {
             registre: services.sources
         )
 
-        // L ordre compte : l ecran Parcourir previent la bibliotheque et le
-        // registre, il doit donc etre construit apres eux. Une source ajoutee
-        // devient interrogeable sans relancer l application.
+        let couvertures = ChargeurDeCouvertures(
+            resolution: services.resolutionDeChapitre,
+            sources: sourcesVivantes
+        )
+
+        // L ordre compte : l ecran Parcourir previent la bibliotheque, le
+        // registre et les couvertures, il doit donc etre construit apres eux.
+        // Une source ajoutee devient interrogeable, et ses series montrent leur
+        // couverture, sans relancer l application.
         _parcourir = State(
             initialValue: SessionDeParcourir(
                 magasin: services.sourcesInstallees,
                 importateur: services.importateur,
-                apresImport: { bibliotheque.recharger() },
+                apresImport: {
+                    bibliotheque.recharger()
+                    couvertures.vider()
+                },
                 sourcesOntChange: { sourcesVivantes.reconstruire() }
             )
         )
@@ -80,6 +90,7 @@ struct YumApp: App {
         )
         _sourcesVivantes = State(initialValue: sourcesVivantes)
         _recherche = State(initialValue: SessionDeRecherche(registre: sourcesVivantes))
+        _couvertures = State(initialValue: couvertures)
 
         let lecture = SessionDeLecture()
 
@@ -108,6 +119,7 @@ struct YumApp: App {
                 lecture: lecture,
                 parcourir: parcourir,
                 bibliotheque: bibliotheque,
+                couvertures: couvertures,
                 recherche: recherche,
                 ouverture: ouverture,
                 serie: serie

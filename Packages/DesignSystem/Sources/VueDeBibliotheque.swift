@@ -79,15 +79,28 @@ public struct VueDeBibliotheque: View {
     private let etat: EtatDeBibliotheque
     private let libelles: LibellesDeBibliotheque
     private let commandes: CommandesDeBibliotheque
+    private let couverture: @MainActor (UUID) -> ImageDeLecteur?
 
+    /// Construit l ecran.
+    ///
+    /// - Parameters:
+    ///   - etat: chargement, grille ou erreur.
+    ///   - libelles: libelles pris dans le catalogue de chaines.
+    ///   - commandes: ce que les cartes declenchent.
+    ///   - couverture: couverture deja decodee d une serie, nulle tant qu elle
+    ///     ne l est pas. La fonction est appelee pendant le rendu et ne doit
+    ///     rien decoder : le decodage vit dans l application, qui le fait hors
+    ///     du fil principal et previent par observation quand il a abouti.
     public init(
         etat: EtatDeBibliotheque,
         libelles: LibellesDeBibliotheque,
-        commandes: CommandesDeBibliotheque
+        commandes: CommandesDeBibliotheque,
+        couverture: @escaping @MainActor (UUID) -> ImageDeLecteur? = { _ in nil }
     ) {
         self.etat = etat
         self.libelles = libelles
         self.commandes = commandes
+        self.couverture = couverture
     }
 
     public var body: some View {
@@ -137,7 +150,7 @@ public struct VueDeBibliotheque: View {
                 spacing: Jetons.CarteDeSerie.gouttiere
             ) {
                 ForEach(series) { serie in
-                    CarteDeSerie(serie: serie) {
+                    CarteDeSerie(serie: serie, couverture: couverture(serie.id)) {
                         commandes.ouvrir(serie.id)
                     }
                 }
@@ -152,12 +165,16 @@ struct CarteDeSerie: View {
     @Environment(\.palette) private var palette
 
     let serie: SerieDeGrille
+
+    /// Couverture decodee, nulle tant qu elle ne l est pas.
+    let couverture: ImageDeLecteur?
+
     let ouvrir: () -> Void
 
     var body: some View {
         Button(action: ouvrir) {
             VStack(alignment: .leading, spacing: Jetons.CarteDeSerie.gouttiereDuTitre) {
-                couverture
+                vignette
 
                 Text(serie.titre)
                     .style(Jetons.CarteDeSerie.titre)
@@ -173,12 +190,24 @@ struct CarteDeSerie: View {
     ///
     /// Le ratio deux tiers est tenu par la carte elle meme, pas par l image :
     /// une grille dont les cartes changent de hauteur quand les vignettes
-    /// arrivent saute sous le doigt pendant le defilement.
-    private var couverture: some View {
+    /// arrivent saute sous le doigt pendant le defilement. L image est donc
+    /// rognee pour remplir le cadre, jamais le cadre ajuste a l image.
+    private var vignette: some View {
         ZStack(alignment: .topTrailing) {
             RoundedRectangle(cornerRadius: Jetons.CarteDeSerie.rayon)
                 .fill(palette.surfaces.card.couleur)
                 .aspectRatio(Jetons.CarteDeSerie.ratio, contentMode: .fit)
+                .overlay {
+                    if let couverture {
+                        Image(decorative: couverture.image, scale: 1)
+                            .resizable()
+                            .scaledToFill()
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: Jetons.CarteDeSerie.rayon)
+                            )
+                    }
+                }
+                .clipped()
 
             if serie.chapitresNonLus > 0 {
                 pastilleDeNonLus

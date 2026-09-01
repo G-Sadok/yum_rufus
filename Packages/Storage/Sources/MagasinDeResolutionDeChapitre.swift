@@ -73,4 +73,32 @@ public struct MagasinDeResolutionDeChapitre: Sendable {
             )
         }
     }
+
+    /// Adresse du premier chapitre d une serie, nulle quand elle n en a pas.
+    ///
+    /// C est ce qui sert de couverture aux series qui n en ont pas : un dossier
+    /// local ne publie pas d image de couverture, et la premiere page du
+    /// premier chapitre est la seule que la serie possede a coup sur.
+    ///
+    /// Le tri suit `ordreDansSerie` et jamais le numero. Un numero peut etre
+    /// absent, duplique ou incoherent selon la source, le rang non.
+    public func adresseDuPremierChapitre(deLaSerie identifiant: UUID) throws -> AdresseDeChapitre? {
+        try base.ecrivain.read { connexion in
+            guard let serie = try Manga.fetchOne(connexion, key: identifiant),
+                  let chapitre = try Chapitre
+                  .filter(Column("mangaId") == identifiant)
+                  .order(Column("ordreDansSerie"))
+                  .fetchOne(connexion)
+            else {
+                return nil
+            }
+
+            return AdresseDeChapitre(
+                source: serie.sourceId,
+                serie: serie.identifiantDistant,
+                chapitre: chapitre.identifiantDistant,
+                serieInterne: serie.id
+            )
+        }
+    }
 }

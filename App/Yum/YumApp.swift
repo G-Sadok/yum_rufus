@@ -138,9 +138,15 @@ struct YumApp: App {
                 serie: serie
             )
             // Ce que le systeme envoie quand on ouvre un fichier avec Yum,
-            // depuis le clic droit ou par glisser sur l icone.
+            // depuis le clic droit ou par glisser sur l icone. Un dossier de
+            // pages se lit, un dossier de series s installe comme source.
             .onOpenURL { url in
-                lecture.ouvrir(url)
+                OuvertureDeFichierDuSysteme(
+                    lecture: lecture,
+                    parcourir: parcourir,
+                    ouvrirLaDestination: { etat.selectionner($0) }
+                )
+                .ouvrir(url)
             }
             // Les sources se reconstruisent une fois, au lancement. Les rebatir
             // a chaque requete relirait le trousseau a chaque frappe.

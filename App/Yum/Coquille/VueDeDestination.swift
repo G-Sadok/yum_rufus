@@ -71,7 +71,8 @@ struct VueDeDestination: View {
                     ouvrirLaSerie: { serie.ouvrir($0) },
                     ajouterUneSource: { ouvrir(.parcourir) }
                 ),
-                couverture: { couvertures.couverture($0) }
+                couverture: { couvertures.couverture($0) },
+                analyseEnCours: parcourir.analyseEnCours
             )
             .task { bibliotheque.recharger() }
 

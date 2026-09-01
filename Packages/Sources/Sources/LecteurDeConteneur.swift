@@ -76,6 +76,17 @@ public enum LecteurDeConteneur {
         )
     }
 
+    /// Vrai quand ce dossier porte des pages, donc quand c est un chapitre.
+    ///
+    /// Un dossier de series n en porte pas : ses images sont deux niveaux plus
+    /// bas, sous une serie puis sous un chapitre. La distinction decide ce que
+    /// fait un dossier ouvert avec Yum, le lire ou l installer comme source, et
+    /// se trompe rarement : un dossier qui contient a la fois des pages et des
+    /// series n existe pas dans une bibliotheque rangee.
+    public static func porteDesPages(_ dossier: URL) -> Bool {
+        AnalyseurDeDossier().imagesPosees(dans: dossier).isEmpty == false
+    }
+
     /// Les formats que le lecteur sait ouvrir.
     public static var formatsConnus: Set<String> {
         DocumentZip.extensions

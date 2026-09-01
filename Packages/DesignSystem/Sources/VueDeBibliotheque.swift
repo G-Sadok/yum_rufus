@@ -80,6 +80,7 @@ public struct VueDeBibliotheque: View {
     private let libelles: LibellesDeBibliotheque
     private let commandes: CommandesDeBibliotheque
     private let couverture: @MainActor (UUID) -> ImageDeLecteur?
+    private let analyseEnCours: Bool
 
     /// Construit l ecran.
     ///
@@ -91,16 +92,21 @@ public struct VueDeBibliotheque: View {
     ///     ne l est pas. La fonction est appelee pendant le rendu et ne doit
     ///     rien decoder : le decodage vit dans l application, qui le fait hors
     ///     du fil principal et previent par observation quand il a abouti.
+    ///   - analyseEnCours: vrai pendant qu une source est lue. La grille dit
+    ///     alors qu elle attend, au lieu d afficher un etat vide qui laisserait
+    ///     croire que l analyse a echoue.
     public init(
         etat: EtatDeBibliotheque,
         libelles: LibellesDeBibliotheque,
         commandes: CommandesDeBibliotheque,
-        couverture: @escaping @MainActor (UUID) -> ImageDeLecteur? = { _ in nil }
+        couverture: @escaping @MainActor (UUID) -> ImageDeLecteur? = { _ in nil },
+        analyseEnCours: Bool = false
     ) {
         self.etat = etat
         self.libelles = libelles
         self.commandes = commandes
         self.couverture = couverture
+        self.analyseEnCours = analyseEnCours
     }
 
     public var body: some View {
@@ -112,6 +118,13 @@ public struct VueDeBibliotheque: View {
     private var contenu: some View {
         switch etat {
         case .chargement:
+            ProgressView()
+                .controlSize(.large)
+
+        case let .chargee(series) where series.isEmpty && analyseEnCours:
+            // Une source est en train d etre lue. Montrer l etat vide ici
+            // ferait croire qu elle n a rien rendu, alors qu elle n a pas
+            // encore fini.
             ProgressView()
                 .controlSize(.large)
 

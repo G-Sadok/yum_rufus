@@ -31,102 +31,27 @@ struct YumApp: App {
     @State private var couvertures: ChargeurDeCouvertures
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
-    /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
-    /// chaque apparition paierait la migration a chaque aller retour.
-    ///
-    /// La confidentialite est construite avec le registre d incognito des
-    /// services, et non avec un registre neuf. C est ce qui relie l interrupteur
-    /// de l ecran Reglages aux magasins qui ecrivent.
+    /// dependent sont construits avec elle. Le montage porte l ordre de leurs
+    /// dependances, qui est la seule chose difficile de cette construction.
     init() {
-        let services = ServicesDeLApplication()
+        let montage = MontageDeLApplication()
 
-        _services = State(initialValue: services)
-        _historique = State(initialValue: EtatDHistorique(magasin: services.historique))
-        _confidentialite = State(
-            initialValue: SessionDeConfidentialite(registre: services.incognito)
-        )
-        _premiereOuverture = State(
-            initialValue: SessionDePremiereOuverture(base: services.base)
-        )
-        _reglages = State(initialValue: SessionDeReglages(magasin: services.reglages))
-        _statistiques = State(
-            initialValue: SessionDeStatistiques(magasin: services.statistiques)
-        )
-        _stockage = State(
-            initialValue: SessionDeStockage(emplacements: services.emplacementsDuStockage)
-        )
-        _prereglages = State(
-            initialValue: SessionDePrereglages(magasin: services.prereglages)
-        )
-        let bibliotheque = SessionDeBibliotheque(magasin: services.categories)
-        let sourcesVivantes = RegistreDesSourcesVivantes(
-            magasin: services.sourcesInstallees,
-            registre: services.sources
-        )
-
-        let serie = SessionDeNavigationDeSerie(magasin: services.ficheDeSerie)
-        let couvertures = ChargeurDeCouvertures(
-            resolution: services.resolutionDeChapitre,
-            sources: sourcesVivantes
-        )
-
-        // L ordre compte : l ecran Parcourir previent la bibliotheque, le
-        // registre et les couvertures, il doit donc etre construit apres eux.
-        // Une source ajoutee devient interrogeable, et ses series montrent leur
-        // couverture, sans relancer l application.
-        _parcourir = State(
-            initialValue: SessionDeParcourir(
-                magasin: services.sourcesInstallees,
-                importateur: services.importateur,
-                sources: sourcesVivantes,
-                apresImport: {
-                    bibliotheque.recharger()
-                    couvertures.vider()
-                },
-                sourcesOntChange: {
-                    Task {
-                        await sourcesVivantes.reconstruire()
-                        couvertures.vider()
-                    }
-                }
-            )
-        )
-        _bibliotheque = State(initialValue: bibliotheque)
-        _serie = State(initialValue: serie)
-        _sourcesVivantes = State(initialValue: sourcesVivantes)
-
-        // Un resultat de recherche est range en bibliotheque avant que sa
-        // fiche s ouvre : la fiche ne sait lire que la base.
-        _recherche = State(
-            initialValue: SessionDeRecherche(
-                registre: sourcesVivantes,
-                importateur: services.importateur,
-                ouvrirLaFiche: { serie.ouvrir($0) },
-                apresImport: {
-                    bibliotheque.recharger()
-                    couvertures.vider()
-                }
-            )
-        )
-        _couvertures = State(initialValue: couvertures)
-
-        let lecture = SessionDeLecture(
-            progression: services.progression,
-            reglages: services.reglages
-        ) {
-            bibliotheque.recharger()
-            serie.fiche?.charger()
-        }
-
-        _lecture = State(initialValue: lecture)
-        _ouverture = State(
-            initialValue: OuvertureDeChapitre(
-                resolution: services.resolutionDeChapitre,
-                sensDeLecture: services.sensDeLecture,
-                sources: sourcesVivantes,
-                lecture: lecture
-            )
-        )
+        _services = State(initialValue: montage.services)
+        _historique = State(initialValue: montage.historique)
+        _confidentialite = State(initialValue: montage.confidentialite)
+        _premiereOuverture = State(initialValue: montage.premiereOuverture)
+        _reglages = State(initialValue: montage.reglages)
+        _statistiques = State(initialValue: montage.statistiques)
+        _stockage = State(initialValue: montage.stockage)
+        _prereglages = State(initialValue: montage.prereglages)
+        _bibliotheque = State(initialValue: montage.bibliotheque)
+        _sourcesVivantes = State(initialValue: montage.sourcesVivantes)
+        _serie = State(initialValue: montage.serie)
+        _couvertures = State(initialValue: montage.couvertures)
+        _parcourir = State(initialValue: montage.parcourir)
+        _recherche = State(initialValue: montage.recherche)
+        _lecture = State(initialValue: montage.lecture)
+        _ouverture = State(initialValue: montage.ouverture)
     }
 
     var body: some Scene {

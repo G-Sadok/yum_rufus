@@ -156,6 +156,32 @@ public struct VueDeRecherche: View {
         }
     }
 
+    /// Ouverture d une serie de cette source, nulle quand rien ne l ouvre.
+    ///
+    /// Le type est ecrit plutot que deduit. Une fermeture qui rend une
+    /// fermeture, posee au milieu d une hierarchie de vues, demande au
+    /// verificateur de types un travail qu il refuse de faire sur certaines
+    /// versions du compilateur.
+    private func ouverture(depuis source: SourceID) -> (@MainActor (MangaDistant) -> Void)? {
+        guard let ouvrir = commandes.ouvrirLaSerie else {
+            return nil
+        }
+
+        return { serie in ouvrir(source, serie) }
+    }
+
+    /// Ouverture d une serie precise, nulle quand rien ne l ouvre.
+    private func ouverture(
+        de serie: MangaDistant,
+        depuis source: SourceID
+    ) -> (@MainActor () -> Void)? {
+        guard let ouvrir = commandes.ouvrirLaSerie else {
+            return nil
+        }
+
+        return { ouvrir(source, serie) }
+    }
+
     // MARK: Rangees
 
     private func rangees(_ resultats: ResultatsDeRecherche) -> some View {
@@ -168,9 +194,7 @@ public struct VueDeRecherche: View {
                         delaiEnSecondes: delaiEnSecondes,
                         toutVoir: { commandes.deplier(groupe.source) },
                         reessayer: { commandes.reessayer(groupe.source) },
-                        ouvrirLaSerie: commandes.ouvrirLaSerie.map { ouvrir in
-                            { serie in ouvrir(groupe.source, serie) }
-                        },
+                        ouvrirLaSerie: ouverture(depuis: groupe.source),
                         vignette: { _ in VignetteDeResultat() }
                     )
                 }
@@ -191,9 +215,7 @@ public struct VueDeRecherche: View {
                     ForEach(groupe.resultats, id: \.identifiant) { serie in
                         VueDeCarteDeResultat(
                             serie: serie,
-                            ouvrir: commandes.ouvrirLaSerie.map { ouvrir in
-                                { ouvrir(groupe.source, serie) }
-                            },
+                            ouvrir: ouverture(de: serie, depuis: groupe.source),
                             vignette: { VignetteDeResultat() }
                         )
                     }

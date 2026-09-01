@@ -38,7 +38,7 @@ final class SessionDeParcourir {
     private(set) var etatDeConfiguration: EtatDeConfiguration = .saisie
 
     private let magasin: MagasinDeSources?
-    private let import_: MagasinDImportDeSource?
+    private let importateur: MagasinDImportDeSource?
 
     /// Sources reconstruites, celles qu on peut reinterroger.
     private let sources: RegistreDesSourcesVivantes
@@ -62,7 +62,7 @@ final class SessionDeParcourir {
         sourcesOntChange: @escaping @MainActor () -> Void = {}
     ) {
         self.magasin = magasin
-        import_ = importateur
+        self.importateur = importateur
         self.sources = sources
         self.apresImport = apresImport
         self.sourcesOntChange = sourcesOntChange
@@ -114,7 +114,7 @@ final class SessionDeParcourir {
     /// a quelque chose. Sans elle, la source apparait dans la liste et la
     /// bibliotheque reste vide, ce qui est le plus decourageant des resultats.
     func ajouterLeDossier(_ url: URL) {
-        guard let magasin, let import_ else { return }
+        guard let magasin, let importateur else { return }
 
         let identifiant = UUID()
 
@@ -134,7 +134,7 @@ final class SessionDeParcourir {
         analyseEnCours = true
 
         Task { [weak self] in
-            await self?.analyser(url, source: identifiant, import_: import_)
+            await self?.analyser(url, source: identifiant, importateur: importateur)
         }
     }
 
@@ -151,12 +151,12 @@ final class SessionDeParcourir {
     /// L import etant idempotent, actualiser une source deja lue met a jour
     /// ses series sans les dupliquer et sans toucher a la progression.
     func actualiser(_ identifiant: UUID) {
-        guard let import_, let source = sources.source(identifiant) else { return }
+        guard let importateur, let source = sources.source(identifiant) else { return }
 
         analyseEnCours = true
 
         Task { [weak self] in
-            await self?.recolter(source, dans: identifiant, import_: import_)
+            await self?.recolter(source, dans: identifiant, importateur: importateur)
         }
     }
 
@@ -168,7 +168,7 @@ final class SessionDeParcourir {
     private func recolter(
         _ source: any SourceProvider,
         dans identifiant: UUID,
-        import_: MagasinDImportDeSource
+        importateur: MagasinDImportDeSource
     ) async {
         defer { analyseEnCours = false }
 
@@ -189,7 +189,7 @@ final class SessionDeParcourir {
                 for serie in catalogue.elements {
                     let chapitres = try await source.chapitres(pour: serie.identifiant)
 
-                    try import_.importer(serie, chapitres: chapitres, de: identifiant)
+                    try importateur.importer(serie, chapitres: chapitres, de: identifiant)
                 }
 
                 guard catalogue.ilResteDesPages else { break }
@@ -214,7 +214,7 @@ final class SessionDeParcourir {
     private func analyser(
         _ url: URL,
         source identifiant: UUID,
-        import_: MagasinDImportDeSource
+        importateur: MagasinDImportDeSource
     ) async {
         defer { analyseEnCours = false }
 
@@ -238,7 +238,7 @@ final class SessionDeParcourir {
             for serie in catalogue.elements {
                 let chapitres = try await source.chapitres(pour: serie.identifiant)
 
-                try import_.importer(serie, chapitres: chapitres, de: identifiant)
+                try importateur.importer(serie, chapitres: chapitres, de: identifiant)
             }
 
             apresImport()
@@ -277,9 +277,11 @@ final class SessionDeParcourir {
             // designe et que rien ne viendrait nettoyer.
             let construite = try await FabriqueDeSource.construire(
                 type: type,
-                adresse: adresse,
-                compte: compte,
-                motDePasse: motDePasse,
+                saisie: SaisieDeSource(
+                    adresse: adresse,
+                    compte: compte,
+                    motDePasse: motDePasse
+                ),
                 identifiant: UUID(),
                 trousseau: MagasinDIdentifiantsEnMemoire()
             )
@@ -323,9 +325,11 @@ final class SessionDeParcourir {
         do {
             let construite = try await FabriqueDeSource.construire(
                 type: type,
-                adresse: adresse,
-                compte: compte,
-                motDePasse: motDePasse,
+                saisie: SaisieDeSource(
+                    adresse: adresse,
+                    compte: compte,
+                    motDePasse: motDePasse
+                ),
                 identifiant: identifiant
             )
 

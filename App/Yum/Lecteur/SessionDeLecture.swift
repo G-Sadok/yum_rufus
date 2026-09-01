@@ -12,10 +12,10 @@ import Storage
 // Ouvre un fichier pose par l utilisateur, en lit les pages et les decode a la
 // demande.
 //
-// Le document reste ouvert pendant toute la lecture, et seule la page affichee
-// est decodee. Charger le chapitre entier couterait cinquante quatre megaoctets
-// par page, ce que la section 12 interdit et que le decodage sous echantillonne
-// evite deja page par page.
+// Le document reste ouvert pendant toute la lecture. Les pages sont decodees a
+// la demande par `CacheDePagesDecodees`, qui en garde une poignee autour de
+// celle qu on regarde : le chapitre entier couterait cinquante quatre
+// megaoctets par page, ce que la section 12 interdit.
 //
 // L acces au fichier passe par un signet de securite quand le systeme l exige.
 // Sans lui, un fichier ouvert au premier lancement redeviendrait illisible au
@@ -54,27 +54,19 @@ final class SessionDeLecture {
     /// un manga se tournait donc a l envers.
     private(set) var sensCourant: SensDeLecture = .parDefaut
 
-    /// Pages du ruban deja decodees, par rang.
+    /// Les pages decodees, dans les deux mises en page.
     ///
-    /// Le ruban ne demande que ce qui approche de l ecran, et ce dictionnaire
-    /// ne grandit donc qu a mesure de la lecture. Le chapitre entier n est
-    /// jamais decode d avance.
-    private(set) var pagesDuRuban: [Int: ImageDeLecteur] = [:]
-
-    /// Rangs dont le decodage court.
-    @ObservationIgnored private var rangsEnCours: Set<Int> = []
+    /// Rien n est decode d avance au dela des voisines immediates : le ruban
+    /// demande ce qui approche de l ecran, la pagination demande la page
+    /// courante et celles d a cote. Un chapitre de deux cents pages ne coute
+    /// donc jamais deux cents pages decodees.
+    private let cache: CacheDePagesDecodees
 
     private let progression: MagasinDeProgression?
     private let reglages: MagasinDeReglages?
 
     /// Disposition des zones de toucher, lue a l ouverture du chapitre.
-    ///
-    /// Lue une fois et non a chaque appui : un reglage relu a chaque doigt pose
-    /// ferait une lecture en base par page tournee.
-    private var disposition: DispositionDeZones = .standard
-
-    /// Option Inverser les zones, lue avec la disposition.
-    private var zonesInversees = false
+    private var zones = ReglageDesZonesDeToucher(lus: nil)
 
     /// Previent qu une lecture vient de se terminer.
     ///
@@ -91,10 +83,18 @@ final class SessionDeLecture {
         self.progression = progression
         self.reglages = reglages
         self.apresLecture = apresLecture
+        cache = CacheDePagesDecodees(zone: Self.zoneDeDecodage)
+
+        cache.quandUnePageArrive = { [weak self] rang in
+            self?.poserSiCourante(rang)
+        }
+        cache.quandUnePageEchoue = { [weak self] rang in
+            self?.signalerLEchecDeDecodage(rang)
+        }
     }
 
-    private let decodeur = DecodeurDePage()
-    private let zone = TailleEnPixels(largeur: 2000, hauteur: 2600)
+    /// Taille de decodage d une page, celle d une planche a l ecran.
+    private static let zoneDeDecodage = TailleEnPixels(largeur: 2000, hauteur: 2600)
 
     /// Ouvre un fichier, archive ou dossier de pages.
     ///
@@ -123,12 +123,13 @@ final class SessionDeLecture {
             let ouvert = try LecteurDeConteneur.ouvrir(url)
 
             document = ouvert
+            cache.ouvrir(ouvert)
             titre = url.deletingPathExtension().lastPathComponent
             // Le sens haut bas impose la mise en page continue, c est le
             // modele de Core qui le dit et non le lecteur.
             sensCourant = sens
             estEnDefilement = sens.miseEnPageImposee == .continuVertical
-            lireLesZones()
+            zones = ReglageDesZonesDeToucher(lus: reglages)
             pagination = PaginationEnPageSimple(
                 nombreDePages: ouvert.nombrePages,
                 sens: sens,
@@ -167,8 +168,7 @@ final class SessionDeLecture {
         chapitre = nil
         estEnDefilement = false
         sensCourant = .parDefaut
-        pagesDuRuban = [:]
-        rangsEnCours = []
+        cache.vider()
         etat = .chargement
 
         if let acces {
@@ -208,12 +208,10 @@ final class SessionDeLecture {
     private func appuyer(abscisse: Double, ordonnee: Double) -> Bool {
         guard estEnDefilement == false, pagination.estVide == false else { return false }
 
-        let intention = ZonesDeToucher.intention(
-            pourAbscisse: abscisse,
+        let intention = zones.intention(
+            abscisse: abscisse,
             ordonnee: ordonnee,
-            sens: sensCourant,
-            disposition: disposition,
-            zonesInversees: zonesInversees
+            sens: sensCourant
         )
 
         guard intention != .aucune else { return false }
@@ -223,19 +221,6 @@ final class SessionDeLecture {
         return true
     }
 
-    /// Relit la disposition des zones et l option qui les echange.
-    private func lireLesZones() {
-        guard let reglages else { return }
-
-        if case let .choix(nom) = try? reglages.valeur(de: .zonesDeToucher),
-           let choisie = DispositionDeZones(rawValue: nom) {
-            disposition = choisie
-        }
-
-        if case let .booleen(actif) = try? reglages.valeur(de: .inverserLesZones) {
-            zonesInversees = actif
-        }
-    }
 
     var libelles: LibellesDeLecteur {
         LibellesDeLecteur(
@@ -278,84 +263,51 @@ final class SessionDeLecture {
     /// Appelee pendant le rendu de la pile. Elle rend tout de suite ce qu elle
     /// a, et l observation reveille le ruban quand le decodage aboutit.
     func page(auRang rang: Int) -> ImageDeLecteur? {
-        if let deja = pagesDuRuban[rang] {
+        if let deja = cache.page(rang) {
             return deja
         }
-
-        decoderPourLeRuban(rang)
 
         // Les deux pages suivantes partent avec celle ci. Sans elles, chaque
         // page decodee changerait la hauteur reservee juste sous le pouce, et
         // le defilement sauterait a chaque fois.
-        decoderPourLeRuban(rang + 1)
-        decoderPourLeRuban(rang + 2)
+        for voisine in rang...(rang + Self.portee) {
+            cache.demander(voisine)
+        }
 
         return nil
     }
 
-    /// Signale la page qui vient d apparaitre dans le ruban.
-    ///
-    /// La progression suit le defilement comme elle suit la pagination : c est
-    /// le meme enregistrement, declenche par un autre geste.
+    /// Signale la page qui vient d apparaitre dans le ruban. La progression
+    /// suit le defilement comme elle suit la pagination.
     func pageAtteinte(_ rang: Int) {
         guard estEnDefilement, pagination.allerALaPage(rang) else { return }
+
+        cache.elaguer(autourDe: rang, portee: Self.portee)
 
         etat = .defilement(nombreDePages: pagination.nombreDePages, position: positionCourante)
         enregistrerLaPosition()
     }
 
-    private func decoderPourLeRuban(_ rang: Int) {
-        guard let document,
-              rang >= 0,
-              rang < pagination.nombreDePages,
-              pagesDuRuban[rang] == nil,
-              rangsEnCours.contains(rang) == false
-        else {
-            return
-        }
-
-        rangsEnCours.insert(rang)
-
-        Task { [weak self, zone] in
-            let decodee = await Self.decoder(document, rang: rang, dans: zone)
-
-            guard let self else { return }
-
-            rangsEnCours.remove(rang)
-
-            if let decodee {
-                pagesDuRuban[rang] = decodee
-            }
-        }
-    }
-
-    /// Decode une page hors du fil principal.
+    /// Montre l echec quand c est la page regardee qui a refuse de se decoder.
     ///
-    /// Le decodeur est construit dans la tache et n en sort pas : le faire
-    /// traverser obligerait a le rendre partageable alors qu il ne sert que la,
-    /// le temps d une page.
-    private nonisolated static func decoder(
-        _ document: any DocumentLocal,
-        rang: Int,
-        dans zone: TailleEnPixels
-    ) async -> ImageDeLecteur? {
-        await Task.detached(priority: .userInitiated) {
-            do {
-                let reference = try document.referencePage(rang)
-                let octets = try document.donneesPage(reference)
-                let page = try DecodeurDePage().decoder(octets, nom: reference.nom, dans: zone)
+    /// Une voisine qui echoue ne dit rien : elle sera redemandee si le lecteur
+    /// y arrive, et couvrir la page lue d une erreur pour une page qu il n a
+    /// pas encore atteinte serait faux.
+    private func signalerLEchecDeDecodage(_ rang: Int) {
+        guard estEnDefilement == false, rang == pagination.index else { return }
 
-                return ImageDeLecteur(
-                    image: page.image,
-                    largeur: page.tailleDecodee.largeur,
-                    hauteur: page.tailleDecodee.hauteur
-                )
-            } catch {
-                NSLog("Ruban : %@", String(describing: error))
-
-                return nil
-            }
-        }.value
+        etat = .erreur(
+            .erreur(
+                titre: Chaines.Lecteur.erreurTitre,
+                phrase: Chaines.Lecteur.erreurPhrase,
+                reessayer: ActionDEtat(libelle: Chaines.Erreur.reessayer) { [weak self] in
+                    self?.afficherLaPageCourante()
+                },
+                repli: ActionDEtat(libelle: Chaines.Lecteur.fermer) { [weak self] in
+                    self?.fermer()
+                }
+            )
+        )
     }
 
     /// Page ou reprendre, la premiere quand le chapitre est neuf ou inconnu.
@@ -384,7 +336,7 @@ final class SessionDeLecture {
 
     /// Decode la page courante et la pose a l ecran.
     private func afficherLaPageCourante() {
-        guard let document, pagination.estVide == false else {
+        guard document != nil, pagination.estVide == false else {
             etat = .chargement
 
             return
@@ -399,35 +351,49 @@ final class SessionDeLecture {
             return
         }
 
-        do {
-            let reference = try document.referencePage(pagination.index)
-            let octets = try document.donneesPage(reference)
-            let page = try decodeur.decoder(octets, nom: reference.nom, dans: zone)
-
-            etat = .page(
-                ImageDeLecteur(
-                    image: page.image,
-                    largeur: page.tailleDecodee.largeur,
-                    hauteur: page.tailleDecodee.hauteur
-                ),
-                position: positionCourante
-            )
-        } catch {
-            etat = .erreur(
-                .erreur(
-                    titre: Chaines.Lecteur.erreurTitre,
-                    phrase: (error as? ErreurDeDecodage)?.messageUtilisateur
-                        ?? Chaines.Lecteur.erreurPhrase,
-                    reessayer: ActionDEtat(libelle: Chaines.Erreur.reessayer) { [weak self] in
-                        self?.afficherLaPageCourante()
-                    },
-                    repli: ActionDEtat(libelle: Chaines.Lecteur.fermer) { [weak self] in
-                        self?.fermer()
-                    }
-                )
-            )
-
-            NSLog("Lecture : %@", String(describing: error))
+        // La page courante et ses deux voisines. Le decodage part hors du fil
+        // principal : une page fait environ cinquante quatre megaoctets en
+        // pleine resolution, et la decoder sous le doigt figeait l interface a
+        // chaque page tournee.
+        for voisine in (pagination.index - Self.portee)...(pagination.index + Self.portee) {
+            cache.demander(voisine)
         }
+
+        cache.elaguer(autourDe: pagination.index, portee: Self.portee)
+
+        if let deja = cache.page(pagination.index) {
+            etat = .page(deja, position: positionCourante)
+        } else if unePageEstAffichee == false {
+            etat = .chargement
+        }
+
+        // Quand une page est deja a l ecran, elle y reste le temps que la
+        // suivante arrive. La remplacer par un indicateur ferait clignoter le
+        // lecteur a chaque tour, y compris quand l attente est d une image.
+    }
+
+    /// Vrai quand une planche est deja posee a l ecran.
+    private var unePageEstAffichee: Bool {
+        if case .page = etat {
+            return true
+        }
+
+        return false
+    }
+
+    /// Nombre de pages prechargees et gardees de part et d autre de la page
+    /// courante.
+    private static let portee = 2
+
+    /// Pose la page qui vient d etre decodee, si c est celle qu on regarde.
+    private func poserSiCourante(_ rang: Int) {
+        guard estEnDefilement == false,
+              rang == pagination.index,
+              let page = cache.page(rang)
+        else {
+            return
+        }
+
+        etat = .page(page, position: positionCourante)
     }
 }

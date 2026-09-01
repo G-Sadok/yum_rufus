@@ -13,6 +13,28 @@ import Sources
 // l utilisateur, ce que la section des contraintes juridiques impose.
 //
 
+/// Ce que la feuille de configuration a saisi.
+///
+/// Les trois champs voyagent ensemble parce qu ils viennent ensemble et se
+/// perdent ensemble : une adresse sans son compte ne construit rien de plus
+/// qu un compte sans son adresse.
+struct SaisieDeSource {
+    let adresse: String
+    let compte: String
+    let motDePasse: String
+
+    init(adresse: String, compte: String = "", motDePasse: String = "") {
+        self.adresse = adresse
+        self.compte = compte
+        self.motDePasse = motDePasse
+    }
+
+    /// Vrai quand la source demande une authentification.
+    var demandeUnCompte: Bool {
+        compte.isEmpty == false
+    }
+}
+
 enum FabriqueDeSource {
     /// Ce que la fabrique refuse de construire.
     enum Erreur: Error, LocalizedError {
@@ -31,9 +53,7 @@ enum FabriqueDeSource {
     ///
     /// - Parameters:
     ///   - type: type choisi dans le menu d ajout.
-    ///   - adresse: adresse saisie, telle quelle.
-    ///   - compte: compte saisi, vide quand la source n en demande pas.
-    ///   - motDePasse: mot de passe saisi.
+    ///   - saisie: ce que la feuille a saisi.
     ///   - identifiant: identifiant que la source portera en base.
     ///   - trousseau: ou ranger les identifiants. Le trousseau du systeme pour
     ///     une source qui va vivre, un magasin en memoire pour un simple test
@@ -42,13 +62,11 @@ enum FabriqueDeSource {
     ///     rien ne viendrait jamais nettoyer.
     static func construire(
         type: TypeDeSource,
-        adresse: String,
-        compte: String,
-        motDePasse: String,
+        saisie: SaisieDeSource,
         identifiant: UUID,
         trousseau: any MagasinDIdentifiants = TrousseauDuSysteme()
     ) async throws -> (source: any SourceProvider, configuration: ConfigurationDeSource) {
-        guard let url = URL(string: adresse.trimmingCharacters(in: .whitespaces)),
+        guard let url = URL(string: saisie.adresse.trimmingCharacters(in: .whitespaces)),
               url.host() != nil
         else {
             throw Erreur.adresseIllisible
@@ -56,16 +74,16 @@ enum FabriqueDeSource {
 
         let source = SourceID(identifiant)
 
-        if compte.isEmpty == false {
+        if saisie.demandeUnCompte {
             try await trousseau.enregistrer(
-                .basique(compte: compte, motDePasse: motDePasse),
+                .basique(compte: saisie.compte, motDePasse: saisie.motDePasse),
                 pour: source
             )
         }
 
         let configuration = ConfigurationDeSource(
             adresse: url,
-            authentification: compte.isEmpty ? .aucune : .basique
+            authentification: saisie.demandeUnCompte ? .basique : .aucune
         )
 
         let construite = try await provider(
@@ -73,8 +91,7 @@ enum FabriqueDeSource {
             source: source,
             configuration: configuration,
             trousseau: trousseau,
-            compte: compte,
-            motDePasse: motDePasse
+            saisie: saisie
         )
 
         // La configuration revient avec la source : elle doit etre persistee
@@ -100,15 +117,12 @@ enum FabriqueDeSource {
         // chercher elles memes ce dont elles ont besoin sous la cle de leur
         // identifiant ; les partages reseau, non, et c est pour eux que ces
         // deux chaines sont extraites.
-        let compte: String
-        let motDePasse: String
+        let saisie: SaisieDeSource
 
-        if case let .basique(compte: saisi, motDePasse: secret) = ranges {
-            compte = saisi
-            motDePasse = secret
+        if case let .basique(compte: compte, motDePasse: motDePasse) = ranges {
+            saisie = SaisieDeSource(adresse: "", compte: compte, motDePasse: motDePasse)
         } else {
-            compte = ""
-            motDePasse = ""
+            saisie = SaisieDeSource(adresse: "")
         }
 
         return try await provider(
@@ -116,8 +130,7 @@ enum FabriqueDeSource {
             source: identifiant,
             configuration: configuration,
             trousseau: trousseau,
-            compte: compte,
-            motDePasse: motDePasse,
+            saisie: saisie,
             nom: nom
         )
     }
@@ -127,8 +140,7 @@ enum FabriqueDeSource {
         source: SourceID,
         configuration: ConfigurationDeSource,
         trousseau: any MagasinDIdentifiants,
-        compte: String,
-        motDePasse: String,
+        saisie: SaisieDeSource,
         nom: String? = nil
     ) async throws -> any SourceProvider {
         let libelle = nom ?? type.rawValue
@@ -142,8 +154,7 @@ enum FabriqueDeSource {
                 source: source,
                 configuration: configuration,
                 libelle: libelle,
-                compte: compte,
-                motDePasse: motDePasse
+                saisie: saisie
             )
         }
 
@@ -202,8 +213,7 @@ enum FabriqueDeSource {
         source: SourceID,
         configuration: ConfigurationDeSource,
         libelle: String,
-        compte: String,
-        motDePasse: String
+        saisie: SaisieDeSource
     ) async throws -> any SourceProvider {
         guard let url = configuration.adresse, let hote = url.host() else {
             throw Erreur.adresseIllisible
@@ -223,9 +233,9 @@ enum FabriqueDeSource {
                 hote: hote,
                 partage: racine,
                 canal: CanalTcp(hote: hote, port: Self.portSmb),
-                identifiants: compte.isEmpty
-                    ? .invite
-                    : .compte(compte: compte, motDePasse: motDePasse)
+                identifiants: saisie.demandeUnCompte
+                    ? .compte(compte: saisie.compte, motDePasse: saisie.motDePasse)
+                    : .invite
             )
 
         case .nfs:
@@ -246,9 +256,9 @@ enum FabriqueDeSource {
             client = try PartageWebDav(
                 libelle: libelle,
                 base: url,
-                identifiants: compte.isEmpty
-                    ? .aucuns
-                    : .compte(compte: compte, motDePasse: motDePasse),
+                identifiants: saisie.demandeUnCompte
+                    ? .compte(compte: saisie.compte, motDePasse: saisie.motDePasse)
+                    : .aucuns,
                 accepteLeHttpEnClair: configuration.accepteLeHttpEnClair
             )
         }

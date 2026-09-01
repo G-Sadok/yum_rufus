@@ -45,7 +45,7 @@ final class SessionDeRecherche {
     private static let reposAvantRecherche: Duration = .milliseconds(300)
 
     private let registre: RegistreDesSourcesVivantes
-    private let import_: MagasinDImportDeSource?
+    private let importateur: MagasinDImportDeSource?
 
     /// Ouvre la fiche d une serie de la bibliotheque.
     private let ouvrirLaFiche: @MainActor (UUID) -> Void
@@ -63,7 +63,7 @@ final class SessionDeRecherche {
         apresImport: @escaping @MainActor () -> Void = {}
     ) {
         self.registre = registre
-        import_ = importateur
+        self.importateur = importateur
         self.ouvrirLaFiche = ouvrirLaFiche
         self.apresImport = apresImport
     }
@@ -108,7 +108,7 @@ final class SessionDeRecherche {
     /// la base. Il est idempotent : rouvrir un resultat deja range met la
     /// serie a jour sans la dupliquer et sans toucher a la progression.
     private func ouvrir(_ serie: MangaDistant, de source: SourceID) {
-        guard let import_, let fournisseur = registre.source(source.brut) else { return }
+        guard let importateur, let fournisseur = registre.source(source.brut) else { return }
 
         Task { [weak self] in
             let chapitres = (try? await fournisseur.chapitres(pour: serie.identifiant)) ?? []
@@ -116,9 +116,9 @@ final class SessionDeRecherche {
             guard let self else { return }
 
             do {
-                try import_.importer(serie, chapitres: chapitres, de: source.brut)
+                try importateur.importer(serie, chapitres: chapitres, de: source.brut)
 
-                guard let interne = try import_.identifiant(
+                guard let interne = try importateur.identifiant(
                     deLaSerie: serie.identifiant,
                     source: source.brut
                 ) else {

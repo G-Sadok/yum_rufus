@@ -40,6 +40,9 @@ final class SessionDeParcourir {
     private let magasin: MagasinDeSources?
     private let import_: MagasinDImportDeSource?
 
+    /// Sources reconstruites, celles qu on peut reinterroger.
+    private let sources: RegistreDesSourcesVivantes
+
     /// Relit la bibliotheque quand l import y a ajoute des series.
     private let apresImport: @MainActor () -> Void
 
@@ -54,11 +57,13 @@ final class SessionDeParcourir {
     init(
         magasin: MagasinDeSources?,
         importateur: MagasinDImportDeSource?,
+        sources: RegistreDesSourcesVivantes,
         apresImport: @escaping @MainActor () -> Void = {},
         sourcesOntChange: @escaping @MainActor () -> Void = {}
     ) {
         self.magasin = magasin
         import_ = importateur
+        self.sources = sources
         self.apresImport = apresImport
         self.sourcesOntChange = sourcesOntChange
     }
@@ -93,9 +98,8 @@ final class SessionDeParcourir {
                     self?.typeEnConfiguration = type
                 }
             },
-            ouvrir: { _ in
-                // Le catalogue d une source est l ecran de la section 5.3 qui
-                // n existe pas encore.
+            ouvrir: { [weak self] identifiant in
+                self?.actualiser(identifiant)
             },
             supprimer: { [weak self] identifiant in
                 self?.agir { _ = try $0.supprimer(identifiant) }
@@ -133,6 +137,78 @@ final class SessionDeParcourir {
             await self?.analyser(url, source: identifiant, import_: import_)
         }
     }
+
+    // MARK: Actualisation d une source installee
+
+    /// Relit une source deja installee et range ce qu elle rend.
+    ///
+    /// C est ce que fait le clic sur une ligne. Ouvrir le catalogue d une
+    /// source dans un ecran a part demanderait de choisir quoi importer, alors
+    /// qu une source installee est deja un choix : ce qu elle contient a sa
+    /// place en bibliotheque, et l y mettre est la seule chose que
+    /// l utilisateur puisse vouloir en la designant.
+    ///
+    /// L import etant idempotent, actualiser une source deja lue met a jour
+    /// ses series sans les dupliquer et sans toucher a la progression.
+    func actualiser(_ identifiant: UUID) {
+        guard let import_, let source = sources.source(identifiant) else { return }
+
+        analyseEnCours = true
+
+        Task { [weak self] in
+            await self?.recolter(source, dans: identifiant, import_: import_)
+        }
+    }
+
+    /// Parcourt le catalogue d une source, page par page, et range ce qu il rend.
+    ///
+    /// Le nombre de pages est borne. Une source qui annoncerait toujours une
+    /// page suivante ferait tourner cette boucle sans fin, et l utilisateur
+    /// n aurait aucun moyen de l arreter.
+    private func recolter(
+        _ source: any SourceProvider,
+        dans identifiant: UUID,
+        import_: MagasinDImportDeSource
+    ) async {
+        defer { analyseEnCours = false }
+
+        var page = 0
+
+        do {
+            // Une source de fichiers garde son analyse en cache. Sans cette
+            // relance, actualiser un dossier rendrait ce qu il contenait a la
+            // premiere lecture, et un chapitre ajoute depuis resterait
+            // invisible tant que l application ne serait pas relancee.
+            if let locale = source as? SourceFichiersLocaux {
+                try await locale.reanalyser()
+            }
+
+            while page < Self.pagesMaximalesParActualisation {
+                let catalogue = try await source.parcourir(.tout, page: page)
+
+                for serie in catalogue.elements {
+                    let chapitres = try await source.chapitres(pour: serie.identifiant)
+
+                    try import_.importer(serie, chapitres: chapitres, de: identifiant)
+                }
+
+                guard catalogue.ilResteDesPages else { break }
+
+                page += 1
+            }
+
+            if page == Self.pagesMaximalesParActualisation {
+                NSLog("Parcourir : catalogue tronque a %ld pages", page)
+            }
+
+            apresImport()
+        } catch {
+            NSLog("Actualisation de la source : %@", String(describing: error))
+        }
+    }
+
+    /// Nombre de pages de catalogue lues au plus par actualisation.
+    private static let pagesMaximalesParActualisation = 50
 
     /// Parcourt le dossier et range ce qu il contient.
     private func analyser(

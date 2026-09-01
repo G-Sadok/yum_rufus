@@ -78,6 +78,7 @@ struct YumApp: App {
             initialValue: SessionDeParcourir(
                 magasin: services.sourcesInstallees,
                 importateur: services.importateur,
+                sources: sourcesVivantes,
                 apresImport: {
                     bibliotheque.recharger()
                     couvertures.vider()

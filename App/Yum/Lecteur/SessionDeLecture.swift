@@ -65,6 +65,16 @@ final class SessionDeLecture {
     @ObservationIgnored private var rangsEnCours: Set<Int> = []
 
     private let progression: MagasinDeProgression?
+    private let reglages: MagasinDeReglages?
+
+    /// Disposition des zones de toucher, lue a l ouverture du chapitre.
+    ///
+    /// Lue une fois et non a chaque appui : un reglage relu a chaque doigt pose
+    /// ferait une lecture en base par page tournee.
+    private var disposition: DispositionDeZones = .standard
+
+    /// Option Inverser les zones, lue avec la disposition.
+    private var zonesInversees = false
 
     /// Previent qu une lecture vient de se terminer.
     ///
@@ -75,9 +85,11 @@ final class SessionDeLecture {
 
     init(
         progression: MagasinDeProgression? = nil,
+        reglages: MagasinDeReglages? = nil,
         apresLecture: @escaping @MainActor () -> Void = {}
     ) {
         self.progression = progression
+        self.reglages = reglages
         self.apresLecture = apresLecture
     }
 
@@ -116,6 +128,7 @@ final class SessionDeLecture {
             // modele de Core qui le dit et non le lecteur.
             sensCourant = sens
             estEnDefilement = sens.miseEnPageImposee == .continuVertical
+            lireLesZones()
             pagination = PaginationEnPageSimple(
                 nombreDePages: ouvert.nombrePages,
                 sens: sens,
@@ -178,8 +191,50 @@ final class SessionDeLecture {
             },
             fermer: { [weak self] in
                 self?.fermer()
+            },
+            appuyer: { [weak self] abscisse, ordonnee in
+                self?.appuyer(abscisse: abscisse, ordonnee: ordonnee) ?? false
             }
         )
+    }
+
+    // MARK: Zones de toucher
+
+    /// Traite un appui, et dit s il a tourne une page.
+    ///
+    /// Rend faux en defilement continu : le doigt y sert a faire glisser le
+    /// ruban, et tourner une page sous un doigt qui defile serait un saut que
+    /// personne n a demande.
+    private func appuyer(abscisse: Double, ordonnee: Double) -> Bool {
+        guard estEnDefilement == false, pagination.estVide == false else { return false }
+
+        let intention = ZonesDeToucher.intention(
+            pourAbscisse: abscisse,
+            ordonnee: ordonnee,
+            sens: sensCourant,
+            disposition: disposition,
+            zonesInversees: zonesInversees
+        )
+
+        guard intention != .aucune else { return false }
+
+        deplacer(intention)
+
+        return true
+    }
+
+    /// Relit la disposition des zones et l option qui les echange.
+    private func lireLesZones() {
+        guard let reglages else { return }
+
+        if case let .choix(nom) = try? reglages.valeur(de: .zonesDeToucher),
+           let choisie = DispositionDeZones(rawValue: nom) {
+            disposition = choisie
+        }
+
+        if case let .booleen(actif) = try? reglages.valeur(de: .inverserLesZones) {
+            zonesInversees = actif
+        }
     }
 
     var libelles: LibellesDeLecteur {

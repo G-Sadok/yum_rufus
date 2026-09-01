@@ -80,14 +80,29 @@ public struct CommandesDeLecteur {
     public let pagePrecedente: @MainActor () -> Void
     public let fermer: @MainActor () -> Void
 
+    /// Traduit un appui sur la surface de lecture.
+    ///
+    /// Les deux valeurs sont des parts de la largeur et de la hauteur, mesurees
+    /// depuis le bord gauche et depuis le bord haut, quel que soit le sens de
+    /// lecture. La traduction en zones vit dans l application : elle depend du
+    /// sens, de la disposition choisie et de l option Inverser les zones, que
+    /// le systeme de design ne voit pas.
+    ///
+    /// Rend vrai quand l appui a tourne une page. Faux, il bascule les barres :
+    /// c est la bande du milieu, et c est aussi ce qui se passe quand les zones
+    /// sont desactivees.
+    public let appuyer: @MainActor (Double, Double) -> Bool
+
     public init(
         pageSuivante: @escaping @MainActor () -> Void,
         pagePrecedente: @escaping @MainActor () -> Void,
-        fermer: @escaping @MainActor () -> Void
+        fermer: @escaping @MainActor () -> Void,
+        appuyer: @escaping @MainActor (Double, Double) -> Bool = { _, _ in false }
     ) {
         self.pageSuivante = pageSuivante
         self.pagePrecedente = pagePrecedente
         self.fermer = fermer
+        self.appuyer = appuyer
     }
 }
 
@@ -162,25 +177,43 @@ public struct VueDeLecteur: View {
     }
 
     public var body: some View {
-        ZStack {
-            fond.couleur.couleur
-                .ignoresSafeArea()
+        GeometryReader { cadre in
+            ZStack {
+                fond.couleur.couleur
+                    .ignoresSafeArea()
 
-            planche
+                planche
 
-            if barresVisibles {
-                barres
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                if barresVisibles {
+                    barres
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { point in
+                appuyer(point, dans: cadre.size)
             }
         }
-        .contentShape(Rectangle())
-        .onTapGesture { basculerLesBarres() }
         .gesture(balayage)
         .focusable()
         .onKeyPress(.rightArrow) { avancerVersLaDroite() }
         .onKeyPress(.leftArrow) { avancerVersLaGauche() }
         .onKeyPress(.space) { commandes.pageSuivante(); return .handled }
         .onKeyPress(.escape) { commandes.fermer(); return .handled }
+    }
+
+    /// Traite un appui : une page tournee, ou les barres qui apparaissent.
+    ///
+    /// Les coordonnees partent en parts de la surface et non en points. La
+    /// traduction depend du sens de lecture et de la disposition choisie, que
+    /// l application connait et que le systeme de design ne voit pas.
+    private func appuyer(_ point: CGPoint, dans taille: CGSize) {
+        let abscisse = taille.width > 0 ? point.x / taille.width : 0.5
+        let ordonnee = taille.height > 0 ? point.y / taille.height : 0.5
+
+        if commandes.appuyer(Double(abscisse), Double(ordonnee)) == false {
+            basculerLesBarres()
+        }
     }
 
     // MARK: Planche

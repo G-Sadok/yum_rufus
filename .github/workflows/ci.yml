@@ -70,7 +70,18 @@ jobs:
             \( -name '*.xcodeproj' -o -name '*.xcworkspace' \) -print -quit 2>/dev/null || true)
           if [ -n "$PROJET" ]; then
             echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "projet=$PROJET" >> "$GITHUB_OUTPUT"
             echo "Projet Xcode detecte : $PROJET"
+
+            # Le schema de l application ne declare pas toujours de testable.
+            # xcodebuild test echoue quand il n y en a aucun, et la couche
+            # metier est de toute facon couverte par verifications.sh.
+            if grep -rq "<TestableReference" "$PROJET/xcshareddata/xcschemes" 2>/dev/null; then
+              echo "testable=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "testable=false" >> "$GITHUB_OUTPUT"
+              echo "Le schema ne declare aucun testable, l action de test est passee."
+            fi
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
             echo "Pas encore de projet Xcode, la couche metier est couverte par verifications.sh."
@@ -80,6 +91,7 @@ jobs:
         if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild build \
+            -project "${{ steps.detection.outputs.projet }}" \
             -scheme Yum \
             -destination 'platform=macOS' \
             -configuration Debug \
@@ -89,15 +101,17 @@ jobs:
         if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild build \
+            -project "${{ steps.detection.outputs.projet }}" \
             -scheme Yum \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -configuration Debug \
             | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Lancer les tests
-        if: steps.detection.outputs.present == 'true'
+        if: steps.detection.outputs.testable == 'true'
         run: |
           xcodebuild test \
+            -project "${{ steps.detection.outputs.projet }}" \
             -scheme Yum \
             -destination 'platform=macOS' \
             -enableCodeCoverage YES \

@@ -59,6 +59,18 @@ public struct LibellesDeRecherche: Sendable, Equatable {
     /// Phrase affichee quand aucune source ne connait le terme cherche.
     public let aucunResultatPhrase: String
 
+    /// Titre affiche quand aucune source installee ne sait chercher.
+    public let aucuneSourceTitre: String
+
+    /// Phrase affichee quand aucune source installee ne sait chercher.
+    public let aucuneSourcePhrase: String
+
+    /// Titre affiche quand toutes les sources interrogees ont echoue.
+    public let toutesLesSourcesTitre: String
+
+    /// Phrase affichee quand toutes les sources interrogees ont echoue.
+    public let toutesLesSourcesPhrase: String
+
     public init(
         espaceReserve: String,
         etiquetteDuChamp: String,
@@ -73,7 +85,11 @@ public struct LibellesDeRecherche: Sendable, Equatable {
         ligneAccesRefuse: String,
         ligneEchec: String,
         aucunResultatTitre: String,
-        aucunResultatPhrase: String
+        aucunResultatPhrase: String,
+        aucuneSourceTitre: String,
+        aucuneSourcePhrase: String,
+        toutesLesSourcesTitre: String,
+        toutesLesSourcesPhrase: String
     ) {
         self.espaceReserve = espaceReserve
         self.etiquetteDuChamp = etiquetteDuChamp
@@ -89,6 +105,10 @@ public struct LibellesDeRecherche: Sendable, Equatable {
         self.ligneEchec = ligneEchec
         self.aucunResultatTitre = aucunResultatTitre
         self.aucunResultatPhrase = aucunResultatPhrase
+        self.aucuneSourceTitre = aucuneSourceTitre
+        self.aucuneSourcePhrase = aucuneSourcePhrase
+        self.toutesLesSourcesTitre = toutesLesSourcesTitre
+        self.toutesLesSourcesPhrase = toutesLesSourcesPhrase
     }
 }
 

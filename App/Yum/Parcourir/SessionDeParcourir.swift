@@ -43,14 +43,24 @@ final class SessionDeParcourir {
     /// Relit la bibliotheque quand l import y a ajoute des series.
     private let apresImport: @MainActor () -> Void
 
+    /// Previent que la liste des sources a change.
+    ///
+    /// Une source ajoutee doit devenir interrogeable sans relancer
+    /// l application, et une source supprimee doit cesser de repondre. Le
+    /// registre des sources vivantes se rebatit donc a chaque ajout et a
+    /// chaque suppression, pas seulement au lancement.
+    private let sourcesOntChange: @MainActor () -> Void
+
     init(
         magasin: MagasinDeSources?,
         importateur: MagasinDImportDeSource?,
-        apresImport: @escaping @MainActor () -> Void = {}
+        apresImport: @escaping @MainActor () -> Void = {},
+        sourcesOntChange: @escaping @MainActor () -> Void = {}
     ) {
         self.magasin = magasin
         import_ = importateur
         self.apresImport = apresImport
+        self.sourcesOntChange = sourcesOntChange
     }
 
     func recharger() {
@@ -89,6 +99,7 @@ final class SessionDeParcourir {
             },
             supprimer: { [weak self] identifiant in
                 self?.agir { _ = try $0.supprimer(identifiant) }
+                self?.sourcesOntChange()
             }
         )
     }
@@ -109,6 +120,7 @@ final class SessionDeParcourir {
             )
 
             recharger()
+            sourcesOntChange()
         } catch {
             NSLog("Parcourir : %@", String(describing: error))
 
@@ -222,6 +234,7 @@ final class SessionDeParcourir {
 
             typeEnConfiguration = nil
             recharger()
+            sourcesOntChange()
         } catch {
             etatDeConfiguration = .echec(
                 (error as? LocalizedError)?.errorDescription ?? Chaines.Erreur.reglagesPhrase

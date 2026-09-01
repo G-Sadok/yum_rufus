@@ -106,6 +106,15 @@ public actor RegistreDeSources {
         }
     }
 
+    /// Remplace toutes les sources inscrites par celles ci.
+    ///
+    /// C est ce qu appelle la couche qui reconstruit les sources depuis la
+    /// base : elle connait la liste complete, et l inscrire source par source
+    /// laisserait dans le registre celles qui viennent d etre supprimees.
+    public func remplacerPar(_ sources: [any SourceProvider]) {
+        inscrites = sources
+    }
+
     /// Retire une source, et rend vrai quand elle y etait.
     @discardableResult
     public func retirer(_ id: SourceID) -> Bool {

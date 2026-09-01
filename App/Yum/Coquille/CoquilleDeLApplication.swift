@@ -44,6 +44,9 @@ struct CoquilleDeLApplication: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Ecran Rechercher, section 5.4.
+    let recherche: SessionDeRecherche
+
     /// Fiche de serie ouverte, section 5.6.
     let serie: SessionDeNavigationDeSerie
 
@@ -140,6 +143,7 @@ struct CoquilleDeLApplication: View {
             historique: historique,
             parcourir: parcourir,
             bibliotheque: bibliotheque,
+            recherche: recherche,
             serie: serie,
             reglages: reglages,
             statistiques: statistiques,

@@ -26,6 +26,7 @@ struct YumApp: App {
     @State private var bibliotheque: SessionDeBibliotheque
     @State private var serie: SessionDeNavigationDeSerie
     @State private var sourcesVivantes: RegistreDesSourcesVivantes
+    @State private var recherche: SessionDeRecherche
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -55,21 +56,26 @@ struct YumApp: App {
         _prereglages = State(
             initialValue: SessionDePrereglages(magasin: services.prereglages)
         )
+        let bibliotheque = SessionDeBibliotheque(magasin: services.categories)
+        let sourcesVivantes = RegistreDesSourcesVivantes(magasin: services.sourcesInstallees)
+
+        // L ordre compte : l ecran Parcourir previent la bibliotheque et le
+        // registre, il doit donc etre construit apres eux. Une source ajoutee
+        // devient interrogeable sans relancer l application.
         _parcourir = State(
             initialValue: SessionDeParcourir(
                 magasin: services.sourcesInstallees,
-                importateur: services.importateur
+                importateur: services.importateur,
+                apresImport: { bibliotheque.recharger() },
+                sourcesOntChange: { sourcesVivantes.reconstruire() }
             )
         )
-        _bibliotheque = State(
-            initialValue: SessionDeBibliotheque(magasin: services.categories)
-        )
+        _bibliotheque = State(initialValue: bibliotheque)
         _serie = State(
             initialValue: SessionDeNavigationDeSerie(magasin: services.ficheDeSerie)
         )
-        _sourcesVivantes = State(
-            initialValue: RegistreDesSourcesVivantes(magasin: services.sourcesInstallees)
-        )
+        _sourcesVivantes = State(initialValue: sourcesVivantes)
+        _recherche = State(initialValue: SessionDeRecherche(registre: sourcesVivantes))
     }
 
     var body: some Scene {
@@ -86,6 +92,7 @@ struct YumApp: App {
                 lecture: lecture,
                 parcourir: parcourir,
                 bibliotheque: bibliotheque,
+                recherche: recherche,
                 serie: serie
             )
             // Ce que le systeme envoie quand on ouvre un fichier avec Yum,

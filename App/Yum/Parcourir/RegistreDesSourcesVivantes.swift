@@ -25,6 +25,15 @@ final class RegistreDesSourcesVivantes {
     /// Sources pretes a repondre, par identifiant.
     private(set) var sources: [UUID: any SourceProvider] = [:]
 
+    /// Le registre de Core, qui sait poser la meme question a toutes les
+    /// sources en isolant chacune et en bornant son delai.
+    ///
+    /// Il est alimente ici plutot que reconstruit par chaque ecran : la
+    /// recherche, le catalogue et la verification de connexion posent la meme
+    /// question au meme jeu de sources, et deux registres finiraient par ne
+    /// plus contenir les memes.
+    let registre = RegistreDeSources()
+
     private let magasin: MagasinDeSources?
 
     init(magasin: MagasinDeSources?) {
@@ -40,6 +49,10 @@ final class RegistreDesSourcesVivantes {
         guard let magasin, let lignes = try? magasin.sources() else {
             sources = [:]
 
+            Task { [registre] in
+                await registre.remplacerPar([])
+            }
+
             return
         }
 
@@ -52,6 +65,12 @@ final class RegistreDesSourcesVivantes {
         }
 
         sources = vivantes
+
+        let aInscrire = Array(vivantes.values)
+
+        Task { [registre] in
+            await registre.remplacerPar(aInscrire)
+        }
     }
 
     /// Source prete pour cet identifiant, nulle quand rien ne l a reconstruite.

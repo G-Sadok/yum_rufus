@@ -30,6 +30,9 @@ extension Jetons {
         /// Taille de rendu de la loupe et du bouton d effacement.
         public static let tailleDesSymbolesDuChamp = Icone.tailleEnMenu
 
+        /// Marge laterale de l ecran, celle de toute colonne de contenu.
+        public static let margeLaterale = LigneDeReglage.margeLaterale
+
         /// Nom de la source, en tete de sa rangee.
         public static let nomDeSource = Typo.headline
         /// Compteur de resultats, a cote du nom.

@@ -10678,6 +10678,516 @@
           }
         }
       }
+    },
+    "recherche.espaceReserve": {
+      "comment": "Espace reserve du champ de la barre d outils, tableau 6.2",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search your sources"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar en tus fuentes"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chercher dans vos sources"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ソースを検索"
+          }
+        }
+      }
+    },
+    "recherche.etiquetteDuChamp": {
+      "comment": "Etiquette d accessibilite du champ, qui n a pas de libelle visible",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search field"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Campo de busqueda"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Champ de recherche"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検索フィールド"
+          }
+        }
+      }
+    },
+    "recherche.effacer": {
+      "comment": "Bouton qui vide le champ de recherche",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear search"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Borrar la busqueda"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effacer la recherche"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検索をクリア"
+          }
+        }
+      }
+    },
+    "recherche.compteur": {
+      "comment": "Compteur d une rangee, section 5.4. La source a rendu tout ce qu elle connait",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld results"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld resultados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld resultats"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld件"
+          }
+        }
+      }
+    },
+    "recherche.compteurPartiel": {
+      "comment": "Compteur d une rangee dont la source annonce d autres pages. Le nombre de la premiere page n est pas un total",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld results or more"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld resultados o mas"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld resultats ou plus"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld件以上"
+          }
+        }
+      }
+    },
+    "recherche.toutVoir": {
+      "comment": "Lien de l en tete d une rangee, tableau 6.5",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See all"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver todo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout voir"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべて表示"
+          }
+        }
+      }
+    },
+    "recherche.retour": {
+      "comment": "Retour depuis la liste complete d une source vers toutes les rangees",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All results"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos los resultados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tous les resultats"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "すべての結果"
+          }
+        }
+      }
+    },
+    "recherche.ligne.delaiDepasse": {
+      "comment": "Ligne d une source qui n a pas repondu dans le delai, tableau 6.4. Nom de la source, puis delai en secondes",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ did not respond within %lld seconds."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ no respondio en %lld segundos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ n a pas repondu en %lld secondes."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@は%lld秒以内に応答しませんでした。"
+          }
+        }
+      }
+    },
+    "recherche.ligne.injoignable": {
+      "comment": "Ligne d une source qui n a pas pu etre jointe du tout, tableau 6.4",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ could not be reached."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No se pudo contactar con %@."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ est injoignable."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@に接続できませんでした。"
+          }
+        }
+      }
+    },
+    "recherche.ligne.accesRefuse": {
+      "comment": "Ligne d une source qui a refuse les identifiants ou l acces, tableau 6.4",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ refused access."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ denego el acceso."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ a refuse l acces."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@がアクセスを拒否しました。"
+          }
+        }
+      }
+    },
+    "recherche.ligne.echec": {
+      "comment": "Ligne d un echec qu aucune des trois autres formes ne decrit, tableau 6.4",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ could not search."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ no pudo buscar."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ n a pas pu chercher."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@は検索できませんでした。"
+          }
+        }
+      }
+    },
+    "recherche.aucunResultat.titre": {
+      "comment": "Titre affiche quand aucune source ne connait le terme cherche, tableau 6.3",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sin resultados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun resultat"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "結果なし"
+          }
+        }
+      }
+    },
+    "recherche.aucunResultat.phrase": {
+      "comment": "Phrase affichee quand aucune source ne connait le terme cherche, tableau 6.3",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None of your sources knows this title. Try another spelling, or the original title."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguna de tus fuentes conoce este titulo. Prueba otra ortografia o el titulo original."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune de vos sources ne connait ce titre. Essayez une autre orthographe, ou le titre original."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どのソースにもこのタイトルはありません。別のつづりか、原題を試してください。"
+          }
+        }
+      }
+    },
+    "recherche.aucuneSource.titre": {
+      "comment": "Titre affiche quand aucune source installee ne sait chercher",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No source can search"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguna fuente puede buscar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune source ne sait chercher"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検索できるソースがありません"
+          }
+        }
+      }
+    },
+    "recherche.aucuneSource.phrase": {
+      "comment": "Phrase affichee quand aucune source installee ne sait chercher. Un dossier local ne cherche pas, il se parcourt",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a server or a catalog in Browse. A local folder is browsed, not searched."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anade un servidor o un catalogo en Explorar. Una carpeta local se explora, no se busca."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez un serveur ou un catalogue dans Parcourir. Un dossier local se parcourt, il ne se cherche pas."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "「見つける」でサーバーかカタログを追加してください。ローカルフォルダは検索ではなく閲覧します。"
+          }
+        }
+      }
+    },
+    "recherche.toutesLesSources.titre": {
+      "comment": "Titre affiche quand toutes les sources interrogees ont echoue, tableau 6.4",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your sources did not respond"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tus fuentes no respondieron"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos sources n ont pas repondu"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ソースが応答しませんでした"
+          }
+        }
+      }
+    },
+    "recherche.toutesLesSources.phrase": {
+      "comment": "Phrase affichee quand toutes les sources interrogees ont echoue. Une page de lignes d erreur empilees n aide personne",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None of your sources could respond. Check your connection, then try again."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguna de tus fuentes pudo responder. Comprueba tu conexion y vuelve a intentarlo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune de vos sources n a pu repondre. Verifiez votre connexion, puis reessayez."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "どのソースも応答できませんでした。接続を確認してから再試行してください。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

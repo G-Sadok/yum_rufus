@@ -31,6 +31,12 @@ struct VueDeDestination: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Ecran Rechercher, section 5.4.
+    ///
+    /// Liee et non simplement passee : le champ de la barre d outils ecrit
+    /// dans la session, et une valeur non liee ne laisserait rien a taper.
+    @Bindable var recherche: SessionDeRecherche
+
     /// Fiche de serie ouverte, section 5.6.
     let serie: SessionDeNavigationDeSerie
 
@@ -111,13 +117,12 @@ struct VueDeDestination: View {
             }
 
         case .rechercher:
-            VueDEtatDeContenu(
-                .vide(
-                    symbole: Jetons.icone(de: destination),
-                    titre: Chaines.EtatVide.rechercherTitre,
-                    phrase: Chaines.EtatVide.rechercherPhrase,
-                    action: nil
-                )
+            VueDeRecherche(
+                terme: $recherche.terme,
+                etat: recherche.etat,
+                libelles: .duCatalogue,
+                delaiEnSecondes: recherche.delaiEnSecondes,
+                commandes: recherche.commandes
             )
 
         case .reglages:

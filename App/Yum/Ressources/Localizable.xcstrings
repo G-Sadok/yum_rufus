@@ -3428,25 +3428,25 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Manga read right to left, manhwa and comics read left to right. You can change this choice series by series."
+            "value": "Manga reads right to left, manhwa and comics left to right, webtoons top to bottom. You can change this per series later."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Los mangas se leen de derecha a izquierda, los manhwas y los cómics de izquierda a derecha. Podrás cambiar esta opción serie por serie."
+            "value": "El manga se lee de derecha a izquierda, el manhwa y los comics de izquierda a derecha, los webtoons de arriba abajo. Podras cambiarlo serie por serie."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Les mangas se lisent de droite a gauche, les manhwas et les comics de gauche a droite. Vous pourrez changer ce choix serie par serie."
+            "value": "Les mangas se lisent de droite a gauche, les manhwas et les comics de gauche a droite, les webtoons de haut en bas. Vous pourrez changer ce choix serie par serie."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "漫画は右から左へ、マンファやコミックは左から右へ読みます。この選択はシリーズごとに変更できます。"
+            "value": "漫画は右から左へ、マンファとコミックは左から右へ、ウェブトゥーンは上から下へ読みます。この選択はシリーズごとに変更できます。"
           }
         }
       }

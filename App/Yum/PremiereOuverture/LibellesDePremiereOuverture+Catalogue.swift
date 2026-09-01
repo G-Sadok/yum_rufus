@@ -58,11 +58,16 @@ extension LibellesDePremiereOuverture {
         ]
     }
 
-    /// Les deux sens du menu de reglages, tableau 6.7.
+    /// Les sens du menu de reglages, tableau 6.7.
+    ///
+    /// Les trois y sont. Un sens offert au choix sans libelle s affichait sous
+    /// le nom brut de sa valeur, ce que la premiere ouverture montrait en
+    /// entier au premier lancement.
     private static var sensDuCatalogue: [String: String] {
         [
             SensDeLecture.droiteGauche.rawValue: Chaines.PremiereOuverture.sensDroiteGauche,
             SensDeLecture.gaucheDroite.rawValue: Chaines.PremiereOuverture.sensGaucheDroite,
+            SensDeLecture.hautBas.rawValue: Chaines.PremiereOuverture.sensHautBas,
         ]
     }
 

@@ -48,7 +48,10 @@ struct CoquilleDeLApplication: View {
     let couvertures: ChargeurDeCouvertures
 
     /// Ecran Rechercher, section 5.4.
-    let recherche: SessionDeRecherche
+    ///
+    /// Liee : le champ de la barre d outils vit ici, pas dans l ecran, et il
+    /// ecrit dans la session.
+    @Bindable var recherche: SessionDeRecherche
 
     /// Ouvre un chapitre de la bibliotheque dans le lecteur.
     let ouverture: OuvertureDeChapitre
@@ -161,19 +164,43 @@ struct CoquilleDeLApplication: View {
 
     /// Commandes de barre d outils de la destination affichee.
     ///
+    /// Toutes passent par ici, et aucune par `.toolbar`. La coquille dessine sa
+    /// propre barre : une commande posee dans la barre native de la fenetre
+    /// atterrirait a cote des feux de circulation et y resterait visible
+    /// pendant la lecture, ce que la section 5.7 interdit.
+    ///
     /// La section 5.2 pose `Effacer l historique` dans la barre d outils. Le
     /// bouton disparait quand l historique est deja vide : une commande qui n a
     /// rien a effacer n a rien a faire la, et l etat vide invite deja a agir
     /// ailleurs.
     @ViewBuilder
     private func commandes(de destination: DestinationPrincipale) -> some View {
-        if destination == .historique, historique.porteDesEntrees {
-            CommandeDeBarreDOutils(
-                libelle: Chaines.Historique.effacer,
-                symbole: Jetons.IconeDHistorique.effacer
-            ) {
-                historique.demanderLEffacement()
+        switch destination {
+        case .historique:
+            if historique.porteDesEntrees {
+                CommandeDeBarreDOutils(
+                    libelle: Chaines.Historique.effacer,
+                    symbole: Jetons.IconeDHistorique.effacer
+                ) {
+                    historique.demanderLEffacement()
+                }
             }
+
+        case .parcourir:
+            MenuDAjoutDeSourceBouton(libelles: .duCatalogue) { type in
+                parcourir.commandes.ajouter(type)
+            }
+
+        case .rechercher:
+            ChampDeRecherche(
+                texte: $recherche.terme,
+                espaceReserve: Chaines.Recherche.espaceReserve,
+                etiquette: Chaines.Recherche.etiquetteDuChamp,
+                libelleDEffacement: Chaines.Recherche.effacer
+            )
+
+        case .bibliotheque, .reglages:
+            EmptyView()
         }
     }
 

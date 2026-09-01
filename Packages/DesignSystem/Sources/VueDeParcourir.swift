@@ -112,11 +112,6 @@ public struct VueDeParcourir: View {
     public var body: some View {
         contenu
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .toolbar {
-                ToolbarItem {
-                    menuDAjout
-                }
-            }
     }
 
     @ViewBuilder
@@ -142,25 +137,6 @@ public struct VueDeParcourir: View {
         case let .erreur(contenu):
             VueDEtatDeContenu(contenu)
         }
-    }
-
-    /// Le menu porte les douze entrees, separateur apres la premiere.
-    private var menuDAjout: some View {
-        Menu {
-            ForEach(Array(MenuDAjoutDeSource.entrees.enumerated()), id: \.element.id) { rang, entree in
-                Button(libelles.libelle(de: entree)) {
-                    commandes.ajouter(entree.type)
-                }
-
-                if rang == MenuDAjoutDeSource.tailleDuPremierGroupe - 1 {
-                    Divider()
-                }
-            }
-        } label: {
-            Label(libelles.ajouter, systemImage: "plus")
-        }
-        .menuIndicator(.visible)
-        .accessibilityLabel(libelles.ajouter)
     }
 
     private func liste(_ sources: [SourceAffichee]) -> some View {

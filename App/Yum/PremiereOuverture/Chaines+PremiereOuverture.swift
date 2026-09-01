@@ -63,6 +63,7 @@ extension Chaines {
 
         /// Sens de lecture, libelles du menu de reglages du tableau 6.7.
         static let sensDroiteGauche = String(localized: "reglages.valeur.droiteGauche")
+        static let sensHautBas = String(localized: "reglages.valeur.hautBas")
         static let sensGaucheDroite = String(localized: "reglages.valeur.gaucheDroite")
     }
 }

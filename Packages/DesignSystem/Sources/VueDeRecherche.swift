@@ -63,10 +63,13 @@ public struct CommandesDeRecherche {
 }
 
 /// Ecran Rechercher, section 5.4.
+///
+/// Le champ de saisie n est pas ici. La section 5.4 le pose dans la barre
+/// d outils, que la coquille dessine elle meme : un `.toolbar` s en irait dans
+/// la barre native de la fenetre, a cote des feux de circulation, et y
+/// resterait visible pendant la lecture.
 public struct VueDeRecherche: View {
     @Environment(\.palette) private var palette
-
-    @Binding private var terme: String
 
     private let etat: EtatDeRecherche
     private let libelles: LibellesDeRecherche
@@ -76,7 +79,6 @@ public struct VueDeRecherche: View {
     /// Construit l ecran.
     ///
     /// - Parameters:
-    ///   - terme: texte du champ de la barre d outils, pilote par la session.
     ///   - etat: invitation ou resultats.
     ///   - libelles: libelles pris dans le catalogue de chaines.
     ///   - delaiEnSecondes: delai accorde a une source, ecrit dans la ligne
@@ -85,13 +87,11 @@ public struct VueDeRecherche: View {
     ///     different de celui applique serait pire que pas de message.
     ///   - commandes: ce que les liens de l ecran declenchent.
     public init(
-        terme: Binding<String>,
         etat: EtatDeRecherche,
         libelles: LibellesDeRecherche,
         delaiEnSecondes: Int,
         commandes: CommandesDeRecherche
     ) {
-        _terme = terme
         self.etat = etat
         self.libelles = libelles
         self.delaiEnSecondes = delaiEnSecondes
@@ -101,16 +101,6 @@ public struct VueDeRecherche: View {
     public var body: some View {
         contenu
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .toolbar {
-                ToolbarItem {
-                    ChampDeRecherche(
-                        texte: $terme,
-                        espaceReserve: libelles.espaceReserve,
-                        etiquette: libelles.etiquetteDuChamp,
-                        libelleDEffacement: libelles.effacerLaRecherche
-                    )
-                }
-            }
     }
 
     @ViewBuilder

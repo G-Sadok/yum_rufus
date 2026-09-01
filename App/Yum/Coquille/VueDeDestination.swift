@@ -123,7 +123,6 @@ struct VueDeDestination: View {
 
         case .rechercher:
             VueDeRecherche(
-                terme: $recherche.terme,
                 etat: recherche.etat,
                 libelles: .duCatalogue,
                 delaiEnSecondes: recherche.delaiEnSecondes,

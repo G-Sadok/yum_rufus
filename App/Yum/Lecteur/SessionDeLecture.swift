@@ -21,9 +21,7 @@ import Storage
 // Sans lui, un fichier ouvert au premier lancement redeviendrait illisible au
 // suivant, et l utilisateur croirait l application cassee.
 //
-// La progression est enregistree quand le chapitre ouvert est un chapitre de la
-// bibliotheque. Un fichier pose par le systeme n en est pas un : il n a pas de
-// ligne en base, donc rien a mettre a jour, et le lecteur ne s en plaint pas.
+// Ce que la lecture laisse derriere elle appartient a `TraceDeLecture`.
 //
 
 @MainActor
@@ -64,11 +62,18 @@ final class SessionDeLecture {
     /// donc jamais deux cents pages decodees.
     private let cache: CacheDePagesDecodees
 
-    private let progression: MagasinDeProgression?
+    private let trace: TraceDeLecture
     private let reglages: MagasinDeReglages?
 
     /// Disposition des zones de toucher, lue a l ouverture du chapitre.
     private var zones = ReglageDesZonesDeToucher(lus: nil)
+
+    /// Ouvre le chapitre suivant, et rend faux quand il n y en a pas.
+    ///
+    /// Pose apres la construction : l ouverture de chapitre a besoin du lecteur
+    /// et le lecteur a besoin d elle, et deux dependances qui se referment ne
+    /// se construisent pas d un seul tenant.
+    var ouvrirLeChapitreSuivant: (@MainActor (UUID) async -> Bool)?
 
     /// Previent qu une lecture vient de se terminer.
     ///
@@ -82,7 +87,7 @@ final class SessionDeLecture {
         reglages: MagasinDeReglages? = nil,
         apresLecture: @escaping @MainActor () -> Void = {}
     ) {
-        self.progression = progression
+        trace = TraceDeLecture(progression: progression)
         self.reglages = reglages
         self.apresLecture = apresLecture
         cache = CacheDePagesDecodees(zone: Self.zoneDeDecodage)
@@ -135,7 +140,7 @@ final class SessionDeLecture {
             pagination = PaginationEnPageSimple(
                 nombreDePages: ouvert.nombrePages,
                 sens: sens,
-                index: pageDeReprise(chapitre)
+                index: trace.pageDeReprise(chapitre)
             )
 
             afficherLaPageCourante()
@@ -161,7 +166,7 @@ final class SessionDeLecture {
     func fermer() {
         // La position part avant que le document se referme : apres, la
         // pagination est remise a zero et il n y aurait plus rien a ecrire.
-        enregistrerLaPosition()
+        trace.enregistrer(chapitre: chapitre, page: pageEnregistrable)
 
         let lisaitUnChapitre = chapitre != nil
 
@@ -234,20 +239,32 @@ final class SessionDeLecture {
     }
 
     private var sousTitre: String {
-        guard pagination.estVide == false else { return "" }
-
-        return "\(pagination.numeroDePage) / \(pagination.nombreDePages)"
+        pagination.estVide ? "" : positionCourante.compteur
     }
 
     private func deplacer(_ intention: IntentionDeNavigation) {
-        guard pagination.appliquer(intention) else { return }
+        guard pagination.appliquer(intention) else {
+            // La pagination refuse de sortir du chapitre. Une page suivante
+            // demandee sur la derniere ouvre donc le chapitre d apres, ce qui
+            // evite de refermer le lecteur entre deux chapitres.
+            if intention == .pageSuivante, pagination.estALaDernierePage {
+                enchainerLeChapitreSuivant()
+            }
+
+            return
+        }
 
         afficherLaPageCourante()
 
         // A chaque page et non a cadence fixe : une page tournee est le seul
         // moment ou la position change en lecture paginee, et l ecriture est
         // une seule transaction.
-        enregistrerLaPosition()
+        trace.enregistrer(chapitre: chapitre, page: pageEnregistrable)
+    }
+
+    /// Page a enregistrer, nulle quand aucun document n est ouvert.
+    private var pageEnregistrable: Int? {
+        pagination.estVide ? nil : pagination.index
     }
 
     private var positionCourante: PositionDansLeChapitre {
@@ -286,7 +303,7 @@ final class SessionDeLecture {
         cache.elaguer(autourDe: rang, portee: Self.portee)
 
         etat = .defilement(nombreDePages: pagination.nombreDePages, position: positionCourante)
-        enregistrerLaPosition()
+        trace.enregistrer(chapitre: chapitre, page: pageEnregistrable)
     }
 
     /// Montre l echec quand c est la page regardee qui a refuse de se decoder.
@@ -311,31 +328,13 @@ final class SessionDeLecture {
         )
     }
 
-    /// Page ou reprendre, la premiere quand le chapitre est neuf ou inconnu.
-    private func pageDeReprise(_ chapitre: UUID?) -> Int {
-        guard let chapitre, let progression else { return 0 }
+    /// Passe au chapitre suivant de la serie, quand il en reste un.
+    private func enchainerLeChapitreSuivant() {
+        guard let chapitre, let ouvrirLeChapitreSuivant else { return }
 
-        return (try? progression.position(duChapitre: chapitre))?.pageIndex ?? 0
+        Task { await ouvrirLeChapitreSuivant(chapitre) }
     }
 
-    /// Ecrit la position courante, quand il y a un chapitre a mettre a jour.
-    ///
-    /// Un echec n interrompt pas la lecture et ne remonte a personne. La
-    /// sauvegarde revient a chaque page, et une alerte a chaque echeance
-    /// mettrait un message par dessus la page de manga.
-    private func enregistrerLaPosition() {
-        guard let chapitre, let progression, pagination.estVide == false else { return }
-
-        do {
-            try progression.enregistrer(
-                PositionDeLecture(chapitreId: chapitre, pageIndex: pagination.index)
-            )
-        } catch {
-            NSLog("Progression : %@", String(describing: error))
-        }
-    }
-
-    /// Decode la page courante et la pose a l ecran.
     private func afficherLaPageCourante() {
         guard document != nil, pagination.estVide == false else {
             etat = .chargement

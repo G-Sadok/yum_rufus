@@ -74,6 +74,26 @@ public struct MagasinDeResolutionDeChapitre: Sendable {
         }
     }
 
+    /// Identifiant du chapitre qui suit celui ci, nul a la fin de la serie.
+    ///
+    /// Le suivant est le rang immediatement superieur dans la meme serie. Le
+    /// tri suit `ordreDansSerie` et jamais le numero : un numero peut etre
+    /// absent, duplique ou incoherent selon la source, le rang non.
+    public func chapitreSuivant(apres identifiant: UUID) throws -> UUID? {
+        try base.ecrivain.read { connexion in
+            guard let courant = try Chapitre.fetchOne(connexion, key: identifiant) else {
+                return nil
+            }
+
+            return try Chapitre
+                .filter(Column("mangaId") == courant.mangaId)
+                .filter(Column("ordreDansSerie") > courant.ordreDansSerie)
+                .order(Column("ordreDansSerie"))
+                .fetchOne(connexion)?
+                .id
+        }
+    }
+
     /// Adresse du premier chapitre d une serie, nulle quand elle n en a pas.
     ///
     /// C est ce qui sert de couverture aux series qui n en ont pas : un dossier

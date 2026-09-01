@@ -49,6 +49,22 @@ final class OuvertureDeChapitre {
         self.lecture = lecture
     }
 
+    /// Ouvre le chapitre qui suit celui ci, et dit si un suivant existait.
+    ///
+    /// C est ce que fait la derniere page. Sans lui, il faut refermer le
+    /// lecteur et rouvrir la fiche entre deux chapitres, ce qui interrompt la
+    /// lecture a chaque fois.
+    @discardableResult
+    func ouvrirLeSuivant(de chapitre: UUID) async -> Bool {
+        guard let resolution,
+              let suivant = try? resolution.chapitreSuivant(apres: chapitre)
+        else {
+            return false
+        }
+
+        return await ouvrir(suivant) == nil
+    }
+
     /// Ouvre un chapitre, et dit ce qui l en a empeche.
     @discardableResult
     func ouvrir(_ chapitre: UUID) async -> Refus? {

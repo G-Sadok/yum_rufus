@@ -142,14 +142,21 @@ struct MontageDeLApplication {
             contenu.serie.fiche?.charger()
         }
 
-        return Lecture(
-            session: session,
-            ouverture: OuvertureDeChapitre(
-                resolution: services.resolutionDeChapitre,
-                sensDeLecture: services.sensDeLecture,
-                sources: contenu.sourcesVivantes,
-                lecture: session
-            )
+        let ouverture = OuvertureDeChapitre(
+            resolution: services.resolutionDeChapitre,
+            sensDeLecture: services.sensDeLecture,
+            sources: contenu.sourcesVivantes,
+            lecture: session
         )
+
+        // La boucle se referme ici, apres coup : le lecteur a besoin de
+        // l ouverture pour enchainer, et l ouverture a besoin du lecteur pour
+        // poser le chapitre. Deux dependances qui se referment ne se
+        // construisent pas d un seul tenant.
+        session.ouvrirLeChapitreSuivant = { [weak ouverture] chapitre in
+            await ouverture?.ouvrirLeSuivant(de: chapitre) ?? false
+        }
+
+        return Lecture(session: session, ouverture: ouverture)
     }
 }

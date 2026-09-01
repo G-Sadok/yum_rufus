@@ -104,7 +104,9 @@ enum FabriqueDeSource {
     ) throws -> any SourceProvider {
         let libelle = nom ?? type.rawValue
 
-        switch type {
+        // Le retour est explicite : le switch n est plus la seule instruction
+        // de la fonction, il perd donc son retour implicite.
+        return switch type {
         case .komga:
             try SourceKomga(
                 id: source,

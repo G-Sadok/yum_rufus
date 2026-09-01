@@ -76,17 +76,39 @@ enum FabriqueDeSource {
         return (construite, configuration)
     }
 
+    /// Reconstruit une source depuis sa configuration persistee.
+    ///
+    /// Les identifiants ne sont pas relus ici : chaque source va les chercher
+    /// au trousseau quand elle en a besoin, sous la cle de son identifiant.
+    static func reconstruire(
+        type: TypeDeSource,
+        nom: String,
+        configuration: ConfigurationDeSource,
+        identifiant: SourceID
+    ) throws -> any SourceProvider {
+        try provider(
+            type: type,
+            source: identifiant,
+            configuration: configuration,
+            trousseau: TrousseauDuSysteme(),
+            nom: nom
+        )
+    }
+
     private static func provider(
         type: TypeDeSource,
         source: SourceID,
         configuration: ConfigurationDeSource,
-        trousseau: TrousseauDuSysteme
+        trousseau: TrousseauDuSysteme,
+        nom: String? = nil
     ) throws -> any SourceProvider {
+        let libelle = nom ?? type.rawValue
+
         switch type {
         case .komga:
             try SourceKomga(
                 id: source,
-                nom: type.rawValue,
+                nom: libelle,
                 configuration: configuration,
                 magasin: trousseau
             )
@@ -94,7 +116,7 @@ enum FabriqueDeSource {
         case .kavita:
             try SourceKavita(
                 id: source,
-                nom: type.rawValue,
+                nom: libelle,
                 configuration: configuration,
                 magasin: trousseau
             )
@@ -102,7 +124,7 @@ enum FabriqueDeSource {
         case .jellyfin:
             try SourceJellyfin(
                 id: source,
-                nom: type.rawValue,
+                nom: libelle,
                 configuration: configuration,
                 magasin: trousseau
             )
@@ -110,7 +132,7 @@ enum FabriqueDeSource {
         case .opds:
             try SourceOpds(
                 id: source,
-                nom: type.rawValue,
+                nom: libelle,
                 configuration: configuration,
                 magasin: trousseau
             )

@@ -25,6 +25,7 @@ struct YumApp: App {
     @State private var parcourir: SessionDeParcourir
     @State private var bibliotheque: SessionDeBibliotheque
     @State private var serie: SessionDeNavigationDeSerie
+    @State private var sourcesVivantes: RegistreDesSourcesVivantes
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -66,6 +67,9 @@ struct YumApp: App {
         _serie = State(
             initialValue: SessionDeNavigationDeSerie(magasin: services.ficheDeSerie)
         )
+        _sourcesVivantes = State(
+            initialValue: RegistreDesSourcesVivantes(magasin: services.sourcesInstallees)
+        )
     }
 
     var body: some Scene {
@@ -89,6 +93,9 @@ struct YumApp: App {
             .onOpenURL { url in
                 lecture.ouvrir(url)
             }
+            // Les sources se reconstruisent une fois, au lancement. Les rebatir
+            // a chaque requete relirait le trousseau a chaque frappe.
+            .task { sourcesVivantes.reconstruire() }
         }
         #if os(macOS)
         .defaultSize(

@@ -47,6 +47,9 @@ struct CoquilleDeLApplication: View {
     /// Ecran Rechercher, section 5.4.
     let recherche: SessionDeRecherche
 
+    /// Ouvre un chapitre de la bibliotheque dans le lecteur.
+    let ouverture: OuvertureDeChapitre
+
     /// Fiche de serie ouverte, section 5.6.
     let serie: SessionDeNavigationDeSerie
 
@@ -79,11 +82,8 @@ struct CoquilleDeLApplication: View {
             if let fiche = serie.fiche {
                 EcranDeFicheDeSerie(
                     etat: fiche,
-                    ouvrirLeChapitre: { _ in
-                        // Lire un chapitre depuis la fiche demande de resoudre
-                        // son fichier sur le disque, ce que seule une source
-                        // installee sait faire. La ligne reste inerte tant
-                        // qu aucune source ne repond.
+                    ouvrirLeChapitre: { [ouverture] chapitre in
+                        Task { await ouverture.ouvrir(chapitre) }
                     },
                     revenir: { serie.fermer() }
                 )
@@ -144,6 +144,7 @@ struct CoquilleDeLApplication: View {
             parcourir: parcourir,
             bibliotheque: bibliotheque,
             recherche: recherche,
+            ouverture: ouverture,
             serie: serie,
             reglages: reglages,
             statistiques: statistiques,

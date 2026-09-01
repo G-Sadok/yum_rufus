@@ -28,16 +28,17 @@ final class RegistreDesSourcesVivantes {
     /// Le registre de Core, qui sait poser la meme question a toutes les
     /// sources en isolant chacune et en bornant son delai.
     ///
-    /// Il est alimente ici plutot que reconstruit par chaque ecran : la
-    /// recherche, le catalogue et la verification de connexion posent la meme
-    /// question au meme jeu de sources, et deux registres finiraient par ne
-    /// plus contenir les memes.
-    let registre = RegistreDeSources()
+    /// Il vient des services et n est pas construit ici : la recherche, la
+    /// veille et la verification de connexion posent la meme question au meme
+    /// jeu de sources, et deux registres finiraient par ne plus contenir les
+    /// memes. Il etait construit au lancement et personne ne l alimentait.
+    let registre: RegistreDeSources
 
     private let magasin: MagasinDeSources?
 
-    init(magasin: MagasinDeSources?) {
+    init(magasin: MagasinDeSources?, registre: RegistreDeSources) {
         self.magasin = magasin
+        self.registre = registre
     }
 
     /// Reconstruit toutes les sources que la base connait.
@@ -76,6 +77,22 @@ final class RegistreDesSourcesVivantes {
     /// Source prete pour cet identifiant, nulle quand rien ne l a reconstruite.
     func source(_ identifiant: UUID) -> (any SourceProvider)? {
         sources[identifiant]
+    }
+
+    /// Fichier d un chapitre sur le disque, quand il y en a un.
+    ///
+    /// Ne repond que pour les sources de fichiers locaux, ou l identifiant
+    /// distant d un chapitre est son chemin sous la racine de la source. Un
+    /// chapitre servi par un serveur n a pas de fichier a ouvrir : il se lit
+    /// page par page par le reseau, ce que le lecteur ne sait pas encore faire.
+    func fichier(de adresse: AdresseDeChapitre) async -> URL? {
+        guard let locale = sources[adresse.source] as? SourceFichiersLocaux,
+              let racine = try? await locale.racine()
+        else {
+            return nil
+        }
+
+        return racine.appending(path: adresse.chapitre)
     }
 
     private func construire(_ ligne: Source) throws -> any SourceProvider {

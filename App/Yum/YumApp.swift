@@ -21,12 +21,13 @@ struct YumApp: App {
     @State private var statistiques: SessionDeStatistiques
     @State private var stockage: SessionDeStockage
     @State private var prereglages: SessionDePrereglages
-    @State private var lecture = SessionDeLecture()
+    @State private var lecture: SessionDeLecture
     @State private var parcourir: SessionDeParcourir
     @State private var bibliotheque: SessionDeBibliotheque
     @State private var serie: SessionDeNavigationDeSerie
     @State private var sourcesVivantes: RegistreDesSourcesVivantes
     @State private var recherche: SessionDeRecherche
+    @State private var ouverture: OuvertureDeChapitre
 
     /// La base est ouverte une fois, au lancement, et les etats d ecran qui en
     /// dependent sont construits avec elle. Un ecran qui ouvrirait la base a
@@ -57,7 +58,10 @@ struct YumApp: App {
             initialValue: SessionDePrereglages(magasin: services.prereglages)
         )
         let bibliotheque = SessionDeBibliotheque(magasin: services.categories)
-        let sourcesVivantes = RegistreDesSourcesVivantes(magasin: services.sourcesInstallees)
+        let sourcesVivantes = RegistreDesSourcesVivantes(
+            magasin: services.sourcesInstallees,
+            registre: services.sources
+        )
 
         // L ordre compte : l ecran Parcourir previent la bibliotheque et le
         // registre, il doit donc etre construit apres eux. Une source ajoutee
@@ -76,6 +80,18 @@ struct YumApp: App {
         )
         _sourcesVivantes = State(initialValue: sourcesVivantes)
         _recherche = State(initialValue: SessionDeRecherche(registre: sourcesVivantes))
+
+        let lecture = SessionDeLecture()
+
+        _lecture = State(initialValue: lecture)
+        _ouverture = State(
+            initialValue: OuvertureDeChapitre(
+                resolution: services.resolutionDeChapitre,
+                sensDeLecture: services.sensDeLecture,
+                sources: sourcesVivantes,
+                lecture: lecture
+            )
+        )
     }
 
     var body: some Scene {
@@ -93,6 +109,7 @@ struct YumApp: App {
                 parcourir: parcourir,
                 bibliotheque: bibliotheque,
                 recherche: recherche,
+                ouverture: ouverture,
                 serie: serie
             )
             // Ce que le systeme envoie quand on ouvre un fichier avec Yum,

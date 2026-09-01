@@ -69,6 +69,16 @@ final class ServicesDeLApplication {
         base.map { MagasinDeFicheDeSerie(base: $0) }
     }
 
+    /// Resolution d un chapitre vers sa source, nulle sans base.
+    var resolutionDeChapitre: MagasinDeResolutionDeChapitre? {
+        base.map { MagasinDeResolutionDeChapitre(base: $0) }
+    }
+
+    /// Magasin du sens de lecture, nul tant que la base n est pas ouverte.
+    var sensDeLecture: MagasinDeSensDeLecture? {
+        base.map { MagasinDeSensDeLecture(base: $0) }
+    }
+
     /// Magasin de categories, nul tant que la base n est pas ouverte.
     var categories: MagasinDeCategories? {
         base.map { MagasinDeCategories(base: $0) }

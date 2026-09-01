@@ -37,6 +37,9 @@ struct VueDeDestination: View {
     /// dans la session, et une valeur non liee ne laisserait rien a taper.
     @Bindable var recherche: SessionDeRecherche
 
+    /// Ouvre un chapitre de la bibliotheque dans le lecteur.
+    let ouverture: OuvertureDeChapitre
+
     /// Fiche de serie ouverte, section 5.6.
     let serie: SessionDeNavigationDeSerie
 
@@ -69,13 +72,11 @@ struct VueDeDestination: View {
             .task { bibliotheque.recharger() }
 
         case .historique:
-            // La navigation vers le lecteur n existe pas encore dans la
-            // coquille. Plutot qu une ligne qui ne repond pas au clic, les
-            // entrees restent inertes tant que rien ne peut les ouvrir : un
-            // bouton qui ment coute plus cher qu un bouton absent.
             EcranDHistorique(
                 etat: historique,
-                ouvrirLeChapitre: nil,
+                ouvrirLeChapitre: { [ouverture] chapitre in
+                    Task { await ouverture.ouvrir(chapitre) }
+                },
                 ouvrirLaBibliotheque: { ouvrir(.bibliotheque) }
             )
 

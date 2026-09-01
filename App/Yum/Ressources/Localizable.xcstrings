@@ -11188,6 +11188,36 @@
           }
         }
       }
+    },
+    "parcourir.supprimer": {
+      "comment": "Geste qui retire une source de la liste, section 5.3. Il n a qu une icone, l etiquette dit ce qu il fait",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove the source"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eliminar la fuente"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retirer la source"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ソースを削除"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -331,6 +331,7 @@ enum Chaines {
     enum Parcourir {
         static let ajouter = String(localized: "parcourir.ajouter")
         static let compteur = String(localized: "parcourir.compteur")
+        static let supprimer = String(localized: "parcourir.supprimer")
     }
 
     /// Lecteur pagine, section 5.7.

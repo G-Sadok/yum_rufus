@@ -19,6 +19,7 @@ extension LibellesDeParcourir {
             compteur: Chaines.Parcourir.compteur,
             videTitre: Chaines.EtatVide.parcourirTitre,
             videPhrase: Chaines.EtatVide.parcourirPhrase,
+            supprimer: Chaines.Parcourir.supprimer,
             entreesDuMenu: Dictionary(
                 uniqueKeysWithValues: MenuDAjoutDeSource.entrees.map {
                     ($0.type, libelle(de: $0))

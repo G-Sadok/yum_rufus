@@ -51,6 +51,9 @@ public struct LibellesDeParcourir: Sendable, Equatable {
     public let videTitre: String
     public let videPhrase: String
 
+    /// Etiquette du geste qui retire une source, qui n a qu une icone.
+    public let supprimer: String
+
     /// Libelle de chaque entree du menu, par type de source.
     public let entreesDuMenu: [TypeDeSource: String]
 
@@ -59,12 +62,14 @@ public struct LibellesDeParcourir: Sendable, Equatable {
         compteur: String,
         videTitre: String,
         videPhrase: String,
+        supprimer: String,
         entreesDuMenu: [TypeDeSource: String]
     ) {
         self.ajouter = ajouter
         self.compteur = compteur
         self.videTitre = videTitre
         self.videPhrase = videPhrase
+        self.supprimer = supprimer
         self.entreesDuMenu = entreesDuMenu
     }
 

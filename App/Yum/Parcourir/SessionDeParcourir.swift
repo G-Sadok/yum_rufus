@@ -264,7 +264,7 @@ final class SessionDeParcourir {
         motDePasse: String
     ) async {
         do {
-            let construite = try FabriqueDeSource.construire(
+            let construite = try await FabriqueDeSource.construire(
                 type: type,
                 adresse: adresse,
                 compte: compte,
@@ -286,12 +286,30 @@ final class SessionDeParcourir {
 
     /// Enregistre la source dont le test vient de reussir.
     func enregistrerLaSource(adresse: String, compte: String, motDePasse: String) {
-        guard let type = typeEnConfiguration, let magasin else { return }
+        guard let type = typeEnConfiguration, magasin != nil else { return }
+
+        Task { [weak self] in
+            await self?.ranger(type: type, adresse: adresse, compte: compte, motDePasse: motDePasse)
+        }
+    }
+
+    /// Construit la source une seconde fois et la range.
+    ///
+    /// Une seconde fois parce que le test a construit la sienne sous un
+    /// identifiant jetable : c est celle ci qui vivra, et son identifiant est
+    /// celui sous lequel le trousseau range ses secrets.
+    private func ranger(
+        type: TypeDeSource,
+        adresse: String,
+        compte: String,
+        motDePasse: String
+    ) async {
+        guard let magasin else { return }
 
         let identifiant = UUID()
 
         do {
-            let construite = try FabriqueDeSource.construire(
+            let construite = try await FabriqueDeSource.construire(
                 type: type,
                 adresse: adresse,
                 compte: compte,

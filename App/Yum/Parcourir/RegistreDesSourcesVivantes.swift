@@ -47,12 +47,15 @@ final class RegistreDesSourcesVivantes {
     /// serveur peut etre injoignable ou son signet revoque, et ce n est pas au
     /// lancement de trancher. L ecran qui l interrogera le dira mieux.
     func reconstruire() {
+        Task { [weak self] in
+            await self?.rebatir()
+        }
+    }
+
+    private func rebatir() async {
         guard let magasin, let lignes = try? magasin.sources() else {
             sources = [:]
-
-            Task { [registre] in
-                await registre.remplacerPar([])
-            }
+            await registre.remplacerPar([])
 
             return
         }
@@ -60,18 +63,14 @@ final class RegistreDesSourcesVivantes {
         var vivantes: [UUID: any SourceProvider] = [:]
 
         for ligne in lignes {
-            if let source = try? construire(ligne) {
+            if let source = try? await construire(ligne) {
                 vivantes[ligne.id] = source
             }
         }
 
         sources = vivantes
 
-        let aInscrire = Array(vivantes.values)
-
-        Task { [registre] in
-            await registre.remplacerPar(aInscrire)
-        }
+        await registre.remplacerPar(Array(vivantes.values))
     }
 
     /// Source prete pour cet identifiant, nulle quand rien ne l a reconstruite.
@@ -95,7 +94,7 @@ final class RegistreDesSourcesVivantes {
         return racine.appending(path: adresse.chapitre)
     }
 
-    private func construire(_ ligne: Source) throws -> any SourceProvider {
+    private func construire(_ ligne: Source) async throws -> any SourceProvider {
         let identifiant = SourceID(ligne.id)
 
         if ligne.type == .fichiersLocaux {
@@ -110,7 +109,7 @@ final class RegistreDesSourcesVivantes {
             throw ErreurDeConfigurationDeSource.illisible
         }
 
-        return try FabriqueDeSource.reconstruire(
+        return try await FabriqueDeSource.reconstruire(
             type: ligne.type,
             nom: ligne.nom,
             configuration: try ConfigurationDeSource(donnees: donnees),

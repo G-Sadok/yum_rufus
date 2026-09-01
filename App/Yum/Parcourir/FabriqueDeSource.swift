@@ -41,7 +41,7 @@ enum FabriqueDeSource {
         compte: String,
         motDePasse: String,
         identifiant: UUID
-    ) throws -> any SourceProvider {
+    ) throws -> (source: any SourceProvider, configuration: ConfigurationDeSource) {
         guard let url = URL(string: adresse.trimmingCharacters(in: .whitespaces)),
               url.host() != nil
         else {
@@ -63,12 +63,17 @@ enum FabriqueDeSource {
             authentification: compte.isEmpty ? .aucune : .basique
         )
 
-        return try provider(
+        let construite = try provider(
             type: type,
             source: source,
             configuration: configuration,
             trousseau: trousseau
         )
+
+        // La configuration revient avec la source : elle doit etre persistee
+        // pour que la source se reconstruise au prochain lancement. Sans elle,
+        // l adresse serait perdue et la source deviendrait une ligne morte.
+        return (construite, configuration)
     }
 
     private static func provider(

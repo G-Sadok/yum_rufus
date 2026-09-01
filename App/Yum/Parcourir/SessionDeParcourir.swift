@@ -176,7 +176,7 @@ final class SessionDeParcourir {
         motDePasse: String
     ) async {
         do {
-            let source = try FabriqueDeSource.construire(
+            let construite = try FabriqueDeSource.construire(
                 type: type,
                 adresse: adresse,
                 compte: compte,
@@ -184,7 +184,7 @@ final class SessionDeParcourir {
                 identifiant: UUID()
             )
 
-            let etat = await source.verifierConnexion()
+            let etat = await construite.source.verifierConnexion()
 
             etatDeConfiguration = etat == .connecte
                 ? .reussi
@@ -203,7 +203,7 @@ final class SessionDeParcourir {
         let identifiant = UUID()
 
         do {
-            _ = try FabriqueDeSource.construire(
+            let construite = try FabriqueDeSource.construire(
                 type: type,
                 adresse: adresse,
                 compte: compte,
@@ -212,7 +212,12 @@ final class SessionDeParcourir {
             )
 
             try magasin.enregistrer(
-                Source(id: identifiant, type: type, nom: type.rawValue)
+                Source(
+                    id: identifiant,
+                    type: type,
+                    nom: type.rawValue,
+                    configurationChiffree: try construite.configuration.donnees()
+                )
             )
 
             typeEnConfiguration = nil

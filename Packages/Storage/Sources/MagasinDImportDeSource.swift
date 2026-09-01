@@ -76,10 +76,19 @@ public struct MagasinDImportDeSource: Sendable {
                 .filter(Column("identifiantDistant") == serie.identifiant)
                 .fetchOne(connexion)
 
+            // Une serie importee entre en bibliotheque. Tous les chemins
+            // d import partent d un geste de l utilisateur : il a designe un
+            // dossier, installe une source, ou choisi un resultat. Rien
+            // n arrive ici qu il n ait demande.
+            //
+            // Le drapeau n est pose qu a la creation. Une serie qu il a retiree
+            // de sa bibliotheque ne doit pas y revenir a la premiere
+            // actualisation de la source.
             var rangee = existante ?? Manga(
                 sourceId: source,
                 identifiantDistant: serie.identifiant,
-                titre: serie.titre
+                titre: serie.titre,
+                estDansBibliotheque: true
             )
 
             rangee.titre = serie.titre

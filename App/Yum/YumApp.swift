@@ -83,7 +83,12 @@ struct YumApp: App {
                     bibliotheque.recharger()
                     couvertures.vider()
                 },
-                sourcesOntChange: { sourcesVivantes.reconstruire() }
+                sourcesOntChange: {
+                    Task {
+                        await sourcesVivantes.reconstruire()
+                        couvertures.vider()
+                    }
+                }
             )
         )
         _bibliotheque = State(initialValue: bibliotheque)
@@ -150,7 +155,14 @@ struct YumApp: App {
             }
             // Les sources se reconstruisent une fois, au lancement. Les rebatir
             // a chaque requete relirait le trousseau a chaque frappe.
-            .task { sourcesVivantes.reconstruire() }
+            //
+            // Les couvertures sont oubliees ensuite, et pas avant : la grille
+            // se dessine avant que les sources soient pretes, et une couverture
+            // demandee a ce moment la ne trouve pas son fichier.
+            .task {
+                await sourcesVivantes.reconstruire()
+                couvertures.vider()
+            }
         }
         #if os(macOS)
         .defaultSize(

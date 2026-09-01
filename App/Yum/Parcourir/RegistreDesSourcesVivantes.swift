@@ -46,13 +46,7 @@ final class RegistreDesSourcesVivantes {
     /// Une source qui ne se reconstruit pas est passee, pas signalee : son
     /// serveur peut etre injoignable ou son signet revoque, et ce n est pas au
     /// lancement de trancher. L ecran qui l interrogera le dira mieux.
-    func reconstruire() {
-        Task { [weak self] in
-            await self?.rebatir()
-        }
-    }
-
-    private func rebatir() async {
+    func reconstruire() async {
         guard let magasin, let lignes = try? magasin.sources() else {
             sources = [:]
             await registre.remplacerPar([])

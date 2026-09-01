@@ -30,10 +30,15 @@ final class ChargeurDeCouvertures {
     /// Couvertures deja decodees, par serie.
     private(set) var couvertures: [UUID: ImageDeLecteur] = [:]
 
-    /// Series dont le decodage court ou a echoue.
+    /// Series dont le decodage court.
     ///
     /// Ignoree par l observation : elle est ecrite pendant le rendu d une
     /// carte, et la faire observer relancerait ce rendu a chaque demande.
+    ///
+    /// Une serie en sort des que sa tentative echoue. Y laisser un echec
+    /// condamnerait la carte pour toute la session, alors que la cause la plus
+    /// probable est que les sources n etaient pas encore reconstruites au
+    /// premier rendu de la grille.
     @ObservationIgnored private var traitees: Set<UUID> = []
 
     private let resolution: MagasinDeResolutionDeChapitre?
@@ -73,12 +78,13 @@ final class ChargeurDeCouvertures {
     private func charger(_ serie: UUID) async {
         guard let resolution,
               let adresse = try? resolution.adresseDuPremierChapitre(deLaSerie: serie),
-              let fichier = await sources.fichier(de: adresse)
+              let fichier = await sources.fichier(de: adresse),
+              let image = await Self.premierePage(de: fichier)
         else {
+            traitees.remove(serie)
+
             return
         }
-
-        guard let image = await Self.premierePage(de: fichier) else { return }
 
         couvertures[serie] = image
     }

@@ -232,7 +232,11 @@ struct CarteDeSerie: View {
         Text("\(serie.chapitresNonLus)")
             .style(Jetons.CarteDeSerie.pastille)
             .monospacedDigit()
-            .foregroundStyle(palette.semantiques.accentText.couleur)
+            // Le chiffre est pose sur l aplat d accent, pas a cote : c est
+            // `text.onAccent` qu il lui faut. `accent.text` est la couleur d un
+            // texte accentue sur un fond neutre, et sur l aplat elle donnait du
+            // bleu sur du bleu, donc une pastille vide.
+            .foregroundStyle(palette.textes.onAccent.couleur)
             .padding(.horizontal, Jetons.Espace.x2)
             .padding(.vertical, Jetons.Espace.x1)
             .background(

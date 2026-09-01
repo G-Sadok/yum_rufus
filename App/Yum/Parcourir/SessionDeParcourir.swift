@@ -220,8 +220,15 @@ final class SessionDeParcourir {
 
         do {
             let signets = try MagasinDeSignetsFichier.parDefaut(nomApplication: Self.nomDuDossier)
+
+            // L identifiant de la base voyage jusqu au signet. Sans lui la
+            // source s en fabrique un au hasard, le signet se range sous cet
+            // identifiant la, et au lancement suivant la reconstruction cherche
+            // sous celui de la base et ne trouve rien : la source devient une
+            // ligne morte, sans couverture et sans chapitre ouvrable.
             let source = try SourceFichiersLocaux.enregistrant(
                 dossier: url,
+                id: SourceID(identifiant),
                 nom: url.lastPathComponent,
                 magasin: signets
             )

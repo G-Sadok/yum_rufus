@@ -140,6 +140,7 @@ struct CoquilleDeLApplication: View {
             historique: historique,
             parcourir: parcourir,
             bibliotheque: bibliotheque,
+            serie: serie,
             reglages: reglages,
             statistiques: statistiques,
             stockage: stockage,

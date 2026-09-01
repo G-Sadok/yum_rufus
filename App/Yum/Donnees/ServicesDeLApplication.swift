@@ -59,6 +59,11 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Range en bibliotheque ce qu une source rend, nul sans base.
+    var importateur: MagasinDImportDeSource? {
+        base.map { MagasinDImportDeSource(base: $0) }
+    }
+
     /// Magasin de fiche de serie, nul tant que la base n est pas ouverte.
     var ficheDeSerie: MagasinDeFicheDeSerie? {
         base.map { MagasinDeFicheDeSerie(base: $0) }

@@ -1,6 +1,7 @@
 import Core
 import DesignSystem
 import Foundation
+import Sources
 import Storage
 
 //
@@ -27,10 +28,23 @@ final class SessionDeParcourir {
     /// Vrai quand le selecteur de dossier est demande.
     var choisitUnDossier = false
 
-    private let magasin: MagasinDeSources?
+    /// Vrai pendant l analyse d un dossier, qui peut prendre du temps.
+    private(set) var analyseEnCours = false
 
-    init(magasin: MagasinDeSources?) {
+    private let magasin: MagasinDeSources?
+    private let import_: MagasinDImportDeSource?
+
+    /// Relit la bibliotheque quand l import y a ajoute des series.
+    private let apresImport: @MainActor () -> Void
+
+    init(
+        magasin: MagasinDeSources?,
+        importateur: MagasinDImportDeSource?,
+        apresImport: @escaping @MainActor () -> Void = {}
+    ) {
         self.magasin = magasin
+        import_ = importateur
+        self.apresImport = apresImport
     }
 
     func recharger() {
@@ -70,18 +84,67 @@ final class SessionDeParcourir {
         )
     }
 
-    /// Enregistre le dossier choisi comme source locale.
+    /// Enregistre le dossier choisi, puis range son contenu en bibliotheque.
+    ///
+    /// L analyse est ce qui distingue une source ajoutee d une source qui sert
+    /// a quelque chose. Sans elle, la source apparait dans la liste et la
+    /// bibliotheque reste vide, ce qui est le plus decourageant des resultats.
     func ajouterLeDossier(_ url: URL) {
-        agir { magasin in
+        guard let magasin, let import_ else { return }
+
+        let identifiant = UUID()
+
+        do {
             try magasin.enregistrer(
-                Source(
-                    id: UUID(),
-                    type: .fichiersLocaux,
-                    nom: url.lastPathComponent
-                )
+                Source(id: identifiant, type: .fichiersLocaux, nom: url.lastPathComponent)
             )
+
+            recharger()
+        } catch {
+            NSLog("Parcourir : %@", String(describing: error))
+
+            return
+        }
+
+        analyseEnCours = true
+
+        Task { [weak self] in
+            await self?.analyser(url, source: identifiant, import_: import_)
         }
     }
+
+    /// Parcourt le dossier et range ce qu il contient.
+    private func analyser(
+        _ url: URL,
+        source identifiant: UUID,
+        import_: MagasinDImportDeSource
+    ) async {
+        defer { analyseEnCours = false }
+
+        do {
+            let signets = try MagasinDeSignetsFichier.parDefaut(nomApplication: Self.nomDuDossier)
+            let source = try SourceFichiersLocaux.enregistrant(
+                dossier: url,
+                nom: url.lastPathComponent,
+                magasin: signets
+            )
+
+            let catalogue = try await source.parcourir(.tout, page: 0)
+
+            for serie in catalogue.elements {
+                let chapitres = try await source.chapitres(pour: serie.identifiant)
+
+                try import_.importer(serie, chapitres: chapitres, de: identifiant)
+            }
+
+            apresImport()
+        } catch {
+            NSLog("Analyse du dossier : %@", String(describing: error))
+        }
+    }
+
+    /// Nom du dossier de support, celui ou vivent la base et les signets.
+    private static let nomDuDossier = Bundle.main.bundleIdentifier ?? "Yum"
 
     private func erreurDeLecture() -> EtatDeContenu {
         .erreur(

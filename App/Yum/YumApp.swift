@@ -55,7 +55,10 @@ struct YumApp: App {
             initialValue: SessionDePrereglages(magasin: services.prereglages)
         )
         _parcourir = State(
-            initialValue: SessionDeParcourir(magasin: services.sourcesInstallees)
+            initialValue: SessionDeParcourir(
+                magasin: services.sourcesInstallees,
+                importateur: services.importateur
+            )
         )
         _bibliotheque = State(
             initialValue: SessionDeBibliotheque(magasin: services.categories)

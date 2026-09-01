@@ -31,6 +31,12 @@ final class SessionDeParcourir {
     /// Vrai pendant l analyse d un dossier, qui peut prendre du temps.
     private(set) var analyseEnCours = false
 
+    /// Type dont la feuille de configuration est ouverte, nul sans feuille.
+    var typeEnConfiguration: TypeDeSource?
+
+    /// Ou en est le test de connexion de la feuille ouverte.
+    private(set) var etatDeConfiguration: EtatDeConfiguration = .saisie
+
     private let magasin: MagasinDeSources?
     private let import_: MagasinDImportDeSource?
 
@@ -70,9 +76,12 @@ final class SessionDeParcourir {
     var commandes: CommandesDeParcourir {
         CommandesDeParcourir(
             ajouter: { [weak self] type in
-                guard type == .fichiersLocaux else { return }
-
-                self?.choisitUnDossier = true
+                if type == .fichiersLocaux {
+                    self?.choisitUnDossier = true
+                } else {
+                    self?.etatDeConfiguration = .saisie
+                    self?.typeEnConfiguration = type
+                }
             },
             ouvrir: { _ in
                 // Le catalogue d une source est l ecran de la section 5.3 qui
@@ -141,6 +150,83 @@ final class SessionDeParcourir {
         } catch {
             NSLog("Analyse du dossier : %@", String(describing: error))
         }
+    }
+
+    // MARK: Sources a serveur
+
+    /// Teste la connexion avant d autoriser l enregistrement.
+    ///
+    /// Le test porte sur la source reelle, pas sur la seule forme de l adresse.
+    /// Une adresse bien formee vers un serveur qui ne repond pas serait
+    /// enregistree sans lui, et la source resterait vide sans dire pourquoi.
+    func tester(adresse: String, compte: String, motDePasse: String) {
+        guard let type = typeEnConfiguration else { return }
+
+        etatDeConfiguration = .test
+
+        Task { [weak self] in
+            await self?.essayer(type: type, adresse: adresse, compte: compte, motDePasse: motDePasse)
+        }
+    }
+
+    private func essayer(
+        type: TypeDeSource,
+        adresse: String,
+        compte: String,
+        motDePasse: String
+    ) async {
+        do {
+            let source = try FabriqueDeSource.construire(
+                type: type,
+                adresse: adresse,
+                compte: compte,
+                motDePasse: motDePasse,
+                identifiant: UUID()
+            )
+
+            let etat = await source.verifierConnexion()
+
+            etatDeConfiguration = etat == .connecte
+                ? .reussi
+                : .echec(Chaines.Erreur.reglagesPhrase)
+        } catch {
+            etatDeConfiguration = .echec(
+                (error as? LocalizedError)?.errorDescription ?? Chaines.Erreur.reglagesPhrase
+            )
+        }
+    }
+
+    /// Enregistre la source dont le test vient de reussir.
+    func enregistrerLaSource(adresse: String, compte: String, motDePasse: String) {
+        guard let type = typeEnConfiguration, let magasin else { return }
+
+        let identifiant = UUID()
+
+        do {
+            _ = try FabriqueDeSource.construire(
+                type: type,
+                adresse: adresse,
+                compte: compte,
+                motDePasse: motDePasse,
+                identifiant: identifiant
+            )
+
+            try magasin.enregistrer(
+                Source(id: identifiant, type: type, nom: type.rawValue)
+            )
+
+            typeEnConfiguration = nil
+            recharger()
+        } catch {
+            etatDeConfiguration = .echec(
+                (error as? LocalizedError)?.errorDescription ?? Chaines.Erreur.reglagesPhrase
+            )
+        }
+    }
+
+    func fermerLaConfiguration() {
+        typeEnConfiguration = nil
+        etatDeConfiguration = .saisie
     }
 
     /// Nom du dossier de support, celui ou vivent la base et les signets.

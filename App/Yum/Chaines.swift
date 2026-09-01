@@ -312,6 +312,21 @@ enum Chaines {
     }
 
     /// Etats d erreur, tableau 6.4.
+    /// Feuille de configuration d une source, section 5.3.
+    enum Configuration {
+        static let adresse = String(localized: "configuration.adresse")
+        static let compte = String(localized: "configuration.compte")
+        static let motDePasse = String(localized: "configuration.motDePasse")
+        static let tester = String(localized: "configuration.tester")
+        static let enregistrer = String(localized: "configuration.enregistrer")
+        static let annuler = String(localized: "configuration.annuler")
+        static let reussite = String(localized: "configuration.reussite")
+        static let adresseIllisible = String(localized: "configuration.adresseIllisible")
+        static let typeNonPrisEnCharge = String(
+            localized: "configuration.typeNonPrisEnCharge"
+        )
+    }
+
     /// Ecran Parcourir, section 5.3.
     enum Parcourir {
         static let ajouter = String(localized: "parcourir.ajouter")

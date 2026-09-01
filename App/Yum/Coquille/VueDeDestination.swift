@@ -88,6 +88,27 @@ struct VueDeDestination: View {
                     parcourir.ajouterLeDossier(url)
                 }
             }
+            .sheet(item: $parcourir.typeEnConfiguration) { type in
+                VueDeConfigurationDeSource(
+                    etat: parcourir.etatDeConfiguration,
+                    libelles: .duCatalogue(pour: type),
+                    tester: { adresse, compte, motDePasse in
+                        parcourir.tester(
+                            adresse: adresse,
+                            compte: compte,
+                            motDePasse: motDePasse
+                        )
+                    },
+                    enregistrer: { adresse, compte, motDePasse in
+                        parcourir.enregistrerLaSource(
+                            adresse: adresse,
+                            compte: compte,
+                            motDePasse: motDePasse
+                        )
+                    },
+                    annuler: { parcourir.fermerLaConfiguration() }
+                )
+            }
 
         case .rechercher:
             VueDEtatDeContenu(

@@ -97,14 +97,20 @@ jobs:
             -configuration Debug \
             | xcpretty && exit ${PIPESTATUS[0]}
 
+      # La destination est generique et non un simulateur nomme. Le runner ne
+      # porte pas forcement le runtime iOS demande, et l etape echouait sur
+      # "iOS 18.0 is not installed" sans jamais compiler une ligne. Ce que le
+      # controle veut savoir est que le code compile pour iOS, ce qu une
+      # destination generique verifie sans reclamer de simulateur installe.
       - name: Compiler pour iOS
         if: steps.detection.outputs.present == 'true'
         run: |
           xcodebuild build \
             -project "${{ steps.detection.outputs.projet }}" \
             -scheme Yum \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'generic/platform=iOS' \
             -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
             | xcpretty && exit ${PIPESTATUS[0]}
 
       - name: Lancer les tests

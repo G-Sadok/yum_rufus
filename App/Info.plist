@@ -20,6 +20,16 @@
 	Le role est Viewer et non Editor : Yum lit ce qu il ouvre, il ne le
 	reecrit jamais.
 	-->
+	<!--
+	Yum lit les fichiers la ou ils sont, il n en fait pas de copie dans son
+	espace applicatif. Sans cette declaration, iOS ne sait pas si l ouverture
+	se fait sur place et le signale a chaque construction. Elle est vraie : le
+	lecteur ouvre le fichier designe et l acces passe par un signet de
+	securite, jamais par une copie.
+	-->
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

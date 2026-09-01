@@ -16,6 +16,12 @@ import SwiftUI
 // etiree au dela de ce que le fichier contient serait floue, et un lecteur de
 // manga se juge sur ce point avant tout autre.
 //
+// Le sens haut bas ne pagine pas, il deroule. Une image par page dans une pile
+// paresseuse, et non une seule longue image : la limite de texture de 16384
+// pixels frappe une image, pas une pile, et un chapitre de webtoon la depasse
+// sans prevenir. L echec serait silencieux et toucherait les series les plus
+// lues.
+//
 
 /// Ce que le lecteur affiche.
 ///
@@ -27,6 +33,13 @@ public enum EtatDeLecteur {
 
     /// Page affichee, avec sa position dans le chapitre.
     case page(ImageDeLecteur, position: PositionDansLeChapitre)
+
+    /// Chapitre deroule d un seul defilement, sens haut bas.
+    ///
+    /// Les pages ne sont pas portees ici : la pile les demande une par une a
+    /// mesure qu elles approchent, et les tenir toutes en memoire couterait le
+    /// chapitre entier decode alors que trois pages sont visibles.
+    case defilement(nombreDePages: Int, position: PositionDansLeChapitre)
 
     /// Echec nomme, avec sa sortie.
     case erreur(EtatDeContenu)
@@ -113,19 +126,39 @@ public struct VueDeLecteur: View {
     private let sens: SensDeLecture
     private let libelles: LibellesDeLecteur
     private let commandes: CommandesDeLecteur
+    private let pageAuRang: @MainActor (Int) -> ImageDeLecteur?
+    private let pageAtteinte: @MainActor (Int) -> Void
 
+    /// Construit le lecteur.
+    ///
+    /// - Parameters:
+    ///   - etat: chargement, page, defilement ou erreur.
+    ///   - fond: fond choisi par l utilisateur.
+    ///   - sens: sens de lecture resolu pour la serie.
+    ///   - libelles: libelles pris dans le catalogue de chaines.
+    ///   - commandes: ce que le lecteur declenche.
+    ///   - pageAuRang: page deja decodee, nulle tant qu elle ne l est pas.
+    ///     Employee par le seul defilement continu. La fonction est appelee
+    ///     pendant le rendu et ne decode rien : le decodage vit dans
+    ///     l application, hors du fil principal.
+    ///   - pageAtteinte: signale la page qui vient d apparaitre, pour que la
+    ///     progression suive le defilement comme elle suit la pagination.
     public init(
         etat: EtatDeLecteur,
         fond: FondDeLecteur = .defaut,
         sens: SensDeLecture = .parDefaut,
         libelles: LibellesDeLecteur,
-        commandes: CommandesDeLecteur
+        commandes: CommandesDeLecteur,
+        pageAuRang: @escaping @MainActor (Int) -> ImageDeLecteur? = { _ in nil },
+        pageAtteinte: @escaping @MainActor (Int) -> Void = { _ in }
     ) {
         self.etat = etat
         self.fond = fond
         self.sens = sens
         self.libelles = libelles
         self.commandes = commandes
+        self.pageAuRang = pageAuRang
+        self.pageAtteinte = pageAtteinte
     }
 
     public var body: some View {
@@ -168,8 +201,51 @@ public struct VueDeLecteur: View {
                 // lecteur de manga se voit reprocher.
                 .frame(maxWidth: CGFloat(page.largeur), maxHeight: CGFloat(page.hauteur))
 
+        case let .defilement(nombre, _):
+            ruban(nombre)
+
         case let .erreur(contenu):
             VueDEtatDeContenu(contenu)
+        }
+    }
+
+    // MARK: Defilement continu
+
+    /// Le chapitre deroule, une page par element de la pile.
+    ///
+    /// La pile est paresseuse : elle ne construit que ce qui approche de
+    /// l ecran, et l application ne decode que ce que la pile demande. Un
+    /// chapitre de deux cents pages ne coute donc pas deux cents pages
+    /// decodees.
+    private func ruban(_ nombre: Int) -> some View {
+        ScrollView(.vertical) {
+            LazyVStack(spacing: Jetons.Lecteur.ecartEntrePagesDefilees) {
+                ForEach(0..<nombre, id: \.self) { rang in
+                    planche(auRang: rang)
+                        .onAppear { pageAtteinte(rang) }
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
+    }
+
+    /// Une page du ruban, ou la place qu elle occupera.
+    @ViewBuilder
+    private func planche(auRang rang: Int) -> some View {
+        if let page = pageAuRang(rang) {
+            Image(decorative: page.image, scale: 1)
+                .resizable()
+                .aspectRatio(
+                    CGFloat(page.largeur) / CGFloat(max(1, page.hauteur)),
+                    contentMode: .fit
+                )
+                .frame(maxWidth: CGFloat(page.largeur))
+        } else {
+            // La place est reservee avant que la page arrive. Sans elle, le
+            // ruban se replierait sur lui meme et le defilement sauterait a
+            // chaque page decodee.
+            Color.clear
+                .aspectRatio(Jetons.Lecteur.ratioDePageAttendue, contentMode: .fit)
         }
     }
 
@@ -182,11 +258,20 @@ public struct VueDeLecteur: View {
 
             Spacer()
 
-            if case let .page(_, position) = etat {
+            if let position = positionCourante {
                 barreInferieure(position)
             }
         }
         .ignoresSafeArea(edges: .bottom)
+    }
+
+    /// Position affichee en bas, quelle que soit la mise en page.
+    private var positionCourante: PositionDansLeChapitre? {
+        switch etat {
+        case let .page(_, position): position
+        case let .defilement(_, position): position
+        case .chargement, .erreur: nil
+        }
     }
 
     private var barreSuperieure: some View {

@@ -44,6 +44,26 @@ final class SessionDeLecture {
     /// Chapitre lu, nul quand le fichier ne vient pas de la bibliotheque.
     private var chapitre: UUID?
 
+    /// Vrai quand le chapitre se deroule au lieu de se paginer.
+    private var estEnDefilement = false
+
+    /// Sens de lecture du chapitre ouvert.
+    ///
+    /// Il sort d ici parce que la vue en a besoin : c est lui qui decide quelle
+    /// fleche avance et quel balayage recule. La vue le prenait par defaut, et
+    /// un manga se tournait donc a l envers.
+    private(set) var sensCourant: SensDeLecture = .parDefaut
+
+    /// Pages du ruban deja decodees, par rang.
+    ///
+    /// Le ruban ne demande que ce qui approche de l ecran, et ce dictionnaire
+    /// ne grandit donc qu a mesure de la lecture. Le chapitre entier n est
+    /// jamais decode d avance.
+    private(set) var pagesDuRuban: [Int: ImageDeLecteur] = [:]
+
+    /// Rangs dont le decodage court.
+    @ObservationIgnored private var rangsEnCours: Set<Int> = []
+
     private let progression: MagasinDeProgression?
 
     /// Previent qu une lecture vient de se terminer.
@@ -92,6 +112,10 @@ final class SessionDeLecture {
 
             document = ouvert
             titre = url.deletingPathExtension().lastPathComponent
+            // Le sens haut bas impose la mise en page continue, c est le
+            // modele de Core qui le dit et non le lecteur.
+            sensCourant = sens
+            estEnDefilement = sens.miseEnPageImposee == .continuVertical
             pagination = PaginationEnPageSimple(
                 nombreDePages: ouvert.nombrePages,
                 sens: sens,
@@ -128,6 +152,10 @@ final class SessionDeLecture {
         document = nil
         titre = ""
         chapitre = nil
+        estEnDefilement = false
+        sensCourant = .parDefaut
+        pagesDuRuban = [:]
+        rangsEnCours = []
         etat = .chargement
 
         if let acces {
@@ -181,6 +209,100 @@ final class SessionDeLecture {
         enregistrerLaPosition()
     }
 
+    private var positionCourante: PositionDansLeChapitre {
+        PositionDansLeChapitre(
+            numero: pagination.numeroDePage,
+            total: pagination.nombreDePages
+        )
+    }
+
+    // MARK: Defilement continu
+
+    /// Page du ruban a ce rang, et son decodage quand il n a pas eu lieu.
+    ///
+    /// Appelee pendant le rendu de la pile. Elle rend tout de suite ce qu elle
+    /// a, et l observation reveille le ruban quand le decodage aboutit.
+    func page(auRang rang: Int) -> ImageDeLecteur? {
+        if let deja = pagesDuRuban[rang] {
+            return deja
+        }
+
+        decoderPourLeRuban(rang)
+
+        // Les deux pages suivantes partent avec celle ci. Sans elles, chaque
+        // page decodee changerait la hauteur reservee juste sous le pouce, et
+        // le defilement sauterait a chaque fois.
+        decoderPourLeRuban(rang + 1)
+        decoderPourLeRuban(rang + 2)
+
+        return nil
+    }
+
+    /// Signale la page qui vient d apparaitre dans le ruban.
+    ///
+    /// La progression suit le defilement comme elle suit la pagination : c est
+    /// le meme enregistrement, declenche par un autre geste.
+    func pageAtteinte(_ rang: Int) {
+        guard estEnDefilement, pagination.allerALaPage(rang) else { return }
+
+        etat = .defilement(nombreDePages: pagination.nombreDePages, position: positionCourante)
+        enregistrerLaPosition()
+    }
+
+    private func decoderPourLeRuban(_ rang: Int) {
+        guard let document,
+              rang >= 0,
+              rang < pagination.nombreDePages,
+              pagesDuRuban[rang] == nil,
+              rangsEnCours.contains(rang) == false
+        else {
+            return
+        }
+
+        rangsEnCours.insert(rang)
+
+        Task { [weak self, zone] in
+            let decodee = await Self.decoder(document, rang: rang, dans: zone)
+
+            guard let self else { return }
+
+            rangsEnCours.remove(rang)
+
+            if let decodee {
+                pagesDuRuban[rang] = decodee
+            }
+        }
+    }
+
+    /// Decode une page hors du fil principal.
+    ///
+    /// Le decodeur est construit dans la tache et n en sort pas : le faire
+    /// traverser obligerait a le rendre partageable alors qu il ne sert que la,
+    /// le temps d une page.
+    private nonisolated static func decoder(
+        _ document: any DocumentLocal,
+        rang: Int,
+        dans zone: TailleEnPixels
+    ) async -> ImageDeLecteur? {
+        await Task.detached(priority: .userInitiated) {
+            do {
+                let reference = try document.referencePage(rang)
+                let octets = try document.donneesPage(reference)
+                let page = try DecodeurDePage().decoder(octets, nom: reference.nom, dans: zone)
+
+                return ImageDeLecteur(
+                    image: page.image,
+                    largeur: page.tailleDecodee.largeur,
+                    hauteur: page.tailleDecodee.hauteur
+                )
+            } catch {
+                NSLog("Ruban : %@", String(describing: error))
+
+                return nil
+            }
+        }.value
+    }
+
     /// Page ou reprendre, la premiere quand le chapitre est neuf ou inconnu.
     private func pageDeReprise(_ chapitre: UUID?) -> Int {
         guard let chapitre, let progression else { return 0 }
@@ -213,6 +335,15 @@ final class SessionDeLecture {
             return
         }
 
+        // En defilement, aucune page n est decodee ici : le ruban demande ce
+        // qui approche de l ecran, et decoder d avance couterait le chapitre
+        // entier pour trois pages visibles.
+        guard estEnDefilement == false else {
+            etat = .defilement(nombreDePages: pagination.nombreDePages, position: positionCourante)
+
+            return
+        }
+
         do {
             let reference = try document.referencePage(pagination.index)
             let octets = try document.donneesPage(reference)
@@ -224,10 +355,7 @@ final class SessionDeLecture {
                     largeur: page.tailleDecodee.largeur,
                     hauteur: page.tailleDecodee.hauteur
                 ),
-                position: PositionDansLeChapitre(
-                    numero: pagination.numeroDePage,
-                    total: pagination.nombreDePages
-                )
+                position: positionCourante
             )
         } catch {
             etat = .erreur(

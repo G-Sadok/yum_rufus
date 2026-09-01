@@ -102,8 +102,11 @@ struct CoquilleDeLApplication: View {
             if lecture.estOuvert {
                 VueDeLecteur(
                     etat: lecture.etat,
+                    sens: lecture.sensCourant,
                     libelles: lecture.libelles,
-                    commandes: lecture.commandes
+                    commandes: lecture.commandes,
+                    pageAuRang: { lecture.page(auRang: $0) },
+                    pageAtteinte: { lecture.pageAtteinte($0) }
                 )
                 .transition(.opacity)
             }

@@ -33,6 +33,20 @@ extension Jetons {
         /// courte pour qu un geste franc reponde du premier coup.
         public static let distanceDeBalayage: Double = 24
 
+        /// Ecart entre deux pages du defilement continu.
+        ///
+        /// Nul, et c est voulu. Un webtoon est decoupe en pages pour tenir dans
+        /// un fichier, pas pour etre lu comme des pages : un filet entre deux
+        /// morceaux couperait une case en deux.
+        public static let ecartEntrePagesDefilees: Double = 0
+
+        /// Proportion reservee a une page pas encore decodee, dans le ruban.
+        ///
+        /// Deux tiers, le ratio d une planche. La place est reservee avant que
+        /// l image arrive, sans quoi le ruban se replierait et le defilement
+        /// sauterait a chaque page decodee.
+        public static let ratioDePageAttendue: Double = 2.0 / 3.0
+
         /// Titre de la serie, `body` en graisse 600 comme le document l ecrit.
         public static let titre = StyleTypographique(
             taille: Typo.body.taille,

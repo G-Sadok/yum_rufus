@@ -110,7 +110,10 @@ struct YumApp: App {
         )
         _couvertures = State(initialValue: couvertures)
 
-        let lecture = SessionDeLecture()
+        let lecture = SessionDeLecture(progression: services.progression) {
+            bibliotheque.recharger()
+            serie.fiche?.charger()
+        }
 
         _lecture = State(initialValue: lecture)
         _ouverture = State(

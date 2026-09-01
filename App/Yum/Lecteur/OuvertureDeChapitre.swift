@@ -62,7 +62,11 @@ final class OuvertureDeChapitre {
             return .pasDeFichierLocal
         }
 
-        lecture.ouvrir(fichier, sens: sens(pourSerie: adresse.serieInterne))
+        lecture.ouvrir(
+            fichier,
+            sens: sens(pourSerie: adresse.serieInterne),
+            chapitre: chapitre
+        )
 
         return nil
     }

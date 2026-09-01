@@ -64,6 +64,7 @@ struct YumApp: App {
             registre: services.sources
         )
 
+        let serie = SessionDeNavigationDeSerie(magasin: services.ficheDeSerie)
         let couvertures = ChargeurDeCouvertures(
             resolution: services.resolutionDeChapitre,
             sources: sourcesVivantes
@@ -85,11 +86,22 @@ struct YumApp: App {
             )
         )
         _bibliotheque = State(initialValue: bibliotheque)
-        _serie = State(
-            initialValue: SessionDeNavigationDeSerie(magasin: services.ficheDeSerie)
-        )
+        _serie = State(initialValue: serie)
         _sourcesVivantes = State(initialValue: sourcesVivantes)
-        _recherche = State(initialValue: SessionDeRecherche(registre: sourcesVivantes))
+
+        // Un resultat de recherche est range en bibliotheque avant que sa
+        // fiche s ouvre : la fiche ne sait lire que la base.
+        _recherche = State(
+            initialValue: SessionDeRecherche(
+                registre: sourcesVivantes,
+                importateur: services.importateur,
+                ouvrirLaFiche: { serie.ouvrir($0) },
+                apresImport: {
+                    bibliotheque.recharger()
+                    couvertures.vider()
+                }
+            )
+        )
         _couvertures = State(initialValue: couvertures)
 
         let lecture = SessionDeLecture()

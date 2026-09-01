@@ -42,6 +42,21 @@ public struct MagasinDImportDeSource: Sendable {
         }
     }
 
+    /// Identifiant interne d une serie, nul quand la base ne la connait pas.
+    ///
+    /// L identite est le couple source et identifiant distant, jamais le
+    /// titre. Un ecran qui vient d importer une serie s en sert pour ouvrir sa
+    /// fiche, qui ne connait que les identifiants internes.
+    public func identifiant(deLaSerie distant: String, source: UUID) throws -> UUID? {
+        try base.ecrivain.read { connexion in
+            try Manga
+                .filter(Column("sourceId") == source)
+                .filter(Column("identifiantDistant") == distant)
+                .fetchOne(connexion)?
+                .id
+        }
+    }
+
     /// Range une serie et ses chapitres, en preservant ce qui est deja connu.
     ///
     /// - Parameters:

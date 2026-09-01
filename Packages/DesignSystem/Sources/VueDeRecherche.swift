@@ -43,13 +43,17 @@ public struct CommandesDeRecherche {
 
     /// Ouvre la fiche d une serie, nulle tant qu aucune fiche n est
     /// atteignable depuis cet ecran.
-    public let ouvrirLaSerie: (@MainActor (MangaDistant) -> Void)?
+    ///
+    /// La source voyage avec la serie. Un resultat ne porte que l identifiant
+    /// que sa source lui donne, et deux sources peuvent rendre le meme : sans
+    /// la source, la fiche ouverte serait celle d une autre serie.
+    public let ouvrirLaSerie: (@MainActor (SourceID, MangaDistant) -> Void)?
 
     public init(
         deplier: @escaping @MainActor (SourceID) -> Void,
         replier: @escaping @MainActor () -> Void,
         reessayer: @escaping @MainActor (SourceID) -> Void,
-        ouvrirLaSerie: (@MainActor (MangaDistant) -> Void)?
+        ouvrirLaSerie: (@MainActor (SourceID, MangaDistant) -> Void)?
     ) {
         self.deplier = deplier
         self.replier = replier
@@ -174,7 +178,9 @@ public struct VueDeRecherche: View {
                         delaiEnSecondes: delaiEnSecondes,
                         toutVoir: { commandes.deplier(groupe.source) },
                         reessayer: { commandes.reessayer(groupe.source) },
-                        ouvrirLaSerie: commandes.ouvrirLaSerie,
+                        ouvrirLaSerie: commandes.ouvrirLaSerie.map { ouvrir in
+                            { serie in ouvrir(groupe.source, serie) }
+                        },
                         vignette: { _ in VignetteDeResultat() }
                     )
                 }
@@ -196,7 +202,7 @@ public struct VueDeRecherche: View {
                         VueDeCarteDeResultat(
                             serie: serie,
                             ouvrir: commandes.ouvrirLaSerie.map { ouvrir in
-                                { ouvrir(serie) }
+                                { ouvrir(groupe.source, serie) }
                             },
                             vignette: { VignetteDeResultat() }
                         )

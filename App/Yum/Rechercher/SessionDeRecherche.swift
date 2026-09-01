@@ -1,6 +1,7 @@
 import Core
 import DesignSystem
 import Foundation
+import Storage
 
 //
 // SessionDeRecherche
@@ -44,16 +45,28 @@ final class SessionDeRecherche {
     private static let reposAvantRecherche: Duration = .milliseconds(300)
 
     private let registre: RegistreDesSourcesVivantes
+    private let import_: MagasinDImportDeSource?
+
+    /// Ouvre la fiche d une serie de la bibliotheque.
+    private let ouvrirLaFiche: @MainActor (UUID) -> Void
+
+    /// Previent que la bibliotheque a recu une serie de plus.
+    private let apresImport: @MainActor () -> Void
 
     /// Recherche en cours, annulee des que le terme change.
     private var enCours: Task<Void, Never>?
 
-    init(registre: RegistreDesSourcesVivantes) {
+    init(
+        registre: RegistreDesSourcesVivantes,
+        importateur: MagasinDImportDeSource?,
+        ouvrirLaFiche: @escaping @MainActor (UUID) -> Void,
+        apresImport: @escaping @MainActor () -> Void = {}
+    ) {
         self.registre = registre
+        import_ = importateur
+        self.ouvrirLaFiche = ouvrirLaFiche
+        self.apresImport = apresImport
     }
-
-    /// Ouvre la fiche d une serie distante, nulle tant que rien ne la resout.
-    var ouvrirLaSerie: (@MainActor (MangaDistant) -> Void)?
 
     var etat: EtatDeRecherche {
         guard let resultats else {
@@ -81,8 +94,43 @@ final class SessionDeRecherche {
             reessayer: { [weak self] source in
                 self?.relancer(source)
             },
-            ouvrirLaSerie: ouvrirLaSerie
+            ouvrirLaSerie: { [weak self] source, serie in
+                self?.ouvrir(serie, de: source)
+            }
         )
+    }
+
+    // MARK: Ouverture d un resultat
+
+    /// Range la serie choisie dans la bibliotheque, puis ouvre sa fiche.
+    ///
+    /// L import a lieu avant l ouverture parce que la fiche ne sait lire que
+    /// la base. Il est idempotent : rouvrir un resultat deja range met la
+    /// serie a jour sans la dupliquer et sans toucher a la progression.
+    private func ouvrir(_ serie: MangaDistant, de source: SourceID) {
+        guard let import_, let fournisseur = registre.source(source.brut) else { return }
+
+        Task { [weak self] in
+            let chapitres = (try? await fournisseur.chapitres(pour: serie.identifiant)) ?? []
+
+            guard let self else { return }
+
+            do {
+                try import_.importer(serie, chapitres: chapitres, de: source.brut)
+
+                guard let interne = try import_.identifiant(
+                    deLaSerie: serie.identifiant,
+                    source: source.brut
+                ) else {
+                    return
+                }
+
+                apresImport()
+                ouvrirLaFiche(interne)
+            } catch {
+                NSLog("Recherche : %@", String(describing: error))
+            }
+        }
     }
 
     // MARK: Lancement

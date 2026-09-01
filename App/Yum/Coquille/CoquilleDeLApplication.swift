@@ -44,6 +44,9 @@ struct CoquilleDeLApplication: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Fiche de serie ouverte, section 5.6.
+    let serie: SessionDeNavigationDeSerie
+
     var body: some View {
         VueDeCoquille(
             etat: etat,
@@ -69,6 +72,21 @@ struct CoquilleDeLApplication: View {
             libelles: .duCatalogue,
             deverrouiller: deverrouiller
         )
+        .overlay {
+            if let fiche = serie.fiche {
+                EcranDeFicheDeSerie(
+                    etat: fiche,
+                    ouvrirLeChapitre: { _ in
+                        // Lire un chapitre depuis la fiche demande de resoudre
+                        // son fichier sur le disque, ce que seule une source
+                        // installee sait faire. La ligne reste inerte tant
+                        // qu aucune source ne repond.
+                    },
+                    revenir: { serie.fermer() }
+                )
+                .transition(.opacity)
+            }
+        }
         // Le lecteur couvre la coquille entiere : la these de la section 5.7
         // veut que rien d autre ne reste visible pendant la lecture.
         .overlay {

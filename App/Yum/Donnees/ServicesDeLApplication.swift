@@ -59,6 +59,11 @@ final class ServicesDeLApplication {
         self.base = base
     }
 
+    /// Magasin de fiche de serie, nul tant que la base n est pas ouverte.
+    var ficheDeSerie: MagasinDeFicheDeSerie? {
+        base.map { MagasinDeFicheDeSerie(base: $0) }
+    }
+
     /// Magasin de categories, nul tant que la base n est pas ouverte.
     var categories: MagasinDeCategories? {
         base.map { MagasinDeCategories(base: $0) }

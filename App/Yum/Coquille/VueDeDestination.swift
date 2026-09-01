@@ -31,6 +31,9 @@ struct VueDeDestination: View {
     /// Ecran Bibliotheque, section 5.1.
     let bibliotheque: SessionDeBibliotheque
 
+    /// Fiche de serie ouverte, section 5.6.
+    let serie: SessionDeNavigationDeSerie
+
     /// Colonne de reglages, section 5.5.
     ///
     /// Liee et non simplement passee : la feuille posee par dessus la colonne
@@ -52,7 +55,10 @@ struct VueDeDestination: View {
             VueDeBibliotheque(
                 etat: bibliotheque.etat,
                 libelles: .duCatalogue,
-                commandes: bibliotheque.commandes { ouvrir(.parcourir) }
+                commandes: bibliotheque.commandes(
+                    ouvrirLaSerie: { serie.ouvrir($0) },
+                    ajouterUneSource: { ouvrir(.parcourir) }
+                )
             )
             .task { bibliotheque.recharger() }
 

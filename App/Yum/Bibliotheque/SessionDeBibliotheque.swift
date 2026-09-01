@@ -45,14 +45,11 @@ final class SessionDeBibliotheque {
         }
     }
 
-    func commandes(ajouterUneSource: @escaping @MainActor () -> Void) -> CommandesDeBibliotheque {
-        CommandesDeBibliotheque(
-            ouvrir: { _ in
-                // La fiche de serie existe, mais la navigation vers elle
-                // appartient a la coquille, qui ne la pose pas encore.
-            },
-            ajouterUneSource: ajouterUneSource
-        )
+    func commandes(
+        ouvrirLaSerie: @escaping @MainActor (UUID) -> Void,
+        ajouterUneSource: @escaping @MainActor () -> Void
+    ) -> CommandesDeBibliotheque {
+        CommandesDeBibliotheque(ouvrir: ouvrirLaSerie, ajouterUneSource: ajouterUneSource)
     }
 
     private func erreurDeLecture() -> EtatDeContenu {

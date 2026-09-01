@@ -1,9 +1,9 @@
-import Archive
 import Core
 import DesignSystem
 import Foundation
 import ImagePipeline
 import ReaderEngine
+import Sources
 
 //
 // SessionDeLecture
@@ -50,7 +50,11 @@ final class SessionDeLecture {
         }
 
         do {
-            let ouvert = try DocumentZip(contenuDe: url)
+            // Le format decide, jamais le contenu. Le choix du lecteur est
+            // celui des sources : le ZIP, le TAR et le PDF passent par le meme
+            // selecteur, et une seconde copie aurait diverge au premier format
+            // ajoute.
+            let ouvert = try LecteurDeConteneur.ouvrir(url)
 
             document = ouvert
             titre = url.deletingPathExtension().lastPathComponent

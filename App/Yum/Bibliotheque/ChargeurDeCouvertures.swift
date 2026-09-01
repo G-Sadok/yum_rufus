@@ -1,8 +1,8 @@
-import Archive
 import Core
 import DesignSystem
 import Foundation
 import ImagePipeline
+import Sources
 import Storage
 
 //
@@ -91,7 +91,7 @@ final class ChargeurDeCouvertures {
     private nonisolated static func premierePage(de fichier: URL) async -> ImageDeLecteur? {
         await Task.detached(priority: .utility) {
             do {
-                let document = try DocumentZip(contenuDe: fichier)
+                let document = try LecteurDeConteneur.ouvrir(fichier)
 
                 guard document.nombrePages > 0 else { return nil }
 

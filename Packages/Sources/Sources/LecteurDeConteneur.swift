@@ -20,9 +20,13 @@ import ImagePipeline
 // au vu des premiers octets ouvrirait sans le dire une archive que
 // l utilisateur croit d un autre type.
 //
+// Il est public parce que le lecteur de l application ouvre les memes fichiers,
+// ceux que le systeme lui pose par un clic droit. Il n ouvrait que le ZIP, donc
+// un PDF annonce dans les types du bundle s ouvrait sur une erreur.
+//
 
 /// Ouverture d un conteneur de pages, quel que soit son format.
-enum LecteurDeConteneur {
+public enum LecteurDeConteneur {
     /// Ouvre le conteneur avec le lecteur qui correspond a son format.
     ///
     /// - Throws: `ErreurDeSource.formatNonPrisEnCharge` quand aucun lecteur ne
@@ -31,7 +35,11 @@ enum LecteurDeConteneur {
     ///   `conteneurChiffre`, ce que l ecran attend pour demander le mot de passe,
     ///   et le traduire en erreur de source le rendrait indiscernable d une
     ///   archive cassee.
-    static func ouvrir(_ emplacement: URL, format: String, nom: String) throws -> any DocumentLocal {
+    public static func ouvrir(
+        _ emplacement: URL,
+        format: String,
+        nom: String
+    ) throws -> any DocumentLocal {
         if DocumentZip.extensions.contains(format) {
             return try DocumentZip(contenuDe: emplacement)
         }
@@ -43,5 +51,35 @@ enum LecteurDeConteneur {
         }
 
         throw ErreurDeSource.formatNonPrisEnCharge(nom: nom, format: format)
+    }
+
+    /// Ouvre un fichier pose par le systeme, dont seul le chemin est connu.
+    ///
+    /// Le format est lu sur l extension et rien d autre, comme au dessus.
+    public static func ouvrir(_ emplacement: URL) throws -> any DocumentLocal {
+        // Un dossier n a pas d extension qui dise ce qu il est. Il se reconnait
+        // au systeme de fichiers, avant que le format n ait son mot a dire.
+        var estDossier: ObjCBool = false
+        let existe = FileManager.default.fileExists(
+            atPath: emplacement.path,
+            isDirectory: &estDossier
+        )
+
+        if existe, estDossier.boolValue {
+            return try DocumentDeDossier(contenuDe: emplacement)
+        }
+
+        return try ouvrir(
+            emplacement,
+            format: emplacement.pathExtension.lowercased(),
+            nom: emplacement.lastPathComponent
+        )
+    }
+
+    /// Les formats que le lecteur sait ouvrir.
+    public static var formatsConnus: Set<String> {
+        DocumentZip.extensions
+            .union(DocumentTar.extensions)
+            .union(DocumentPdf.extensions)
     }
 }

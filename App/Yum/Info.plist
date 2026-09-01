@@ -8,9 +8,14 @@
 	Ce fichier sert de base a l Info.plist genere : les cles reglees dans le
 	projet s y ajoutent, elles ne sont donc pas repetees ici.
 
-	CBZ et CBR n ont pas de type declare par le systeme. Yum les declare donc
+	CBZ et CBT n ont pas de type declare par le systeme. Yum les declare donc
 	lui meme, comme conformes a l archive dont ils derivent, ce qui laisse le
 	systeme continuer a les traiter comme des archives pour tout le reste.
+
+	Le RAR et le CBR ne sont pas declares : aucun lecteur du projet ne les
+	ouvre. Les annoncer ferait proposer Yum dans le menu du clic droit pour
+	des fichiers qu il refuserait ensuite, ce qui est pire que ne pas
+	apparaitre du tout.
 
 	Le role est Viewer et non Editor : Yum lit ce qu il ouvre, il ne le
 	reecrit jamais.
@@ -27,7 +32,7 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.yum.cbz</string>
-				<string>com.yum.cbr</string>
+				<string>com.yum.cbt</string>
 			</array>
 		</dict>
 		<dict>
@@ -52,7 +57,7 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.zip-archive</string>
-				<string>com.rarlab.rar-archive</string>
+				<string>public.tar-archive</string>
 			</array>
 		</dict>
 		<dict>
@@ -95,18 +100,18 @@
 		</dict>
 		<dict>
 			<key>UTTypeIdentifier</key>
-			<string>com.yum.cbr</string>
+			<string>com.yum.cbt</string>
 			<key>UTTypeDescription</key>
-			<string>Archive de bande dessinee RAR</string>
+			<string>Archive de bande dessinee TAR</string>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>com.rarlab.rar-archive</string>
+				<string>public.tar-archive</string>
 			</array>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>cbr</string>
+					<string>cbt</string>
 				</array>
 			</dict>
 		</dict>

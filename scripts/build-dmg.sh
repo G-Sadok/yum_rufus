@@ -62,6 +62,11 @@ if [ "${1:-}" = "--fond" ]; then
 fi
 
 SCHEMA="${SCHEMA_XCODE:-Yum}"
+
+# Le projet doit etre nomme. Le script travaille depuis la racine du depot, ou
+# aucun projet Xcode ne se trouve : xcodebuild s y arretait sur "does not
+# contain an Xcode project", et le script n avait jamais produit de DMG.
+PROJET="${PROJET_XCODE:-App/Yum.xcodeproj}"
 NOM_APP="${NOM_APP:-Yum}"
 VERSION="${1:-}"
 SORTIE="$RACINE/build"
@@ -104,7 +109,7 @@ rm -rf "$SORTIE"
 mkdir -p "$SORTIE" "$STAGING"
 
 if [ -z "$VERSION" ]; then
-  VERSION="$(xcodebuild -scheme "$SCHEMA" -showBuildSettings 2>/dev/null \
+  VERSION="$(xcodebuild -project "$PROJET" -scheme "$SCHEMA" -showBuildSettings 2>/dev/null \
     | awk -F' = ' '/MARKETING_VERSION/{print $2; exit}' | tr -d ' ')"
   VERSION="${VERSION:-0.0.0}"
 fi
@@ -142,6 +147,7 @@ if [ "$SIGNE" -eq 1 ]; then
 fi
 
 xcodebuild archive \
+  -project "$PROJET" \
   -scheme "$SCHEMA" \
   -configuration Release \
   -destination 'generic/platform=macOS' \
